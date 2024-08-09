@@ -66,6 +66,7 @@ export default {
       this.exerciseData.info=data.testCaseInfo;
       console.log(data);
       this.exerciseData.userProject=data.project;
+      this.$root.save();
     }
   }
 }

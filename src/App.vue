@@ -21,10 +21,11 @@ export default{
         exerciseDataCollection: {}
       };
   },
-  mounted(){
-    setInterval(()=>{
-      this.save();
-    },1000);
+  async mounted(){
+    await this.load();
+    // setInterval(()=>{
+    //   this.save();
+    // },1000);
   },
   methods: {
     setExerciseData(data){
@@ -51,7 +52,7 @@ export default{
       for(let a in this.exerciseDataCollection){
         let ed=this.exerciseDataCollection[a];
         if(ed.userProject){
-          userData[ed.userProject.id]=ed.userProject;
+          userData[ed.data.id]=JSON.parse(JSON.stringify(ed.userProject));
         }
       }
       return userData;
@@ -67,11 +68,11 @@ export default{
     },
     async load(){
       let data=await storage.getItem(STORAGE_DATA);
-      this.restoreUserDataObject(o);
+      this.restoreUserDataObject(data);
     },
-    async save(){
-
-      await storage.setItem(STORAGE_DATA,this.createUserDataObject());
+    save(){
+      console.log("save");
+      storage.setItem(STORAGE_DATA,this.createUserDataObject());
     }
   }
 }
