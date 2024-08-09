@@ -9,7 +9,7 @@ import MainScreen from './components/main-screen.vue';
 import PWABadge from './components/PWABadge.vue'
 import { storage } from './functions/storage';
 
-
+const STORAGE_DATA="INFO-TRAINER-USER-DATA";
 
 export default{
   components: {
@@ -21,23 +21,57 @@ export default{
         exerciseDataCollection: {}
       };
   },
+  mounted(){
+    setInterval(()=>{
+      this.save();
+    },1000);
+  },
   methods: {
+    setExerciseData(data){
+      let ed={
+        index: 0,
+        count: 1,
+        info: null,
+        data: data
+      };
+      this.exerciseDataCollection[data.id]=ed;
+      return ed;
+    },
     getExerciseData(id){
+      let ed=this.exerciseDataCollection[id];
+      if(!ed) return null;
+      return ed;
       if(!this.exerciseDataCollection[id]){
-        this.exerciseDataCollection[id]={
-          index: 0,
-          count: 1,
-          info: null
-        };
+        
       }
-      return this.exerciseDataCollection[id];
+      return 
+    },
+    createUserDataObject(){
+      let userData={};
+      for(let a in this.exerciseDataCollection){
+        let ed=this.exerciseDataCollection[a];
+        if(ed.userProject){
+          userData[ed.userProject.id]=ed.userProject;
+        }
+      }
+      return userData;
+    },
+    restoreUserDataObject(o){
+      for(let a in o){
+        let data=o[a];
+        let ed=this.exerciseDataCollection[a];
+        if(ed){
+          ed.userProject=data;
+        }
+      }
     },
     async load(){
-      let item=await storage.getItem("test");
-      this.daten=item;
+      let data=await storage.getItem(STORAGE_DATA);
+      this.restoreUserDataObject(o);
     },
     async save(){
-      await storage.setItem("test",this.daten);
+
+      await storage.setItem(STORAGE_DATA,this.createUserDataObject());
     }
   }
 }

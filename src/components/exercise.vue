@@ -4,14 +4,13 @@
       {{ title }}
     </template>
     <template #content>
-      Inhalt
       <slot name="exercise"></slot>
       <slot name="input"></slot>
       <template v-if="project">
         <JavaAppLauncher
           :project="project"
           :exercise-data="exerciseData"
-          @exercise-submit=""
+          @exercise-submit="exerciseSubmitted"
           @show-feedback="$refs.dialogFeedback.open()"
         />
         <DialogFeedback ref="dialogFeedback" :exercise-data="exerciseData"/>
@@ -30,22 +29,44 @@ export default {
     JavaApp, DialogFeedback
   },
   props: {
-    title: String,
-    project: Object,
-    id: String
+    exercise: Object,
   },
   computed: {
+    title(){
+      return this.project.title;
+    },
+    project(){
+      if(this.exerciseData.userProject){
+        return this.exerciseData.userProject;
+      }else{
+        return this.exercise.project;
+      }
+    },
+    id(){
+      return this.exercise.id;
+    },
     exerciseData(){
       let root;
       root=this.$root;
       if(this.id===undefined) return;
-      return root.getExerciseData(this.id);
+      let ed=root.getExerciseData(this.id);
+      if(ed) return ed;
+      return root.setExerciseData(this.exercise);
     }
   },
   data(){
     return {
       
     };
+  },
+  methods: {
+    exerciseSubmitted(data){
+      this.exerciseData.count=data.testCaseCount;
+      this.exerciseData.index=data.testCaseIndex;
+      this.exerciseData.info=data.testCaseInfo;
+      console.log(data);
+      this.exerciseData.userProject=data.project;
+    }
   }
 }
 </script>

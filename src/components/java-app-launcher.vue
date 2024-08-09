@@ -44,10 +44,7 @@ export default{
   },
   methods: {
     exerciseSubmitted(data){
-      this.exerciseData.count=data.testCaseCount;
-      this.exerciseData.index=data.testCaseIndex;
-      this.exerciseData.info=data.testCaseInfo;
-      //this.$emit("exercise-submit",data);
+      this.$emit("exercise-submit",data);
     }
   }
 }

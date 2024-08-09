@@ -1,5 +1,5 @@
 <template>
-  <Exercise title="Array-Tausch" :project="project" :id="id">
+  <Exercise title="Array-Tausch" :exercise="$data" :project="project" :id="id">
     <template #exercise>
       Die Methode <Code>void vertauschen(int[] array, int index1, int index2)</Code>
       soll die beiden Elemente im Array <Code inline>array</Code> an den Positionen <Code inline>index1</Code> und <Code inline>index2</Code> miteinander vertauschen.
@@ -7,7 +7,7 @@
   </Exercise>
 </template>
 
-<script lang="ts">
+<script>
 
 
 export default{
@@ -17,6 +17,7 @@ export default{
   data() {
       return {
         id: "arraytausch",
+        title: "Array-Tausch",
         project: {
           name: "Array-Tausch",
           clazzes: [
