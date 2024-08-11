@@ -5,11 +5,28 @@
 </template>
 
 <script>
+const version="0.0.2";
+
 import MainScreen from './components/main-screen.vue';
 import PWABadge from './components/PWABadge.vue'
 import { storage } from './functions/storage';
-
+import * as exercises from './components/exercises/index';
 const STORAGE_DATA="INFO-TRAINER-USER-DATA";
+
+console.log(exercises);
+
+let exerciseDataCollection={};
+for(let a in exercises){
+  let data=exercises[a].data;
+  console.log(a,data);
+  let ed={
+    index: 0,
+    data: data,
+    count: data.check.testcases().length
+  };
+  exerciseDataCollection[data.id]=ed;
+}
+console.log(exerciseDataCollection);
 
 export default{
   components: {
@@ -17,43 +34,30 @@ export default{
   },
   data() {
       return {
-        version: "0.0.0",
-        exerciseDataCollection: {}
+        version: version,
+        exerciseDataCollection: exerciseDataCollection
       };
   },
   async mounted(){
+
     await this.load();
     // setInterval(()=>{
     //   this.save();
     // },1000);
   },
   methods: {
-    setExerciseData(data){
-      let ed={
-        index: 0,
-        data: data,
-        count: data.check.testcases().length
-      };
-      this.exerciseDataCollection[data.id]=ed;
-      return ed;
-    },
     getExerciseData(id){
       let ed=this.exerciseDataCollection[id];
-      if(!ed) return null;
-      return ed;
-      if(!this.exerciseDataCollection[id]){
-        
-      }
-      return 
+      return ed; 
     },
     createUserDataObject(){
       let userData={};
-      for(let a in this.exerciseDataCollection){
-        let ed=this.exerciseDataCollection[a];
+      for(let id in this.exerciseDataCollection){
+        let ed=this.exerciseDataCollection[id];
         let o={
           index: ed.index
         };
-        userData[ed.data.id]=o;
+        userData[id]=o;
         if(ed.userProject){
           o.project=JSON.parse(JSON.stringify(ed.userProject));
         }
@@ -61,9 +65,9 @@ export default{
       return userData;
     },
     restoreUserDataObject(userData){
-      for(let a in userData){
-        let o=userData[a];
-        let ed=this.exerciseDataCollection[a];
+      for(let id in userData){
+        let o=userData[id];
+        let ed=this.getExerciseData(id);//exerciseDataCollection[a];
         ed.index=0;
         if(ed){
           ed.index=o.index;

@@ -1,0 +1,116 @@
+<template>
+  <div>
+    <slot></slot>
+    <template v-if="project">
+      <JavaAppLauncher
+        :project="project"
+        :check="exercise.check"
+        :exercise-data="exerciseData"
+        @exercise-submit="exerciseSubmitted"
+        @show-feedback="$refs.dialogFeedback.open()"
+      />
+      <DialogFeedback ref="dialogFeedback" :exercise-data="exerciseData">
+        <slot></slot>  
+      </DialogFeedback>
+    </template>
+  </div>
+</template>
+
+<script>
+import DialogFeedback from "./dialog-feedback.vue";
+import ExerciseProgress from "./exercise-progress.vue";
+import JavaApp from "./java-app.vue";
+
+
+export default {
+  components: {
+    JavaApp, DialogFeedback,ExerciseProgress
+  },
+  props: {
+    exercise: Object,
+    showOnlyExercise: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    title(){
+      return this.exercise.title;
+    },
+    testCaseCount(){
+      return this.exerciseData.count;
+    },
+    hasUserData(){
+      return this.exerciseData.userProject!==undefined;
+    },
+    project(){
+      if(this.exerciseData.userProject){
+        return this.exerciseData.userProject;
+      }else{
+        return this.exercise.project;
+      }
+    },
+    id(){
+      return this.exercise.id;
+    },
+    exerciseData(){
+      let root;
+      root=this.$root;
+      if(this.id===undefined) return;
+      let ed=root.getExerciseData(this.id,this.exercise);
+      return ed;
+      //return root.setExerciseData(this.exercise);
+    }
+  },
+  data(){
+    return {
+      
+    };
+  },
+  methods: {
+    confirmReset(event) {
+      this.$confirm.require({
+        target: event.currentTarget,
+        message: 'Soll die Aufgabe wirklich zurückgesetzt werden?',
+        icon: 'pi pi-exclamation-triangle',
+        rejectProps: {
+            label: 'Abbrechen',
+            severity: 'secondary',
+            outlined: true
+        },
+        acceptProps: {
+            label: 'Zurücksetzen'
+        },
+        accept: () => {
+          this.reset();
+            //this.$toast.add({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
+        },
+        reject: () => {
+            //this.$toast.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
+        }
+      });
+    },
+    reset(){
+      delete this.exerciseData.userProject;
+      this.exerciseData.index=0;
+      this.$root.save();
+    },
+    exerciseSubmitted(data){
+      //this.exerciseData.count=data.testCaseCount;
+      this.exerciseData.index=data.testCaseIndex;
+      this.exerciseData.info=data.testCaseInfo;
+      console.log(data);
+      let clazzes=[];
+      for(let i=0;i<data.project.clazzes.length;i++){
+        let c=data.project.clazzes[i];
+        if(!c.isHidden){
+          clazzes.push(c);
+        }
+      }
+      data.project.clazzes=clazzes;
+      this.exerciseData.userProject=data.project;
+      this.$root.save();
+    }
+  }
+}
+</script>

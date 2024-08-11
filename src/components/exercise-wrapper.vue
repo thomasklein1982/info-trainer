@@ -1,22 +1,14 @@
 <template>
   <Card :title="title">
+    
     <template #title>
-      <ConfirmPopup></ConfirmPopup>
-      <div style="display: flex; align-items: center">{{ title }} <ExerciseProgress style="flex: 1" :exercise-data="exerciseData"/><Button :disabled="!hasUserData" @click="confirmReset" size="small" text rounded icon="pi pi-trash"/></div>
+      <div >Aufgabe {{number}}: {{ title }} </div>
+      
     </template>
     <template #content>
-      <slot name="exercise"></slot>
-      <slot name="input"></slot>
-      <template v-if="project">
-        <JavaAppLauncher
-          :project="project"
-          :check="exercise.check"
-          :exercise-data="exerciseData"
-          @exercise-submit="exerciseSubmitted"
-          @show-feedback="$refs.dialogFeedback.open()"
-        />
-        <DialogFeedback ref="dialogFeedback" :exercise-data="exerciseData"/>
-      </template>
+      <ConfirmPopup></ConfirmPopup>
+      <div style="display: flex; align-items: center"><span>Fortschritt:</span><ExerciseProgress style="flex: 1" :exercise-data="exerciseData"/><Button :disabled="!hasUserData" @click="confirmReset" size="small" text rounded icon="pi pi-trash"/></div>
+      <slot></slot>
     </template>
   </Card>
 </template>
@@ -32,11 +24,12 @@ export default {
     JavaApp, DialogFeedback,ExerciseProgress
   },
   props: {
-    exercise: Object,
+    id: String,
+    number: Number
   },
   computed: {
     title(){
-      return this.exercise.title;
+      return this.exerciseData.data.title;
     },
     testCaseCount(){
       return this.exerciseData.count;
@@ -48,19 +41,16 @@ export default {
       if(this.exerciseData.userProject){
         return this.exerciseData.userProject;
       }else{
-        return this.exercise.project;
+        return this.exerciseData.data.project;
       }
-    },
-    id(){
-      return this.exercise.id;
     },
     exerciseData(){
       let root;
       root=this.$root;
       if(this.id===undefined) return;
       let ed=root.getExerciseData(this.id);
-      if(ed) return ed;
-      return root.setExerciseData(this.exercise);
+      return ed;
+      //return root.setExerciseData(this.exercise);
     }
   },
   data(){
@@ -70,6 +60,7 @@ export default {
   },
   methods: {
     confirmReset(event) {
+      console.log("confirm");
       this.$confirm.require({
         target: event.currentTarget,
         message: 'Soll die Aufgabe wirklich zurückgesetzt werden?',
@@ -90,26 +81,11 @@ export default {
             //this.$toast.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
         }
       });
+
     },
     reset(){
       delete this.exerciseData.userProject;
       this.exerciseData.index=0;
-      this.$root.save();
-    },
-    exerciseSubmitted(data){
-      //this.exerciseData.count=data.testCaseCount;
-      this.exerciseData.index=data.testCaseIndex;
-      this.exerciseData.info=data.testCaseInfo;
-      console.log(data);
-      let clazzes=[];
-      for(let i=0;i<data.project.clazzes.length;i++){
-        let c=data.project.clazzes[i];
-        if(!c.isHidden){
-          clazzes.push(c);
-        }
-      }
-      data.project.clazzes=clazzes;
-      this.exerciseData.userProject=data.project;
       this.$root.save();
     }
   }

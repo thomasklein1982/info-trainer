@@ -29,10 +29,27 @@ export default defineConfig({
         description: 'Lerne Informatik und das Programmieren mit Java.',
         theme_color: '#ffffff',
         display: 'standalone',
+        icons: [
+          {
+            src: 'pwa-64x64.png',
+            sizes: '64x64',
+            type: 'image/png',
+          },
+          {
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          }
+        ]
       },
 
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2,eot,ttf,woff}'],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
       },

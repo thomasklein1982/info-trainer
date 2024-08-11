@@ -69,60 +69,40 @@ function close() {
 
 <template>
   <div
-    v-if="needRefresh"
-    class="pwa-complete"
-    aria-labelledby="toast-message"
-    role="alert"
+      v-if="needRefresh"
+      class="pwa-toast"
+      aria-labelledby="toast-message"
+      role="alert"
   >
-    <div class="pwa-backdrop"></div>
-    <div class="pwa-toast">
-      <div class="message">
-        <span id="toast-message">
-          {{ title }}
-        </span>
-      </div>
-      <div class="buttons">
-        <button  type="button" class="reload" @click="updateServiceWorker()">
-          Neu laden
-        </button>
-        <button type="button" @click="close">
-          Schließen
-        </button>
-      </div>
+    <div class="message">
+      <span id="toast-message">
+        {{ title }}
+      </span>
+    </div>
+    <div class="buttons">
+      <button  type="button" class="reload" @click="updateServiceWorker()">
+        Neu laden
+      </button>
+      <button type="button" @click="close">
+        Schließen
+      </button>
     </div>
   </div>
 </template>
 
 <style scoped>
-.pwa-complete{
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 1;
-  place-content: center;
-  display: grid;
-}
-.pwa-backdrop {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 1;
-  background-color: gray;
-  opacity: 0.5;
-}
 .pwa-toast {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  margin: 16px;
+  padding: 12px;
   border: 1px solid #8885;
-  padding: 0.5rem;
   border-radius: 4px;
   z-index: 1;
   text-align: left;
   box-shadow: 3px 4px 5px 0 #8885;
   display: grid;
-  background-color: #121212;
 }
 .pwa-toast .message {
   margin-bottom: 8px;
@@ -134,10 +114,8 @@ function close() {
   border: 1px solid #8885;
   outline: none;
   margin-right: 5px;
-  margin-left: 5px;
   border-radius: 2px;
   padding: 3px 10px;
-  min-height: 0.8cm;
 }
 .pwa-toast button.reload {
   display: block;
