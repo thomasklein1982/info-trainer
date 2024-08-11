@@ -9,7 +9,8 @@
 export default{
   props: {
     project: Object,
-    options: Object
+    options: Object,
+    check: Object
   },
   computed: {
     src(){
@@ -23,6 +24,31 @@ export default{
       src+="#exercise-mode;hard";
       console.log(src);
       return src;
+    },
+    realProject(){
+      if(!this.check) return this.project;
+      let project=JSON.parse(JSON.stringify(this.project));
+      let initFunc,testcases,applyTestFunc;
+      if(this.check.init){
+        initFunc=this.check.init.toString();
+      }else{
+        initFunc="null";
+      }
+      testcases="("+this.check.testcases.toString()+")()";
+      applyTestFunc=this.check.test.toString();
+      let src=`class $Aufgabe{
+        public static void main(String args[]){
+        /*JAVASCRIPT-CODE
+          let init=await (${initFunc})();
+          $Exercise.checkTestCases(init,${testcases},${applyTestFunc});
+        */
+        }
+      }`;
+      project.clazzes.push({
+        isHidden: true,
+        src: src
+      });
+      return project;
     }
   },
   data(){
@@ -47,7 +73,7 @@ export default{
         console.log("submitted",data);
         this.$emit("exercise-submit",data);
       }else if(type==='LOADING-COMPLETE'){
-        this.sendMessage("setup-exercise",this.project);
+        this.sendMessage("setup-exercise",this.realProject);
       }
     },
     sendMessage(type,data){

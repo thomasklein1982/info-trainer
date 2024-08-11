@@ -1,12 +1,14 @@
 <template>
-  <Button @click="show=true" label="JavaApp starten"/>
-  <Dialog :header="project?.name" v-model:visible="show" maximizable>
+  <Button @click="openDialog" label="JavaApp starten"/>
+  <Dialog ref="dialog" :header="project?.name" v-model:visible="show" maximizable>
+    <template #maximizeicon><Button :class="newInfos? 'wobbling':''" rounded @click.stop="showFeedback" :severity="completed? 'success':'danger'" size="small" :icon="'pi pi-'+(completed? 'check':'exclamation-triangle')"/></template>
     <template #header>
-      <div style="display: flex; width: 100%; align-items: center;"><span style="font-size: 120%; font-weight: bold;">{{ project?.name }}</span> <span style="flex: 1; margin-left: 0.5rem; margin-right: 0.5rem"><ProgressBar :value="percent">{{ exerciseData?.index }}/{{ exerciseData?.count }}</ProgressBar></span><Button v-if="completed" @click="$emit('show-feedback')" severity="success" size="small" icon="pi pi-check"/><Button v-else @click="$emit('show-feedback')" size="small" severity="danger" icon="pi pi-exclamation-triangle"/></div>
+      <div style="display: flex; width: 100%; align-items: center;"><ExerciseProgress :exercise-data="exerciseData"/></div>
     </template>
     <JavaApp
       :project="project"
       :options="options"
+      :check="check"
       @exercise-submit="exerciseSubmitted"
     />
   </Dialog>
@@ -14,36 +16,56 @@
 
 <script>
 import ProgressBar from 'primevue/progressbar';
+import ExerciseProgress from './exercise-progress.vue';
+
 export default{
   components: {
-    ProgressBar
+    ProgressBar,ExerciseProgress
   },
   emits: [
-    "exercise-submit","show-feedback"
+    "exercise-submit","show-feedback","reset-exercise"
   ],
   computed: {
     percent(){
       if(!this.exerciseData) return 0;
-      return this.exerciseData.index/this.exerciseData.count*100;
+      return this.exerciseData.index/this.testCaseCount*100;
+    },
+    hasUserData(){
+      return this.exerciseData.userProject!==undefined;
     },
     completed(){
       if(!this.exerciseData) return false;
-      return this.exerciseData.index===this.exerciseData.count;
+      return this.exerciseData.index===this.testCaseCount;
     },
-
+    testCaseCount(){
+      return this.exerciseData.count;
+    },
   },
   props: {
     project: Object,
     options: Object,
+    check: Object,
     exerciseData: Object
   },
   data(){
     return {
-      show: false
+      show: false,
+      newInfos: false
     }
   },
   methods: {
+    showFeedback(){
+      this.newInfos=false;
+      this.$emit('show-feedback');
+    },
+    openDialog(){
+      if(!this.$refs.dialog.maximized){
+        this.$refs.dialog.maximize();
+      }
+      this.show=true;
+    },
     exerciseSubmitted(data){
+      this.newInfos=true;
       this.$emit("exercise-submit",data);
     }
   }

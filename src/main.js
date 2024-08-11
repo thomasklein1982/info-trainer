@@ -16,13 +16,15 @@ import 'prismjs/themes/prism-coy.css';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
 import 'prismjs';
 import 'primeicons/primeicons.css'
-
+import ConfirmationService from 'primevue/confirmationservice';
+import ConfirmPopup from 'primevue/confirmpopup';
 const app = createApp(App);
 app.use(PrimeVue, {
     theme: {
         preset: Aura
     }
 });
+app.use(ConfirmationService);
 
 
 app.component('Button', Button);
@@ -33,6 +35,7 @@ app.component('Code',Code);
 app.component("Exercise",Exercise);
 app.component("JavaApp",JavaApp);
 app.component("JavaAppLauncher",JavaAppLauncher);
+app.component("ConfirmPopup",ConfirmPopup);
 
 console.log("fertig");
 app.mount('#app');

@@ -31,9 +31,8 @@ export default{
     setExerciseData(data){
       let ed={
         index: 0,
-        count: 1,
-        info: null,
-        data: data
+        data: data,
+        count: data.check.testcases().length
       };
       this.exerciseDataCollection[data.id]=ed;
       return ed;
@@ -51,18 +50,28 @@ export default{
       let userData={};
       for(let a in this.exerciseDataCollection){
         let ed=this.exerciseDataCollection[a];
+        let o={
+          index: ed.index
+        };
+        userData[ed.data.id]=o;
         if(ed.userProject){
-          userData[ed.data.id]=JSON.parse(JSON.stringify(ed.userProject));
+          o.project=JSON.parse(JSON.stringify(ed.userProject));
         }
       }
       return userData;
     },
-    restoreUserDataObject(o){
-      for(let a in o){
-        let data=o[a];
+    restoreUserDataObject(userData){
+      for(let a in userData){
+        let o=userData[a];
         let ed=this.exerciseDataCollection[a];
+        ed.index=0;
         if(ed){
-          ed.userProject=data;
+          ed.index=o.index;
+          if(o.project){
+            ed.userProject=o.project;
+          }else{
+            delete ed.userProject;
+          }
         }
       }
     },

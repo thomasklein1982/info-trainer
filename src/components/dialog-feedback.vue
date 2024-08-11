@@ -1,7 +1,7 @@
 <template>
   <Dialog v-model:visible="show" :header="header">
     <template v-if="exerciseData.info">
-      <p>Um zu prüfen, ob deine Programmierung stimmt, werden verschiedene Testfälle durchgespielt. <template v-if="completed">alle Testfälle waren erfolgreich:</template><template v-else>Hier siehst du, welche Testfälle erfolgreich waren und welche nicht:</template></p>
+      <p>Um zu prüfen, ob deine Programmierung stimmt, werden verschiedene Testfälle durchgespielt. <template v-if="completed">Alle Testfälle waren erfolgreich:</template><template v-else>Hier siehst du, welche Testfälle erfolgreich waren und welche nicht:</template></p>
       <Message :icon="'pi pi-'+(i<exerciseData.index?'check':'times')" :severity="(i<exerciseData.index?'success':'error')" v-for="(t,i) in exerciseData.info">
         {{ t }}
       </Message>
