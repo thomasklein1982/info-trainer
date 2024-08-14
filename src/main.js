@@ -19,6 +19,22 @@ import ConfirmationService from 'primevue/confirmationservice';
 import ConfirmPopup from 'primevue/confirmpopup';
 import * as exercises from './components/exercises/index';
 import ExerciseBody from './components/exercise-body.vue';
+import ConsoleOutput from './components/console-output.vue';
+import { boolArrayToInt, intToBoolArray } from './other/bool-array';
+import { registerSW } from 'virtual:pwa-register';
+
+const updateSW=registerSW({
+  onNeedRefresh(){
+    let a=confirm("Eine neue Version ist verfügbar. Willst du aktualisieren (empfohlen!)?");
+    if(a){
+      updateSW();
+    }
+  },
+  onOfflineReady(){
+    console.log("offline ready");
+  }
+});
+export const updateServiceWorker=updateSW;
 
 const app = createApp(App);
 app.use(PrimeVue, {
@@ -37,6 +53,7 @@ app.component('InputText', InputText);
 app.component('Card',Card);
 app.component('Dialog',Dialog);
 app.component('Code',Code);
+app.component('ConsoleOutput',ConsoleOutput)
 app.component("ExerciseBody",ExerciseBody);
 app.component("ExercisePath",ExercisePath);
 app.component("JavaApp",JavaApp);
@@ -52,3 +69,10 @@ for(let a in exercises){
 
 console.log("fertig");
 app.mount('#app');
+
+
+let array=[true,true,false,false,false,true,false];
+let n=boolArrayToInt(array);
+let array2=intToBoolArray(n);
+let n2=boolArrayToInt(array2);
+console.log(array,n,array2,n2);

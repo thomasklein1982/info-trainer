@@ -18,13 +18,11 @@ export const data={
         a: await $new(MehrfachAusgabe)
       }
     },
-    testcases: ()=>{
-      return [
+    testcases: [
         {
           info: "Text wird so oft ausgegeben wie verlangt"
         }
-      ]
-    },
+      ],
     test: async (tc,init)=>{
       await System.console().clear();
       await init.a.mehrfachAusgabe();

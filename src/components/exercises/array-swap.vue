@@ -1,6 +1,6 @@
 <template>
   <ExerciseBody :exercise="$data">
-      Die Methode <Code>void vertauschen(int[] array, int index1, int index2)</Code>
+      Die Methode <Code no-numbers>void vertauschen(int[] array, int index1, int index2)</Code>
       soll die beiden Elemente im Array <Code inline>array</Code> an den Positionen <Code inline>index1</Code> und <Code inline>index2</Code> miteinander vertauschen.
   </ExerciseBody>
 </template>
@@ -39,8 +39,7 @@ export const data={
       }
       return true;
     },
-    testcases: ()=>{
-      return [
+    testcases: [
         {
           data: ()=>{
             let N=$Exercise.random(7,11);
@@ -50,7 +49,8 @@ export const data={
             };
           },
           info: "Normalfall: Beide Indices liegen im richtigen Bereich.",
-          count: 10
+          count: 10,
+          points: 16
         },
         {
           data: ()=>{
@@ -89,17 +89,16 @@ export const data={
           info: "Spezialfall: Der 1. Index ist zu klein."
         }
       ]
-    },
   },
 
   project: {
     name: "Array-Tausch",
     clazzes: [
 `class ArrayTausch{
-void vertauschen(int[] array, int index1, int index2){
-//hierhin kommt der Code
+  void vertauschen(int[] array, int index1, int index2){
+    //hierhin kommt der Code
 
-}
+  }
 }`,
     ]
   }

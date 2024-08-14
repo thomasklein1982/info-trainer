@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import { calcPoints } from "../App.vue";
+import { createBoolArray } from "../other/bool-array";
 import DialogFeedback from "./dialog-feedback.vue";
 import ExerciseProgress from "./exercise-progress.vue";
 import JavaApp from "./java-app.vue";
@@ -32,7 +34,7 @@ export default {
       return this.exerciseData.data.title;
     },
     testCaseCount(){
-      return this.exerciseData.count;
+      return this.exerciseData.data.check.testcases.length;
     },
     hasUserData(){
       return this.exerciseData.userProject!==undefined;
@@ -85,7 +87,8 @@ export default {
     },
     reset(){
       delete this.exerciseData.userProject;
-      this.exerciseData.index=0;
+      this.exerciseData.correct=createBoolArray(this.exerciseData.data.check.testcases.length);
+      calcPoints(this.exerciseData);
       this.$root.save();
     }
   }

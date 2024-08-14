@@ -6,7 +6,7 @@
     <img alt="logo" src="/favicon.svg" style="height: 2rem" ><Button icon="pi pi-bars" text @click="$emit('show-exercises')"/>
   </template>
   <template #end>
-    <Button :label="$root.version" text rounded/>
+    <Button :label="$root.version" @click="$emit('click-version')" text rounded/>
   </template>
   </Menubar>
 </template>
@@ -20,7 +20,7 @@ export default{
     Menubar
   },
   emits: [
-    "show-exercises","show-about","show-settings"
+    "show-exercises","show-about","show-settings","click-version"
   ],
   computed: {
     items(){

@@ -1,6 +1,6 @@
 <template>
   <span style="flex: 1; margin-left: 0.5rem; margin-right: 0.5rem">
-    <ProgressBar :value="percent">{{ exerciseData?.index }}/{{ testCaseCount }}</ProgressBar>
+    <ProgressBar :value="percent">{{ Math.floor(percent) }}%</ProgressBar>
   </span>
 </template>
 
@@ -16,11 +16,8 @@ export default{
   computed: {
     percent(){
       if(!this.exerciseData) return 0;
-      return this.exerciseData.index/this.testCaseCount*100;
-    },
-    testCaseCount(){
-      return this.exerciseData.count;
-    },
+      return this.exerciseData.points/this.exerciseData.total*100;
+    }
   }
 }
 </script>

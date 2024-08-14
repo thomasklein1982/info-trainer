@@ -6,15 +6,10 @@
       </template>
     </Card>
     
-    <template v-if="exerciseData.info">
       <p>Um zu prüfen, ob deine Programmierung stimmt, werden verschiedene Testfälle durchgespielt. <template v-if="completed">Alle Testfälle waren erfolgreich:</template><template v-else>Hier siehst du, welche Testfälle erfolgreich waren und welche nicht:</template></p>
-      <Message :icon="'pi pi-'+(i<exerciseData.index?'check':'times')" :severity="(i<exerciseData.index?'success':'error')" v-for="(t,i) in exerciseData.info">
-        {{ t }}
+      <Message :icon="'pi pi-'+(completed || exerciseData.correct[i]?'check':'times')" :severity="(completed || exerciseData.correct[i]?'success':'error')" v-for="(t,i) in exerciseData.data.check.testcases">
+        {{ t.info }} [{{ (100*(t.points? t.points:1)/exerciseData.total).toFixed(2) }} %]
       </Message>
-    </template>
-    <template v-else>
-      Löse die Aufgabe und klicke auf Ausführen, um deinen Code zu testen.
-    </template>
   </Dialog>
 </template>
 
@@ -31,7 +26,7 @@ export default{
   },
   computed: {
     completed(){
-      return this.exerciseData.count===this.exerciseData.index;
+      return this.exerciseData.correct===true;
     },
     header(){
       if(this.completed){

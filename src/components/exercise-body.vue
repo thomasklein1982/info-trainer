@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import { calcPoints } from "../App.vue";
+import { isCompletelyTrue } from "../other/bool-array";
 import DialogFeedback from "./dialog-feedback.vue";
 import ExerciseProgress from "./exercise-progress.vue";
 import JavaApp from "./java-app.vue";
@@ -38,7 +40,7 @@ export default {
       return this.exercise.title;
     },
     testCaseCount(){
-      return this.exerciseData.count;
+      return this.exerciseData.data.check.testcases.length;
     },
     hasUserData(){
       return this.exerciseData.userProject!==undefined;
@@ -68,38 +70,14 @@ export default {
     };
   },
   methods: {
-    confirmReset(event) {
-      this.$confirm.require({
-        target: event.currentTarget,
-        message: 'Soll die Aufgabe wirklich zurückgesetzt werden?',
-        icon: 'pi pi-exclamation-triangle',
-        rejectProps: {
-            label: 'Abbrechen',
-            severity: 'secondary',
-            outlined: true
-        },
-        acceptProps: {
-            label: 'Zurücksetzen'
-        },
-        accept: () => {
-          this.reset();
-            //this.$toast.add({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
-        },
-        reject: () => {
-            //this.$toast.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
-        }
-      });
-    },
-    reset(){
-      delete this.exerciseData.userProject;
-      this.exerciseData.index=0;
-      this.$root.save();
-    },
     exerciseSubmitted(data){
       //this.exerciseData.count=data.testCaseCount;
-      this.exerciseData.index=data.testCaseIndex;
-      this.exerciseData.info=data.testCaseInfo;
-      console.log(data);
+      if(isCompletelyTrue(data.resArray)){
+        this.exerciseData.correct=true;
+      }else{
+        this.exerciseData.correct=data.resArray;
+      }
+      calcPoints(this.exerciseData);
       let clazzes=[];
       for(let i=0;i<data.project.clazzes.length;i++){
         let c=data.project.clazzes[i];

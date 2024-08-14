@@ -27,7 +27,7 @@ export default defineConfig({
         name: 'info-trainer',
         short_name: 'info-trainer',
         description: 'Lerne Informatik und das Programmieren mit Java.',
-        theme_color: '#ffffff',
+        theme_color: '#121212',
         display: 'standalone',
         icons: [
           {
@@ -52,6 +52,7 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2,eot,ttf,woff}'],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
+        maximumFileSizeToCacheInBytes: 3000000,
       },
 
       devOptions: {

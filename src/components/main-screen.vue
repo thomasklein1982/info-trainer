@@ -2,6 +2,7 @@
   <div class="screen" style="display: flex; flex-direction: column">
     <AppMenubar
       @show-exercises="$refs.exerciseDrawer.show()"
+      @click-version="updateVersion()"
     />
     <div style="flex: 1; overflow: auto" ref="content">
       <ExerciseDrawer 
@@ -20,7 +21,8 @@ import AppMenubar from './app-menubar.vue';
 import Home from './home.vue';
 import ExerciseDrawer from './exercise-drawer.vue';
 import ExercisePath from './exercise-path.vue';
-import ExercisePathData from '../functions/exercisePathDefinitions';
+import ExercisePathData from '../other/exercisePathDefinitions';
+import { updateServiceWorker } from '../main';
 
 export default{
   components: {
@@ -39,6 +41,9 @@ export default{
     openExercisePath(path){
       this.currentPath=path;
       //this.navigate(pathInfos.name);
+    },
+    updateVersion(){
+      updateServiceWorker(true);
     },
     navigate(component,dontPush){
       //let comp=await import(path+component);

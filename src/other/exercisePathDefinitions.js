@@ -3,7 +3,7 @@ let Java={
   paths: [
     {
       label: "Basics",
-      exercises: ["hallo-welt"]
+      exercises: ["hallo-welt","ascii-art","taschenrechner"]
     },
     {
       label: "Arrays",
@@ -27,7 +27,7 @@ let Html={
 }
 
 let paths=[
-  Html, Java
+  Java
 ];
 
 for(let i=0;i<paths.length;i++){

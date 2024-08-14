@@ -53,6 +53,8 @@ const { needRefresh, updateServiceWorker } = useRegisterSW({
   },
 })
 
+window.updateServiceWorker=updateServiceWorker;
+
 const title = computed(() => {
   
     

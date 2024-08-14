@@ -1,6 +1,6 @@
 <template>
   <span ref="root">
-    <pre v-if="!inline" :class="classes"><code :class="language"><slot></slot></code></pre>
+    <pre v-if="!inline" :class="classes" style="max-width: 70vw"><code :class="language"><slot></slot></code></pre>
     <code v-else :class="language"><slot></slot></code>
   </span>
 </template>

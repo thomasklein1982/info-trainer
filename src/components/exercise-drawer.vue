@@ -17,7 +17,7 @@
 <script>
 import Drawer from 'primevue/drawer';
 import PathMenuItem from './path-menu-item.vue';
-import ExercisePathData from '../functions/exercisePathDefinitions';
+import ExercisePathData from '../other/exercisePathDefinitions';
 
 let categories=[];
 for(let i=0;i<ExercisePathData.length;i++){

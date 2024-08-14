@@ -1,36 +1,54 @@
 
 <template>
   <MainScreen/>
-  <PWABadge />
+  
 </template>
 
 <script>
-const version="0.0.2";
+const version="0.0.6";
 
 import MainScreen from './components/main-screen.vue';
-import PWABadge from './components/PWABadge.vue'
-import { storage } from './functions/storage';
+//import PWABadge from './components/PWABadge.vue'
+import { storage } from './other/storage';
 import * as exercises from './components/exercises/index';
+import { boolArrayToInt, createBoolArray, intToBoolArray } from './other/bool-array';
 const STORAGE_DATA="INFO-TRAINER-USER-DATA";
-
-console.log(exercises);
 
 let exerciseDataCollection={};
 for(let a in exercises){
   let data=exercises[a].data;
   console.log(a,data);
+  
+  let testcases=data.check.testcases;
   let ed={
-    index: 0,
-    data: data,
-    count: data.check.testcases().length
+    correct: createBoolArray(testcases.length),
+    data: data
   };
+  let p=0;
+  for(let i=0;i<testcases.length;i++){
+    let tc=testcases[i];
+    p+=tc.points? tc.points: 1;
+  }
+  ed.total=p;
   exerciseDataCollection[data.id]=ed;
 }
-console.log(exerciseDataCollection);
+
+export function calcPoints(exerciseData){
+  let p=0;
+  let testcases=exerciseData.data.check.testcases;
+  for(let i=0;i<testcases.length;i++){
+    let tc=testcases[i];
+    if(exerciseData.correct===true || exerciseData.correct[i]){
+      p+=tc.points? tc.points: 1;
+    }
+  }
+  exerciseData.points=p;
+}
 
 export default{
   components: {
-    PWABadge,MainScreen
+    MainScreen,
+    //PWABadge,
   },
   data() {
       return {
@@ -55,7 +73,7 @@ export default{
       for(let id in this.exerciseDataCollection){
         let ed=this.exerciseDataCollection[id];
         let o={
-          index: ed.index
+          correct: ed.correct===true? true: boolArrayToInt(ed.correct)
         };
         userData[id]=o;
         if(ed.userProject){
@@ -68,9 +86,17 @@ export default{
       for(let id in userData){
         let o=userData[id];
         let ed=this.getExerciseData(id);//exerciseDataCollection[a];
-        ed.index=0;
+        ed.correct=0;
         if(ed){
-          ed.index=o.index;
+          if(o.correct===true){
+            ed.correct=true;
+          }else{
+            let array=intToBoolArray(o.correct);
+            if(array.length===ed.data.check.testcases.length){
+              ed.correct=array;
+            }
+          }
+          calcPoints(ed);
           if(o.project){
             ed.userProject=o.project;
           }else{

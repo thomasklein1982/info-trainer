@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import stringifyTestcases from '../other/stringifyTestcases';
+
 
 export default{
   props: {
@@ -21,33 +23,45 @@ export default{
       }else{
         src="https://thomaskl.uber.space/Apps/java-app/";
       }
-      src+="#exercise-mode;hard";
+      src+="#exercise-mode";
       console.log(src);
       return src;
     },
-    realProject(){
-      if(!this.check) return this.project;
-      let project=JSON.parse(JSON.stringify(this.project));
+    extraSourceCode(){
+      if(!this.check) return "";
       let initFunc,testcases,applyTestFunc;
       if(this.check.init){
         initFunc=this.check.init.toString();
       }else{
         initFunc="null";
       }
-      testcases="("+this.check.testcases.toString()+")()";
+      testcases=stringifyTestcases(this.check.testcases);
       applyTestFunc=this.check.test.toString();
-      let src=`class $Aufgabe{
-        public static void main(String args[]){
-        /*JAVASCRIPT-CODE
-          let init=await (${initFunc})();
-          $Exercise.checkTestCases(init,${testcases},${applyTestFunc});
-        */
-        }
-      }`;
-      project.clazzes.push({
-        isHidden: true,
-        src: src
-      });
+      let src=`let init=await (${initFunc})();
+            $Exercise.checkTestCases(init,${testcases},${applyTestFunc});`;
+      return src;
+    },
+    checkerCode(){
+      if(!this.check) return null;
+      return this.extraSourceCode;
+    },
+    realProject(){
+      return this.project;
+      if(!this.check) return this.project;
+      let project=JSON.parse(JSON.stringify(this.project));
+      if(!this.check.checker){
+        let src=`class $Aufgabe{
+          public static void main(String args[]){
+          /*JAVASCRIPT-CODE
+            ${this.extraSourceCode}
+          */
+          }
+        }`;
+        project.clazzes.push({
+          isHidden: true,
+          src: src
+        });
+      }
       return project;
     }
   },
@@ -73,7 +87,7 @@ export default{
         console.log("submitted",data);
         this.$emit("exercise-submit",data);
       }else if(type==='LOADING-COMPLETE'){
-        this.sendMessage("setup-exercise",this.realProject);
+        this.sendMessage("setup-exercise",{project: this.realProject, checker: this.checkerCode});
       }
     },
     sendMessage(type,data){

@@ -28,19 +28,12 @@ export default{
     "exercise-submit","show-feedback","reset-exercise"
   ],
   computed: {
-    percent(){
-      if(!this.exerciseData) return 0;
-      return this.exerciseData.index/this.testCaseCount*100;
-    },
     hasUserData(){
       return this.exerciseData.userProject!==undefined;
     },
     completed(){
       if(!this.exerciseData) return false;
-      return this.exerciseData.index===this.testCaseCount;
-    },
-    testCaseCount(){
-      return this.exerciseData.count;
+      return this.exerciseData.correct===true;
     },
   },
   props: {

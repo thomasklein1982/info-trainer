@@ -15,23 +15,20 @@ export const data={
         a: await $new(Aufgabe)
       }
     },
-    testcases: ()=>{
-      return [
+    testcases: [
         {
           info: "Der Text wird angezeigt."
         }
-      ]
-    },
+      ],
     test: async (tc,init)=>{
       await System.console().clear();
       await init.a.halloWelt();
-      let r=$Exercise.getConsoleContent();
-      let t="Hallo Welt!";
+      let r=$Exercise.getConsoleContent().join("\n");
+      let t="Hallo Welt!\n";
       return (r===t);
     }
   },
   project: {
-    name: "Mehrfach-Ausgabe",
     clazzes: [
 `class Aufgabe{
   void halloWelt(){
