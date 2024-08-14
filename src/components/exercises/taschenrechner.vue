@@ -114,7 +114,8 @@ export const data={
             f: (a,b)=>{return a+b}
           }
         },
-        info: "Addition funktioniert."
+        info: "Addition funktioniert.",
+        points: 3,
       },
       {
         data: ()=>{
@@ -124,7 +125,8 @@ export const data={
             f: (a,b)=>{return a-b}
           }
         },
-        info: "Subtraktion funktioniert."
+        info: "Subtraktion funktioniert.",
+        points: 3,
       },
       {
         data: ()=>{
@@ -134,7 +136,8 @@ export const data={
             f: (a,b)=>{return a*b}
           }
         },
-        info: "Multiplikation funktioniert."
+        info: "Multiplikation funktioniert.",
+        points: 3,
       },
       {
         data: ()=>{
@@ -144,7 +147,8 @@ export const data={
             f: (a,b)=>{return a/b}
           }
         },
-        info: "Division funktioniert."
+        info: "Division funktioniert.",
+        points: 3,
       },
     ],
     test: async (tc,init)=>{
@@ -154,6 +158,7 @@ export const data={
         for(let a in init){
           if(!init[a]) return false;
         }
+        $Exercise.setUIBlocked(true);
         let a=Math.random()*1000;
         let b=Math.random()*1000;
         init.tf1.setValue(a);
@@ -166,6 +171,7 @@ export const data={
         await App.sleep(500);
         let ist=init.labelResult.getValue();
         let soll=tc.f(a,b);
+        $Exercise.setUIBlocked(false);
         return (Math.abs(ist-soll)<0.0000001);
       }
       return false;
