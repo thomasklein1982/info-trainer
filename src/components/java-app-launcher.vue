@@ -3,7 +3,7 @@
     <Button @click="openDialog" label="JavaApp starten"/>
   </div>
   <Dialog ref="dialog" :header="project?.name" v-model:visible="show" maximizable>
-    <template #maximizeicon><Button :class="newInfos? 'shaking':''" rounded @click.stop="showFeedback" text size="small" :icon="'pi pi-'+(completed? 'check':'info')"/></template>
+    <template #maximizeicon><Button :class="newInfos? 'shaking':''" rounded @click.stop="showFeedback" text size="large" style="width:200px;height:200px" :icon="'pi pi-'+(completed? 'check':'info')"/></template>
     <template #header>
       <div style="display: flex; width: 100%; align-items: center;"><ExerciseProgress :exercise-data="exerciseData"/></div>
     </template>

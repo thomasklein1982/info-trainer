@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import App from '../../App.vue';
+
 
 
 export const data={
@@ -26,8 +28,9 @@ export const data={
         buttonMinus: $Exercise.getComponent("JButton","-"),
         buttonMal: $Exercise.getComponent("JButton","*"),
         buttonGeteilt: $Exercise.getComponent("JButton",":"),
-        labelResult: $Exercise.getComponent("JLabel",""),
-        
+        labelResult: $Exercise.getComponent("JLabel","Ergebnis"),
+        tf1: $Exercise.getComponent("JTextField","Zahl 1"),
+        tf2: $Exercise.getComponent("JTextField","Zahl 2"),
       };
     },
     testcases: [
@@ -76,10 +79,94 @@ export const data={
         },
         info: "Es gibt einen JButton, in dem ':' steht."
       },
+      {
+        data: ()=>{
+          return {
+            id: "labelResult",
+            type: "exists"
+          }
+        },
+        info: "Es gibt ein JLabel, in dem 'Ergebnis' steht."
+      },
+      {
+        data: ()=>{
+          return {
+            id: "tf1",
+            type: "exists"
+          }
+        },
+        info: "Es gibt ein JTextField mit dem Platzhaltertext 'Zahl 1'."
+      },
+      {
+        data: ()=>{
+          return {
+            id: "tf2",
+            type: "exists"
+          }
+        },
+        info: "Es gibt ein JTextField mit dem Platzhaltertext 'Zahl 2'."
+      },
+      {
+        data: ()=>{
+          return {
+            id: "Plus",
+            type: "calc",
+            f: (a,b)=>{return a+b}
+          }
+        },
+        info: "Addition funktioniert."
+      },
+      {
+        data: ()=>{
+          return {
+            id: "Minus",
+            type: "calc",
+            f: (a,b)=>{return a-b}
+          }
+        },
+        info: "Subtraktion funktioniert."
+      },
+      {
+        data: ()=>{
+          return {
+            id: "Mal",
+            type: "calc",
+            f: (a,b)=>{return a*b}
+          }
+        },
+        info: "Multiplikation funktioniert."
+      },
+      {
+        data: ()=>{
+          return {
+            id: "Geteilt",
+            type: "calc",
+            f: (a,b)=>{return a/b}
+          }
+        },
+        info: "Division funktioniert."
+      },
     ],
     test: async (tc,init)=>{
       if(tc.type==="exists"){
         return (init[tc.id]!==null);
+      }else if(tc.type==="calc"){
+        for(let a in init){
+          if(!init[a]) return false;
+        }
+        let a=Math.random()*1000;
+        let b=Math.random()*1000;
+        init.tf1.setValue(a);
+        await App.sleep(500);
+        init.tf2.setValue(b);
+        await App.sleep(500);
+        let but=init["button"+tc.id];
+        console.log(but);
+        but.$el.click();
+        await App.sleep(500);
+        let ist=init.labelResult.getValue();
+        let soll=tc.f(a,b);
+        return (Math.abs(ist-soll)<0.0000001);
       }
       return false;
     },
