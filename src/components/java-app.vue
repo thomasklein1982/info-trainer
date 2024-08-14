@@ -5,12 +5,15 @@
 </template>
 
 <script>
+import { js_beautify } from 'js-beautify';
 import stringifyTestcases from '../other/stringifyTestcases';
+import { prettify } from '../other/prettify';
 
 
 export default{
   props: {
     project: Object,
+    userProject: Object,
     options: Object,
     check: Object
   },
@@ -24,6 +27,8 @@ export default{
         src="https://thomaskl.uber.space/Apps/java-app/";
       }
       src+="#exercise-mode";
+      let diff=this.$root.settings.javaAppDifficulty.toLowerCase();
+      src+=";"+diff;
       console.log(src);
       return src;
     },
@@ -46,21 +51,37 @@ export default{
       return this.extraSourceCode;
     },
     realProject(){
-      return this.project;
-      if(!this.check) return this.project;
+      //return this.project;
+      //if(!this.check) return this.project;
+      if(this.userProject) return this.userProject;
       let project=JSON.parse(JSON.stringify(this.project));
-      if(!this.check.checker){
-        let src=`class $Aufgabe{
-          public static void main(String args[]){
-          /*JAVASCRIPT-CODE
-            ${this.extraSourceCode}
-          */
+      let diff=this.$root.settings.javaAppDifficulty.toLowerCase();
+      for(let i=0;i<project.clazzes.length;i++){
+        let c=project.clazzes[i];
+        if(c.substring) continue;
+        let src=c.src;
+        if(diff!=="hard"){
+          if(c.onStart!==undefined){
+            src+=`\n$void onStart(){\n${c.onStart}}\n`
           }
-        }`;
-        project.clazzes.push({
-          isHidden: true,
-          src: src
-        });
+        }
+        if(diff==="easy"){
+          src=src.replace(/\$void /g,"");
+        }else{
+          src=src.replace(/\$void /g,"void ");
+          if(c.main){
+            src+="\npublic static void main(String[] args){\n";
+            if(diff==="normal"){
+              src+="new "+c.name+"();";
+            }else{
+              src+=c.main;
+            }
+            src+="\n}";
+          }
+          let pre="class "+c.name;
+          src=pre+"{\n"+src+"\n}"
+        }
+        c.src=prettify(src);
       }
       return project;
     }

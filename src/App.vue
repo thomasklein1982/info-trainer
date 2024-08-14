@@ -1,7 +1,8 @@
 
 <template>
-  <MainScreen/>
-  
+  <MainScreen 
+    :settings="settings"
+  />
 </template>
 
 <script>
@@ -12,7 +13,9 @@ import MainScreen from './components/main-screen.vue';
 import { storage } from './other/storage';
 import * as exercises from './components/exercises/index';
 import { boolArrayToInt, createBoolArray, intToBoolArray } from './other/bool-array';
+import { toRaw } from 'vue';
 const STORAGE_DATA="INFO-TRAINER-USER-DATA";
+const STORAGE_SETTINGS="INFO-TRAINER-SETTINGS";
 
 let exerciseDataCollection={};
 for(let a in exercises){
@@ -53,7 +56,10 @@ export default{
   data() {
       return {
         version: version,
-        exerciseDataCollection: exerciseDataCollection
+        exerciseDataCollection: exerciseDataCollection,
+        settings: {
+          javaAppDifficulty: "Hard"
+        }
       };
   },
   async mounted(){
@@ -72,6 +78,7 @@ export default{
       let userData={};
       for(let id in this.exerciseDataCollection){
         let ed=this.exerciseDataCollection[id];
+        if(!ed.project && !ed.correct) continue;
         let o={
           correct: ed.correct===true? true: boolArrayToInt(ed.correct)
         };
@@ -106,12 +113,26 @@ export default{
       }
     },
     async load(){
+      console.log("load");
+      let settings=await storage.getItem(STORAGE_SETTINGS);
+      if(settings){
+        for(let a in this.settings){
+          if(settings[a]!==undefined){
+            this.settings[a]=settings[a];
+          }
+        }
+      }
       let data=await storage.getItem(STORAGE_DATA);
       this.restoreUserDataObject(data);
     },
     save(){
       console.log("save");
       storage.setItem(STORAGE_DATA,this.createUserDataObject());
+    },
+    saveSettings(){
+      storage.setItem(STORAGE_SETTINGS,toRaw(this.settings)).catch((err)=>{
+        console.error(err);
+      });
     }
   }
 }

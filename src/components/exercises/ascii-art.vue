@@ -18,8 +18,9 @@ export const data={
   title: "ASCII-Art",
   check: {
     init: async ()=>{
+      $Exercise.deleteMain();
       return {
-        a: await $new(Aufgabe)
+        a: await $new(ASCIIArt)
       }
     },
     testcases: [
@@ -64,26 +65,23 @@ export const data={
       await System.console().clear();
       await init.a.zeichnen();
       let ist=$Exercise.getConsoleContent()[tc.line];
-      let soll=tc.text;
-      let image=`
- () ()
- (-.-)
-<{   }>
-(") (")
-`;
       
+      let soll=tc.text;
       return (soll===ist);
     }
   },
   project: {
     name: "ASCIIArt",
     clazzes: [
-`class Aufgabe{
-  void zeichnen(){
-    //hierhin kommt der Code:
-    
-  }
-}`
+      {
+        name: "Aufgabe",
+        src: `$void zeichnen(){
+        //hierhin kommt der Code:
+        
+        }`,
+        main: `Aufgabe a = new ASCIIArt();\na.zeichnen();`,
+        onStart: `zeichnen();`
+      }
     ]
   }
 };

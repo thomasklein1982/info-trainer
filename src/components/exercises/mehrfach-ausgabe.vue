@@ -14,6 +14,7 @@ export const data={
   title: "Mehrfache Ausgabe",
   check: {
     init: async ()=>{
+      $Exercise.deleteMain();
       return {
         a: await $new(MehrfachAusgabe)
       }
@@ -37,13 +38,15 @@ export const data={
   },
   project: {
     name: "Mehrfach-Ausgabe",
-    clazzes: [
-`class MehrfachAusgabe{
-  void mehrfachAusgabe(){
-    //hierhin kommt der Code
+    clazzes: [{
+      name: "Aufgabe",
+      src: `$void mehrfachAusgabe(){
+        ///hierhin kommt der Code:
 
-  }
-}`
+      }`,
+      main: `Aufgabe a = new Aufgabe();\na.mehrfachAusgabe();`,
+      onStart: `mehrfachAusgabe();`
+    }
     ]
   }
 }

@@ -6,7 +6,11 @@
     <img alt="logo" src="/favicon.svg" style="height: 2rem" ><Button icon="pi pi-bars" text @click="$emit('show-exercises')"/>
   </template>
   <template #end>
-    <Button :label="$root.version" @click="$emit('click-version')" text rounded/>
+    <Button size="small" text rounded @click="$emit('settings')">
+      <Button class="nopointer" size="small" :label="settings.javaAppDifficulty" icon="pi pi-gauge"  text/>
+      <Button class="nopointer" size="small" icon="pi pi-tag" :label="$root.version" text rounded/>
+    </Button>
+    
   </template>
   </Menubar>
 </template>
@@ -20,8 +24,11 @@ export default{
     Menubar
   },
   emits: [
-    "show-exercises","show-about","show-settings","click-version"
+    "show-exercises","show-about","settings"
   ],
+  props: {
+    settings: Object
+  },
   computed: {
     items(){
       return [

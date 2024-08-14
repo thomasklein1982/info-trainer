@@ -11,6 +11,7 @@ export const data={
   title: "Hallo Welt!",
   check: {
     init: async ()=>{
+      $Exercise.deleteMain();
       return {
         a: await $new(Aufgabe)
       }
@@ -30,12 +31,15 @@ export const data={
   },
   project: {
     clazzes: [
-`class Aufgabe{
-  void halloWelt(){
-    //hierhin kommt der Code
-    
-  }
-}`
+      {
+        name: "Aufgabe",
+        src: `$void halloWelt(){
+          //hierhin kommt der Code
+      
+        }`,
+        main: `Aufgabe a = new Aufgabe();\na.halloWelt();`,
+        onStart: `halloWelt();`
+      }
     ]
   }
 };

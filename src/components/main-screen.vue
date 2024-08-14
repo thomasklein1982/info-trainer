@@ -1,8 +1,10 @@
 <template>
   <div class="screen" style="display: flex; flex-direction: column">
     <AppMenubar
+      :settings="settings"
       @show-exercises="$refs.exerciseDrawer.show()"
-      @click-version="updateVersion()"
+      @settings="$refs.dialogSettings.open()"
+      @submit="$emit('settings-changed')"
     />
     <div style="flex: 1; overflow: auto" ref="content">
       <ExerciseDrawer 
@@ -12,6 +14,10 @@
       <ExercisePath :path="currentPath"/>
       
     </div>
+    <DialogSettings
+      ref="dialogSettings"
+      :settings="settings"
+    />
   </div>
 </template>
 
@@ -23,10 +29,14 @@ import ExerciseDrawer from './exercise-drawer.vue';
 import ExercisePath from './exercise-path.vue';
 import ExercisePathData from '../other/exercisePathDefinitions';
 import { updateServiceWorker } from '../main';
+import DialogSettings from './dialog-settings.vue';
 
 export default{
   components: {
-    AppMenubar, Home, ExerciseDrawer, ExercisePath
+    AppMenubar, Home, ExerciseDrawer, ExercisePath, DialogSettings
+  },
+  props: {
+    settings: Object
   },
   data() {
     return {

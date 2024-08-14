@@ -21,37 +21,78 @@ export const data={
   check: {
     init: async ()=>{
       return {
-        a: await $new(Taschenrechner)
-      }
+        labelTR: $Exercise.getComponent("JLabel","Taschenrechner"),
+        buttonPlus: $Exercise.getComponent("JButton","+"),
+        buttonMinus: $Exercise.getComponent("JButton","-"),
+        buttonMal: $Exercise.getComponent("JButton","*"),
+        buttonGeteilt: $Exercise.getComponent("JButton",":"),
+        labelResult: $Exercise.getComponent("JLabel",""),
+        
+      };
     },
     testcases: [
       {
         data: ()=>{
           return {
-            id: "Label TR",
-            text: " () ()",
+            id: "labelTR",
+            type: "exists"
           }
         },
-        info: "Es gibt ein Label, in dem 'Taschenrechner' steht."
+        info: "Es gibt ein JLabel, in dem 'Taschenrechner' steht."
       },
-      
+      {
+        data: ()=>{
+          return {
+            id: "buttonPlus",
+            type: "exists"
+          }
+        },
+        info: "Es gibt einen JButton, in dem '+' steht."
+      },
+      {
+        data: ()=>{
+          return {
+            id: "buttonMinus",
+            type: "exists"
+          }
+        },
+        info: "Es gibt einen JButton, in dem '-' steht."
+      },
+      {
+        data: ()=>{
+          return {
+            id: "buttonMal",
+            type: "exists"
+          }
+        },
+        info: "Es gibt einen JButton, in dem '*' steht."
+      },
+      {
+        data: ()=>{
+          return {
+            id: "buttonGeteilt",
+            type: "exists"
+          }
+        },
+        info: "Es gibt einen JButton, in dem ':' steht."
+      },
     ],
     test: async (tc,init)=>{
-      if(tc.id==="Label TR"){
-        let root=$Exercise.getUIRoot();
-        let labels=root.querySelectorAll(".jlabel");
-        console.log(labels);
+      if(tc.type==="exists"){
+        return (init[tc.id]!==null);
       }
       return false;
     },
-    checker: true
   },
   project: {
     name: "Taschenrechner",
     clazzes: [
-`class Taschenrechner{
-  
-}`
+      {
+        name: "Taschenrechner",
+        src: ``,
+        main: `new Taschenrechner();`,
+        onStart: ` `
+      }
     ]
   }
 };

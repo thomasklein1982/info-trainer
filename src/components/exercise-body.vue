@@ -4,6 +4,7 @@
     <template v-if="project">
       <JavaAppLauncher
         :project="project"
+        :user-project="userProject"
         :check="exercise.check"
         :exercise-data="exerciseData"
         @exercise-submit="exerciseSubmitted"
@@ -46,10 +47,13 @@ export default {
       return this.exerciseData.userProject!==undefined;
     },
     project(){
+      return JSON.parse(JSON.stringify(this.exercise.project));
+    },
+    userProject(){
       if(this.exerciseData.userProject){
         return this.exerciseData.userProject;
       }else{
-        return this.exercise.project;
+        return null;
       }
     },
     id(){

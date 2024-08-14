@@ -7,6 +7,7 @@ import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import Card from 'primevue/card';
 import Dialog from 'primevue/dialog';
+import Select from 'primevue/select';
 import Code from './components/code.vue';
 import JavaApp from './components/java-app.vue';
 import JavaAppLauncher from "./components/java-app-launcher.vue";
@@ -52,6 +53,7 @@ app.component('Button', Button);
 app.component('InputText', InputText);
 app.component('Card',Card);
 app.component('Dialog',Dialog);
+app.component('Select',Select);
 app.component('Code',Code);
 app.component('ConsoleOutput',ConsoleOutput)
 app.component("ExerciseBody",ExerciseBody);

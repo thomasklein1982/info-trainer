@@ -9,6 +9,7 @@
     </template>
     <JavaApp
       :project="project"
+      :user-project="userProject"
       :options="options"
       :check="check"
       @exercise-submit="exerciseSubmitted"
@@ -38,6 +39,7 @@ export default{
   },
   props: {
     project: Object,
+    userProject: Object,
     options: Object,
     check: Object,
     exerciseData: Object

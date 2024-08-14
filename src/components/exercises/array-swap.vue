@@ -12,6 +12,7 @@ export const data={
   title: "Array-Tausch",
   check: {
     init: async ()=>{
+      $Exercise.deleteMain();
       return {a: await $new(ArrayTausch)};
     },
     test: async (tc,init)=>{
@@ -94,12 +95,15 @@ export const data={
   project: {
     name: "Array-Tausch",
     clazzes: [
-`class ArrayTausch{
-  void vertauschen(int[] array, int index1, int index2){
-    //hierhin kommt der Code
+      {
+        name: "Aufgabe",
+        src: `$void vertauschen(int[] array, int index1, int index2){
+  //hierhin kommt der Code
 
-  }
 }`,
+        main: `aufgabe a = new Aufgabe();\na.vertauschen(new int[]{5,3,8,1,6,9,11},2,5);`,
+        onStart: `vertauschen(new int[]{5,3,8,1,6,9,11},2,5);`
+      }
     ]
   }
 }
