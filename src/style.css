@@ -51,3 +51,17 @@ body{
   0% {transform: scale(1);}
   50% {transform: scale(0.8);}
 }
+
+@media screen and (min-width: 550px) {
+  .float-right{
+    float: right;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .float-right{
+    display: grid;
+    place-content: center;
+    width: 100%;
+  }
+}

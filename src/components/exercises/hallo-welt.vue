@@ -18,14 +18,14 @@ export const data={
     },
     testcases: [
         {
-          info: "Der Text wird angezeigt."
+          info: "Der Text 'Hallo Welt!' wird angezeigt."
         }
       ],
     test: async (tc,init)=>{
       await System.console().clear();
       await init.a.halloWelt();
-      let r=$Exercise.getConsoleContent().join("\n");
-      let t="Hallo Welt!\n";
+      let r=$Exercise.getConsoleContent().join("\n").trim();
+      let t="Hallo Welt!";
       return (r===t);
     }
   },

@@ -65,7 +65,6 @@ export const data={
       await System.console().clear();
       await init.a.zeichnen();
       let ist=$Exercise.getConsoleContent()[tc.line];
-      
       let soll=tc.text;
       return (soll===ist);
     }

@@ -23,6 +23,12 @@ import ExerciseBody from './components/exercise-body.vue';
 import ConsoleOutput from './components/console-output.vue';
 import { boolArrayToInt, intToBoolArray } from './other/bool-array';
 import { registerSW } from 'virtual:pwa-register';
+import AppPreview from './components/app-preview.vue';
+import JFrame from './components/j-frame.vue';
+import JLabel from './components/j-label.vue';
+import JButton from './components/j-button.vue';
+import JPanel from './components/j-panel.vue';
+import JTextField from './components/j-text-field.vue';
 
 const updateSW=registerSW({
   onNeedRefresh(){
@@ -58,10 +64,15 @@ app.component('Code',Code);
 app.component('ConsoleOutput',ConsoleOutput)
 app.component("ExerciseBody",ExerciseBody);
 app.component("ExercisePath",ExercisePath);
+app.component("AppPreview",AppPreview);
 app.component("JavaApp",JavaApp);
 app.component("JavaAppLauncher",JavaAppLauncher);
 app.component("ConfirmPopup",ConfirmPopup);
-
+app.component("JFrame",JFrame);
+app.component("JButton", JButton);
+app.component("JLabel",JLabel);
+app.component("JTextField",JTextField);
+app.component("JPanel",JPanel);
 
 for(let a in exercises){
   let m=exercises[a];

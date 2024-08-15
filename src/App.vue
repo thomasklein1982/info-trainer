@@ -6,7 +6,6 @@
 </template>
 
 <script>
-const version="0.0.6";
 
 import MainScreen from './components/main-screen.vue';
 //import PWABadge from './components/PWABadge.vue'
@@ -14,6 +13,7 @@ import { storage } from './other/storage';
 import * as exercises from './components/exercises/index';
 import { boolArrayToInt, createBoolArray, intToBoolArray } from './other/bool-array';
 import { toRaw } from 'vue';
+import packageJson from '../package.json';
 const STORAGE_DATA="INFO-TRAINER-USER-DATA";
 const STORAGE_SETTINGS="INFO-TRAINER-SETTINGS";
 
@@ -55,7 +55,7 @@ export default{
   },
   data() {
       return {
-        version: version,
+        version: packageJson.version,
         exerciseDataCollection: exerciseDataCollection,
         settings: {
           javaAppDifficulty: "Hard"

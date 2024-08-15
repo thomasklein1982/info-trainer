@@ -1,14 +1,32 @@
 <template>
   <ExerciseBody :exercise="$data">
       Es soll ein einfacher grafischer Taschenrechner erstellt werden, mit dem man zwei Zahlen addieren, subtrahieren, multiplizieren und dividieren kann.
+      <div class="float-right">
+        <AppPreview >
+          <JFrame layout="1">
+            <JLabel>Taschenrechner</JLabel>
+            <JPanel layout="2">
+              <JTextField placeholder="Zahl 1" type="number"/>
+              <JTextField placeholder="Zahl 2" type="number"/>
+            </JPanel>
+            <JPanel layout="4">
+              <JButton>+</JButton>
+              <JButton>-</JButton>
+              <JButton>*</JButton>
+              <JButton>:</JButton>
+            </JPanel>
+            <JLabel>Ergebnis</JLabel>
+          </JFrame>
+        </AppPreview>
+      </div>
       <p>Die UI soll bestehen aus:</p>
       <ul>
         <li>Einem JLabel, in dem "Taschenrechner" steht.</li>
-        <li>Zwei Textfeldern namens zahl1 und zahl2, in die der User jeweils eine Zahl eingeben kann.</li>
-        <li>Einem Button für jede Grundrechenart mit den Aufschriften "+", "-", "*" und ":" und den Namen plus, minus, mal und geteilt.</li>
-        <li>Einem Label namens ausgabe, das zu Beginn leer ist.</li>
+        <li>Zwei Textfeldern mit den Platzhalter-Texten "Zahl 1" und "Zahl 2".</li>
+        <li>Einem Button für jede Grundrechenart mit den Aufschriften "+", "-", "*" und ":".</li>
+        <li>Einem Label, in dem "Ergebnis" steht.</li>
       </ul>
-      <p>Sobald einer der Buttons geklickt wird, sollen die beiden Zahlen aus den Textfeldern miteinander verrechnet werden und das Ergebnis in dem Label ausgabe angezeigt werden.</p>
+      <p>Sobald einer der Buttons angeklickt wird, sollen die beiden Zahlen aus den Textfeldern miteinander verrechnet werden und das Ergebnis in dem Label "Ergebnis" angezeigt werden.</p>
   </ExerciseBody>
 </template>
 
