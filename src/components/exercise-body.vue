@@ -76,21 +76,25 @@ export default {
   methods: {
     exerciseSubmitted(data){
       //this.exerciseData.count=data.testCaseCount;
-      if(isCompletelyTrue(data.resArray)){
-        this.exerciseData.correct=true;
-      }else{
-        this.exerciseData.correct=data.resArray;
-      }
-      calcPoints(this.exerciseData);
-      let clazzes=[];
-      for(let i=0;i<data.project.clazzes.length;i++){
-        let c=data.project.clazzes[i];
-        if(!c.isHidden){
-          clazzes.push(c);
+      if(data.resArray){
+        if(isCompletelyTrue(data.resArray)){
+          this.exerciseData.correct=true;
+        }else{
+          this.exerciseData.correct=data.resArray;
         }
+        calcPoints(this.exerciseData);
       }
-      data.project.clazzes=clazzes;
-      this.exerciseData.userProject=data.project;
+      if(data.project){
+        let clazzes=[];
+        for(let i=0;i<data.project.clazzes.length;i++){
+          let c=data.project.clazzes[i];
+          if(!c.isHidden){
+            clazzes.push(c);
+          }
+        }
+        data.project.clazzes=clazzes;
+        this.exerciseData.userProject=data.project;
+      }
       this.$root.save();
     }
   }

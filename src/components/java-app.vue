@@ -109,13 +109,14 @@ export default{
         this.$emit("exercise-submit",data);
       }else if(type==='LOADING-COMPLETE'){
         this.sendMessage("setup-exercise",{project: this.realProject, checker: this.checkerCode});
+      }else if(type==="send-exercise-data"){
+        this.$emit("close-dialog",data);
       }
     },
     sendMessage(type,data){
       data=JSON.parse(JSON.stringify(data));
       let frame=this.$refs.iframe;
       if(frame && frame.contentWindow){
-        console.log("send");
         frame.contentWindow.postMessage({
           type,
           data: data
