@@ -7,8 +7,12 @@ let Java={
     },
     {
       label: "Arrays",
-      exercises: ["array-swap"]
-    }
+      exercises: ["array-basics","array-swap"]
+    },
+    {
+      label: "Algorithmen I",
+      exercises: ["iterative-suche"]
+    },
   ]
 }
 

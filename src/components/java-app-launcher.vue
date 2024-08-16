@@ -2,9 +2,9 @@
   <div style="display: grid; place-content: end;">
     <Button @click="openDialog" label="JavaApp starten"/>
   </div>
-  <Dialog ref="dialog" :header="project?.name" v-model:visible="show" :closable="true" maximizable>
+  <Dialog ref="dialog" :header="project?.name" v-model:visible="show" :closable="true" maximizable :close-on-escape="false">
     <template #maximizeicon><Button :class="newInfos? 'shaking':''" rounded @click.stop="showFeedback" text size="large" style="width:200px;height:200px" :icon="'pi pi-'+(completed? 'check':'info')"/></template>
-    <template #closeicon><Button rounded @click.stop="closeDialog" text icon="pi pi-times" severity="secondary"/></template>
+    <template #closeicon><Button rounded @click.stop="closeDialog" text icon="pi pi-times" severity="secondary" :loading="saveResolve!==null"/></template>
     <template #header>
       <div style="display: flex; width: 100%; align-items: center;"><ExerciseProgress :exercise-data="exerciseData"/></div>
     </template>
@@ -56,12 +56,20 @@ export default{
   },
   methods: {
     async closeDialog(){
+      if(this.saveResolve) return;
       this.$refs.javaApp.sendMessage("give-exercise-data",{});
       let p=new Promise((resolve,reject)=>{
         this.saveResolve=resolve;
+        setTimeout(()=>{
+          if(!this.saveResolve) return;
+          alert("Fehler: Ihre Änderungen konnten unter Umständen nicht gespeichert werden.\n\nVerwenden Sie die aktuelle JavaApp-Version?");
+          resolve();
+        },3000);
+          
       });
       await p;
       this.show=false;
+      this.saveResolve=null;
     },
     closeDialogFinish(data){
       this.$emit("exercise-submit",data);

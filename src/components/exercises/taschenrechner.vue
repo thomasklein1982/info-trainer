@@ -41,14 +41,14 @@ export const data={
   check: {
     init: async ()=>{
       return {
-        labelTR: $Exercise.getComponent("JLabel","Taschenrechner"),
-        buttonPlus: $Exercise.getComponent("JButton","+"),
-        buttonMinus: $Exercise.getComponent("JButton","-"),
-        buttonMal: $Exercise.getComponent("JButton","*"),
-        buttonGeteilt: $Exercise.getComponent("JButton",":"),
-        labelResult: $Exercise.getComponent("JLabel","Ergebnis"),
-        tf1: $Exercise.getComponent("JTextField","Zahl 1"),
-        tf2: $Exercise.getComponent("JTextField","Zahl 2"),
+        labelTR: $Exercise.getComponent("JLabel",(e)=>{return e.getValue()==="Taschenrechner"}),
+        buttonPlus: $Exercise.getComponent("JButton",(e)=>{return e.getValue()==="+"}),
+        buttonMinus: $Exercise.getComponent("JButton",(e)=>{return e.getValue()==="-"}),
+        buttonMal: $Exercise.getComponent("JButton",(e)=>{return e.getValue()==="*"}),
+        buttonGeteilt: $Exercise.getComponent("JButton",(e)=>{return e.getValue()===":"}),
+        labelResult: $Exercise.getComponent("JLabel",(e)=>{return e.getValue()==="Ergebnis"}),
+        tf1: $Exercise.getComponent("JTextField",(e)=>{return e.getPlaceholder()==="Zahl 1"}),
+        tf2: $Exercise.getComponent("JTextField",(e)=>{return e.getPlaceholder()==="Zahl 2"}),
       };
     },
     testcases: [
@@ -180,13 +180,13 @@ export const data={
         let a=Math.random()*1000;
         let b=Math.random()*1000;
         init.tf1.setValue(a);
-        await App.sleep(500);
+        await $Exercise.sleep(500);
         init.tf2.setValue(b);
-        await App.sleep(500);
+        await $Exercise.sleep(500);
         let but=init["button"+tc.id];
-        console.log(but);
+        console.log("Button",but);
         but.$el.click();
-        await App.sleep(500);
+        await $Exercise.sleep(500);
         let ist=init.labelResult.getValue();
         let soll=tc.f(a,b);
         $Exercise.setUIBlocked(false);

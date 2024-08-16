@@ -29,6 +29,7 @@ import JLabel from './components/j-label.vue';
 import JButton from './components/j-button.vue';
 import JPanel from './components/j-panel.vue';
 import JTextField from './components/j-text-field.vue';
+import Hint from './components/hint.vue';
 
 const updateSW=registerSW({
   onNeedRefresh(){
@@ -61,6 +62,7 @@ app.component('Card',Card);
 app.component('Dialog',Dialog);
 app.component('Select',Select);
 app.component('Code',Code);
+app.component('Hint',Hint);
 app.component('ConsoleOutput',ConsoleOutput)
 app.component("ExerciseBody",ExerciseBody);
 app.component("ExercisePath",ExercisePath);

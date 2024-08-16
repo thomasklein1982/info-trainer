@@ -13,7 +13,7 @@ export const data={
   check: {
     init: async ()=>{
       $Exercise.deleteMain();
-      return {a: await $new(ArrayTausch)};
+      return {a: await $new(Aufgabe)};
     },
     test: async (tc,init)=>{
       let array=$Exercise.getCopy(tc.array);

@@ -23,6 +23,16 @@ body{
   pointer-events: none;
 }
 
+.teilaufgaben{
+  list-style-type: none;
+  counter-reset: item;
+}
+
+.teilaufgaben>li:before{
+  content: counter(item, lower-latin) ") ";
+  counter-increment: item;
+}
+
 .screen{
   width: 100%;
   height: 100%;
