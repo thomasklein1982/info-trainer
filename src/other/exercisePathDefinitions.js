@@ -7,7 +7,7 @@ let Java={
     },
     {
       label: "Arrays",
-      exercises: ["array-basics","array-swap"]
+      exercises: ["array-basics","array-swap","array-ausgabe","array-ausgabe-liste"]
     },
     {
       label: "Algorithmen I",

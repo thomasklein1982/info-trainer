@@ -1,5 +1,5 @@
 <template>
-  <Message :icon="'pi pi-'+icon" :severity="severity"><slot></slot></Message>
+  <Message style="margin-top: 0.2rem; margin-bottom: 0.2rem;" :icon="'pi pi-'+icon" :severity="severity"><slot></slot></Message>
 </template>
 
 <script>

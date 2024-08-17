@@ -21,27 +21,61 @@ export const data={
     testcases: [
         {
           data: ()=>{
-            let array=$Exercise.getRandomObjectArray({
-              name: ["Ahmad","Konrad","Elisabeth","Felicitas","Justus","Valerie","Kenan","Fatima","Ayla","Nikolas","Theresa","Ben","Mia","Frauke","Gerd","Thomas"],
-              alter: $Exercise.getRange(5,99)
-            },20)
-            let personen=[];
-            for(let i=0;i<array.length;i++){
-              personen.push(new Person(array[i].name,array[i].alter));
-            }
-            let gesucht=personen[$Exercise.random(0,personen.length-1)];
-            let name=gesucht.name;
             return {
-              personen,gesucht,name
+              create: (personen,person,runIndex)=>{
+                let index=runIndex%personen.length;
+                let gesucht=personen[index];
+                let name=gesucht.name;
+                return {
+                  personen,gesucht,name
+                }
+              }
             }
           },
-          info: "Suche funktioniert, wenn der gesuchte Name genau einmal vorkommt."
+          info: "Suche funktioniert, wenn der gesuchte Name vorkommt.",
+          count: 15,
+          points: 3
+        },
+        {
+          data: ()=>{
+            return {
+              create: (personen,person)=>{
+                let gesucht=null;
+                let name=person.name;
+                return {
+                  personen,gesucht,name
+                }
+              }
+            }
+          },
+          info: "Suche funktioniert, wenn der gesuchte Name gar nicht vorkommt.",
+          count: 5
         }
       ],
     test: async (tc,init)=>{
+      let array=$Exercise.getRandomObjectArray({
+        name: ["Ahmad","Konrad","Elisabeth","Felicitas","Justus","Valerie","Kenan","Fatima","Ayla","Nikolas","Theresa","Ben","Mia","Frauke","Gerd","Thomas","Maria","Frank","Meltem","Hannes","Berta","Ramon"],//22 Namen
+        alter: $Exercise.getRange(5,99)
+      },$Exercise.random(10,15));
+      let personen=[];
+      for(let i=1;i<array.length;i++){
+        let p=new Person();
+        p.name=array[i].name;
+        p.alter=array[i].alter;
+        personen.push(p);
+      }
+      let person=new Person();
+      person.name=array[0].name;
+      person.alter=array[1].alter;
+      let res=tc.create(personen,person,tc.$run.index);
       $Exercise.clearConsole();
-      let p=await init.a.suchen(tc.personen,tc.name);
-      return (p===tc.gesucht);
+      let p=await init.a.suchen(res.personen,res.name);
+      if(res.gesucht){
+        if(!p) return false;
+        return p.name===res.name;
+      }else{
+        return p===null && res.gesucht===null;
+      }
     }
   },
   project: {
@@ -60,7 +94,7 @@ export const data={
           new Person("Justus",0),
           new Person("Felicitas",7),
           new Person("Valerie",35)
-        });
+        }, "Justus");
         System.out.println(p);`,
         onStart: `Person p = suchen(new Person[]{
           new Person("Thomas",41),
@@ -69,7 +103,7 @@ export const data={
           new Person("Justus",0),
           new Person("Felicitas",7),
           new Person("Valerie",35)
-        });
+        }, "Justus");
         System.out.println(p);`
       },
       {

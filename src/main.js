@@ -30,7 +30,7 @@ import JButton from './components/j-button.vue';
 import JPanel from './components/j-panel.vue';
 import JTextField from './components/j-text-field.vue';
 import Hint from './components/hint.vue';
-
+import Example from './components/example.vue';
 const updateSW=registerSW({
   onNeedRefresh(){
     let a=confirm("Eine neue Version ist verfügbar. Willst du aktualisieren (empfohlen!)?");
@@ -63,6 +63,7 @@ app.component('Dialog',Dialog);
 app.component('Select',Select);
 app.component('Code',Code);
 app.component('Hint',Hint);
+app.component('Example',Example);
 app.component('ConsoleOutput',ConsoleOutput)
 app.component("ExerciseBody",ExerciseBody);
 app.component("ExercisePath",ExercisePath);

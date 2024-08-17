@@ -8,7 +8,7 @@
     
       <p>Um zu prüfen, ob deine Programmierung stimmt, werden verschiedene Testfälle durchgespielt. <template v-if="completed">Alle Testfälle waren erfolgreich:</template><template v-else>Hier siehst du, welche Testfälle erfolgreich waren und welche nicht:</template></p>
       <Message :icon="'pi pi-'+(completed || exerciseData.correct[i]?'check':'times')" :severity="(completed || exerciseData.correct[i]?'success':'error')" v-for="(t,i) in exerciseData.data.check.testcases">
-        {{ t.info }} [{{ (100*(t.points? t.points:1)/exerciseData.total).toFixed(2) }} %]
+        {{ t.info }}
       </Message>
   </Dialog>
 </template>

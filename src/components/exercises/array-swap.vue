@@ -2,6 +2,8 @@
   <ExerciseBody :exercise="$data">
       Die Methode <Code no-numbers>void vertauschen(int[] array, int index1, int index2)</Code>
       soll die beiden Elemente im Array <Code inline>array</Code> an den Positionen <Code inline>index1</Code> und <Code inline>index2</Code> miteinander vertauschen.
+      <p>Implementiere diese Methode.</p>
+      <Hint>Du darfst davon ausgehen, dass die Indices im "richtigen" Bereich liegen.</Hint>
   </ExerciseBody>
 </template>
 
@@ -16,11 +18,15 @@ export const data={
       return {a: await $new(Aufgabe)};
     },
     test: async (tc,init)=>{
-      let array=$Exercise.getCopy(tc.array);
-      let i1=tc.i[0];
-      let i2=tc.i[1];
-      await init.a.vertauschen(tc.array,i1,i2);
-      if(array.length!==tc.array.length){
+      let N=$Exercise.random(7,11);
+      let array=$Exercise.getRandomIntArray(N);
+      let i=$Exercise.randomFrom($Exercise.getRange(0,N-1),2)
+      let copy=$Exercise.getCopy(array);
+      let i1=i[0];
+      let i2=i[1];
+      await init.a.vertauschen(copy,i1,i2);
+      return tc.check(array,copy,i1,i2);
+      if(copy.length!==array.length){
         throw "Längen stimmen nicht überein.";
       }
       let tauschen=i1>=0 && i2>=0 && i1<array.length && i2<array.length;
@@ -43,52 +49,77 @@ export const data={
     testcases: [
         {
           data: ()=>{
-            let N=$Exercise.random(7,11);
             return {
-              array: $Exercise.getRandomIntArray(N),
-              i: $Exercise.randomFrom($Exercise.getRange(0,N-1),2)
-            };
+              check: (arrayBefore,arrayAfter,index1,index2)=>{
+                return arrayAfter[index1]===arrayBefore[index2];
+              }
+            }
           },
-          info: "Normalfall: Beide Indices liegen im richtigen Bereich.",
-          count: 10,
-          points: 16
+          info: "Das Element an der Stelle index2 wird an die Stelle index1 geschrieben.",
+          count: 10
         },
         {
           data: ()=>{
             return {
-              array: $Exercise.getRandomIntArray(10),
-              i: [$Exercise.random(0,9),$Exercise.random(10,15)],
+              check: (arrayBefore,arrayAfter,index1,index2)=>{
+                return arrayAfter[index2]===arrayBefore[index1];
+              }
             }
           },
-          info: "Spezialfall: Der 2. Index ist zu groß."
+          info: "Das Element an der Stelle index1 wird an die Stelle index2 geschrieben.",
+          count: 10
         },
         {
           data: ()=>{
             return {
-              array: $Exercise.getRandomIntArray(10),
-              i: [$Exercise.random(0,9),$Exercise.random(-10,-2)]
+              check: (arrayBefore,arrayAfter,index1,index2)=>{
+                for(let i=0;i<arrayBefore.length;i++){
+                  if(i===index1 || i==index2) continue;
+                  if(arrayBefore[i]!==arrayAfter[i]) return false;
+                }
+                return true;
+              }
             }
           },
-          info: "Spezialfall: Der 2. Index ist zu klein."
+          info: "Alle anderen Elemente bleiben unverändert.",
+          count: 2
         },
-        {
-          data: ()=>{
-            return {
-              array: $Exercise.getRandomIntArray(10),
-              i: [$Exercise.random(10,15),$Exercise.random(0,9)]
-            }
-          },
-          info: "Spezialfall: Der 1. Index ist zu groß."
-        },
-        {
-          data: ()=>{
-            return {
-              array: $Exercise.getRandomIntArray(10),
-              i: [$Exercise.random(-10,-1),$Exercise.random(0,9)]
-            }
-          },
-          info: "Spezialfall: Der 1. Index ist zu klein."
-        }
+        // {
+        //   data: ()=>{
+        //     return {
+        //       array: $Exercise.getRandomIntArray(10),
+        //       i: [$Exercise.random(0,9),$Exercise.random(10,15)],
+        //     }
+        //   },
+        //   info: "Spezialfall: Der 2. Index ist zu groß."
+        // },
+        // {
+        //   data: ()=>{
+        //     return {
+        //       array: $Exercise.getRandomIntArray(10),
+        //       i: [$Exercise.random(0,9),$Exercise.random(-10,-2)]
+        //     }
+        //   },
+        //   info: "Spezialfall: Der 2. Index ist zu klein."
+        // },
+        // {
+        //   data: ()=>{
+        //     return {
+        //       array: $Exercise.getRandomIntArray(10),
+        //       i: [$Exercise.random(10,15),$Exercise.random(0,9)]
+        //     }
+        //   },
+        //   info: "Spezialfall: Der 1. Index ist zu groß."
+        // },
+        // {
+        //   data: ()=>{
+        //     return {
+        //       array: $Exercise.getRandomIntArray(10),
+        //       i: [$Exercise.random(-10,-1),$Exercise.random(0,9)]
+        //     }
+        //   },
+        //   info: "Spezialfall: Der 1. Index ist zu klein."
+        // }
       ]
   },
 
@@ -101,7 +132,7 @@ export const data={
   //hierhin kommt der Code
 
 }`,
-        main: `aufgabe a = new Aufgabe();\na.vertauschen(new int[]{5,3,8,1,6,9,11},2,5);`,
+        main: `Aufgabe a = new Aufgabe();\na.vertauschen(new int[]{5,3,8,1,6,9,11},2,5);`,
         onStart: `vertauschen(new int[]{5,3,8,1,6,9,11},2,5);`
       }
     ]

@@ -70,7 +70,7 @@ export default{
         }else{
           src=src.replace(/\$void /g,"void ");
           if(c.main){
-            src+="\npublic static void main(String[] args){\n";
+            src+="\n\npublic static void main(String[] args){\n";
             if(diff==="normal"){
               src+="new "+c.name+"();";
             }else{
