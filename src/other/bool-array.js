@@ -21,6 +21,12 @@ export function intToBoolArray(n){
   return array;
 }
 
+export function setArrayToValue(array, value){
+  for(let i=0;i<array.length;i++){
+    array[i]=value;
+  }
+}
+
 export function createBoolArray(n,value){
   if(!value) value=false; else value=true;
   let array=[];

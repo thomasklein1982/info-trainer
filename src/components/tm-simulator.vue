@@ -29,6 +29,7 @@
         <Button :disabled="!running || halted" icon="pi pi-stop" @click="stop()"/>
         <Button :disabled="running" icon="pi pi-refresh" @click="resetRuntime()"/>
         Zustand: <span style="font-family: monospace; font-size: 130%;">{{ runtime.state }}</span>
+        Schritte: <span style="">{{ runtime.steps }}/{{ maxSteps }}</span>
       </div>
       <table class="transition-table" style="text-align: center; margin: auto">
         <tr><th></th><th>Zustand</th><th>Lesen</th><th>Schreiben</th><th>Bewegen</th><th>neuer Zustand</th></tr>
@@ -49,6 +50,15 @@
         </div>
       </SplitterPanel>
       <SplitterPanel>
+        <Card>
+          <template #title>
+            Überprüfen
+          </template>
+          <template #content>
+            <p>Deine Turing-Maschine darf höchstens {{ maxSteps }} Schritte benötigen.</p>
+            <Button icon="pi pi-list-check" label="Überpüfen" @click="check()"/>
+          </template>
+        </Card>
         <Card>
           <template #title>
             Einstellungen
@@ -78,6 +88,8 @@ import SelectButton from 'primevue/selectbutton';
 import { nextTick } from 'vue';
 import { sleep } from '../other/sleep';
 import Message from 'primevue/message';
+import { createBoolArray, setArrayToValue } from '../other/bool-array';
+import { calcPoints } from '../App.vue';
 
 const parts=[
     {
@@ -109,41 +121,24 @@ export default{
     Menubar,CodeMirror, Splitter, SplitterPanel, Slider, SelectButton, Message
   },
   props: {
-    machine: Object
+    machine: Object,
+    exerciseData: Object
   },
   computed: {
+    maxSteps(){
+      return (this.machine.maxSteps? this.machine.maxSteps:1000);
+    },
     halted(){
-      console.log("check halt",this.runtime.state)
       return (!this.runtime.state || this.runtime.state.toLowerCase().startsWith("halt"));
     },
     inputError(){
       if(this.input.length===0){
         return "Die Eingabe darf nicht leer sein.";
       }
-      if(!this.inputParts){
+      if(this.input.split("*").length>2){
         return "Das Zeichen * darf im Input nur höchstens 1 mal vorkommen (es legt die Startposition des Lese-/Schreibkopfes fest).";
       }
       return null;
-    },
-    inputParts(){
-      let s=this.input.split("*");
-      if(s.length>2){
-        return null;
-      }else if(s.length===2){
-        this.band.position=s[0].length;
-        return {
-          before: s[0],
-          at: this.input.charAt(s[0].length),
-          after: s[1]
-        };
-      }else{
-        this.band.position=0;
-        return {
-          before: "",
-          at: this.input.charAt(0),
-          after: s[0]
-        };
-      }
     },
     sleepTime(){
       return 2010-this.speed*20;
@@ -173,30 +168,82 @@ export default{
     }
   },
   methods: {
-    resetRuntime(){
-      let pos=this.input.indexOf("*");
-      if(pos>=0){
-        this.band.position=pos;
+    check(){
+      let check=this.exerciseData.data.check;
+      let testcases=check.testcases;
+      if(!this.compile()){
+        setArrayToValue(this.exerciseData.correct,false);
+        calcPoints(this.exerciseData);
+        this.save();
+        return;
+      }
+      //let test=.test;
+      let input=check.input;
+      setArrayToValue(this.exerciseData.correct,true);
+      let inputs=input();
+      if(!Array.isArray(inputs)) inputs=[inputs];
+      for(let j=0;j<inputs.length;j++){
+        let input=inputs[j];
+        this.resetRuntime(input);
+        let ok=this.runAtMaxSpeed();
+        if(!ok){
+          setArrayToValue(this.exerciseData.correct,false);
+          calcPoints(this.exerciseData);
+          this.save();
+          return;
+        }
+        let output=this.getBandContent();
+        for(let k=0;k<testcases.length;k++){
+          if(!this.exerciseData.correct[k]) continue;
+          let tc=testcases[k];
+          if(!tc.check(input,output)){
+            this.exerciseData.correct[k]=false;
+          }
+        }
+      }
+      calcPoints(this.exerciseData);
+      this.save();
+    },
+    getBandContent(){
+      return this.band.content;
+    },
+    resetRuntime(input){
+      if(input===undefined) input=this.input;
+      let pos=input.indexOf("*");
+      
+      let s=input.split("*");
+      let before,after,at;
+      if(s.length>2){
+        return;
+      }else if(s.length===2){
+        this.band.position=s[0].length;
+        before=s[0];
+        after=s[1];
+        at=input.charAt(s[0].length);
       }else{
         this.band.position=0;
+        before="";
+        after=s[0];
+        at=input.charAt(0);
       }
-      this.band.content=this.inputParts.before+this.inputParts.after;
+
+      this.band.content=before+after;
       this.band.pointerString=getBlanks(this.band.position)+"<span id='read-write-head'>&#8679;</span>"+getBlanks(this.band.content.length-this.band.position-1);
 
       this.runtime.state=this.startState;
       this.runtime.steps=0;
-      this.runtime.character=this.inputParts.at;
+      this.runtime.character=at;
       this.runtime.command=getCommand(this.commands,this.runtime.state,this.runtime.character);
     },
     scrollHead(){
+      if(!this.$refs.pointer) return;
       let head=this.$refs.pointer.querySelector("#read-write-head");
-      head.scrollIntoView();
+      if(head) head.scrollIntoView();
     },
     save(){
       this.$emit("save");
     },
-    toRunView(){
-      this.save();
+    compile(){
       let code=this.$refs.editor.getValue();
       this.code=code;
       let lines=code.split("\n");
@@ -210,9 +257,14 @@ export default{
           this.commands.push(c);
         }catch(e){
           alert("Fehler in Zeile "+(i+1)+"\n"+e);
-          return;
+          return false;
         }
       }
+      return true;
+    },
+    toRunView(){
+      this.save();
+      if(!this.compile()) return;
       this.resetRuntime();
       this.mode="run";
 
@@ -226,10 +278,28 @@ export default{
     async run(){
       this.running=true;
       while(this.running){
+        if(!this.runtime.command){
+          this.running=false;
+          return;
+        }
         this.step();
         await sleep(this.sleepTime);
-        if(this.runtime.state.toLowerCase().startsWith("halt")){
+        if(!this.runtime.state || this.runtime.state.toLowerCase().startsWith("halt")){
           this.running=false;
+        }
+      }
+    },
+    runAtMaxSpeed(){
+      while(true){
+        if(!this.runtime.command){
+          return true;
+        }
+        this.step();
+        if(this.runtime.steps>this.maxSteps){
+          return false;
+        }
+        if(!this.runtime.state || this.runtime.state.toLowerCase().startsWith("halt")){
+          return true;
         }
       }
     },

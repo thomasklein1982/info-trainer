@@ -11,6 +11,7 @@
     <TmSimulator
       ref="tmSimulator"
       :machine="machine"
+      :exercise-data="exerciseData"
       @save="save()"
     />
   </Dialog>
@@ -27,6 +28,9 @@ export default{
   components: {
     ProgressBar,ExerciseProgress,TmSimulator
   },
+  emits: [
+    "show-feedback"
+  ],
   computed: {
     hasUserData(){
       return this.exerciseData.userMachine!==undefined;

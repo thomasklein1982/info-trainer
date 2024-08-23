@@ -15,6 +15,7 @@
       <TuringMachineLauncher
         :exercise-data="exerciseData"
         :machine="turingMachine"
+        @show-feedback="$refs.dialogFeedback.open()"
       />
     </template>
     <DialogFeedback ref="dialogFeedback" :exercise-data="exerciseData">
