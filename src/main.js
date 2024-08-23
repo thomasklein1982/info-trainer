@@ -31,6 +31,7 @@ import JPanel from './components/j-panel.vue';
 import JTextField from './components/j-text-field.vue';
 import Hint from './components/hint.vue';
 import Example from './components/example.vue';
+import OverlayBadge from 'primevue/overlaybadge';
 const updateSW=registerSW({
   onNeedRefresh(){
     let a=confirm("Eine neue Version ist verfügbar. Willst du aktualisieren (empfohlen!)?");
@@ -76,6 +77,7 @@ app.component("JButton", JButton);
 app.component("JLabel",JLabel);
 app.component("JTextField",JTextField);
 app.component("JPanel",JPanel);
+app.component("OverlayBatch",OverlayBadge);
 
 for(let a in exercises){
   let m=exercises[a];
@@ -85,10 +87,3 @@ for(let a in exercises){
 
 console.log("fertig");
 app.mount('#app');
-
-
-let array=[true,true,false,false,false,true,false];
-let n=boolArrayToInt(array);
-let array2=intToBoolArray(n);
-let n2=boolArrayToInt(array2);
-console.log(array,n,array2,n2);

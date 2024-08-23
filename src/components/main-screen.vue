@@ -41,7 +41,7 @@ export default{
   data() {
     return {
       currentComponent: "Home",
-      currentPath: ExercisePathData[0].paths[1]
+      currentPath: ExercisePathData[1].paths[0]
     };
   },
   mounted(){

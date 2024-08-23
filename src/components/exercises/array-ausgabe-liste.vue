@@ -1,5 +1,5 @@
 <template>
-  <ExerciseBody :exercise="$data">
+  <ExerciseBody :exercise="$data" :java="project">
       Die Methode <Code no-numbers>void ausgeben(String[] array)</Code>
       soll alle Elemente des Arrays nacheinander in der Konsole als nummerierte Liste (1. , 2. , 3. , ...) ausgeben.
       <Example>

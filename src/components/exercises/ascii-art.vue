@@ -1,5 +1,5 @@
 <template>
-  <ExerciseBody :exercise="$data">
+  <ExerciseBody :exercise="$data" :java="project">
       Die Methode <Code inline>zeichnen()</Code> soll das folgende Bild in der Konsole ausgeben:
       <ConsoleOutput> () ()
  (-.-)

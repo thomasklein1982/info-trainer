@@ -20,7 +20,6 @@ const STORAGE_SETTINGS="INFO-TRAINER-SETTINGS";
 let exerciseDataCollection={};
 for(let a in exercises){
   let data=exercises[a].data;
-  console.log(a,data);
   
   let testcases=data.check.testcases;
   let ed={

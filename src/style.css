@@ -33,12 +33,40 @@ body{
   counter-increment: item;
 }
 
+
+.top-batch.p-overlaybatch{
+  background-color: white;
+}
+
+.top-batch{
+  margin-top: 1rem;
+}
+
+.top-batch>span.p-badge{
+  transform: translate(50%, -80%); 
+  right: 50%;
+}
+
+.transition-table{
+  text-align: center;
+  border-collapse: collapse;
+}
+
+.transition-table td{
+  border: 1pt solid white;
+}
+
 .screen{
   width: 100%;
   height: 100%;
   padding: 0;
   margin: 0;
   overflow-y: auto;
+}
+
+.error-hint{
+  font-size: small;
+  color: red;
 }
 
 .shaking{

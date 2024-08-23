@@ -1,5 +1,5 @@
 <template>
-  <ExerciseBody :exercise="$data">
+  <ExerciseBody :exercise="$data" :java="project">
       Die Methode <Code no-numbers>void vertauschen(int[] array, int index1, int index2)</Code>
       soll die beiden Elemente im Array <Code inline>array</Code> an den Positionen <Code inline>index1</Code> und <Code inline>index2</Code> miteinander vertauschen.
       <p>Implementiere diese Methode.</p>

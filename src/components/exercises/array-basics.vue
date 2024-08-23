@@ -1,5 +1,5 @@
 <template>
-  <ExerciseBody :exercise="$data">
+  <ExerciseBody :exercise="$data" :java="project">
       Die Methode <Code no-numbers>void arrayBasics(int[] array)</Code> soll mehrere Dinge bewirken (und nicht mehr als diese!):
       <ol class="teilaufgaben">
         <li>Der Wert des siebten Elements soll in der Konsole ausgegeben werden.</li>

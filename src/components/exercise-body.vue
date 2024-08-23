@@ -1,7 +1,7 @@
 <template>
   <div>
     <slot></slot>
-    <template v-if="project">
+    <template v-if="java">
       <JavaAppLauncher
         :project="project"
         :user-project="userProject"
@@ -10,10 +10,16 @@
         @exercise-submit="exerciseSubmitted"
         @show-feedback="$refs.dialogFeedback.open()"
       />
-      <DialogFeedback ref="dialogFeedback" :exercise-data="exerciseData">
-        <slot></slot>  
-      </DialogFeedback>
     </template>
+    <template v-if="turingMachine">
+      <TuringMachineLauncher
+        :exercise-data="exerciseData"
+        :machine="turingMachine"
+      />
+    </template>
+    <DialogFeedback ref="dialogFeedback" :exercise-data="exerciseData">
+      <slot></slot>  
+    </DialogFeedback>
   </div>
 </template>
 
@@ -23,18 +29,21 @@ import { isCompletelyTrue } from "../other/bool-array";
 import DialogFeedback from "./dialog-feedback.vue";
 import ExerciseProgress from "./exercise-progress.vue";
 import JavaApp from "./java-app.vue";
+import TuringMachineLauncher from "./turing-machine-launcher.vue";
 
 
 export default {
   components: {
-    JavaApp, DialogFeedback,ExerciseProgress
+    JavaApp, DialogFeedback,ExerciseProgress, TuringMachineLauncher
   },
   props: {
     exercise: Object,
     showOnlyExercise: {
       type: Boolean,
       default: false
-    }
+    },
+    turingMachine: Object,
+    java: Object
   },
   computed: {
     title(){
@@ -43,11 +52,9 @@ export default {
     testCaseCount(){
       return this.exerciseData.data.check.testcases.length;
     },
-    hasUserData(){
-      return this.exerciseData.userProject!==undefined;
-    },
     project(){
-      return JSON.parse(JSON.stringify(this.exercise.project));
+      if(!this.java) return null;
+      return JSON.parse(JSON.stringify(this.java));
     },
     userProject(){
       if(this.exerciseData.userProject){

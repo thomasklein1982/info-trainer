@@ -1,5 +1,5 @@
 <template>
-  <ExerciseBody :exercise="$data">
+  <ExerciseBody :exercise="$data" :java="project">
       Implementiere die Methode <Code inline>halloWelt()</Code>, die den Satz <code>"Hallo Welt!"</code> in der Konsole ausgibt.
   </ExerciseBody>
 </template>

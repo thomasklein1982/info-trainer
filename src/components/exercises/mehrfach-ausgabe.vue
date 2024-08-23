@@ -1,5 +1,5 @@
 <template>
-  <ExerciseBody title="Mehrfach-Ausgabe" :exercise="$data" :project="project" :id="id">
+  <ExerciseBody :exercise="$data" :project="project" :id="id" :java="project">
       Implementiere die Methode <Code inline>mehrfachAusgabe()</Code>, die 100 mal den Satz "Informatik ist cool!" in der Konsole ausgibt:
       <Code no-numbers>Informatik ist cool!
 Informatik ist cool!

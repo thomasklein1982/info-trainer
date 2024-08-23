@@ -7,12 +7,22 @@ let Java={
     },
     {
       label: "Arrays",
-      exercises: ["array-basics","array-swap","array-ausgabe","array-ausgabe-liste"]
+      exercises: ["array-basics","array-erzeugen","array-swap","array-ausgabe","array-ausgabe-liste"]
     },
     {
       label: "Algorithmen I",
       exercises: ["iterative-suche"]
     },
+  ]
+}
+
+let TheoretischeInformatik={
+  name: "Theoretische Informatik",
+  paths: [
+    {
+      label: "Turingmaschinen",
+      exercises: ["tm-bits-kippen"]
+    }
   ]
 }
 
@@ -31,7 +41,7 @@ let Html={
 }
 
 let paths=[
-  Java
+  Java, TheoretischeInformatik
 ];
 
 for(let i=0;i<paths.length;i++){

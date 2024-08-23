@@ -1,5 +1,5 @@
 <template>
-  <ExerciseBody :exercise="$data">
+  <ExerciseBody :exercise="$data" :java="project">
       Die Methode <Code>Person suchen(Person[] personen, String name)</Code> soll die erste Person in <Code inline>personen</Code> zurückgeben, die den Namen <Code inline>name</Code> hat.
       <p>Gibt es keine solche Person, so soll <Code inline>null</Code> zurückgegeben werden.</p>
       <p>Implementiere diese Methode.</p>

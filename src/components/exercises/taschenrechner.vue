@@ -1,5 +1,5 @@
 <template>
-  <ExerciseBody :exercise="$data">
+  <ExerciseBody :exercise="$data" :java="project">
       Es soll ein einfacher grafischer Taschenrechner erstellt werden, mit dem man zwei Zahlen addieren, subtrahieren, multiplizieren und dividieren kann.
       <div class="float-right">
         <AppPreview >
