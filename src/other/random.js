@@ -31,13 +31,13 @@ class RandomClazz{
     }
     let b=[];
     for(let i=min;i<=max;i++){
-      let c=a.splice(this.int(0,a.length-1,forceRandom),1);
+      let c=a.splice(this.int(0,a.length-1),1);
       b.push(c[0]);
     }
     return b;
   }
-  drawFrom(){
-    let indices=this.draw(k,array.length,forceRandom);
+  drawFrom(array,k){
+    let indices=this.draw(k,array.length);
     let b=[];
     for(let i=0;i<indices.length;i++){
       b.push(array[indices[i]-1]);
@@ -52,7 +52,7 @@ class RandomClazz{
     }
     let b=[];
     for(let i=1;i<=k;i++){
-      let c=a.splice(this.int(0,a.length-1,forceRandom),1);
+      let c=a.splice(this.int(0,a.length-1),1);
       b.push(c[0]);
     }
     return b;

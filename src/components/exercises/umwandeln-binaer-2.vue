@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data">
     <template #intro>
-      Überführe die Dezimalzahlen in das Binärsystem.
+      Überführe die Binärzahlen in das Dezimalsystem.
     </template>
     <template #exercise>
       <ol class="teilaufgaben">
@@ -15,8 +15,8 @@
 
 
 export const data={
-  id: "umwandeln-binaer",
-  title: "Umwandeln ins Binärsystem",
+  id: "umwandeln-binaer-2",
+  title: "Umwandeln aus dem Binärsystem",
   tasks: [
     {
       from: 2,
@@ -49,9 +49,9 @@ export default{
     create(Random, resArray){
       for(let i=0;i<this.tasks.length;i++){
         let t=this.tasks[i];
-        t.number=Random.int(t.from,t.to);
+        t.solution=Random.int(t.from,t.to);
         t.correct=resArray? resArray[i]: false;
-        t.solution=t.number.toString(2);
+        t.number=t.solution.toString(2);
         t.checked=resArray? true: false;
         t.input=resArray && resArray[i]? t.solution: "";
       }

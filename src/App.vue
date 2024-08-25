@@ -11,7 +11,7 @@ import MainScreen from './components/main-screen.vue';
 //import PWABadge from './components/PWABadge.vue'
 import { storage } from './other/storage';
 import * as exercises from './components/exercises/index';
-import { boolArrayToInt, createBoolArray, intToBoolArray } from './other/bool-array';
+import { boolArrayToInt, createBoolArray, intToBoolArray, isCompletelyTrue } from './other/bool-array';
 import { toRaw } from 'vue';
 import packageJson from '../package.json';
 const STORAGE_DATA="INFO-TRAINER-USER-DATA";
@@ -97,7 +97,7 @@ export default{
         let ed=this.exerciseDataCollection[id];
         if(!ed.correct) continue;
         let o={
-          correct: boolArrayToInt(ed.correct)
+          correct: isCompletelyTrue(ed.correct)? true: boolArrayToInt(ed.correct)
         };
         userData[id]=o;
         if(ed.userProject){

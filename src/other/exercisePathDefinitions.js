@@ -45,7 +45,7 @@ let Grundlagen={
   paths: [
     {
       label: "Bits & Bytes",
-      exercises: ["umwandeln-binaer"]
+      exercises: ["umwandeln-binaer","umwandeln-binaer-2","umwandeln-stellenwertsysteme"]
     },
   ]
 }

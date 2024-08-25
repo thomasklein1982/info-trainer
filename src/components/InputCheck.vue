@@ -11,13 +11,11 @@ export default{
   },
   watch: {
     'task.input'(nv,ov){
-      console.log("isCorrect");
       if(this.task.correct && this.task.checked){
         return true;
       }
       let ist=this.task.input;
-      let soll=this.solution;
-      console.log(ist,soll);
+      let soll=this.solution+"";
       if(!this.dontTrim){
         ist=ist.trim();
         soll=soll.trim();

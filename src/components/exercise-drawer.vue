@@ -10,10 +10,6 @@
         </template> 
       </div>
     </template>
-
-    <template #footer>
-      <Button label="JavaApp"/>
-    </template>
     
   </Drawer>
 </template>
