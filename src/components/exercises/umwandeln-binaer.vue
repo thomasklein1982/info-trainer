@@ -5,7 +5,7 @@
     </template>
     <template #exercise>
       <ol class="teilaufgaben">
-        <li v-for="(t,i) in tasks">{{t.number}} = <InputText type="number" v-model="t.input"/>&nbsp;<Check :status="t.correct"/></li>
+        <li v-for="(t,i) in tasks">{{t.number}} = <InputCheck ref="input" :task="t"/></li>
       </ol>
     </template>
   </ExerciseBody>
@@ -13,29 +13,10 @@
 
 <script>
 
+
 export const data={
   id: "umwandeln-binaer",
   title: "Umwandeln ins Binärsystem",
-  create(Random, resArray){
-    for(let i=0;i<this.tasks.length;i++){
-      let t=this.tasks[i];
-      t.number=Random.int(t.from,t.to);
-      t.correct=resArray? resArray[i]: undefined;
-      t.input="";
-    }
-  },
-  test(){
-    let resArray=[];
-    for(let i=0;i<this.tasks.length;i++){
-      let t=this.tasks[i];
-      let n=t.number;
-      let soll=n.toString(2);
-      let ist=t.input.trim();
-      t.correct=soll===ist;
-      resArray.push(t.correct);
-    }
-    return resArray;
-  },
   tasks: [
     {
       from: 2,
@@ -68,5 +49,26 @@ export default{
   data() {
     return data;
   },
+  methods: {
+    create(Random, resArray){
+      for(let i=0;i<this.tasks.length;i++){
+        let t=this.tasks[i];
+        t.number=Random.int(t.from,t.to);
+        t.correct=resArray? resArray[i]: false;
+        t.solution=t.number.toString(2);
+        t.checked=resArray? true: false;
+        t.input=resArray && resArray[i]? t.solution: "";
+      }
+    },
+    check(){
+      let resArray=[];
+      for(let i=0;i<this.tasks.length;i++){
+        let t=this.tasks[i];
+        t.checked=true;
+        resArray.push(t.correct);
+      }
+      return resArray;
+    }
+  }
 }
 </script>

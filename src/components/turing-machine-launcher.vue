@@ -65,11 +65,7 @@ export default{
       if(!this.exerciseData) return;
       let data=this.$refs.tmSimulator.getUserData();
       if(data.resArray){
-        if(isCompletelyTrue(data.resArray)){
-          this.exerciseData.correct=true;
-        }else{
-          this.exerciseData.correct=data.resArray;
-        }
+        this.exerciseData.correct=data.resArray;
         calcPoints(this.exerciseData);
       }
       if(data.machine){

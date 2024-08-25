@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { isCompletelyTrue } from '../other/bool-array';
+
 export default{
   components: {
   
@@ -25,7 +27,7 @@ export default{
       for(let i=0;i<this.pathData.exercises.length;i++){
         let id=this.pathData.exercises[i];
         let ed=this.$root.getExerciseData(id);
-        if(ed.correct===true) s++;
+        if(isCompletelyTrue(ed.correct)) s++;
       }
       return s;
     }

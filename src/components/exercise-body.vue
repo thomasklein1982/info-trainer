@@ -13,7 +13,7 @@
           @show-feedback="$refs.dialogFeedback.open()"
         />
       </template>
-      <template v-if="turingMachine">
+      <template v-else-if="turingMachine">
         <TuringMachineLauncher
           :exercise-data="exerciseData"
           :machine="turingMachine"
@@ -31,6 +31,7 @@
           
           <template #footer>
             <Button v-if="!exerciseChecked" icon="pi pi-list-check" label="Überprüfen" @click="checkExercise()"/>
+            <Button v-else icon="pi pi-refresh" label="Neue Aufgabe" @click="refreshExercise()"/>
           </template>
         </Dialog>
       </template>
@@ -43,7 +44,7 @@
 
 <script>
 import { calcPoints } from "../App.vue";
-import { isCompletelyTrue } from "../other/bool-array";
+import { isCompletelyTrue, setArrayToValue } from "../other/bool-array";
 import { Random, random } from "../other/random";
 import DialogFeedback from "./dialog-feedback.vue";
 import ExerciseProgress from "./exercise-progress.vue";
@@ -114,18 +115,14 @@ export default {
         resArray=undefined;
       }
       Random.setSeed(this.seed);
-      this.exercise.create(Random,resArray);
+      this.$parent.create(Random,resArray);
       this.showExerciseDialog=true;
-      this.save();
+      this.$root.save();
     },
     exerciseSubmitted(data){
       //this.exerciseData.count=data.testCaseCount;
       if(data.resArray){
-        if(isCompletelyTrue(data.resArray)){
-          this.exerciseData.correct=true;
-        }else{
-          this.exerciseData.correct=data.resArray;
-        }
+        this.exerciseData.correct=data.resArray;
         calcPoints(this.exerciseData);
       }
       if(data.project){
@@ -142,14 +139,18 @@ export default {
       this.$root.save();
     },
     checkExercise(){
-      this.exerciseChecked=true;
-      let resArray=this.exercise.test();
-      if(isCompletelyTrue(resArray)){
-        this.exerciseData.correct=true;
-      }else{
-        this.exerciseData.correct=resArray;
-      }
+      let resArray=this.$parent.check();
+      this.exerciseData.correct=resArray;
       this.exerciseData.userProject=this.seed;
+      calcPoints(this.exerciseData);
+      this.$root.save();
+    },
+    refreshExercise(){
+      this.seed=random(1000,99999999);
+      Random.setSeed(this.seed);
+      this.$parent.create(Random);
+      delete this.exerciseData.userProject;
+      setArrayToValue(this.exerciseData.correct,false);
       calcPoints(this.exerciseData);
       this.$root.save();
     }

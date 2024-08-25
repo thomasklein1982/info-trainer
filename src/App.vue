@@ -95,9 +95,9 @@ export default{
       let userData={};
       for(let id in this.exerciseDataCollection){
         let ed=this.exerciseDataCollection[id];
-        if(!ed.project && !ed.correct) continue;
+        if(!ed.correct) continue;
         let o={
-          correct: ed.correct===true? true: boolArrayToInt(ed.correct)
+          correct: boolArrayToInt(ed.correct)
         };
         userData[id]=o;
         if(ed.userProject){
@@ -112,14 +112,15 @@ export default{
         let ed=this.getExerciseData(id);//exerciseDataCollection[a];
         ed.correct=0;
         if(ed){
+          let count=ed.data.check? ed.data.check.testcases.length : ed.data.tasks.length;
+          let array;
           if(o.correct===true){
-            ed.correct=true;
+            array=createBoolArray(count,true);
           }else{
-            let array=intToBoolArray(o.correct);
-            let count=ed.data.check? ed.data.check.testcases.length : ed.data.tasks.length;
-            if(array.length===count){
-              ed.correct=array;
-            }
+            array=intToBoolArray(o.correct);
+          }
+          if(array.length===count){
+            ed.correct=array;
           }
           calcPoints(ed);
           if(o.project){

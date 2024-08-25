@@ -33,6 +33,7 @@ import Hint from './components/hint.vue';
 import Example from './components/example.vue';
 import OverlayBadge from 'primevue/overlaybadge';
 import Check from './components/Check.vue';
+import InputCheck from './components/InputCheck.vue';
 const updateSW=registerSW({
   onNeedRefresh(){
     let a=confirm("Eine neue Version ist verfügbar. Willst du aktualisieren (empfohlen!)?");
@@ -80,6 +81,7 @@ app.component("JTextField",JTextField);
 app.component("JPanel",JPanel);
 app.component("OverlayBatch",OverlayBadge);
 app.component("Check",Check);
+app.component("InputCheck",InputCheck);
 
 for(let a in exercises){
   let m=exercises[a];
