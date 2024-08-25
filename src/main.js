@@ -32,6 +32,7 @@ import JTextField from './components/j-text-field.vue';
 import Hint from './components/hint.vue';
 import Example from './components/example.vue';
 import OverlayBadge from 'primevue/overlaybadge';
+import Check from './components/Check.vue';
 const updateSW=registerSW({
   onNeedRefresh(){
     let a=confirm("Eine neue Version ist verfügbar. Willst du aktualisieren (empfohlen!)?");
@@ -78,6 +79,7 @@ app.component("JLabel",JLabel);
 app.component("JTextField",JTextField);
 app.component("JPanel",JPanel);
 app.component("OverlayBatch",OverlayBadge);
+app.component("Check",Check);
 
 for(let a in exercises){
   let m=exercises[a];

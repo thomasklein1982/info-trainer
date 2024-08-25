@@ -10,7 +10,7 @@
       <Button class="nopointer" size="small" :label="settings.javaAppDifficulty" icon="pi pi-gauge"  text/>
       <Button class="nopointer" size="small" icon="pi pi-tag" :label="$root.version" text rounded/>
     </Button>
-    
+    <Button icon="pi pi-home" text rounded @click="$emit('home')"/>
   </template>
   </Menubar>
 </template>
@@ -24,7 +24,7 @@ export default{
     Menubar
   },
   emits: [
-    "show-exercises","show-about","settings"
+    "show-exercises","show-about","settings","home"
   ],
   props: {
     settings: Object

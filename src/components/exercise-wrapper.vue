@@ -87,7 +87,8 @@ export default {
     },
     reset(){
       delete this.exerciseData.userProject;
-      this.exerciseData.correct=createBoolArray(this.exerciseData.data.check.testcases.length);
+      let count=this.exerciseData.data.check? this.exerciseData.data.check.testcases.length: this.exerciseData.data.tasks.length
+      this.exerciseData.correct=createBoolArray(count);
       calcPoints(this.exerciseData);
       this.$root.save();
     }

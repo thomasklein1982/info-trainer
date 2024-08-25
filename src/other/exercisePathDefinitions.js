@@ -40,8 +40,18 @@ let Html={
   ]
 }
 
+let Grundlagen={
+  name: "Grundlagen",
+  paths: [
+    {
+      label: "Bits & Bytes",
+      exercises: ["umwandeln-binaer"]
+    },
+  ]
+}
+
 let paths=[
-  Java, TheoretischeInformatik
+  Grundlagen, Java, TheoretischeInformatik
 ];
 
 for(let i=0;i<paths.length;i++){

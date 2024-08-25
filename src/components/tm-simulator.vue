@@ -16,7 +16,7 @@
     <div v-if="mode==='run'">
       <OverlayBatch value="Band" class="top-batch">
         <div id="band+pointer" style="font-size: 150%;position: relative;font-family: monospace;min-height: 1rem;overflow-x: auto;">
-          <div ref="band" style="white-space: pre; border: 1pt solid white; min-width: fit-content;">
+          <div ref="band" style="min-height: 2ex; white-space: pre; border: 1pt solid white; min-width: fit-content;">
             {{ band.content }}
           </div>
           <div ref="pointer" style="white-space: pre; position: normal; width: 100%; height: 100%; left: 0; top: 0;" v-html="band.pointerString">
@@ -29,7 +29,7 @@
         <Button :disabled="!running || halted" icon="pi pi-stop" @click="stop()"/>
         <Button :disabled="running" icon="pi pi-refresh" @click="resetRuntime()"/>
         Zustand: <span style="font-family: monospace; font-size: 130%;">{{ runtime.state }}</span>
-        Schritte: <span style="">{{ runtime.steps }}/{{ maxSteps }}</span>
+        Schritte: <span style="">{{ runtime.steps }}<template v-if="maxSteps>=0">/{{ maxSteps }}</template></span>
       </div>
       <table class="transition-table" style="text-align: center; margin: auto">
         <tr><th></th><th>Zustand</th><th>Lesen</th><th>Schreiben</th><th>Bewegen</th><th>neuer Zustand</th></tr>
@@ -50,7 +50,7 @@
         </div>
       </SplitterPanel>
       <SplitterPanel>
-        <Card>
+        <Card v-if="exerciseData">
           <template #title>
             Überprüfen
           </template>
@@ -126,15 +126,13 @@ export default{
   },
   computed: {
     maxSteps(){
+      if(!this.machine) return -1;
       return (this.machine.maxSteps? this.machine.maxSteps:1000);
     },
     halted(){
       return (!this.runtime.state || this.runtime.state.toLowerCase().startsWith("halt"));
     },
     inputError(){
-      if(this.input.length===0){
-        return "Die Eingabe darf nicht leer sein.";
-      }
       if(this.input.split("*").length>2){
         return "Das Zeichen * darf im Input nur höchstens 1 mal vorkommen (es legt die Startposition des Lese-/Schreibkopfes fest).";
       }

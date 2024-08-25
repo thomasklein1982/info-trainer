@@ -5,13 +5,17 @@
       @show-exercises="$refs.exerciseDrawer.show()"
       @settings="$refs.dialogSettings.open()"
       @submit="$emit('settings-changed')"
+      @home="showHome=true"
     />
     <div style="flex: 1; overflow: auto" ref="content">
       <ExerciseDrawer 
         ref="exerciseDrawer"
         @open-exercise-path="openExercisePath"
       />
-      <ExercisePath :path="currentPath"/>
+      <template v-if="showHome">
+        <Home/>
+      </template>
+      <ExercisePath v-else :path="currentPath"/>
       
     </div>
     <DialogSettings
@@ -41,7 +45,8 @@ export default{
   data() {
     return {
       currentComponent: "Home",
-      currentPath: ExercisePathData[1].paths[0]
+      currentPath: ExercisePathData[1].paths[0],
+      showHome: true
     };
   },
   mounted(){
@@ -49,6 +54,7 @@ export default{
   },
   methods: {
     openExercisePath(path){
+      this.showHome=false;
       this.currentPath=path;
       //this.navigate(pathInfos.name);
     },

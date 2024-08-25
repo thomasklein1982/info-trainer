@@ -68,10 +68,10 @@ export const data={
     ]
   },
   machine: {
-    code: `S 0 1 r S`,
+    code: ``,
     startState: "S",
     alphabetInput: "[01]",
-    exampleInput: "01110",
+    exampleInput: "011010",
     maxSteps: 100
   }
 };

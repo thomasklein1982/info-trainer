@@ -20,28 +20,46 @@ const STORAGE_SETTINGS="INFO-TRAINER-SETTINGS";
 let exerciseDataCollection={};
 for(let a in exercises){
   let data=exercises[a].data;
-  
-  let testcases=data.check.testcases;
-  let ed={
-    correct: createBoolArray(testcases.length),
-    data: data
-  };
-  let p=0;
-  for(let i=0;i<testcases.length;i++){
-    let tc=testcases[i];
-    p+=tc.points? tc.points: 1;
+  let ed;
+  if(data.check){
+    let testcases=data.check.testcases;
+    ed={
+      correct: createBoolArray(testcases.length),
+      data: data
+    };
+    let p=0;
+    for(let i=0;i<testcases.length;i++){
+      let tc=testcases[i];
+      p+=tc.points? tc.points: 1;
+    }
+    ed.total=p;
+  }else if(data.tasks){
+    ed={
+      correct: createBoolArray(data.tasks.length),
+      data: data,
+      total: data.tasks.length
+    };
   }
-  ed.total=p;
   exerciseDataCollection[data.id]=ed;
 }
 
 export function calcPoints(exerciseData){
   let p=0;
-  let testcases=exerciseData.data.check.testcases;
-  for(let i=0;i<testcases.length;i++){
-    let tc=testcases[i];
-    if(exerciseData.correct===true || exerciseData.correct[i]){
-      p+=tc.points? tc.points: 1;
+  if(exerciseData.data.check){
+    let testcases=exerciseData.data.check.testcases;
+    for(let i=0;i<testcases.length;i++){
+      let tc=testcases[i];
+      if(exerciseData.correct===true || exerciseData.correct[i]){
+        p+=tc.points? tc.points: 1;
+      }
+    }
+  }else if(exerciseData.data.tasks){
+    let tasks=exerciseData.data.tasks;
+    for(let i=0;i<tasks.length;i++){
+      let t=tasks[i];
+      if(exerciseData.correct===true || exerciseData.correct[i]){
+        p+=t.points? t.points: 1;
+      }
     }
   }
   exerciseData.points=p;
@@ -98,7 +116,8 @@ export default{
             ed.correct=true;
           }else{
             let array=intToBoolArray(o.correct);
-            if(array.length===ed.data.check.testcases.length){
+            let count=ed.data.check? ed.data.check.testcases.length : ed.data.tasks.length;
+            if(array.length===count){
               ed.correct=array;
             }
           }
