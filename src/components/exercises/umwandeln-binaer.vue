@@ -5,7 +5,7 @@
     </template>
     <template #exercise>
       <ol class="teilaufgaben">
-        <li v-for="(t,i) in tasks">{{t.number}} = <InputText type="number" v-model="t.input"/><Check :status="t.correct"/></li>
+        <li v-for="(t,i) in tasks">{{t.number}} = <InputText type="number" v-model="t.input"/>&nbsp;<Check :status="t.correct"/></li>
       </ol>
     </template>
   </ExerciseBody>
@@ -21,6 +21,7 @@ export const data={
       let t=this.tasks[i];
       t.number=Random.int(t.from,t.to);
       t.correct=resArray? resArray[i]: undefined;
+      t.input="";
     }
   },
   test(){
@@ -39,32 +40,26 @@ export const data={
     {
       from: 2,
       to: 15,
-      input: ""
     },
     {
       from: 16,
       to: 31,
-      input: ""
     },
     {
       from: 32,
       to: 63,
-      input: ""
     },
     {
       from: 64,
       to: 127,
-      input: ""
     },
     {
       from: 128,
       to: 255,
-      input: ""
     },
     {
       from: 1000,
       to: 2000,
-      input: ""
     }
   ]
 }

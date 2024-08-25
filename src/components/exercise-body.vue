@@ -105,14 +105,18 @@ export default {
   },
   methods: {
     showExercise(){
+      let resArray;
       if(this.exerciseData.userProject!==undefined){
         this.seed=this.exerciseData.userProject;
+        resArray=this.exerciseData.correct;
       }else{
         this.seed=random(1000,99999999);
+        resArray=undefined;
       }
       Random.setSeed(this.seed);
-      this.exercise.create(Random,this.exerciseData.correct);
+      this.exercise.create(Random,resArray);
       this.showExerciseDialog=true;
+      this.save();
     },
     exerciseSubmitted(data){
       //this.exerciseData.count=data.testCaseCount;
