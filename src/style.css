@@ -34,6 +34,11 @@ body{
 }
 
 
+
+.cm-editor{
+  font-size: 150%;
+}
+
 .top-batch.p-overlaybatch{
   background-color: white;
 }

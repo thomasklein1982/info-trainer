@@ -14,21 +14,25 @@
       </template>
     </Menubar>
     <div v-if="mode==='run'">
-      <OverlayBatch value="Band" class="top-batch">
-        <div id="band+pointer" style="font-size: 150%;position: relative;font-family: monospace;min-height: 1rem;overflow-x: auto;">
-          <div ref="band" style="min-height: 2ex; white-space: pre; border: 1pt solid white; min-width: fit-content;">
-            {{ band.content }}
+      <div style="display: flex">
+        <OverlayBatch value="Zustand" class="top-batch" style="margin-right: 0.5rem;height: 3ex; width: 4em; display: grid; place-content: center; font-size: 150%; border: 1pt solid white;">
+          {{ runtime.state }}
+        </OverlayBatch>
+        <OverlayBatch value="Band" class="top-batch" style="flex: 1">
+          <div id="band+pointer" style="width: 100%; font-size: 180%;font-family: monospace;height: 6ex;overflow-x: hidden;overflow-y: hidden;position: relative;">
+            <div style="position: absolute; overflow-x: auto; overflow-y: hidden; left: 0; right: 0; top: 0; height: 6ex;">
+              <div ref="band" style="height: 100%; white-space: pre; min-width: fit-content;" v-html="band.contentString">
+              </div>
+            </div>
+            <div style="position: absolute; left: 0; right: 0; top: 0;  height: 3ex; border: 1pt solid white; width: 100%;"/>
           </div>
-          <div ref="pointer" style="white-space: pre; position: normal; width: 100%; height: 100%; left: 0; top: 0;" v-html="band.pointerString">
-          </div>
-        </div>
-      </OverlayBatch>
+        </OverlayBatch>
+      </div>
       <div style="margin-top: 0.5rem; margin-bottom: 0.5rem; text-align: center">
         <Button :disabled="running" icon="pi pi-play" @click="run()"/>
         <Button :disabled="halted" icon="pi pi-arrow-right" @click="step()"/>
         <Button :disabled="!running || halted" icon="pi pi-stop" @click="stop()"/>
         <Button :disabled="running" icon="pi pi-refresh" @click="resetRuntime()"/>
-        Zustand: <span style="font-family: monospace; font-size: 130%;">{{ runtime.state }}</span>
         Schritte: <span style="">{{ runtime.steps }}<template v-if="maxSteps>=0">/{{ maxSteps }}</template></span>
       </div>
       <table class="transition-table" style="text-align: center; margin: auto">
@@ -127,7 +131,7 @@ export default{
   computed: {
     maxSteps(){
       if(!this.machine) return -1;
-      return (this.machine.maxSteps? this.machine.maxSteps:1000);
+      return (this.machine.maxSteps? this.machine.maxSteps:10000);
     },
     halted(){
       return (!this.runtime.state || this.runtime.state.toLowerCase().startsWith("halt"));
@@ -154,14 +158,16 @@ export default{
       parts: parts,
       band: {
         content: "",
+        before: "",
+        after: "",
+        at: "",
         position: 0,
         pointerString: ""
       },
       runtime: {
         state: null,
         command: null,
-        steps: 0,
-        character: null
+        steps: 0
       }
     }
   },
@@ -217,25 +223,33 @@ export default{
         this.band.position=s[0].length;
         before=s[0];
         after=s[1];
-        at=input.charAt(s[0].length);
+        at=input.charAt(s[0].length+1);
       }else{
         this.band.position=0;
         before="";
         after=s[0];
         at=input.charAt(0);
       }
-
-      this.band.content=before+after;
+      if(!at) at=" ";
+      after=after.substring(1);
+      this.band.content=before+at+after;
+      this.band.before=before;
+      this.band.after=after;
+      this.band.at=at;
       this.band.pointerString=getBlanks(this.band.position)+"<span id='read-write-head'>&#8679;</span>"+getBlanks(this.band.content.length-this.band.position-1);
+
+      this.updateContentString();
 
       this.runtime.state=this.startState;
       this.runtime.steps=0;
-      this.runtime.character=at;
-      this.runtime.command=getCommand(this.commands,this.runtime.state,this.runtime.character);
+      this.runtime.command=getCommand(this.commands,this.runtime.state,this.band.at);
+    },
+    updateContentString(){
+      this.band.contentString=this.band.before+"<span id='read-write-position'><span id='read-write-band'>"+this.band.at+"</span><span id='read-write-head'>&#8679;</span></span>"+this.band.after;
     },
     scrollHead(){
-      if(!this.$refs.pointer) return;
-      let head=this.$refs.pointer.querySelector("#read-write-head");
+      if(!this.$refs.band) return;
+      let head=this.$refs.band.querySelector("#read-write-position");
       if(head) head.scrollIntoView();
     },
     save(){
@@ -311,28 +325,40 @@ export default{
       }
       this.runtime.steps++;
       let cmd=this.runtime.command;
+      let write;
       if(cmd.write!=="*"){
-        let write=cmd.write==="_"?" ":cmd.write;
-        this.band.content=this.band.content.substring(0,this.band.position)+write+this.band.content.substring(this.band.position+1);
+        write=cmd.write==="_"?" ":cmd.write;
+        
+        //this.band.content=this.band.content.substring(0,this.band.position)+write+this.band.content.substring(this.band.position+1);
+      }else{
+        write=this.band.at;
       }
       if(cmd.move==="r"){
-        this.band.position++;
-        this.band.pointerString=" "+this.band.pointerString;
-        if(this.band.position>=this.band.content.length){
-          this.band.content+=" ";
-        }
+        // this.band.position++;
+        // this.band.pointerString=" "+this.band.pointerString;
+        // if(this.band.position>=this.band.content.length){
+        //   this.band.content+=" ";
+        // }
+        this.band.before+=write;
+        this.band.at=this.band.after.length>0 ? this.band.after.charAt(0): " ";
+        this.band.after=this.band.after.substring(1);
       }else{
-        if(this.band.position>0){
-          this.band.position--;
-          this.band.pointerString=this.band.pointerString.substring(1);
-        }else{
-          this.band.content=" "+this.band.content;
-        }
+        // if(this.band.position>0){
+        //   this.band.position--;
+        //   this.band.pointerString=this.band.pointerString.substring(1);
+        // }else{
+        //   this.band.content=" "+this.band.content;
+        // }
+        this.band.after=write+this.band.after;
+        this.band.at=this.band.before.length>0? this.band.before.charAt(this.band.before.length-1) : " ";
+        this.band.before=this.band.before.substring(0,this.band.before.length-1);
       }
       this.runtime.state=cmd.newState;
-      this.runtime.character=this.band.content.charAt(this.band.position);
-      this.runtime.command=getCommand(this.commands,this.runtime.state,this.runtime.character);
-      this.scrollHead();
+      this.runtime.command=getCommand(this.commands,this.runtime.state,this.band.at);
+      this.updateContentString();
+      nextTick(()=>{
+        this.scrollHead();
+      });
     },
     stop(){
       this.running=false;
@@ -427,9 +453,30 @@ function getBlanks(n){
 
 </script>
 
-<style scoped>
+<style>
 .active-line{
   font-weight: bold;
   color: yellow;
 }
+
+  #read-write-position{
+    white-space: pre;
+    position: relative;
+  }
+
+  #read-write-band{
+    height: 3ex;
+    display: inline-block;
+    background-color: rgba(255,255,0,0.7);
+    color: black;
+  }
+
+  #read-write-head{
+    position: absolute;
+    height: 3ex;
+    z-index: 1;
+    left: 0;
+    right: 0;
+    top: 110%;
+  }
 </style>
