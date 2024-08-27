@@ -24,7 +24,7 @@ export const data={
         array.push(repeatString("x",2*n));
         array.push(repeatString("x",2*n+1));
       }
-      return "";
+      return array;
     },
     testcases: [
       {

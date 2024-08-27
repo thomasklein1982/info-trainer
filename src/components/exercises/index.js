@@ -21,3 +21,4 @@ export * as UmwandelnStellenwertsysteme from './umwandeln-stellenwertsysteme.vue
 export * as TmVerdoppeln from './tm-verdoppeln.vue';
 export * as TmLoeschen from './tm-loeschen.vue';
 export * as TmInkrement from './tm-inkrement.vue';
+export * as OoBasics from './oo-basics.vue';

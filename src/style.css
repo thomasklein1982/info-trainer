@@ -95,6 +95,11 @@ body{
   50% {transform: scale(0.8);}
 }
 
+.float-right{
+  position: relative;
+  z-index: 10;
+}
+
 @media screen and (min-width: 550px) {
   .float-right{
     float: right;

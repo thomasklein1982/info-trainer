@@ -53,11 +53,20 @@ export default{
     realProject(){
       //return this.project;
       //if(!this.check) return this.project;
-      if(this.userProject) return this.userProject;
+      let realProject;
       let project=JSON.parse(JSON.stringify(this.project));
+      if(this.userProject) realProject=JSON.parse(JSON.stringify(this.userProject));
+      else realProject=project;
       let diff=this.$root.settings.javaAppDifficulty.toLowerCase();
       for(let i=0;i<project.clazzes.length;i++){
         let c=project.clazzes[i];
+        if(this.userProject){
+          if(c.isHidden){
+            realProject.clazzes.push(c);
+          }else{
+            continue;
+          }
+        }
         if(c.substring) continue;
         let src=c.src;
         if(diff!=="hard"){
@@ -83,7 +92,7 @@ export default{
         }
         c.src=prettify(src);
       }
-      return project;
+      return realProject;
     }
   },
   data(){

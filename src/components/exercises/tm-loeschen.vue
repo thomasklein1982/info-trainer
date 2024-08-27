@@ -1,6 +1,6 @@
 <template>
   <ExerciseBody :exercise="$data" :turing-machine="machine">
-    Implementiere eine Turingmaschine, die eine Eingabe aus den Zeichen <code>x</code> und <code>y</code>erhält (z. B. <code>xyyxxy</code>) und alle <code>y</code> löscht (d.h., durch Leerzeichen ersetzt).
+    Implementiere eine Turingmaschine, die eine Eingabe aus den Zeichen <code>x</code> und <code>y</code> erhält (z. B. <code>xyyxxy</code>) und alle <code>y</code> löscht (d.h., durch Leerzeichen ersetzt).
     <Example>
       Für die Eingabe <code>xyyxxyx</code> soll die Ausgabe <code>x__xx_x</code> generiert werden.
     </Example>

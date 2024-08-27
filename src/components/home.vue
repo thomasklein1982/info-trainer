@@ -33,11 +33,12 @@
 </template>
 
 <script>
+import ClassDiagram from './ClassDiagram.vue';
 import TuringMachineLauncher from './turing-machine-launcher.vue';
 
 export default{
   components: {
-    TuringMachineLauncher
+    TuringMachineLauncher, ClassDiagram
   }
 }
 </script>

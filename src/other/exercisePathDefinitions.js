@@ -13,6 +13,10 @@ let Java={
       label: "Algorithmen I",
       exercises: ["iterative-suche"]
     },
+    {
+      label: "Objektorientierung",
+      exercises: ["oo-basics"]
+    },
   ]
 }
 
