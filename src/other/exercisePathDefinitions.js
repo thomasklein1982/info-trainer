@@ -21,7 +21,7 @@ let TheoretischeInformatik={
   paths: [
     {
       label: "Turingmaschinen",
-      exercises: ["tm-bits-kippen"]
+      exercises: ["tm-hi","tm-loeschen","tm-bits-kippen","tm-paritaet","tm-zaehlen-1","tm-durch-3","tm-inkrement","tm-verdoppeln","tm-zaehlen-2"]
     }
   ]
 }

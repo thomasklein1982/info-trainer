@@ -1,8 +1,6 @@
 <template>
   <ExerciseBody :exercise="$data">
-    <template #intro>
-      Überführe die Dezimalzahlen in das Binärsystem.
-    </template>
+    Überführe die Dezimalzahlen in das Binärsystem.
     <template #exercise>
       <ol class="teilaufgaben">
         <li v-for="(t,i) in tasks">{{t.number}} = <InputCheck ref="input" :task="t"/></li>

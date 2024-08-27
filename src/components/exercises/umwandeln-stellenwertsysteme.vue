@@ -1,8 +1,6 @@
 <template>
   <ExerciseBody :exercise="$data">
-    <template #intro>
-      Berechne die Darstellung der Zahl in dem angegebenen Stellenwertsystem.
-    </template>
+    Berechne die Darstellung der Zahl in dem angegebenen Stellenwertsystem.
     <template #exercise>
       <ol class="teilaufgaben">
         <li v-for="(t,i) in tasks">Wandle vom {{t.basen[0]}}er-System ins {{t.basen[1]}}er-System um: 

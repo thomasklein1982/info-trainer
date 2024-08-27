@@ -1,6 +1,6 @@
 <template>
   <div>
-    <slot name="intro"></slot>
+    <slot></slot>
     <div style="display: grid; place-content: end;">
       
       <template v-if="java">
@@ -23,7 +23,7 @@
       <template v-else>
         <Button label="Aufgabe bearbeiten" @click="showExercise()"/>
         <Dialog modal v-model:visible="showExerciseDialog" :header="title">
-          <slot name="intro"></slot>
+          <slot></slot>
           <div style="position: relative">
             <slot name="exercise"></slot>
             <div style="position: absolute; left: 0; right: 0; top: 0; bottom: 0" v-if="exerciseChecked"/>

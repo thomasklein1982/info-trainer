@@ -96,7 +96,6 @@ export default{
     //let frame=this.$refs.iframe as HTMLIFrameElement;
   },
   unmounted() {
-    console.log("remove listener");
     window.removeEventListener("message",this.listener);
   },
   methods: {

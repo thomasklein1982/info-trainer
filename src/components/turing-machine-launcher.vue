@@ -12,6 +12,7 @@
       :machine="machine"
       :exercise-data="exerciseData"
       @save="save()"
+      @exercise-submit="newInfos=true"
     />
   </Dialog>
 </template>

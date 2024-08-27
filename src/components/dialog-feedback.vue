@@ -15,6 +15,7 @@
 
 <script>
 import Message from 'primevue/message';
+import { isCompletelyTrue } from '../other/bool-array';
 
 
 export default{
@@ -26,7 +27,7 @@ export default{
   },
   computed: {
     completed(){
-      return this.exerciseData.correct===true;
+      return this.exerciseData.correct===true||isCompletelyTrue(this.exerciseData.correct);
     },
     header(){
       if(this.completed){
@@ -43,6 +44,7 @@ export default{
   },
   methods: {
     open(){
+      console.log("open feedback",this.exerciseData);
       this.show=true;
     }
   }

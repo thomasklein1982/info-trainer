@@ -13,9 +13,9 @@
         <Button size="small" v-if="mode==='run'" icon="pi pi-pencil" rounded text @click="mode='edit'"/>
       </template>
     </Menubar>
-    <div v-if="mode==='run'">
+    <div v-if="mode==='run'" style="overflow: hidden; display: flex; flex-direction: column;">
       <div style="display: flex">
-        <OverlayBatch value="Zustand" class="top-batch" style="margin-right: 0.5rem;height: 3ex; width: 4em; display: grid; place-content: center; font-size: 150%; border: 1pt solid white;">
+        <OverlayBatch value="Zustand" class="top-batch" style="font-family: monospace; margin-right: 0.5rem;padding-top: 0.5ex; min-height: 3ex;height: fit-content; width: 4em; display: grid; place-content: center; font-size: 150%; border: 1pt solid white;">
           {{ runtime.state }}
         </OverlayBatch>
         <OverlayBatch value="Band" class="top-batch" style="flex: 1">
@@ -29,23 +29,25 @@
         </OverlayBatch>
       </div>
       <div style="margin-top: 0.5rem; margin-bottom: 0.5rem; text-align: center">
-        <Button :disabled="running" icon="pi pi-play" @click="run()"/>
+        <Button :disabled="running" icon="pi pi-play" @click="clickRun()"/>
         <Button :disabled="halted" icon="pi pi-arrow-right" @click="step()"/>
         <Button :disabled="!running || halted" icon="pi pi-stop" @click="stop()"/>
         <Button :disabled="running" icon="pi pi-refresh" @click="resetRuntime()"/>
         Schritte: <span style="">{{ runtime.steps }}<template v-if="maxSteps>=0">/{{ maxSteps }}</template></span>
       </div>
-      <table class="transition-table" style="text-align: center; margin: auto">
-        <tr><th></th><th>Zustand</th><th>Lesen</th><th>Schreiben</th><th>Bewegen</th><th>neuer Zustand</th></tr>
-        <tr v-for="(c,i) in commands" style="font-family: monospace; font-size: 150%;" :class="c===runtime.command? 'active-line':''">
-          <td style="width: 2rem; border: none;"><span v-if="c===runtime.command">&#8680;</span></td>
-          <td>{{ c.state }}</td>
-          <td>{{ c.read.raw }}</td>
-          <td>{{ c.write }}</td>
-          <td>{{ c.move }}</td>
-          <td>{{ c.newState }}</td>
-        </tr>
-      </table>
+      <div style="flex: 1; overflow: auto">
+        <table class="transition-table" style="text-align: center; margin: auto">
+          <tr><th></th><th>Zustand</th><th>Lesen</th><th>Schreiben</th><th>Bewegen</th><th>neuer Zustand</th></tr>
+          <tr v-for="(c,i) in commands" style="font-family: monospace; font-size: 150%;" :class="c===runtime.command? 'active-line':''">
+            <td style="width: 2rem; border: none;"><span v-if="c===runtime.command">&#8680;</span></td>
+            <td>{{ c.state }}</td>
+            <td>{{ c.read.raw }}</td>
+            <td>{{ c.write }}</td>
+            <td>{{ c.move }}</td>
+            <td>{{ c.newState }}</td>
+          </tr>
+        </table>
+      </div>
     </div>
     <Splitter v-show="mode==='edit'" style="flex: 1;overflow: hidden">
       <SplitterPanel>
@@ -53,14 +55,14 @@
           <CodeMirror ref="editor"/>
         </div>
       </SplitterPanel>
-      <SplitterPanel>
+      <SplitterPanel style="overflow-y: auto">
         <Card v-if="exerciseData">
           <template #title>
             Überprüfen
           </template>
           <template #content>
             <p>Deine Turing-Maschine darf höchstens {{ maxSteps }} Schritte benötigen.</p>
-            <Button icon="pi pi-list-check" label="Überpüfen" @click="check()"/>
+            <Button icon="pi pi-list-check" label="Überpüfen" :loading="checking" @click="check()"/>
           </template>
         </Card>
         <Card>
@@ -72,8 +74,39 @@
               <span>Startzustand:</span><InputText v-model="startState"/>
               <span>Eingabe:</span><InputText :invalid="inputError!==null" v-model="input"/>
               <Message v-if="inputError" style="grid-column: 1/3;" severity="error">{{ inputError }}</Message>
-              <span>Geschwindigkeit:</span><Slider v-model="speed"/>
+              <span>Geschwindigkeit:</span><Slider :disabled="maxSpeed" v-model="speed"/>
+              <span style="display: flex; align-items: center; grid-column: 1/3;">Nutze Maximale Geschwindigkeit:&nbsp;<ToggleSwitch v-model="maxSpeed"/></span>
             </div>
+          </template>
+        </Card>
+        <Card pt:body:style="padding-top: 0">
+          <template #title>
+            Syntax
+          </template>
+          <template #content>
+            <div class="tm-anweisung">[Zustand] [Lesen] [Schreiben] [l/r] [neuer Zustand]</div>
+          </template>
+        </Card>
+        <Card pt:body:style="padding-top: 0">
+          <template #title>
+            Beispiele
+          </template>
+          <template #content>
+            <ul>
+              <li>
+                <span class="tm-anweisung">S x y r A</span>
+                <p>Wenn die TM im Zustand <span style="font-family: monospace">S</span> das Zeichen <span style="font-family: monospace">x</span> liest: Maschine schreibt <span style="font-family: monospace">y</span>, geht nach rechts und wechselt in Zustand <span style="font-family: monospace">A</span>.</p>
+              </li>
+              <li>
+                <span class="tm-anweisung">A _ a r B</span>
+                <p>Wenn die TM im Zustand <span style="font-family: monospace">A</span> ein Leerzeichen liest: Maschine schreibt <span style="font-family: monospace">a</span>, geht nach rechts und wechselt in Zustand <span style="font-family: monospace">B</span>.</p>
+              </li>
+              <li>
+                <span class="tm-anweisung">NachLinks * * l NachLinks</span>
+                <p>Wenn die TM im Zustand <span style="font-family: monospace">NachLinks</span> ein beliebiges Zeichen liest: Maschine schreibt das Zeichen wieder hin, geht nach links und bleibt im Zustand <span style="font-family: monospace">NachLinks</span>.</p>
+              </li>
+            </ul>
+            
           </template>
         </Card>
       </SplitterPanel>
@@ -94,6 +127,7 @@ import { sleep } from '../other/sleep';
 import Message from 'primevue/message';
 import { createBoolArray, setArrayToValue } from '../other/bool-array';
 import { calcPoints } from '../App.vue';
+import ToggleSwitch from 'primevue/toggleswitch';
 
 const parts=[
     {
@@ -122,7 +156,7 @@ const parts=[
 
 export default{
   components: {
-    Menubar,CodeMirror, Splitter, SplitterPanel, Slider, SelectButton, Message
+    Menubar,CodeMirror, Splitter, SplitterPanel, Slider, SelectButton, Message, ToggleSwitch
   },
   props: {
     machine: Object,
@@ -143,11 +177,12 @@ export default{
       return null;
     },
     sleepTime(){
-      return 2010-this.speed*20;
+      return 1001-this.speed*10;
     }
   },
   data(){
     return {
+      maxSpeed: false,
       startState: "S",
       speed: 100,
       input: "",
@@ -156,6 +191,7 @@ export default{
       mode: "edit",
       running: false,
       parts: parts,
+      checking: false,
       band: {
         content: "",
         before: "",
@@ -172,44 +208,50 @@ export default{
     }
   },
   methods: {
-    check(){
+    async check(){
+      this.checking=true;
+      await sleep(10);
       let check=this.exerciseData.data.check;
       let testcases=check.testcases;
       if(!this.compile()){
         setArrayToValue(this.exerciseData.correct,false);
-        calcPoints(this.exerciseData);
-        this.save();
+        this.finishChecking();
         return;
       }
-      //let test=.test;
       let input=check.input;
       setArrayToValue(this.exerciseData.correct,true);
       let inputs=input();
       if(!Array.isArray(inputs)) inputs=[inputs];
       for(let j=0;j<inputs.length;j++){
-        let input=inputs[j];
+        await sleep(10);
+        let input=inputs[j]+"";
         this.resetRuntime(input);
         let ok=this.runAtMaxSpeed();
         if(!ok){
           setArrayToValue(this.exerciseData.correct,false);
-          calcPoints(this.exerciseData);
-          this.save();
+          this.finishChecking();
           return;
         }
         let output=this.getBandContent();
         for(let k=0;k<testcases.length;k++){
           if(!this.exerciseData.correct[k]) continue;
           let tc=testcases[k];
-          if(!tc.check(input,output)){
+          let ok=tc.check(input,output);
+          if(!ok){
             this.exerciseData.correct[k]=false;
           }
         }
       }
+      this.finishChecking();
+    },
+    finishChecking(){
       calcPoints(this.exerciseData);
       this.save();
+      this.$emit("exercise-submit");
+      this.checking=false;
     },
     getBandContent(){
-      return this.band.content;
+      return this.band.before+this.band.at+this.band.after;
     },
     resetRuntime(input){
       if(input===undefined) input=this.input;
@@ -286,6 +328,14 @@ export default{
     },
     undo(){
 
+    },
+    clickRun(){
+      if(this.maxSpeed){
+        this.runAtMaxSpeed();
+        this.scrollHead();
+      }else{
+        this.run();
+      }
     },
     async run(){
       this.running=true;
@@ -454,10 +504,14 @@ function getBlanks(n){
 </script>
 
 <style>
-.active-line{
-  font-weight: bold;
-  color: yellow;
-}
+  .active-line{
+    font-weight: bold;
+    color: yellow;
+  }
+  .tm-anweisung{
+    font-family: monospace;
+    font-size: 130%;
+  }
 
   #read-write-position{
     white-space: pre;
