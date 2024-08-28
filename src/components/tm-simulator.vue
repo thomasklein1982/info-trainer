@@ -467,6 +467,9 @@ function parseLine(line){
   for(let i=0;i<words.length;i++){
     if(cmd[words[i].key]===null) throw "Unvollständige Zeile ("+words[i].label+" fehlt)";
   }
+  if(cmd[parts[2].key].length>1){
+    throw "Bei 'Schreiben' darf nur ein einzelnes Zeichen stehen, hier steht aber '"+cmd[parts[2].key]+"'."
+  }
   cmd.read={
     raw: cmd.read,
     regex: null,

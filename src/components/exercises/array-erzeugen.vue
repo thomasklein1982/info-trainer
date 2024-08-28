@@ -54,7 +54,7 @@ export const data={
           };
         },
         count: 1,
-        info: "Die Methode erzeugeArray1 funktioniert und liefert ein Array zurück mit Platz für 100 ganze Zahlen.",
+        info: "Die Methode erzeugeArray2 funktioniert und liefert ein Array zurück mit den Strings 'red', 'blue', 'yellow', 'green'.",
       },
     ]
   },

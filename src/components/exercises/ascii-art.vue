@@ -64,7 +64,7 @@ export const data={
     test: async (tc,init)=>{
       await System.console().clear();
       await init.a.zeichnen();
-      let ist=$Exercise.getConsoleContent()[tc.line];
+      let ist=$Exercise.getConsoleContent()[tc.line].trimEnd();
       let soll=tc.text;
       return (soll===ist);
     }

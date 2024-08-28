@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
       Die Methode <Code inline>int zaehlen(int[] array, int z)</Code>
-      soll zurückgeben, wie ob die Zahl <Code inline>z</Code> in dem Array <Code inline>array</Code> vorkommt.
+      soll zurückgeben, wie oft die Zahl <Code inline>z</Code> in dem Array <Code inline>array</Code> vorkommt.
       <Example>
         <code>zaehlen([ 3, 5, -1, 5, 2, 4], 5)</code> liefert 2 zurück, weil die 5 zweimal vorkommt. 
       </Example>
