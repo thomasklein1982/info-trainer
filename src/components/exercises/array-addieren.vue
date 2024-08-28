@@ -4,7 +4,7 @@
       soll folgendes bewirken:
       <ol>
         <li>Falls die beiden Arrays unterschiedliche Länge haben, soll <Code inline>null</Code> zurückgegeben werden.</li>
-        <li>Andernfalls soll ein neues <code>int</code>-Array zurückgegeben werden, dessen Elemente die Summe der Elemente der beiden Arrays sind (siehe das Beispiel).</li>
+        <li>Andernfalls soll ein neues <code>int</code>-Array zurückgegeben werden, dessen Elemente die Summe der Elemente der beiden Arrays sind (siehe Beispiel).</li>
       </ol>
       <Example>
         <code>addieren([ 3, 5, -1], [ 6, 2, 4])</code> liefert das Array <code>[ 3 + 6, 5 + 2, -1 + 4]</code> = <code>[ 9, 7, 3]</code> zurück. 

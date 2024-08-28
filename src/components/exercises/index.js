@@ -1,4 +1,3 @@
-
 export * as ArraySwap from './array-swap.vue';
 export * as HalloWelt from './hallo-welt.vue';
 export * as MehrfachAusgabe from './mehrfach-ausgabe.vue';
@@ -11,6 +10,7 @@ export * as ArrayAusgabeListe from './array-ausgabe-liste.vue';
 export * as ArrayErzeugen from './array-erzeugen.vue';
 export * as ArraySumme from './array-summe.vue';
 export * as ArrayShift from './array-shift.vue';
+export * as ArrayZaehlen from './array-zaehlen.vue';
 export * as ArrayAddieren from './array-addieren.vue';
 export * as TmBitsKippen from './tm-bits-kippen.vue';
 export * as TmHi from './tm-hi.vue';
