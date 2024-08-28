@@ -1,11 +1,9 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
     Es sollen mehrere Methoden implementiert werden:
-
-      Die Methode <Code no-numbers>void erzeugeArray1()</Code> soll mehrere Dinge bewirken (und nicht mehr als diese!):
       <ol class="teilaufgaben">
-        <li>Die Methode <Code inline no-numbers>erzeugeArray1()</Code> soll ein Array erzeugen, das Platz für 100 ganze Zahlen hat, und dieses Array zurückgeben.</li>
-        <li>Die Methode <Code inline no-numbers>erzeugeArray2()</Code> soll ein Array mit den Einträgen <code>"red"</code>, <code>"blue"</code>, <code>"yellow"</code> und <code>"green"</code> erzeugen (in dieser Reihenfolge) und zurückgeben.</li>
+        <li>Die Methode <Code inline no-numbers>??? erzeugeArray1()</Code> soll ein Array erzeugen, das Platz für 100 ganze Zahlen hat, und dieses Array zurückgeben.</li>
+        <li>Die Methode <Code inline no-numbers>??? erzeugeArray2()</Code> soll ein Array mit den Einträgen <code>"red"</code>, <code>"blue"</code>, <code>"yellow"</code> und <code>"green"</code> erzeugen (in dieser Reihenfolge) und zurückgeben.</li>
       </ol>
       Implementiere diese Methoden.
       <Hint>'???' bedeutet, dass du die korrekten Datentypen eingeben musst, damit das Programm funktioniert.</Hint>

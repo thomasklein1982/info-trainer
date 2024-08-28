@@ -54,7 +54,7 @@ export const data={
       let kmStand=$Exercise.random(100,2000);
       let auto=await init.a.auto(marke,kmStand);
       let out=$Exercise.getConsoleContent().join("");
-      let auto2=await $App.asyncFunctionCall(new Auto(),"$constructor",[null,marke,kmStand]);
+      let auto2=await $Exercise.createInstance(Auto,marke,kmStand);//await $App.asyncFunctionCall(new Auto(),"$constructor",[null,marke,kmStand]);
       await auto2.fahren(100);
       return (await tc.check(auto,kmStand,marke,out,auto2));
     },
