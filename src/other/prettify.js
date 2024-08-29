@@ -22,18 +22,25 @@ export function prettify(code,options){
     if(c===indentStart){
       pretty+=indent+line;
       indent+=grow;
-    }else if(c===indentStop){
-      let newIndent=indent.substring(tabSize);
-      if(line.length===1){
-        pretty+=newIndent+c;
-      }else{
-        pretty+=indent+line.substring(0,line.length-1);
-        pretty+="\n"+newIndent+c;
-      }
-      indent=newIndent;
     }else{
-      pretty+=indent+line;
-    }
+      if(c===indentStop){
+        let newIndent=indent.substring(tabSize);
+        if(line.length===1){
+          pretty+=newIndent+c;
+        }else{
+          pretty+=indent+line.substring(0,line.length-1);
+          pretty+="\n"+newIndent+c;
+        }
+        indent=newIndent;
+      }else{
+        if(line.endsWith("});")||line.endsWith("} );")){
+          indent=indent.substring(tabSize);
+          pretty+=indent+line;
+        }else{
+          pretty+=indent+line;
+        }
+      }
+    } 
   }
   return pretty.trim();
 }

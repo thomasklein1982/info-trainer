@@ -25,3 +25,4 @@ export * as TmVerdoppeln from './tm-verdoppeln.vue';
 export * as TmLoeschen from './tm-loeschen.vue';
 export * as TmInkrement from './tm-inkrement.vue';
 export * as OoBasics from './oo-basics.vue';
+export * as OoFunktion from './oo-funktion.vue';

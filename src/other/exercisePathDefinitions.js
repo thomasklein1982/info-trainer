@@ -15,7 +15,7 @@ let Java={
     },
     {
       label: "Objektorientierung",
-      exercises: ["oo-basics"]
+      exercises: ["oo-basics","oo-funktion"]
     },
   ]
 }
