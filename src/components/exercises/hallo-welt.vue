@@ -13,7 +13,7 @@ export const data={
     init: async ()=>{
       $Exercise.deleteMain();
       return {
-        a: await $new(Aufgabe)
+        a: await $new(Main)
       }
     },
     testcases: [
@@ -32,12 +32,12 @@ export const data={
   project: {
     clazzes: [
       {
-        name: "Aufgabe",
+        name: "Main",
         src: `$void halloWelt(){
           //hierhin kommt der Code
       
         }`,
-        main: `Aufgabe a = new Aufgabe();\na.halloWelt();`,
+        main: `Main a = new Main();\na.halloWelt();`,
         onStart: `halloWelt();`
       }
     ]

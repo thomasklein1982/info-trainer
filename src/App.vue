@@ -49,7 +49,7 @@ export function calcPoints(exerciseData){
     let testcases=exerciseData.data.check.testcases;
     for(let i=0;i<testcases.length;i++){
       let tc=testcases[i];
-      if(exerciseData.correct===true || exerciseData.correct[i]){
+      if(exerciseData.correct===true || exerciseData.correct[i]===true){
         p+=tc.points? tc.points: 1;
       }
     }
@@ -57,7 +57,7 @@ export function calcPoints(exerciseData){
     let tasks=exerciseData.data.tasks;
     for(let i=0;i<tasks.length;i++){
       let t=tasks[i];
-      if(exerciseData.correct===true || exerciseData.correct[i]){
+      if(exerciseData.correct===true || exerciseData.correct[i]===true){
         p+=t.points? t.points: 1;
       }
     }

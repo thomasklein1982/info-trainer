@@ -40,10 +40,10 @@ export const data={
         check: (input, output)=>{
           let n=input.length;
           output=output.trim();
-          if(n%2===1) return true;
+          if(n===0 || n%2===1) return true;
           return output==="G";
         },
-        info: 'Klappt für gerade Anzahlen.'
+        info: 'Klappt für gerade Anzahlen größer 0.'
       },
       {
         check: (input, output)=>{

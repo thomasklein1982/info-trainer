@@ -3,7 +3,11 @@ let Java={
   paths: [
     {
       label: "Basics",
-      exercises: ["hallo-welt","ascii-art","taschenrechner"]
+      exercises: ["hallo-welt","ascii-art", "rechnen", "durchschnitt"]
+    },
+    {
+      label: "UI",
+      exercises: ["taschenrechner"]
     },
     {
       label: "Arrays",
@@ -25,7 +29,7 @@ let TheoretischeInformatik={
   paths: [
     {
       label: "Turingmaschinen",
-      exercises: ["tm-hi","tm-loeschen","tm-bits-kippen","tm-paritaet","tm-zaehlen-1","tm-durch-3","tm-inkrement","tm-verdoppeln","tm-zaehlen-2"]
+      exercises: ["tm-hi","tm-loeschen","tm-bits-kippen","tm-paritaet","tm-zaehlen-1","tm-durch-3","tm-palindrom","tm-inkrement","tm-verdoppeln","tm-zaehlen-2", "tm-addieren"]
     }
   ]
 }

@@ -100,6 +100,15 @@ body{
   z-index: 10;
 }
 
+.wertetabelle{
+  text-align: center;
+  border-collapse: collapse;
+}
+
+.wertetabelle td, .wertetabelle th{
+  border: 1pt solid white;
+}
+
 @media screen and (min-width: 550px) {
   .float-right{
     float: right;

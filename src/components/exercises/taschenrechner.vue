@@ -199,9 +199,9 @@ export const data={
     name: "Taschenrechner",
     clazzes: [
       {
-        name: "Taschenrechner",
+        name: "Main",
         src: ``,
-        main: `new Taschenrechner();`,
+        main: `new Main();`,
         onStart: ` `
       }
     ]

@@ -234,11 +234,16 @@ export default{
         }
         let output=this.getBandContent();
         for(let k=0;k<testcases.length;k++){
-          if(!this.exerciseData.correct[k]) continue;
+          if(this.exerciseData.correct[k]!==true) continue;
           let tc=testcases[k];
           let ok=tc.check(input,output);
           if(!ok){
-            this.exerciseData.correct[k]=false;
+            if(input.length>0){
+              this.exerciseData.correct[k]="Fehler trat auf bei Input <code>"+input+"</code>";
+            }else{
+              this.exerciseData.correct[k]="Fehler trat auf bei leerem Input";
+            }
+            
           }
         }
       }
@@ -475,8 +480,8 @@ function parseLine(line){
     regex: null,
     matchesAll: (cmd.read==="*")
   };
-  if(cmd.read.raw==="."){
-    cmd.read.regex=/\./;
+  if(cmd.read.raw==="."||cmd.read.raw==="+"){
+    cmd.read.regex=new RegExp("\\"+cmd.read.raw);
   }else if(cmd.read.raw==="_"){
     cmd.read.regex=/ /;
   }else if(!cmd.read.matchesAll){

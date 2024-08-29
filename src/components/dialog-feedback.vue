@@ -7,8 +7,9 @@
     </Card>
     
       <p>Um zu prüfen, ob deine Programmierung stimmt, werden verschiedene Testfälle durchgespielt. <template v-if="completed">Alle Testfälle waren erfolgreich:</template><template v-else>Hier siehst du, welche Testfälle erfolgreich waren und welche nicht:</template></p>
-      <Message :icon="'pi pi-'+(completed || exerciseData.correct[i]?'check':'times')" :severity="(completed || exerciseData.correct[i]?'success':'error')" v-for="(t,i) in exerciseData.data.check.testcases">
-        {{ t.info }}
+      <Message :icon="'pi pi-'+(completed || exerciseData.correct[i]===true?'check':'times')" :severity="(completed || exerciseData.correct[i]===true?'success':'error')" v-for="(t,i) in exerciseData.data.check.testcases">
+        <span v-html="t.info"/>
+        <span v-if="exerciseData.correct[i].substring" v-html="'('+exerciseData.correct[i]+')'"/>
       </Message>
   </Dialog>
 </template>

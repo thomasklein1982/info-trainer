@@ -20,7 +20,7 @@ export const data={
     init: async ()=>{
       $Exercise.deleteMain();
       return {
-        a: await $new(Aufgabe)
+        a: await $new(Main)
       }
     },
     testcases: [
@@ -73,12 +73,12 @@ export const data={
     name: "ASCIIArt",
     clazzes: [
       {
-        name: "Aufgabe",
+        name: "Main",
         src: `$void zeichnen(){
         //hierhin kommt der Code:
         
         }`,
-        main: `Aufgabe a = new Aufgabe();\na.zeichnen();`,
+        main: `Main a = new Main();\na.zeichnen();`,
         onStart: `zeichnen();`
       }
     ]

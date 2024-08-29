@@ -41,10 +41,10 @@ export const data={
         check: (input, output)=>{
           let n=input.length;
           output=output.trim();
-          if(n%3!==0) return true;
+          if(n===0 || n%3!==0) return true;
           return output==="J";
         },
-        info: 'Klappt für Anzahlen, die durch 3 teilbar sind.'
+        info: 'Klappt für Anzahlen größer 0, die durch 3 teilbar sind.'
       },
       {
         check: (input, output)=>{
