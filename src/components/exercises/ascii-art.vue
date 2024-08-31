@@ -75,11 +75,13 @@ export const data={
       {
         name: "Main",
         src: `$void zeichnen(){
-        //hierhin kommt der Code:
-        
-        }`,
-        main: `Main a = new Main();\na.zeichnen();`,
-        onStart: `zeichnen();`
+  //hierhin kommt der Code:
+  
+}
+
+$void main(){
+  zeichnen();
+}`
       }
     ]
   }

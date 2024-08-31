@@ -64,10 +64,13 @@ export const data={
         name: "Aufgabe",
         src: `int summe(int[] array){
   //hierhin kommt der Code:
+  
+}
 
-}`,
-        main: `Aufgabe a = new Aufgabe();\nint s = a.summe(new int[]{3, 5, -1}); System.out.println(s);`,
-        onStart: `int s = a.summe(new int[]{3, 5, -1}); System.out.println(s);`
+$void main(){
+  int s = a.summe(new int[]{3, 5, -1}); 
+  System.out.println(s);
+}`
       }
     ]
   }

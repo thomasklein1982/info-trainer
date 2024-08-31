@@ -148,146 +148,149 @@ export const data={
       {
         name: "Programm",
         src: `Funktion f;
-  Programm( ) {
-    JFrame frame = new JFrame( "1" );
-    JPanel pFunktion = new JPanel( "4" );
-    frame.add( pFunktion );
-    JTextField in_a = new JTextField( "number", "a" );
-    JTextField in_b = new JTextField( "number", "b" );
-    JTextField in_c = new JTextField( "number", "c" );
-    JTextField in_d = new JTextField( "number", "d" );
-    pFunktion.add( in_a );
-    pFunktion.add( in_b );
-    pFunktion.add( in_c );
-    pFunktion.add( in_d );
-    JButton bUebernehmen = new JButton( "Übernehmen" );
-    frame.add( bUebernehmen );
-    JPanel pButtons = new JPanel( "4" );
-    frame.add( pButtons );
-    JButton bExtrema = new JButton( "Extrema" );
-    pButtons.add( bExtrema );
-    JButton bWende = new JButton( "Wendepunkte" );
-    pButtons.add( bWende );
-    JButton bGrad = new JButton( "Grad" );
-    pButtons.add( bGrad );
-    JButton bAbleiten = new JButton( "Ableiten" );
-    pButtons.add( bAbleiten );
-    JPanel pAuswerten=new JPanel("3");
-    frame.add(pAuswerten);
-    JTextField in_x=new JTextField("number","x");
-    pAuswerten.add(in_x);
-    JButton bAuswerten=new JButton("Auswerten");
-    pAuswerten.add(bAuswerten);
-    JButton bSteigt=new JButton("Steigt?");
-    pAuswerten.add(bSteigt);
-    JPanel pFlaeche = new JPanel("3");
-    frame.add(pFlaeche);
-    JTextField in_von=new JTextField("number","von");
-    pFlaeche.add(in_von);
-    JTextField in_bis=new JTextField("number","bis");
-    pFlaeche.add(in_bis);
-    JButton bFlaeche=new JButton("Fläche");
-    pFlaeche.add(bFlaeche);
-    JLabel anzeige = new JLabel( "Ergebnis" );
-    frame.add( anzeige );
-    bUebernehmen.addActionListener( ( ev ) -> {
-      double a = Double.parseDouble( in_a.getValue( ) );
-      double b = Double.parseDouble( in_b.getValue( ) );
-      double c = Double.parseDouble( in_c.getValue( ) );
-      double d = Double.parseDouble( in_d.getValue( ) );
-      f = new Funktion( a, b, c, d );
-      anzeige.setValue(f.alsString());
-    } );
-    bExtrema.addActionListener( ( ev ) -> {
-      Punkt[ ] extrema = f.extrema( );
-      anzeige.setValue( arrayToString(extrema) );
-    } );
-    bWende.addActionListener( ( ev ) -> {
-      Punkt[ ] wp = f.wendepunkte( );
-      anzeige.setValue( arrayToString(wp) );
-    } );
-    bGrad.addActionListener( ( ev ) -> {
-      anzeige.setValue( f.grad( )+"" );
-    } );
-    bAbleiten.addActionListener( (ev) ->{
-      f=f.ableitung();
-      anzeige.setValue(f.alsString());
-    });
-    bAuswerten.addActionListener( ( ev )->{
-      double x = Double.parseDouble( in_x.getValue( ) );
-      double y=f.auswerten( x );
-      anzeige.setValue( y + "");
-    });
-    bSteigt.addActionListener( ( ev )->{
-      double x = Double.parseDouble( in_x.getValue( ) );
-      boolean s=f.steigt( x );
-      anzeige.setValue( s + "");
-    });
-    bFlaeche.addActionListener( ( ev )->{
-      double von = Double.parseDouble( in_von.getValue( ) );
-      double bis = Double.parseDouble( in_bis.getValue( ) );
-      double a=f.flaeche(von, bis);
-      anzeige.setValue( a+"" );
-    });
-  }
+Programm( ) {
+  JFrame frame = new JFrame( "1" );
+  JPanel pFunktion = new JPanel( "4" );
+  frame.add( pFunktion );
+  JTextField in_a = new JTextField( "number", "a" );
+  JTextField in_b = new JTextField( "number", "b" );
+  JTextField in_c = new JTextField( "number", "c" );
+  JTextField in_d = new JTextField( "number", "d" );
+  pFunktion.add( in_a );
+  pFunktion.add( in_b );
+  pFunktion.add( in_c );
+  pFunktion.add( in_d );
+  JButton bUebernehmen = new JButton( "Übernehmen" );
+  frame.add( bUebernehmen );
+  JPanel pButtons = new JPanel( "4" );
+  frame.add( pButtons );
+  JButton bExtrema = new JButton( "Extrema" );
+  pButtons.add( bExtrema );
+  JButton bWende = new JButton( "Wendepunkte" );
+  pButtons.add( bWende );
+  JButton bGrad = new JButton( "Grad" );
+  pButtons.add( bGrad );
+  JButton bAbleiten = new JButton( "Ableiten" );
+  pButtons.add( bAbleiten );
+  JPanel pAuswerten=new JPanel("3");
+  frame.add(pAuswerten);
+  JTextField in_x=new JTextField("number","x");
+  pAuswerten.add(in_x);
+  JButton bAuswerten=new JButton("Auswerten");
+  pAuswerten.add(bAuswerten);
+  JButton bSteigt=new JButton("Steigt?");
+  pAuswerten.add(bSteigt);
+  JPanel pFlaeche = new JPanel("3");
+  frame.add(pFlaeche);
+  JTextField in_von=new JTextField("number","von");
+  pFlaeche.add(in_von);
+  JTextField in_bis=new JTextField("number","bis");
+  pFlaeche.add(in_bis);
+  JButton bFlaeche=new JButton("Fläche");
+  pFlaeche.add(bFlaeche);
+  JLabel anzeige = new JLabel( "Ergebnis" );
+  frame.add( anzeige );
+  bUebernehmen.addActionListener( ( ev ) -> {
+    double a = Double.parseDouble( in_a.getValue( ) );
+    double b = Double.parseDouble( in_b.getValue( ) );
+    double c = Double.parseDouble( in_c.getValue( ) );
+    double d = Double.parseDouble( in_d.getValue( ) );
+    f = new Funktion( a, b, c, d );
+    anzeige.setValue(f.alsString());
+  } );
+  bExtrema.addActionListener( ( ev ) -> {
+    Punkt[ ] extrema = f.extrema( );
+    anzeige.setValue( arrayToString(extrema) );
+  } );
+  bWende.addActionListener( ( ev ) -> {
+    Punkt[ ] wp = f.wendepunkte( );
+    anzeige.setValue( arrayToString(wp) );
+  } );
+  bGrad.addActionListener( ( ev ) -> {
+    anzeige.setValue( f.grad( )+"" );
+  } );
+  bAbleiten.addActionListener( (ev) ->{
+    f=f.ableitung();
+    anzeige.setValue(f.alsString());
+  });
+  bAuswerten.addActionListener( ( ev )->{
+    double x = Double.parseDouble( in_x.getValue( ) );
+    double y=f.auswerten( x );
+    anzeige.setValue( y + "");
+  });
+  bSteigt.addActionListener( ( ev )->{
+    double x = Double.parseDouble( in_x.getValue( ) );
+    boolean s=f.steigt( x );
+    anzeige.setValue( s + "");
+  });
+  bFlaeche.addActionListener( ( ev )->{
+    double von = Double.parseDouble( in_von.getValue( ) );
+    double bis = Double.parseDouble( in_bis.getValue( ) );
+    double a=f.flaeche(von, bis);
+    anzeige.setValue( a+"" );
+  });
+}
 
-  String arrayToString(Punkt[] array){
-    String t="";
-    for (int i = 0; i < array.length; i++) {
-      t+=array[i].alsString();
-    }
-    return t;
-  }`,
-        main: `new Programm();`
+String arrayToString(Punkt[] array){
+  String t="";
+  for (int i = 0; i < array.length; i++) {
+    t+=array[i].alsString();
+  }
+  return t;
+}
+  
+
+$void main(){
+  
+}`
       },
       {
         name: "Funktion",
-        src: `
-          double a,b,c,d;
-  Funktion(double a, double b, double c, double d){
+        src: `double a,b,c,d;
+Funktion(double a, double b, double c, double d){
 
-  }
-  String alsString(){
-    return a+"x³ + "+b+"x² + "+c+"x + "+d;
-  }
-  double[] nullstellen(){
-    //liefert die Nullstellen der Funktion zurück.
-    //es reicht, diese Methode für Grad <=2 zu implementieren
-    //wenn es unendlich viele Nullstellen gibt oder wenn grad=3, 
-    //soll null zurückgegeben werden
-  }
-  Funktion ableitung(){
-    //liefert die Ableitung von f als neue Funktion zurück
-  }
-  Punkt[] extrema(){
-    //liefert die "echten" Extrempunkte der Funktion zurück
-  }
-  Punkt[] wendepunkte(){
-    //liefert die "echten" Wendepunkte der Funktion zurück
-  }
-  int grad(){
-    //liefert den tatsächlichen Grad der Funktion zurück
-  }
-  double auswerten(double x){
-    //liefert den Wert von f(x) zurück
-  }
-  boolean steigt(double x){
-    //liefert zurück, ob f an der Stelle x (monoton) steigt
-  }
-  double flaeche(double von, double bis){
-    //liefert näherungsweise die Fläche zurück,
-    //die f mit der x-Achse im Intervall [von,bis] einschließt
-  }`
+}
+String alsString(){
+  return a+"x³ + "+b+"x² + "+c+"x + "+d;
+}
+double[] nullstellen(){
+  //liefert die Nullstellen der Funktion zurück.
+  //es reicht, diese Methode für Grad <=2 zu implementieren
+  //wenn es unendlich viele Nullstellen gibt oder wenn grad=3, 
+  //soll null zurückgegeben werden
+}
+Funktion ableitung(){
+  //liefert die Ableitung von f als neue Funktion zurück
+}
+Punkt[] extrema(){
+  //liefert die "echten" Extrempunkte der Funktion zurück
+}
+Punkt[] wendepunkte(){
+  //liefert die "echten" Wendepunkte der Funktion zurück
+}
+int grad(){
+  //liefert den tatsächlichen Grad der Funktion zurück
+}
+double auswerten(double x){
+  //liefert den Wert von f(x) zurück
+}
+boolean steigt(double x){
+  //liefert zurück, ob f an der Stelle x (monoton) steigt
+}
+double flaeche(double von, double bis){
+  //liefert näherungsweise die Fläche zurück,
+  //die f mit der x-Achse im Intervall [von,bis] einschließt
+}`
       },
       {
         name: "Punkt",
         src: `double x, y;
-  Punkt(double x, double y){
+Punkt(double x, double y){
 
-  }
-  String alsString(){
-    //gibt den Punkt in der Form (x|y) als String zurück
-  }`
+}
+String alsString(){
+  //gibt den Punkt in der Form (x|y) als String zurück
+}`
       }
     ]
   }

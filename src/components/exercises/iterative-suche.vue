@@ -83,28 +83,21 @@ export const data={
       {
         name: "Aufgabe",
         src: `Person suchen(Person[] personen, String name){
-          //hierhin kommt der Code
-      
-        }`,
-        main: `Aufgabe a = new Aufgabe();
-          Person p = a.suchen(new Person[]{
-          new Person("Thomas",41),
-          new Person("Elisabeth",4),
-          new Person("Konrad",10),
-          new Person("Justus",0),
-          new Person("Felicitas",7),
-          new Person("Valerie",35)
-        }, "Justus");
-        System.out.println(p);`,
-        onStart: `Person p = suchen(new Person[]{
-          new Person("Thomas",41),
-          new Person("Elisabeth",4),
-          new Person("Konrad",10),
-          new Person("Justus",0),
-          new Person("Felicitas",7),
-          new Person("Valerie",35)
-        }, "Justus");
-        System.out.println(p);`
+  //hierhin kommt der Code:
+  
+}
+  
+$void main(){
+  Person p = suchen(new Person[]{
+    new Person("Thomas",41),
+    new Person("Elisabeth",4),
+    new Person("Konrad",10),
+    new Person("Justus",0),
+    new Person("Felicitas",7),
+    new Person("Valerie",35)
+  }, "Justus");
+  System.out.println(p);
+}`
       },
       {
         name: "Person",

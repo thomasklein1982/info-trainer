@@ -113,10 +113,12 @@ export const data={
         name: "Aufgabe",
         src: `Auto auto(String marke, int kmStand){
   //hierhin kommt der Code:
+  
+}
 
-}`,
-        main: `Aufgabe a = new Aufgabe();\na.auto("VW", 438);`,
-        onStart: `auto("VW", 438);`
+$void main(){
+  auto("VW", 438);
+}`
       },
       {
         isHidden: true,

@@ -56,11 +56,13 @@ export const data={
       {
         name: "Main",
         src: `$void durchschnitt(int a1, int a2, int a3, int a4, int a5, int a6){
-          //hierhin kommt der Code
-
-        }`,
-        main: `Main a = new Main();\na.durchschnitt(2, 5, 7, 4, 1, 0);`,
-        onStart: `durchschnitt(2, 5, 7, 4, 1, 0);`
+  //hierhin kommt der Code:
+  
+}
+  
+$void main(){
+  durchschnitt(2, 5, 7, 4, 1, 0);
+}`
       }
     ]
   }

@@ -200,9 +200,10 @@ export const data={
     clazzes: [
       {
         name: "Main",
-        src: ``,
-        main: `new Main();`,
-        onStart: ` `
+        src: `
+$void main(){
+  
+}`,
       }
     ]
   }

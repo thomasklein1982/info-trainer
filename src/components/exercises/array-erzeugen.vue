@@ -71,10 +71,13 @@ export const data={
   
 ??? erzeugeArray2(){
   //hierhin kommt der Code:
-
-}`,
-        main: `Aufgabe a = new Aufgabe();\nSystem.out.println( a.erzeugeArray1() );\nSystem.out.println( a.erzeugeArray2() );`,
-        onStart: `System.out.println( erzeugeArray1() );\nSystem.out.println( erzeugeArray2() );`
+  
+}
+  
+$void main(){
+  System.out.println( erzeugeArray1() );
+  System.out.println( erzeugeArray2() );
+}`
       }
     ]
   }

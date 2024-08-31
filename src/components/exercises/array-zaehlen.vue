@@ -81,10 +81,13 @@ export const data={
         name: "Aufgabe",
         src: `int zaehlen(int[] array, int z){
   //hierhin kommt der Code:
+  
+}
 
-}`,
-        main: `Aufgabe a = new Aufgabe();\nint anz = a.zaehlen(new int[]{3, 5, -1, 5, 7}, 5); System.out.println(anz);`,
-        onStart: `int anz = zaehlen(new int[]{3, 5, -1, 5, 7}, 5); System.out.println(anz);`
+$void main(){
+  int anz = zaehlen(new int[]{3, 5, -1, 5, 7}, 5);
+  System.out.println(anz);
+}`
       }
     ]
   }

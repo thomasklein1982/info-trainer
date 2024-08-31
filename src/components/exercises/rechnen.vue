@@ -67,11 +67,13 @@ export const data={
       {
         name: "Main",
         src: `$void rechnen(int a, int b){
-          //hierhin kommt der Code
-
-        }`,
-        main: `Main a = new Main();\na.rechnen(10,4);`,
-        onStart: `rechnen(10,4);`
+  //hierhin kommt der Code:
+  
+}
+  
+$void main(){
+  rechnen(10,4);
+}`
       }
     ]
   }

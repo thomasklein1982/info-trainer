@@ -69,28 +69,24 @@ export default{
         }
         if(c.substring) continue;
         let src=c.src;
-        if(diff!=="hard"){
-          if(c.onStart!==undefined){
-            src+=`\n$void onStart(){\n${c.onStart}}\n`
-          }
-        }
         if(diff==="easy"){
           src=src.replace(/\$void /g,"");
         }else{
           src=src.replace(/\$void /g,"void ");
-          if(c.main){
-            src+="\n\npublic static void main(String[] args){\n";
-            if(diff==="normal"){
-              src+="new "+c.name+"();";
-            }else{
-              src+=c.main;
-            }
-            src+="\n}";
-          }
-          let pre="class "+c.name;
-          src=pre+"{\n"+src+"\n}"
         }
-        c.src=prettify(src);
+        //   if(c.main){
+        //     src+="\n\npublic static void main(String[] args){\n";
+        //     if(diff==="normal"){
+        //       src+="new "+c.name+"();";
+        //     }else{
+        //       src+=c.main;
+        //     }
+        //     src+="\n}";
+        //   }
+        //   let pre="class "+c.name;
+        //   src=pre+"{\n"+src+"\n}"
+        // }
+        c.src=src;//prettify(src);
       }
       return realProject;
     }

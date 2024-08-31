@@ -34,11 +34,13 @@ export const data={
       {
         name: "Main",
         src: `$void halloWelt(){
-          //hierhin kommt der Code
-      
-        }`,
-        main: `Main a = new Main();\na.halloWelt();`,
-        onStart: `halloWelt();`
+  //hierhin kommt der Code:
+  
+}
+  
+$void main(){
+  halloWelt();
+}`
       }
     ]
   }

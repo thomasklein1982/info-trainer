@@ -70,10 +70,11 @@ export const data={
         name: "Aufgabe",
         src: `$void ausgeben(String[] array){
   //hierhin kommt der Code:
-
-}`,
-        main: `Aufgabe a = new Aufgabe();\na.ausgeben(new String[]{"Elefant","Löwe","Zebra","Känguru","Giraffe"});`,
-        onStart: `ausgeben(new String[]{"Elefant","Löwe","Zebra","Känguru","Giraffe"});`
+  
+}
+$void main(){
+  ausgeben(new String[]{"Elefant","Löwe","Zebra","Känguru","Giraffe"});
+}`
       }
     ]
   }

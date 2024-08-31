@@ -98,7 +98,11 @@ export const data={
         name: "Aufgabe",
         src: `int[] addieren(int[] array1, int[] array2){
   //hierhin kommt der Code:
-
+  
+}
+$void main(){
+  int[] s = addieren(new int[]{3, 5, -1}, new int[]{ 6, 2, 4}); 
+  System.out.println(s);
 }`,
         main: `Aufgabe a = new Aufgabe();\nint[] s = a.addieren(new int[]{3, 5, -1}, new int[]{ 6, 2, 4}); System.out.println(s);`,
         onStart: `int[] s = addieren(new int[]{3, 5, -1}, new int[]{ 6, 2, 4}); System.out.println(s);`

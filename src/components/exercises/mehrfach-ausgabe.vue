@@ -41,11 +41,13 @@ export const data={
     clazzes: [{
       name: "Aufgabe",
       src: `$void mehrfachAusgabe(){
-        ///hierhin kommt der Code:
-
-      }`,
-      main: `Aufgabe a = new Aufgabe();\na.mehrfachAusgabe();`,
-      onStart: `mehrfachAusgabe();`
+  ///hierhin kommt der Code:
+  
+}
+  
+$void main(){
+  mehrfachAusgabe();
+}`
     }
     ]
   }

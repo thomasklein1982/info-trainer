@@ -130,10 +130,12 @@ export const data={
         name: "Aufgabe",
         src: `$void vertauschen(int[] array, int index1, int index2){
   //hierhin kommt der Code
-
-}`,
-        main: `Aufgabe a = new Aufgabe();\na.vertauschen(new int[]{5,3,8,1,6,9,11},2,5);`,
-        onStart: `vertauschen(new int[]{5,3,8,1,6,9,11},2,5);`
+  
+}
+  
+$void main(){
+  vertauschen(new int[]{5,3,8,1,6,9,11},2,5);
+}`
       }
     ]
   }

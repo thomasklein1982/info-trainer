@@ -86,10 +86,12 @@ export const data={
         name: "Aufgabe",
         src: `$void shiftLeft(int[] array){
   //hierhin kommt der Code:
-
-}`,
-        main: `Aufgabe a = new Aufgabe();\na.shiftLeft(new int[]{3, 6, 9, 12});`,
-        onStart: `shiftLeft(new int[]{3, 6, 9, 12});`
+  
+}
+  
+$void main(){
+  shiftLeft(new int[]{3, 6, 9, 12});
+}`
       }
     ]
   }

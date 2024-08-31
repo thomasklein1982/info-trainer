@@ -157,10 +157,11 @@ export const data={
         name: "Aufgabe",
         src: `$void arrayBasics(int[] array){
   //hierhin kommt der Code:
-
-}`,
-        main: `Aufgabe a = new Aufgabe();\na.arrayBasics(new int[]{37,21,15,65,31,47,53,38,29,55});`,
-        onStart: `arrayBasics(new int[]{37,21,15,65,31,47,53,38,29,55});`
+  
+}
+$void main(){
+  arrayBasics(new int[]{37,21,15,65,31,47,53,38,29,55});
+}`
       }
     ]
   }
