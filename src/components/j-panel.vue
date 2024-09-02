@@ -21,5 +21,8 @@ export default{
 </script>
 
 <style scoped>
-
+  .jpanel{
+    align-items: stretch;
+    justify-items: stretch;
+  }
 </style>

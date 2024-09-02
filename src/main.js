@@ -34,6 +34,8 @@ import Example from './components/example.vue';
 import OverlayBadge from 'primevue/overlaybadge';
 import Check from './components/Check.vue';
 import InputCheck from './components/InputCheck.vue';
+import JImage from './components/j-image.vue';
+import ClipboardJS from 'clipboard';
 const updateSW=registerSW({
   onNeedRefresh(){
     let a=confirm("Eine neue Version ist verfügbar. Willst du aktualisieren (empfohlen!)?");
@@ -78,6 +80,7 @@ app.component("JFrame",JFrame);
 app.component("JButton", JButton);
 app.component("JLabel",JLabel);
 app.component("JTextField",JTextField);
+app.component("JImage",JImage);
 app.component("JPanel",JPanel);
 app.component("OverlayBatch",OverlayBadge);
 app.component("Check",Check);
@@ -88,6 +91,6 @@ for(let a in exercises){
   app.component(m.data.id,m.default);
 }
 
+new ClipboardJS(".clipboard");
 
-console.log("fertig");
 app.mount('#app');

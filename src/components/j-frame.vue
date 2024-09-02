@@ -44,5 +44,7 @@ export default{
   border-radius: 0;
   padding: 0;
   border: 2pt solid gray;
+  align-items: stretch;
+  justify-items: stretch;
 }
 </style>

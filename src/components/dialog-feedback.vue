@@ -1,5 +1,5 @@
 <template>
-  <Dialog modal v-model:visible="show" :header="header">
+  <Dialog modal v-model:visible="show" :header="header" style="width: 90%;">
     <Card>
       <template #content>
         <slot></slot>

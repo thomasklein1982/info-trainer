@@ -7,7 +7,7 @@ let Java={
     },
     {
       label: "UI",
-      exercises: ["taschenrechner"]
+      exercises: ["steck","taschenrechner"]
     },
     {
       label: "Arrays",

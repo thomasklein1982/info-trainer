@@ -53,19 +53,24 @@ export default{
     realProject(){
       //return this.project;
       //if(!this.check) return this.project;
-      let realProject;
+      let rp;
       let project=JSON.parse(JSON.stringify(this.project));
-      if(this.userProject) realProject=JSON.parse(JSON.stringify(this.userProject));
-      else realProject=project;
+      if(this.userProject) rp=JSON.parse(JSON.stringify(this.userProject));
+      else rp=project;
       let diff=this.$root.settings.javaAppDifficulty.toLowerCase();
       for(let i=0;i<project.clazzes.length;i++){
         let c=project.clazzes[i];
         if(this.userProject){
           if(c.isHidden){
-            realProject.clazzes.push(c);
+            rp.clazzes.push(c);
           }else{
             continue;
           }
+        }
+        if(c.type==="UI"){
+          project.clazzes[i]=c.code;
+          //c.code=JSON.parse(c.code);
+          continue;
         }
         if(c.substring) continue;
         let src=c.src;
@@ -88,7 +93,7 @@ export default{
         // }
         c.src=src;//prettify(src);
       }
-      return realProject;
+      return rp;
     }
   },
   data(){
