@@ -36,6 +36,7 @@ import Check from './components/Check.vue';
 import InputCheck from './components/InputCheck.vue';
 import JImage from './components/j-image.vue';
 import ClipboardJS from 'clipboard';
+import ConsoleInputCheck from './components/console-input-check.vue';
 const updateSW=registerSW({
   onNeedRefresh(){
     let a=confirm("Eine neue Version ist verfügbar. Willst du aktualisieren (empfohlen!)?");
@@ -70,6 +71,7 @@ app.component('Code',Code);
 app.component('Hint',Hint);
 app.component('Example',Example);
 app.component('ConsoleOutput',ConsoleOutput)
+app.component('ConsoleInputCheck',ConsoleInputCheck)
 app.component("ExerciseBody",ExerciseBody);
 app.component("ExercisePath",ExercisePath);
 app.component("AppPreview",AppPreview);

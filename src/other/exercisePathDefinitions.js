@@ -2,8 +2,8 @@ let Java={
   name: "Java",
   paths: [
     {
-      label: "Basics",
-      exercises: ["hallo-welt","ascii-art", "rechnen", "durchschnitt"]
+      label: "Methoden",
+      exercises: ["hallo-welt","ascii-art", "rechnen", "ausgabe-ermitteln", "durchschnitt", "nullstelle", "preis"]
     },
     {
       label: "UI",

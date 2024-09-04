@@ -65,17 +65,25 @@ export function calcPoints(exerciseData){
   exerciseData.points=p;
 }
 
+export let difficulty="Hard";
+
 export default{
   components: {
     MainScreen,
     //PWABadge,
+  },
+  watch: {
+    "settings.javaAppDifficulty"(nv,ov){
+      difficulty=nv;
+      console.log("difficulty",difficulty);
+    }
   },
   data() {
       return {
         version: packageJson.version,
         exerciseDataCollection: exerciseDataCollection,
         settings: {
-          javaAppDifficulty: "Hard"
+          javaAppDifficulty: difficulty
         }
       };
   },

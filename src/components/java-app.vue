@@ -91,6 +91,14 @@ export default{
         //   let pre="class "+c.name;
         //   src=pre+"{\n"+src+"\n}"
         // }
+        if(i>0){
+          let lines=src.split("\n");
+          for(let j=0;j<lines.length;j++){
+            lines[j]="  "+lines[j];
+          }
+          src=lines.join("\n");
+          src="class "+c.name+"{\n"+src+"\n}";
+        }
         c.src=src;//prettify(src);
       }
       return rp;

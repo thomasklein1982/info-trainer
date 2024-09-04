@@ -78,10 +78,8 @@ export const data={
   title: "Analyse einer mathematischen Funktion",
   check: {
     init: async ()=>{
-      $Exercise.deleteMain();
-      $Exercise.tank=$Exercise.random(40,100);
       return {
-        a: await $new(Aufgabe)
+        
       };
     },
     test: async (tc,init)=>{
@@ -98,47 +96,16 @@ export const data={
         {
           data: ()=>{
             return {
-              check: (auto,kmStand,marke,out)=>{
-                return auto!==undefined && auto!==null && auto instanceof Auto;
+              check: async (funktion,grad)=>{
+                let g=await funktion.grad();
+                return funktion!==undefined && funktion!==null && funktion instanceof Funktion && g===grad;
               },
             };
           },
-          count: 1,
-          info: "Es wird ein Objekt der Klasse Auto erzeugt und zurückgegeben.",
+          count: 4,
+          info: "Die Methode <code>grad</code> funktioniert.",
         },
-        {
-          data: ()=>{
-            return {
-              check: (auto,kmStand,marke,out)=>{
-                return auto!==undefined && auto!==null && auto instanceof Auto && auto.marke===marke;
-              },
-            };
-          },
-          count: 3,
-          info: "Das zurückgegebene Auto hat die richtige Marke.",
-        },
-        {
-          data: ()=>{
-            return {
-              check: (auto,kmStand,marke,out)=>{
-                return auto!==undefined && auto!==null && auto instanceof Auto && auto.kmStand===kmStand+100 && auto.istGefahren;
-              },
-            };
-          },
-          count: 3,
-          info: "Das zurückgegebene Auto ist 100 km weit gefahren.",
-        },
-        {
-          data: ()=>{
-            return {
-              check: async (auto,kmStand,marke,out,auto2)=>{
-                return out===await auto2.getTankfuellungInProzent()+"%";
-              },
-            };
-          },
-          count: 3,
-          info: "Die prozentuale Tankfüllung wird in der Konsole ausgegeben.",
-        },
+        
       ]
   },
 
@@ -146,9 +113,9 @@ export const data={
     name: "OO-Funktion",
     clazzes: [
       {
-        name: "Programm",
+        name: "Main",
         src: `Funktion f;
-Programm( ) {
+$void main( ) {
   JFrame frame = new JFrame( "1" );
   JPanel pFunktion = new JPanel( "4" );
   frame.add( pFunktion );
@@ -238,11 +205,7 @@ String arrayToString(Punkt[] array){
   }
   return t;
 }
-  
-
-$void main(){
-  
-}`
+`
       },
       {
         name: "Funktion",
