@@ -18,8 +18,8 @@ import { createMethodOutputExerciseCode } from '../../other/createMethodOutputEx
 
 
 export const data={
-  id: "ausgabe-ermitteln",
-  title: "Was wird ausgegeben? (mehrere Methoden)",
+  id: "ausgabe-ermitteln-main",
+  title: "Was wird ausgegeben?",
   showCode: true,
   tasks: [
     {
@@ -40,35 +40,13 @@ export default{
         {
           code: `$void main(){
   System.out.println("$out");
-  $call:2();          
+  System.out.println("$out$out$out");
+  System.out.println("$out$out");
 }`,
           f(out,methods){
             out.push(this.output[0]);
-            methods[2].f(out,methods);
-          }
-        },
-        {
-          code: `$void $name(){
-  System.out.println("$out");
-  System.out.println("$out");
-}`,
-          f(out,methods){
-            out.push(this.output[0]);
-            out.push(this.output[1]);
-          }
-        },
-        {
-          code: `$void $name(){
-  System.out.println("$out");
-  $call:1();
-  $call:1();
-  System.out.println("$out");
-}`,
-          f(out, methods){
-            out.push(this.output[0]);
-            methods[1].f(out,methods);
-            methods[1].f(out,methods);
-            out.push(this.output[1]);
+            out.push(this.output[1]+this.output[2]+this.output[3]);
+            out.push(this.output[4]+this.output[5]);
           }
         }
       ];

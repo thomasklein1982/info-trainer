@@ -1,9 +1,11 @@
-
 export * as ArraySwap from './array-swap.vue';
 export * as HalloWelt from './hallo-welt.vue';
 export * as Preis from './preis.vue';
 export * as Nullstelle from './nullstelle.vue';
 export * as AusgabeErmitteln from './ausgabe-ermitteln.vue';
+export * as AusgabeErmittelnReturn from './ausgabe-ermitteln-return.vue';
+export * as AusgabeErmittelnMain from './ausgabe-ermitteln-main.vue';
+export * as AusgabeErmittelnParams from './ausgabe-ermitteln-params.vue';
 export * as MehrfachAusgabe from './mehrfach-ausgabe.vue';
 export * as AsciiArt from './ascii-art.vue';
 export * as Rechnen from './rechnen.vue';

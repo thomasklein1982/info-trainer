@@ -18,8 +18,8 @@ import { createMethodOutputExerciseCode } from '../../other/createMethodOutputEx
 
 
 export const data={
-  id: "ausgabe-ermitteln",
-  title: "Was wird ausgegeben? (mehrere Methoden)",
+  id: "ausgabe-ermitteln-return",
+  title: "Was wird ausgegeben? (mit Rückgabe)",
   showCode: true,
   tasks: [
     {
@@ -39,36 +39,39 @@ export default{
       let methods=[
         {
           code: `$void main(){
-  System.out.println("$out");
-  $call:2();          
+  System.out.println("$int");
+  int x = $call:1($int);
+  int y = $call:2($int,$int);
+  System.out.println(x);
+  System.out.println(y);
+            
 }`,
           f(out,methods){
-            out.push(this.output[0]);
-            methods[2].f(out,methods);
+            out.push(this.ints[0]);
+            let x=methods[1].f(out,methods,this.ints[1]);
+            let y=methods[2].f(out,methods, this.ints[2], this.ints[3]);
+            out.push(x);
+            out.push(y);
           }
         },
         {
-          code: `$void $name(){
-  System.out.println("$out");
-  System.out.println("$out");
+          code: `$void $name(int a){
+  int b = a * 2 ;
+  System.out.println( a-1 );
+  return b;
 }`,
-          f(out,methods){
-            out.push(this.output[0]);
-            out.push(this.output[1]);
+          f(out,methods,a){
+            let b= a*2;
+            out.push(a-1);
+            return b;
           }
         },
         {
-          code: `$void $name(){
-  System.out.println("$out");
-  $call:1();
-  $call:1();
-  System.out.println("$out");
+          code: `$void $name(int a, int b){
+  return a * ( b + 1 );
 }`,
-          f(out, methods){
-            out.push(this.output[0]);
-            methods[1].f(out,methods);
-            methods[1].f(out,methods);
-            out.push(this.output[1]);
+          f(out, methods,a,b){
+            return a*(b+1);
           }
         }
       ];

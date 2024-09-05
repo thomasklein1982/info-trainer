@@ -2,12 +2,20 @@ let Java={
   name: "Java",
   paths: [
     {
-      label: "Methoden",
-      exercises: ["hallo-welt","ascii-art", "rechnen", "ausgabe-ermitteln", "durchschnitt", "nullstelle", "preis"]
-    },
-    {
       label: "UI",
       exercises: ["steck","taschenrechner"]
+    },
+    {
+      label: "Methoden",
+      exercises: ["ausgabe-ermitteln-main","hallo-welt","ascii-art","ausgabe-ermitteln", "rechnen", "ausgabe-ermitteln-params", "durchschnitt", "nullstelle", "ausgabe-ermitteln-return", "preis"]
+    },
+    {
+      label: "if-else",
+      exercises: []
+    },
+    {
+      label: "Schleifen",
+      exercises: []
     },
     {
       label: "Arrays",

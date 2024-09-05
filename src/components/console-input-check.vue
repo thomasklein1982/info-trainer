@@ -1,6 +1,12 @@
 <template>
   <div style="display: flex">
-    <ConsoleInput v-model="task.input"/>
+    <div style="flex: 1; display: flex" v-if="isChecked">
+      <template v-if="!isCorrect">
+        <div style="flex: 1; font-family: monospace; white-space: pre; text-decoration: line-through;" v-html="displayValueWrong"/>
+      </template>
+      <div style="flex: 1; font-family: monospace; white-space: pre;" v-html="task.solution"/>
+    </div>
+    <ConsoleInput style="flex: 1" v-else v-model="task.input"/>
     <Check :status="status"/>
   </div>
 </template>
@@ -32,6 +38,9 @@ export default{
     }
   },
   computed: {
+    solution(){
+      return this.task.solution;
+    },
     isCorrect(){
       return this.task.correct;
     },

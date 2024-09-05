@@ -23,10 +23,12 @@
       <template v-else>
         <Button label="Aufgabe bearbeiten" @click="showExercise()"/>
         <Dialog modal v-model:visible="showExerciseDialog" :header="title">
+          <template #header>
+            {{ title }} <ExerciseProgress style="flex: 1" :exercise-data="exerciseData"/>
+          </template>
           <slot></slot>
           <div style="position: relative">
             <slot name="exercise"></slot>
-            <div style="position: absolute; left: 0; right: 0; top: 0; bottom: 0" v-if="exerciseChecked"/>
           </div>
           
           <template #footer>
