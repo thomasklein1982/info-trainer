@@ -6,7 +6,7 @@
         :clazzes="clazzes"
       />
     </span>
-    Die Methode <Code no-numbers>void auto(String marke, int kmStand)</Code> soll nacheinander die folgenden Dinge tun:
+    Die Methode <Code no-numbers>Auto auto(String marke, int kmStand)</Code> soll nacheinander die folgenden Dinge tun:
     <ol>
       <li>Es soll ein neues Auto erzeugt werden mit der angegebenen Marke <Code inline>marke</Code> und dem angegebenen Kilometerstand <Code inline>kmStand</Code>.</li>
       <li>Das Auto soll 100 km weit fahren.</li>
