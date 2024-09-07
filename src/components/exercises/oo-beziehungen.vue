@@ -3,7 +3,7 @@
     Entscheide jeweils, welche Aussagen korrekt sind.
     <template #exercise>
       <ol class="teilaufgaben">
-        <li v-for="(t,i) in tasks">
+        <li v-for="(t,i) in realTasks">
           <div style="padding: 1rem; background-color: white; display: grid; grid-template: 1fr 1pt 1fr/1cm 1mm 1fr 1fr 1mm 1cm; width: 8cm">
             <span class="uml-class" style="grid-row: 1/4; grid-column: 1">A</span>
             <span class="uml-class" style="grid-row: 1/4; grid-column: 6">B</span>
@@ -54,8 +54,8 @@ export const data={
     "Klasse A erbt alle Eigenschaften von Klasse B.",
     "Klasse B erbt alle Eigenschaften von Klasse A."
   ],
-  tasks: [],
-  taskDef: [
+  realTasks: [],
+  tasks: [
     {
       type: "vererbung",
       mult: ["1",null]
@@ -126,9 +126,9 @@ export default{
       }
     },
     create(Random, resArray){
-      this.tasks=JSON.parse(JSON.stringify(Random.mixArray(this.taskDef)));
-      for(let i=0;i<this.tasks.length;i++){
-        let t=this.tasks[i];
+      this.realTasks=JSON.parse(JSON.stringify(Random.mixArray(this.tasks)));
+      for(let i=0;i<this.realTasks.length;i++){
+        let t=this.realTasks[i];
         t.checked=false;
         t.input=[];
         t.solution=[];
@@ -193,8 +193,8 @@ export default{
     },
     check(){
       let resArray=[];
-      for(let i=0;i<this.tasks.length;i++){
-        let t=this.tasks[i];
+      for(let i=0;i<this.realTasks.length;i++){
+        let t=this.realTasks[i];
         t.checked=true;
         t.correct=true;
         for(let j=0;j<this.statements.length;j++){
