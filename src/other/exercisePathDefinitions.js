@@ -27,7 +27,7 @@ let Java={
     },
     {
       label: "Objektorientierung",
-      exercises: ["oo-basics","oo-beziehungen","oo-funktion"]
+      exercises: ["oo-basics","oo-beziehungen","oo-person", "oo-funktion"]
     },
   ]
 }
