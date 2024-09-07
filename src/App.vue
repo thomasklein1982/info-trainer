@@ -103,7 +103,7 @@ export default{
       let userData={};
       for(let id in this.exerciseDataCollection){
         let ed=this.exerciseDataCollection[id];
-        if(!ed.correct) continue;
+        if(!ed || !ed.correct) continue;
         let o={
           correct: isCompletelyTrue(ed.correct)? true: boolArrayToInt(ed.correct)
         };
@@ -118,8 +118,8 @@ export default{
       for(let id in userData){
         let o=userData[id];
         let ed=this.getExerciseData(id);//exerciseDataCollection[a];
-        ed.correct=0;
         if(ed){
+          ed.correct=0;
           let count=ed.data.check? ed.data.check.testcases.length : ed.data.tasks.length;
           let array;
           if(o.correct===true){

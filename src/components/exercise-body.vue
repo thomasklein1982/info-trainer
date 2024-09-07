@@ -69,7 +69,7 @@ export default {
   },
   computed: {
     exerciseChecked(){
-      return this.exerciseData.userProject!==undefined;
+      return this.exerciseData?.userProject!==undefined;
     },
     title(){
       return this.exercise.title;
@@ -109,7 +109,7 @@ export default {
   methods: {
     showExercise(){
       let resArray;
-      if(this.exerciseData.userProject!==undefined){
+      if(this.exerciseData?.userProject!==undefined){
         this.seed=this.exerciseData.userProject;
         resArray=this.exerciseData.correct;
       }else{

@@ -55,7 +55,7 @@ export default{
           }
         },
         {
-          code: `$void $name(int a){
+          code: `int $name(int a){
   int b = a * 2 ;
   System.out.println( a-1 );
   return b;
@@ -67,7 +67,7 @@ export default{
           }
         },
         {
-          code: `$void $name(int a, int b){
+          code: `int $name(int a, int b){
   return a * ( b + 1 );
 }`,
           f(out, methods,a,b){

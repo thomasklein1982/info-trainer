@@ -1,3 +1,5 @@
+
+
 export * as ArraySwap from './array-swap.vue';
 export * as HalloWelt from './hallo-welt.vue';
 export * as Preis from './preis.vue';
@@ -36,4 +38,5 @@ export * as TmLoeschen from './tm-loeschen.vue';
 export * as TmInkrement from './tm-inkrement.vue';
 export * as TmAddieren from './tm-addieren.vue';
 export * as OoBasics from './oo-basics.vue';
+export * as OoBeziehungen from './oo-beziehungen.vue';
 export * as OoFunktion from './oo-funktion.vue';

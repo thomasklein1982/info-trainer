@@ -28,7 +28,7 @@ export default{
   },
   computed: {
     completed(){
-      return this.exerciseData.correct===true||isCompletelyTrue(this.exerciseData.correct);
+      return this.exerciseData?.correct===true||isCompletelyTrue(this.exerciseData?.correct);
     },
     header(){
       if(this.completed){

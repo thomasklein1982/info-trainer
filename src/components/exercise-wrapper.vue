@@ -31,13 +31,13 @@ export default {
   },
   computed: {
     title(){
-      return this.exerciseData.data.title;
+      return this.exerciseData?.data.title;
     },
     testCaseCount(){
-      return this.exerciseData.data.check.testcases.length;
+      return this.exerciseData?.data.check.testcases.length;
     },
     hasUserData(){
-      return this.exerciseData.userProject!==undefined;
+      return this.exerciseData?.userProject!==undefined;
     },
     project(){
       if(this.exerciseData.userProject){

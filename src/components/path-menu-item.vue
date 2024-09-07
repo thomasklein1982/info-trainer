@@ -27,7 +27,7 @@ export default{
       for(let i=0;i<this.pathData.exercises.length;i++){
         let id=this.pathData.exercises[i];
         let ed=this.$root.getExerciseData(id);
-        if(isCompletelyTrue(ed.correct)) s++;
+        if(ed && isCompletelyTrue(ed.correct)) s++;
       }
       return s;
     }
