@@ -50,12 +50,111 @@ export const data={
   title: "Person",
   check: {
     init: async ()=>{
+      let p1=await $Exercise.createInstance(Person,"Müller","Eva",17,1.63, 56.4);
+      let p2=await $Exercise.createInstance(Person,"Abelmann","Lutz",18,2.03, 121.2);
+      let p3=await $Exercise.createInstance(Person,"Turing","Alan",36,1.84, 77.6);
+      let c=$object_getClass(p1);
+      let res=$Exercise.compareClass(c,{
+        attributes: {
+          nachname: {
+            vis: "private",
+            type: "String"
+          },
+          vorname: {
+            vis: "private",
+            type: "String"
+          },
+          alter: {
+            vis: "private",
+            type: "int"
+          },
+          groesse: {
+            vis: "private",
+            type: "double"
+          },
+          gewicht: {
+            vis: "private",
+            type: "double"
+          },
+        },
+        methods: {
+          Person: {
+            vis: "public",
+            args: [
+              {
+                name: "nachname",
+                type: "String"
+              },
+              {
+                name: "vorname",
+                type: "String"
+              },
+              {
+                name: "alter",
+                type: "int"
+              },
+              {
+                name: "groesse",
+                type: "double"
+              },
+              {
+                name: "gewicht",
+                type: "double"
+              }
+            ]
+          },
+          vollerName: {
+            vis: "public",
+            args: [
+              
+            ],
+            type: "String"
+          },
+          sage: {
+            vis: "public",
+            args: [
+              {
+                name: "text",
+                type: "String"
+              }
+            ]
+          },
+          istErwachsen: {
+            vis: "public",
+            args: [],
+            type: "boolean"
+          },
+          bmi: {
+            vis: "public",
+            args: [
+              
+            ],
+            type: "double"
+          },
+          heiraten: {
+            vis: "public",
+            args: [
+              {
+                name: "ehepartner",
+                type: "Person"
+              },
+              {
+                name: "behalteNachname",
+                type: "boolean"
+              }
+            ]
+          }
+        }
+      });
+      console.log("compare",res);
       return {
-        a: await $new(Aufgabe)
-      };
+        p1,p2,p3
+      }
     },
     test: async (tc,init)=>{
-      return (await tc.check(auto,kmStand,marke,out,auto2));
+      
+
+      return false;//(await tc.check(auto,kmStand,marke,out,auto2));
     },
     testcases: [
         {
@@ -116,7 +215,7 @@ export const data={
   p1.sage("Hallo!");
   System.out.println( p1.istErwachsen() );
   System.out.println( "BMI = " + p1.bmi() );
-  p1.heiraten( p2, true )
+  p1.heiraten( p2, true );
   p1.sage("Tschüss!");
 }`
       },
