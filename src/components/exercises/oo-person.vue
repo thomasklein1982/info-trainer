@@ -43,17 +43,42 @@ export const data={
         "+ sage(String text)",
         "+ istErwachsen(): boolean",
         "+ bmi(): double",
-        "+ heiraten(Person ehepartner, boolean behaeltNachname)"
+        "+ heiraten(Person ehepartner, boolean behalteNachname)"
       ]
     }
   ],
   title: "Person",
   check: {
     init: async ()=>{
-      let p1=await $Exercise.createInstance(Person,"Müller","Eva",17,1.63, 56.4);
-      let p2=await $Exercise.createInstance(Person,"Abelmann","Lutz",18,2.03, 121.2);
-      let p3=await $Exercise.createInstance(Person,"Turing","Alan",36,1.84, 77.6);
-      let c=$object_getClass(p1);
+      let personendaten=[
+        {
+          nachname: "Müller",
+          vorname: "Eva",
+          alter: 17,
+          groesse: 1.63,
+          gewicht: 56.4
+        },
+        {
+          nachname: "Abelmann",
+          vorname: "Lutz",
+          alter: 18,
+          groesse: 2.03,
+          gewicht: 121.2
+        },
+        {
+          nachname: "Turing",
+          vorname: "Alan",
+          alter: 36,
+          groesse: 1.84,
+          gewicht: 77.6
+        },
+      ];
+      let personen=[];
+      for(let i=0;i<personendaten.length;i++){
+        let p=personendaten[i];
+        personen.push(await $Exercise.createInstance(Person, p.nachname,p.vorname,p.alter,p.groesse, p.gewicht));
+      }
+      let c=$object_getClass(personen[0]);
       let res=$Exercise.compareClass(c,{
         attributes: {
           nachname: {
@@ -148,60 +173,151 @@ export const data={
       });
       console.log("compare",res);
       return {
-        p1,p2,p3
+        personen, personendaten, declaration: res
       }
     },
     test: async (tc,init)=>{
-      
-
-      return false;//(await tc.check(auto,kmStand,marke,out,auto2));
+      return await tc.check(init);
     },
     testcases: [
-        {
-          data: ()=>{
-            return {
-              check: (auto,kmStand,marke,out)=>{
-                return auto!==undefined && auto!==null && auto instanceof Auto;
-              },
-            };
-          },
-          count: 1,
-          info: "Es wird ein Objekt der Klasse Auto erzeugt und zurückgegeben.",
+      {
+        data: ()=>{
+          return {
+            check: (data)=>{
+              if(data.declaration.length>0){
+                return data.declaration.join("\n");
+              }else{
+                return true;
+              }
+            },
+          };
         },
-        {
-          data: ()=>{
-            return {
-              check: (auto,kmStand,marke,out)=>{
-                return auto!==undefined && auto!==null && auto instanceof Auto && auto.marke===marke;
-              },
-            };
-          },
-          count: 3,
-          info: "Das zurückgegebene Auto hat die richtige Marke.",
+        count: 1,
+        info: "Alle Attribute und Methoden wurden korrekt deklariert.",
+      },
+      {
+        data: ()=>{
+          return {
+            check: (data)=>{
+              for(let i=0;i<data.personen.length;i++){
+                let p=data.personen[i];
+                let pd=data.personendaten[i];
+                for(let a in pd){
+                  if(p[a]!==pd[a]){
+                    return false;
+                  }
+                }
+              }
+              return true;
+            },
+          };
         },
-        {
-          data: ()=>{
-            return {
-              check: (auto,kmStand,marke,out)=>{
-                return auto!==undefined && auto!==null && auto instanceof Auto && auto.kmStand===kmStand+100 && auto.istGefahren;
-              },
-            };
-          },
-          count: 3,
-          info: "Das zurückgegebene Auto ist 100 km weit gefahren.",
+        count: 1,
+        info: "Der Konstruktor wurde korrekt implementiert.",
+      },
+      {
+        data: ()=>{
+          return {
+            check: async (data)=>{
+              for(let i=0;i<data.personen.length;i++){
+                let p=data.personen[i];
+                let pd=data.personendaten[i];
+                let vn=await p.vollerName();
+                if(vn!==pd.vorname+" "+pd.nachname){
+                  return false;
+                }
+              }
+              return true;
+            },
+          };
         },
-        {
-          data: ()=>{
-            return {
-              check: async (auto,kmStand,marke,out,auto2)=>{
-                return out===await auto2.getTankfuellungInProzent()+"%";
-              },
-            };
-          },
-          count: 3,
-          info: "Die prozentuale Tankfüllung wird in der Konsole ausgegeben.",
+        count: 1,
+        info: "Die Methode 'vollerName' wurde korrekt implementiert.",
+      },
+      {
+        data: ()=>{
+          return {
+            check: async (data)=>{
+              for(let i=0;i<data.personen.length;i++){
+                let p=data.personen[i];
+                let pd=data.personendaten[i];
+                $Exercise.clearConsole();
+                await p.sage("ghdgdshg"+i);
+                let out=$Exercise.getConsoleContent().join("");
+                if(out!==pd.vorname+" "+pd.nachname+": ghdgdshg"+i){
+                  return false;
+                }
+              }
+              return true;
+            },
+          };
         },
-      ]
+        count: 1,
+        info: "Die Methode 'sage' wurde korrekt implementiert.",
+      },
+      {
+        data: ()=>{
+          return {
+            check: async (data)=>{
+              for(let i=0;i<data.personen.length;i++){
+                let p=data.personen[i];
+                let pd=data.personendaten[i];
+                let erw=await p.istErwachsen();
+                if(pd.alter<18 && erw || pd.alter>=18 && !erw){
+                  return false;
+                }
+              }
+              return true;
+            },
+          };
+        },
+        count: 1,
+        info: "Die Methode 'istErwachsen' wurde korrekt implementiert.",
+      },
+      {
+        data: ()=>{
+          return {
+            check: async (data)=>{
+              for(let i=0;i<data.personen.length;i++){
+                let p=data.personen[i];
+                let pd=data.personendaten[i];
+                let bmi=await p.bmi();
+                let bmiSoll=pd.gewicht/(pd.groesse*pd.groesse);
+                if(Math.abs(bmi-bmiSoll)>0.00001){
+                  return false;
+                }
+              }
+              return true;
+            },
+          };
+        },
+        count: 1,
+        info: "Die Methode 'bmi' wurde korrekt implementiert.",
+      },
+      {
+        data: ()=>{
+          return {
+            check: async (data)=>{
+              for(let i=0;i<data.personen.length;i++){
+                let p=data.personen[i];
+                let pd=data.personendaten[i];
+                let ehe=await $Exercise.createInstance(Person,"Bahsndha","Paul",23,1,1);
+                let behalten=i%2===1;
+                await p.heiraten(ehe,behalten);
+                let soll=behalten? pd.nachname:ehe.nachname;
+                console.log("nachnamen",soll,p.nachname);
+                if(soll!==p.nachname){
+                  return false;
+                }
+              }
+              return true;
+            },
+          };
+        },
+        count: 1,
+        info: "Die Methode 'heiraten' wurde korrekt implementiert.",
+      },
+    ]
   },
 
   project: {

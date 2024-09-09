@@ -2,9 +2,9 @@
   <div style="display: flex">
     <div style="flex: 1; display: flex" v-if="isChecked">
       <template v-if="!isCorrect">
-        <div style="flex: 1; font-family: monospace; white-space: pre; text-decoration: line-through;" v-html="displayValueWrong"/>
+        <div style="font-size: 130%; flex: 1; font-family: monospace; white-space: pre; color: red;" v-html="displayValueWrong"/>
       </template>
-      <div style="flex: 1; font-family: monospace; white-space: pre;" v-html="task.solution"/>
+      <div style="font-size: 130%; flex: 1; font-family: monospace; white-space: pre; color: lime;" v-html="task.solution"/>
     </div>
     <ConsoleInput style="flex: 1" v-else v-model="task.input"/>
     <Check :status="status"/>
