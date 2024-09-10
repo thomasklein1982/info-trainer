@@ -1,4 +1,3 @@
-
 export * as ArraySwap from './array-swap.vue';
 export * as HalloWelt from './hallo-welt.vue';
 export * as Preis from './preis.vue';
@@ -40,3 +39,13 @@ export * as OoBasics from './oo-basics.vue';
 export * as OoBeziehungen from './oo-beziehungen.vue';
 export * as OoPerson from './oo-person.vue';
 export * as OoFunktion from './oo-funktion.vue';
+export * as Roman from './if/roman.vue';
+export * as MonatTage from './if/monat-tage.vue';
+export * as Vokal from './if/vokal.vue';
+export * as Uppercase  from './if/uppercase.vue';
+export * as Schaltjahr from './if/schaltjahr.vue';
+export * as Strom from './if/strom.vue';
+export * as Minimum2 from './if/minimum-2.vue';
+export * as Minimum3 from './if/minimum-3.vue';
+export * as Even from './if/even.vue';
+export * as Dreieck from './if/dreieck.vue';

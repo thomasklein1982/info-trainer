@@ -11,7 +11,7 @@ let Java={
     },
     {
       label: "if-else",
-      exercises: []
+      exercises: ["minimum-2", "even", "roman", "monat-tage","vokal","uppercase","minimum-3","dreieck","schaltjahr","strom"]
     },
     {
       label: "Schleifen",
