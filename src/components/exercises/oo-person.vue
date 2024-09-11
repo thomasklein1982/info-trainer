@@ -16,7 +16,7 @@
       zurückgeben.</li>
       <li>Die Methode <Code inline>istErwachsen</Code> soll entscheiden, ob die Person erwachsen ist oder nicht.</li>
       <li>Die Methode <Code inline>bmi</Code> soll den BMI (Body-Maß-Index) der Person berechnen und zurückgeben.</li>
-      <li>Die Methode <Code inline>heiraten</Code> soll den Nachnamen der Person in den Nachnamen der Person <Code inline>ehepartner</Code> ändern, aber nur, wenn der zweite Parameter <Code inline>true</Code> ist.</li>
+      <li>Die Methode <Code inline>heiraten</Code> soll den Nachnamen der Person in den Nachnamen der Person <Code inline>ehepartner</Code> ändern, aber nur, wenn der zweite Parameter <Code inline>false</Code> ist.</li>
     </ol>
   </ExerciseBody>
 </template>
