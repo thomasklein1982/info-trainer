@@ -3,7 +3,11 @@
     <Button @click="openDialog" label="JavaApp starten"/>
   </div>
   <Dialog ref="dialog" :header="project?.name" v-model:visible="show" :closable="true" maximizable :close-on-escape="false">
-    <template #maximizeicon><Button :class="newInfos? 'shaking':''" rounded @click.stop="showFeedback" text size="large" style="width:200px;height:200px" :icon="'pi pi-'+(completed? 'check':'info')"/></template>
+    <template #maximizeicon>
+      <div style="position: relative" @click.stop="stopMaximize">
+        <Button :class="newInfos? 'shaking':''" rounded @click.stop="showFeedback" text size="large" :icon="'pi pi-'+(completed? 'check':'info')"/>
+      </div>
+    </template>
     <template #closeicon><Button rounded @click.stop="closeDialog" text icon="pi pi-times" severity="secondary" :loading="saveResolve!==null"/></template>
     <template #header>
       <div style="display: flex; width: 100%; align-items: center;"><ExerciseProgress :exercise-data="exerciseData"/></div>
@@ -55,6 +59,9 @@ export default{
     }
   },
   methods: {
+    stopMaximize(ev){
+      ev.stopPropagation();
+    },
     async closeDialog(){
       if(this.saveResolve) return;
       this.$refs.javaApp.sendMessage("give-exercise-data",{});

@@ -2,7 +2,12 @@
   
   <Button @click="openDialog" label="TM-Simulator öffnen"/>
   <Dialog ref="dialog" :header="exerciseData? exerciseData.title:'Turing-Maschine'" v-model:visible="show" :closable="true" maximizable :close-on-escape="false">
-    <template #maximizeicon><Button v-if="exerciseData" :class="newInfos? 'shaking':''" rounded @click.stop="showFeedback" text size="large" style="width:200px;height:200px" :icon="'pi pi-'+(completed? 'check':'info')"/></template>
+    <template #maximizeicon>
+      <div style="position: relative">
+        <div style="position: absolute; width: 200px; height: 200px;"/>
+        <Button v-if="exerciseData" :class="newInfos? 'shaking':''" rounded @click.stop="showFeedback" text size="large" :icon="'pi pi-'+(completed? 'check':'info')"/>
+      </div>
+    </template>
     <template #closeicon><Button rounded @click.stop="closeDialog" text icon="pi pi-times" severity="secondary"/></template>
     <template #header>
       <div v-if="exerciseData" style="display: flex; width: 100%; align-items: center;"><ExerciseProgress :exercise-data="exerciseData"/></div>

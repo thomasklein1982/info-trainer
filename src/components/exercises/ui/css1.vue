@@ -97,13 +97,16 @@ export const data={
           return {
             check: (labels)=>{
               let l=labels[3];
-              if(!l) throw "Es gibt kein 'Label 5'.";
+              if(!l) throw "Es gibt kein 'Label 4'.";
               let panel=l.getPanel();
               let comp=$new(JLabel,"Label 1");
               panel.add(comp);
               comp.setCSS("font-size: 200%");
               let res=$Exercise.compareStyles(l,comp,["font-size"]);
               panel.remove(comp);
+              if(!res.ok){
+                throw res.keys.join("; ");
+              }
               return res.ok;
             }
           }
@@ -122,6 +125,9 @@ export const data={
               comp.setCSS("border: 4pt solid green; background-color: yellow;");
               let res=$Exercise.compareStyles(l,comp,["border","background-color"]);
               panel.remove(comp);
+              if(!res.ok){
+                throw res.keys.join("; ");
+              }
               return res.ok;
             }
           }
@@ -168,7 +174,32 @@ $void main(){
         type: "UI",
         code: {
           "name": "Labels",
-          "components":[]
+          "components":[
+            {
+              "type": "JLabel",
+              "value": "Label 1",
+            },
+            {
+              "type": "JLabel",
+              "value": "Label 2",
+            },
+            {
+              "type": "JLabel",
+              "value": "Label 3",
+            },
+            {
+              "type": "JLabel",
+              "value": "Label 4",
+            },
+            {
+              "type": "JLabel",
+              "value": "Label 5",
+            },
+            {
+              "type": "JLabel",
+              "value": "Label 6",
+            }
+          ]
         }
       },
       
