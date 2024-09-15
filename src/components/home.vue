@@ -18,6 +18,17 @@
       </template>
     </Card>
     <Card>
+      <template #title>Web-Editor</template>
+      <template #content>
+        Ein Editor für HTML, CSS und JavaScript.
+      </template>
+      <template #footer>
+        <div style="text-align: right">
+          <WebEditorLauncher/>
+        </div>
+      </template>
+    </Card>
+    <Card>
       <template #title>Turing-Maschinen-Simulator</template>
       <template #content>
         Der Simulator erlaubt es dir, Turingmaschinen zu programmieren und zu testen.
@@ -35,10 +46,11 @@
 <script>
 import ClassDiagram from './ClassDiagram.vue';
 import TuringMachineLauncher from './turing-machine-launcher.vue';
+import WebEditorLauncher from './web-editor-launcher.vue';
 
 export default{
   components: {
-    TuringMachineLauncher, ClassDiagram
+    TuringMachineLauncher, ClassDiagram, WebEditorLauncher
   }
 }
 </script>
