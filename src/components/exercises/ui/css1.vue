@@ -2,7 +2,7 @@
   <ExerciseBody :exercise="$data" :java="project">
       Die angezeigte UI besteht ausschließlich aus JLabels. Implementiere die benötigten CSS-Regeln.
       <div class="float-right">
-        <AppPreview width="7rem">
+        <AppPreview width="11rem">
           <JFrame layout="1">
             <JLabel style="background-color: red">Label 1</JLabel>
             <JLabel style="color: blue">Label 2</JLabel>

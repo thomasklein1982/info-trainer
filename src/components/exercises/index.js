@@ -14,6 +14,7 @@ export * as Durchschnitt  from './durchschnitt.vue';
 export * as Taschenrechner from './taschenrechner.vue';
 export * as Steckbrief from './ui/steckbrief.vue';
 export * as Css1 from './ui/css1.vue';
+export * as UITaschenrechner  from './ui/ui-taschenrechner.vue';
 export * as ArrayBasics from './array-basics.vue';
 export * as IterativeSuche from './iterative-suche.vue';
 export * as ArrayAusgabe from './array-ausgabe.vue';

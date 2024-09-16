@@ -3,7 +3,7 @@ let Java={
   paths: [
     {
       label: "UI",
-      exercises: ["steck","css1","taschenrechner"]
+      exercises: ["steck","css1","ui-taschenrechner"]
     },
     {
       label: "Methoden",
