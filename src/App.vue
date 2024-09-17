@@ -140,7 +140,6 @@ export default{
       }
     },
     async load(){
-      console.log("load");
       let settings=await storage.getItem(STORAGE_SETTINGS);
       if(settings){
         for(let a in this.settings){
@@ -153,7 +152,6 @@ export default{
       this.restoreUserDataObject(data);
     },
     save(){
-      console.log("save");
       storage.setItem(STORAGE_DATA,this.createUserDataObject());
     },
     saveSettings(){

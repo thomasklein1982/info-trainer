@@ -26,6 +26,10 @@ let Java={
       exercises: ["iterative-suche"]
     },
     {
+      label: "Rekursion",
+      exercises: ["fibonacci","ggt","binary-search"]
+    },
+    {
       label: "Objektorientierung",
       exercises: ["oo-basics","oo-beziehungen","oo-person", "oo-funktion"]
     },

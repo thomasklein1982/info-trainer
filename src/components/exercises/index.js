@@ -1,4 +1,7 @@
 
+export * as Fibonacci from './rekursion/fibonacci.vue';
+export * as Ggt from './rekursion/ggt.vue';
+export * as BinarySearch from './rekursion/binary-search.vue';
 export * as ArraySwap from './array-swap.vue';
 export * as HalloWelt from './hallo-welt.vue';
 export * as Preis from './preis.vue';

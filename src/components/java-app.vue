@@ -118,7 +118,6 @@ export default{
   },
   methods: {
     listener(message){
-      console.log("received",message);
       let type=message.data.type;
       let data=message.data.data;
       if(type==='submit-exercise'){

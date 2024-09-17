@@ -8,14 +8,13 @@
               <JLabel>Grace Hopper</JLabel>
               <JImage src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Grace_Hopper.jpg/330px-Grace_Hopper.jpg"/>
               <JLabel>Geboren:</JLabel><JLabel>09.12.1906</JLabel>
-              <JLabel>Hobbys:</JLabel><JLabel>💻⚓</JLabel>
+              <JLabel>Hobbys:</JLabel><JLabel>Computer, Seefahrt</JLabel>
             </JPanel>
           </JFrame>
         </AppPreview>
       </div>
       <p>Einige Details:</p>
       <ul>
-        <li>Die Symbole bei den Hobbys sind Unicode-Symbole. Suche im Internet nach "unicode computer", um das erste Symbol zu finden.</li>
         <li>Es dürfen nur Labels, Images und Panels verwendet werden.</li>
         <li>Das Bild <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Grace_Hopper.jpg/330px-Grace_Hopper.jpg" target="_blank">findest du hier</a>. <Button class="clipboard" size="small" text data-clipboard-text="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Grace_Hopper.jpg/330px-Grace_Hopper.jpg" icon="pi pi-copy"/></li>
       </ul>
@@ -36,7 +35,7 @@ export const data={
         geburtstag: $Exercise.getComponent("JLabel",(e)=>{return e.getValue().trim()==="09.12.1906"}),
         image: $Exercise.getComponent("JImage",(e)=>{return e.getValue().trim()==="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Grace_Hopper.jpg/330px-Grace_Hopper.jpg"}),
         hobbys: $Exercise.getComponent("JLabel",(e)=>{return e.getValue().trim()==="Hobbys:"}),
-        hobbysWert: $Exercise.getComponent("JLabel",(e)=>{return e.getValue()==="💻⚓"})
+        hobbysWert: $Exercise.getComponent("JLabel",(e)=>{return e.getValue()==="Computer, Seefahrt"})
       };
     },
     testcases: [
@@ -86,7 +85,7 @@ export const data={
             id: "hobbysWert"
           }
         },
-        info: "Es gibt ein JLabel, in dem '💻⚓' steht."
+        info: "Es gibt ein JLabel, in dem 'Computer, Seefahrt' steht."
       },
       {
         data: ()=>{
