@@ -1,4 +1,6 @@
 
+
+export * as List from './data-structures/list.vue';
 export * as Fibonacci from './rekursion/fibonacci.vue';
 export * as Ggt from './rekursion/ggt.vue';
 export * as BinarySearch from './rekursion/binary-search.vue';

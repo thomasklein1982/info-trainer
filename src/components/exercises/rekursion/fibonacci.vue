@@ -60,7 +60,9 @@ export const data={
   project: {
     name: "Fibonacci",
     constraints: {
-      loops: true,
+      java: {
+        loops: true
+      }
     },
     clazzes: [
       {

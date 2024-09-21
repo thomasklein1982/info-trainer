@@ -33,6 +33,10 @@ let Java={
       label: "Objektorientierung",
       exercises: ["oo-basics","oo-beziehungen","oo-person", "oo-funktion"]
     },
+    {
+      label: "Datenstrukturen",
+      exercises: ["list"]
+    },
   ]
 }
 

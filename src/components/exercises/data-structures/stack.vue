@@ -1,22 +1,14 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
-    <p>Der größte gemeinsame Teiler (ggT) zweier natürlicher Zahlen n und m ist die größte natürliche Zahl, durch die man sowohl n als auch m glatt teilen kann. Euklid von Alexandria ersann vor über 2000 Jahren den folgenden euklidischen Algorithmus:</p>
-    <ol>
-      <li>Gegeben: Zwei natürliche Zahlen n und m &ge; 1</li>
-      <li>Berechne den Rest r der Division von n : m.</li>
-      <li>Falls r = 0: Fertig, das Ergebnis ist m.</li>
-      <li>Setze n auf m und m auf r.</li>
-      <li>Zurück zu Schritt 2.</li>
+    Ein <em>Stack</em> (deutsch: "Stapel") ist eine Datenstruktur, die beliebig viele Objekte einer bestimmten Klasse (im folgenden ein Generic namens <Code inline>T</Code>) speichern kann. Ein Stack besitzt (mindestens) die folgenden Methoden:
+    <ol class="teilaufgaben">
+      <li><Code inline>int size()</Code>: Liefert die Anzahl der Objekte auf dem Stack zurück.</li>
+      <li><Code inline>boolean empty()</Code>: Pürft, ob der Stack leer ist.</li>
+      <li><Code inline>T peek()</Code>: Liefert das oberste Objekt auf dem Stack zurück, sofern vorhanden (ansonsten <code>null</code>).</li>
+      <li><Code inline>T pop()</Code>: Entfernt das oberste Objekt vom Stack und liefert es zurück, sofern vorhanden (ansonsten <code>null</code>)</li>
+      <li><Code inline>void push(T obj)</Code>: Legt das Objekt <Code inline>obj</Code> oben auf den Stack.</li>
     </ol>
-
-    Implementiere die Methode <Code inline>int ggT(int n, int m)</Code>
-    die den ggT von <Code inline>n</Code> und <Code inline>m</Code> zurückgibt.
-    <Example>
-      <ul>
-        <li><code>ggT ( 6, 8 )</code> &rarr; 2</li>
-        <li><code>ggT ( 42, 12 )</code> &rarr; 6</li>
-      </ul>
-    </Example>
+    <p>In dieser Aufgabe soll der Stack als verkettete Liste implementiert werden.</p>
     <p>Implementiere diese Methode ohne Verwendung von Schleifen.</p>
   </ExerciseBody>
 </template>
