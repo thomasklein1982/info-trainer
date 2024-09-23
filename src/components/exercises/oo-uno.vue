@@ -4,7 +4,7 @@
     <div style="">
       <ClassDiagram
         style="width: 14cm" 
-        :clazzes="clazzes"
+        :clazz="clazzes[0]"
       />
     </div>
     

@@ -1,13 +1,13 @@
 <template>
-  <div class="clazz-wrapper" v-for="(c,i) in clazzes">
+  <div class="clazz-wrapper">
     <div class="clazz-name">
-      {{ c.name }}
+      {{ clazz.name }}
     </div>
     <div class="clazz-attributes">
-      <div v-for="(a,j) in c.attributes">{{ a }}</div>
+      <div v-for="(a,j) in clazz.attributes" v-html="a"></div>
     </div>
     <div class="clazz-methods">
-      <div v-for="(m,j) in c.methods">{{ m }}</div>
+      <div v-for="(m,j) in clazz.methods" v-html="m"></div>
     </div>
   </div>
 </template>
@@ -17,7 +17,7 @@
 
 export default{
   props: {
-    clazzes: Array
+    clazz: Object
   },
   mounted(){
   }

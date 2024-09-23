@@ -2,8 +2,8 @@
   <ExerciseBody :exercise="$data" :java="project">
     Es soll die Klasse <Code inline>Person</Code> gemäß dem abgebildeten UML-Klassendiagramm implementiert werden.
     <span class="float-right">
-      <ClassDiagram 
-        :clazzes="clazzes"
+      <UmlClazz 
+        :clazz="uml"
       />
     </span>
     Außerdem sollen die folgenden Anmerkungen berücksichtigt werden:
@@ -22,31 +22,29 @@
 </template>
 
 <script>
-import ClassDiagram from '../ClassDiagram.vue';
+import UmlClazz from '../UmlClazz.vue';
 
 
 export const data={
   id: "oo-person",
-  clazzes: [
-    {
-      name: "Person",
-      attributes: [
-        "- nachname: String",
-        "- vorname: String",
-        "- alter: int",
-        "- groesse: double",
-        "- gewicht: double"
-      ],
-      methods: [
-        "+ Person(nachname: String, vorname: String, alter: int, groesse: double, gewicht: double)",
-        "+ vollerName(): String",
-        "+ sage(String text)",
-        "+ istErwachsen(): boolean",
-        "+ bmi(): double",
-        "+ heiraten(Person ehepartner, boolean behalteNachname)"
-      ]
-    }
-  ],
+  uml: {
+    name: "Person",
+    attributes: [
+      "- nachname: String",
+      "- vorname: String",
+      "- alter: int",
+      "- groesse: double",
+      "- gewicht: double"
+    ],
+    methods: [
+      "+ Person(nachname: String, vorname: String, alter: int, groesse: double, gewicht: double)",
+      "+ vollerName(): String",
+      "+ sage(String text)",
+      "+ istErwachsen(): boolean",
+      "+ bmi(): double",
+      "+ heiraten(Person ehepartner, boolean behalteNachname)"
+    ]
+  },
   title: "Person",
   check: {
     init: async ()=>{
@@ -345,7 +343,7 @@ export const data={
 
 export default{
   components: {
-    ClassDiagram
+    UmlClazz
   },
   data() {
       return data;

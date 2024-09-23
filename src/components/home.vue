@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import ClassDiagram from './ClassDiagram.vue';
+import ClassDiagram from './UmlClazz.vue';
 import TuringMachineLauncher from './turing-machine-launcher.vue';
 import WebEditorLauncher from './web-editor-launcher.vue';
 

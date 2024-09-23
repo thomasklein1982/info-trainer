@@ -3,7 +3,7 @@
     Gegeben ist die Klasse <Code inline>Auto</Code> mit dem abgebildeten UML-Klassendiagramm.
     <span class="float-right">
       <ClassDiagram 
-        :clazzes="clazzes"
+        :clazz="uml"
       />
     </span>
     Die Methode <Code no-numbers>Auto auto(String marke, int kmStand)</Code> soll nacheinander die folgenden Dinge tun:
@@ -18,27 +18,25 @@
 </template>
 
 <script>
-import ClassDiagram from '../ClassDiagram.vue';
+import ClassDiagram from '../UmlClazz.vue';
 
 
 export const data={
   id: "oo-basics",
-  clazzes: [
-    {
-      name: "Auto",
-      attributes: [
-        "- kmStand: int",
-        "- tank: int",
-        "- marke: String"
-      ],
-      methods: [
-        "+ Auto(marke: String, kmStand: int)",
-        "+ fahren(km: int)",
-        "+ getKilometerStand(): int",
-        "+ getTankfuellungInProzent(): int"
-      ]
-    }
-  ],
+  uml: {
+    name: "Auto",
+    attributes: [
+      "- kmStand: int",
+      "- tank: int",
+      "- marke: String"
+    ],
+    methods: [
+      "+ Auto(marke: String, kmStand: int)",
+      "+ fahren(km: int)",
+      "+ getKilometerStand(): int",
+      "+ getTankfuellungInProzent(): int"
+    ]
+  },
   title: "Das fahrende Auto",
   check: {
     init: async ()=>{

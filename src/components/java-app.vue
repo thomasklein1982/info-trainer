@@ -57,6 +57,7 @@ export default{
       let project=JSON.parse(JSON.stringify(this.project));
       if(this.userProject) rp=JSON.parse(JSON.stringify(this.userProject));
       else rp=project;
+      rp.constraints=this.project.constraints;
       let diff=this.$root.settings.javaAppDifficulty.toLowerCase();
       for(let i=0;i<project.clazzes.length;i++){
         let c=project.clazzes[i];
