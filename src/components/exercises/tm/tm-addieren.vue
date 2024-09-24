@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { random } from '../../other/random';
+import { random } from '../../../other/random';
 
 
 export const data={

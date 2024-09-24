@@ -16,18 +16,18 @@ export const data={
     init: async ()=>{
       $Exercise.deleteMain();
       return {
-        a: await $new(MehrfachAusgabe)
+        a: await $new(Main)
       }
     },
     testcases: [
         {
-          info: "Text wird so oft ausgegeben wie verlangt"
+          info: 'Der Text "Informatik ist cool!" wird 100 mal ausgegeben.'
         }
       ],
     test: async (tc,init)=>{
       await System.console().clear();
       await init.a.mehrfachAusgabe();
-      let r=$Exercise.getConsoleContent();
+      let r=$Exercise.getConsoleContent().join("\n").trim();
       let t="";
       for(let i=0;i<100;i++){
         t+="Informatik ist cool!\n";
@@ -39,7 +39,7 @@ export const data={
   project: {
     name: "Mehrfach-Ausgabe",
     clazzes: [{
-      name: "Aufgabe",
+      name: "Main",
       src: `$void mehrfachAusgabe(){
   ///hierhin kommt der Code:
   

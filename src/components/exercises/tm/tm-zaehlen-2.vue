@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import { random } from '../../other/random';
-import { repeatString } from '../../other/string-helper';
+import { random } from '../../../other/random';
+import { repeatString } from '../../../other/string-helper';
 
 
 

@@ -8,7 +8,6 @@
 <script>
 
 import MainScreen from './components/main-screen.vue';
-//import PWABadge from './components/PWABadge.vue'
 import { storage } from './other/storage';
 import * as exercises from './components/exercises/index';
 import { boolArrayToInt, createBoolArray, intToBoolArray, isCompletelyTrue } from './other/bool-array';

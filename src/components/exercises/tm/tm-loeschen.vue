@@ -8,9 +8,7 @@
 </template>
 
 <script>
-import { random } from '../../other/random';
-import { repeatString } from '../../other/string-helper';
-import ConsoleOutput from '../console-output.vue';
+import { random } from '../../../other/random';
 
 
 export const data={

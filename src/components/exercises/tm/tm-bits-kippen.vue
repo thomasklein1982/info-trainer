@@ -5,8 +5,7 @@
 </template>
 
 <script>
-import { random } from '../../other/random';
-import ConsoleOutput from '../console-output.vue';
+import { random } from '../../../other/random';
 
 
 export const data={

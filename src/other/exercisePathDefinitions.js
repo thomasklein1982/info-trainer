@@ -15,7 +15,7 @@ let Java={
     },
     {
       label: "Schleifen",
-      exercises: []
+      exercises: ["mehrfach-ausgabe","prim","letters"]
     },
     {
       label: "Arrays",

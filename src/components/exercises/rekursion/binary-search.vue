@@ -11,7 +11,7 @@
       </ul>
     </Example>
     <p>Implementiere diese Methode ohne Verwendung von Schleifen.</p>
-    <Hint>Beachte, dass das Array aufsteigend sortiert sein muss!</Hint>
+    <Hint>Beachte, dass das Array aufsteigend sortiert ist!</Hint>
   </ExerciseBody>
 </template>
 
