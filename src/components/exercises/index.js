@@ -1,6 +1,10 @@
 
 export * as List from './data-structures/list.vue';
 export * as Fibonacci from './rekursion/fibonacci.vue';
+export * as OutputRec1 from './rekursion/output-rec-1.vue';
+export * as OutputRec2 from './rekursion/output-rec-2.vue';
+export * as Fakultaet  from './rekursion/fakultaet.vue';
+export * as Palindrom from './rekursion/palindrom.vue';
 export * as Ggt from './rekursion/ggt.vue';
 export * as BinarySearch from './rekursion/binary-search.vue';
 export * as ArraySwap from './array-swap.vue';
@@ -14,6 +18,7 @@ export * as AusgabeErmittelnParams from './ausgabe-ermitteln-params.vue';
 export * as MehrfachAusgabe from './loops/mehrfach-ausgabe.vue';
 export * as Prim from './loops/prim.vue';
 export * as Letters from './loops/letters.vue';
+export * as Teiler from './loops/teiler.vue';
 export * as AsciiArt from './ascii-art.vue';
 export * as Rechnen from './rechnen.vue';
 export * as Durchschnitt  from './durchschnitt.vue';

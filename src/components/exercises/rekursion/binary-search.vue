@@ -23,17 +23,6 @@ export const data={
   title: "Schnelle Suche",
   check: {
     init: async ()=>{
-      // let n=1000;
-      // let start,stop;
-
-      // do{
-      //   start=new Date();
-      //   for(let i=0;i<n;i++){Math.pow(2.14,3.65)}
-      //   stop=new Date();
-      //   n*=2;
-      // }while(stop-start<100);
-      // n/=2;
-      // console.log("n found",n,stop-start);
       $Exercise.deleteMain();
       return {a: await $new(Aufgabe), n: 4000};
     },

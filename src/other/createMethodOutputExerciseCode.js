@@ -1,6 +1,6 @@
 import { difficulty } from "../App.vue";
 
-export function createMethodOutputExerciseCode(Random,methods){
+export function createMethodOutputExerciseCode(Random,methods,values){
   let methodNames=[];
   for(let i=0;i<methods.length;i++){
     methodNames.push("m"+(i+1));
@@ -50,6 +50,13 @@ export function createMethodOutputExerciseCode(Random,methods){
   for(let i=0;i<randMethods.length;i++){
     let m=randMethods[i];
     let code=m.code;
+    if(values){
+      m.values=values;
+      for(let a in values){
+        let re=new RegExp("\\$"+a+"\\$","g");
+        code=code.replace(re,values[a]);
+      }
+    }
     code=code.replace(/\$name/g,m.name);
     if(difficulty==="Easy"){
       code=code.replace(/\$void /g,"");

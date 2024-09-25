@@ -15,7 +15,7 @@ let Java={
     },
     {
       label: "Schleifen",
-      exercises: ["mehrfach-ausgabe","prim","letters"]
+      exercises: ["mehrfach-ausgabe","prim","letters","teiler"]
     },
     {
       label: "Arrays",
@@ -27,7 +27,7 @@ let Java={
     },
     {
       label: "Rekursion",
-      exercises: ["fibonacci","ggt","binary-search"]
+      exercises: ["output-rec-1","fakultaet","fibonacci","ggt","palindrom","output-rec-2","binary-search"]
     },
     {
       label: "Objektorientierung",

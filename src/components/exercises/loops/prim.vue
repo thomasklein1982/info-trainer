@@ -15,7 +15,7 @@
 <script>
 export const data={
   id: "prim",
-  title: "Primzahl",
+  title: "Primzahl-Check",
   check: {
     init: async ()=>{
       $Exercise.deleteMain();
