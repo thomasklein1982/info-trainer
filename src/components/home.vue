@@ -29,6 +29,19 @@
       </template>
     </Card>
     <Card>
+      <template #title>Simulator für endliche Automaten</template>
+      <template #content>
+        Der Simulator erlaubt es dir, endliche Automaten zu programmieren und zu testen.
+      </template>
+      <template #footer>
+        <div style="text-align: right">
+          <TuringMachineLauncher
+            type="fsm"
+          />
+        </div>
+      </template>
+    </Card>
+    <Card>
       <template #title>Turing-Maschinen-Simulator</template>
       <template #content>
         Der Simulator erlaubt es dir, Turingmaschinen zu programmieren und zu testen.

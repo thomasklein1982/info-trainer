@@ -9,7 +9,7 @@
       <template #end>
         <Button size="small"  icon="pi pi-undo" rounded text @click="undo()"/>
         <Button size="small"  icon="pi pi-refresh" rounded text @click="redo()"/>
-        <Button size="small" :disabled="inputError" v-if="mode==='edit'" icon="pi pi-play" rounded text @click="toRunView()"/>
+        <Button size="small" :disabled="error" v-if="mode==='edit'" icon="pi pi-play" rounded text @click="toRunView()"/>
         <Button size="small" v-if="mode==='run'" icon="pi pi-pencil" rounded text @click="mode='edit'"/>
       </template>
     </Menubar>
@@ -29,22 +29,31 @@
         </OverlayBatch>
       </div>
       <div style="margin-top: 0.5rem; margin-bottom: 0.5rem; text-align: center">
-        <Button :disabled="running" icon="pi pi-play" @click="clickRun()"/>
-        <Button :disabled="halted" icon="pi pi-arrow-right" @click="step()"/>
-        <Button :disabled="!running || halted" icon="pi pi-stop" @click="stop()"/>
+        <Button :disabled="running||runState!=='init'" icon="pi pi-play" @click="clickRun()"/>
+        <Button :disabled="halted||runState!=='init'" icon="pi pi-arrow-right" @click="step()"/>
+        <Button :disabled="!running || halted || runState!=='init'" icon="pi pi-stop" @click="halt()"/>
         <Button :disabled="running" icon="pi pi-refresh" @click="resetRuntime()"/>
-        Schritte: <span style="">{{ runtime.steps }}<template v-if="maxSteps>=0">/{{ maxSteps }}</template></span>
+        <template v-if="isTuringMachine">Schritte: <span style="">{{ runtime.steps }}<template v-if="maxSteps>=0">/{{ maxSteps }}</template></span></template>
+        <template v-if="accepting && runState!=='init'">
+          <span v-if="runState==='accepted'" style="color: green">
+            Akzeptiert
+          </span>
+          <span v-else style="color: red">
+            Nicht akzeptiert
+          </span>
+        </template>
       </div>
       <div style="flex: 1; overflow: auto">
         <table class="transition-table" style="text-align: center; margin: auto">
-          <tr><th></th><th>Zustand</th><th>Lesen</th><th>Schreiben</th><th>Bewegen</th><th>neuer Zustand</th></tr>
+          <tr>
+            <th></th>
+            <th v-for="p in parts">{{p.label}}</th>
+          </tr>
           <tr v-for="(c,i) in commands" style="font-family: monospace; font-size: 150%;" :class="c===runtime.command? 'active-line':''">
             <td style="width: 2rem; border: none;"><span v-if="c===runtime.command">&#8680;</span></td>
-            <td>{{ c.state }}</td>
-            <td>{{ c.read.raw }}</td>
-            <td>{{ c.write }}</td>
-            <td>{{ c.move }}</td>
-            <td>{{ c.newState }}</td>
+            <template v-for="(p,a) in c">
+              <td v-if="a!=='line'">{{ p.raw? p.raw:p }}</td>
+            </template>
           </tr>
         </table>
       </div>
@@ -61,7 +70,7 @@
             Überprüfen
           </template>
           <template #content>
-            <p>Deine Turing-Maschine darf höchstens {{ maxSteps }} Schritte benötigen.</p>
+            <p v-if="isTuringMachine">Deine Turing-Maschine darf höchstens {{ maxSteps }} Schritte benötigen.</p>
             <Button icon="pi pi-list-check" label="Überpüfen" :loading="checking" @click="check()"/>
           </template>
         </Card>
@@ -72,6 +81,11 @@
           <template #content>
             <div style="width: 100%; display: grid; grid-template-columns: auto minmax(0,1fr); align-items: center; gap: 0.5rem">
               <span>Startzustand:</span><InputText v-model="startState"/>
+              <Message v-if="startStateError" style="grid-column: 1/3;" severity="error">{{ startStateError }}</Message>
+              <template v-if="accepting">
+                <span>Akzeptierende Zustände:</span><InputText v-model="acceptingStates"/>
+                <Message v-if="acceptingStatesError" style="grid-column: 1/3;" severity="error">{{ acceptingStatesError }}</Message>
+              </template>
               <span>Eingabe:</span><InputText :invalid="inputError!==null" v-model="input"/>
               <Message v-if="inputError" style="grid-column: 1/3;" severity="error">{{ inputError }}</Message>
               <span>Geschwindigkeit:</span><Slider :disabled="maxSpeed" v-model="speed"/>
@@ -84,7 +98,8 @@
             Syntax
           </template>
           <template #content>
-            <div class="tm-anweisung">[Zustand] [Lesen] [Schreiben] [l/r] [neuer Zustand]</div>
+            <div v-if="isTuringMachine" class="tm-anweisung">[Zustand] [Lesen] [Schreiben] [l/r] [neuer Zustand]</div>
+            <div v-if="isFiniteStateMachine" class="tm-anweisung">[Zustand] [Lesen] [neuer Zustand]</div>
           </template>
         </Card>
         <Card pt:body:style="padding-top: 0">
@@ -92,7 +107,7 @@
             Beispiele
           </template>
           <template #content>
-            <ul>
+            <ul v-if="isTuringMachine">
               <li>
                 <span class="tm-anweisung">S x y r A</span>
                 <p>Wenn die TM im Zustand <span style="font-family: monospace">S</span> das Zeichen <span style="font-family: monospace">x</span> liest: Maschine schreibt <span style="font-family: monospace">y</span>, geht nach rechts und wechselt in Zustand <span style="font-family: monospace">A</span>.</p>
@@ -128,41 +143,63 @@ import Message from 'primevue/message';
 import { createBoolArray, setArrayToValue } from '../other/bool-array';
 import { calcPoints } from '../App.vue';
 import ToggleSwitch from 'primevue/toggleswitch';
+import AutoComplete from 'primevue/autocomplete';
 
 const parts=[
     {
       key: "state",
       label: "Zustand",
-      allowed: /\w/
+      allowed: /^\w+$/
     },
     {
       key: "read",
       label: "Lesen",
-      allowed: "regexp"
     },{
       key: "write",
       label: "Schreiben",
-      allowed: /\S/
+      allowed: /^\S$/
     },{
       key: "move",
       label: "Bewegen",
-      allowed: /[rl]/
+      allowed: /^[rl]$/
     },{
       key: "newState",
       label: "neuer Zustand",
-      allowed: /\w/
+      allowed: /^\w+$/
     }
   ];
 
 export default{
   components: {
-    Menubar,CodeMirror, Splitter, SplitterPanel, Slider, SelectButton, Message, ToggleSwitch
+    Menubar,CodeMirror, Splitter, SplitterPanel, Slider, SelectButton, Message, ToggleSwitch, AutoComplete
   },
   props: {
     machine: Object,
-    exerciseData: Object
+    exerciseData: Object,
+    type: String
   },
   computed: {
+    accepting(){
+      if(this.isTuringMachine) return false;
+      return true;
+    },
+    parts(){
+      let array=[];
+      array.push(parts[0]);
+      array.push(parts[1]);
+      if(this.isTuringMachine){
+        array.push(parts[2]);
+        array.push(parts[3]);
+      }
+      array.push(parts[4]);
+      return array;
+    },
+    isTuringMachine(){
+      return this.type==="tm";
+    },
+    isFiniteStateMachine(){
+      return this.type==="fsm";
+    },
     maxSteps(){
       if(!this.machine) return -1;
       return (this.machine.maxSteps? this.machine.maxSteps:10000);
@@ -170,9 +207,25 @@ export default{
     halted(){
       return (!this.runtime.state || this.runtime.state.toLowerCase().startsWith("halt"));
     },
+    error(){
+      return this.inputError || this.acceptingStatesError || this.startStateError;
+    },
     inputError(){
       if(this.input.split("*").length>2){
         return "Das Zeichen * darf im Input nur höchstens 1 mal vorkommen (es legt die Startposition des Lese-/Schreibkopfes fest).";
+      }
+      return null;
+    },
+    acceptingStatesError(){
+      if(!this.accepting) return null;
+      if(this.acceptingStates.trim().length===0){
+        return "Es gibt keine akzeptierenden Zustände.";
+      }
+      return null;
+    },
+    startStateError(){
+      if(this.startState.trim().length===0){
+        return "Du musst einen Startzustand angeben.";
       }
       return null;
     },
@@ -184,13 +237,15 @@ export default{
     return {
       maxSpeed: false,
       startState: "S",
+      acceptingStates: "",
+      acceptingStatesArray: null,
       speed: 100,
       input: "",
       commands: null,
       code: "",
       mode: "edit",
       running: false,
-      parts: parts,
+      runState: "init",
       checking: false,
       band: {
         content: "",
@@ -210,6 +265,7 @@ export default{
   methods: {
     async check(){
       this.checking=true;
+      this.createAcceptingStatesArray();
       await sleep(10);
       let check=this.exerciseData.data.check;
       let testcases=check.testcases;
@@ -232,7 +288,9 @@ export default{
           this.finishChecking();
           return;
         }
-        let output=this.getBandContent();
+        let output;
+        if(this.isTuringMachine) output=this.getBandContent();
+        else output=this.runState==="accepted";
         for(let k=0;k<testcases.length;k++){
           if(this.exerciseData.correct[k]!==true) continue;
           let tc=testcases[k];
@@ -259,6 +317,7 @@ export default{
       return this.band.before+this.band.at+this.band.after;
     },
     resetRuntime(input){
+      this.runState="init";
       if(input===undefined) input=this.input;
       let pos=input.indexOf("*");
       
@@ -310,7 +369,7 @@ export default{
       for(let i=0;i<lines.length;i++){
         let line=lines[i];
         try{
-          let c=parseLine(line)
+          let c=parseLine(line,this.parts);
           if(!c) continue;
           c.line=i;
           this.commands.push(c);
@@ -326,7 +385,8 @@ export default{
       if(!this.compile()) return;
       this.resetRuntime();
       this.mode="run";
-
+      this.runState="init";
+      this.createAcceptingStatesArray();
       nextTick(()=>{
         this.scrollHead();
       });
@@ -345,68 +405,61 @@ export default{
     async run(){
       this.running=true;
       while(this.running){
-        if(!this.runtime.command){
-          this.running=false;
-          return;
-        }
         this.step();
         await sleep(this.sleepTime);
-        if(!this.runtime.state || this.runtime.state.toLowerCase().startsWith("halt")){
-          this.running=false;
-        }
       }
     },
+    createAcceptingStatesArray(){
+      this.acceptingStatesArray=[];
+      let states=this.acceptingStates.trim();
+      if(states.length===0) return;
+      states=states.split(/\s+/);
+      for(let i=0;i<states.length;i++){
+        let s=states[i].trim();
+        this.acceptingStatesArray.push(s);
+      }
+    },
+    isInAcceptingState(){
+      return this.acceptingStatesArray.indexOf(this.runtime.state)>=0;
+    },
     runAtMaxSpeed(){
-      while(true){
-        if(!this.runtime.command){
-          return true;
-        }
+      this.running=true;
+      while(this.running){
         this.step();
         if(this.runtime.steps>this.maxSteps){
           return false;
         }
-        if(!this.runtime.state || this.runtime.state.toLowerCase().startsWith("halt")){
-          return true;
-        }
       }
+      return true;
     },
     halt(){
       this.running=false;
     },
     step(){
       if(!this.runtime.command){
-        this.halt();
+        this.stop();
         return;
       }
       this.runtime.steps++;
       let cmd=this.runtime.command;
       let write;
-      if(cmd.write!=="*"){
+      if(cmd.write===undefined){
+        write=this.band.at;
+      }else if(cmd.write!=="*"){
         write=cmd.write==="_"?" ":cmd.write;
         
         //this.band.content=this.band.content.substring(0,this.band.position)+write+this.band.content.substring(this.band.position+1);
       }else{
         write=this.band.at;
       }
-      if(cmd.move==="r"){
-        // this.band.position++;
-        // this.band.pointerString=" "+this.band.pointerString;
-        // if(this.band.position>=this.band.content.length){
-        //   this.band.content+=" ";
-        // }
-        this.band.before+=write;
-        this.band.at=this.band.after.length>0 ? this.band.after.charAt(0): " ";
-        this.band.after=this.band.after.substring(1);
-      }else{
-        // if(this.band.position>0){
-        //   this.band.position--;
-        //   this.band.pointerString=this.band.pointerString.substring(1);
-        // }else{
-        //   this.band.content=" "+this.band.content;
-        // }
+      if(cmd.move==="l"){
         this.band.after=write+this.band.after;
         this.band.at=this.band.before.length>0? this.band.before.charAt(this.band.before.length-1) : " ";
         this.band.before=this.band.before.substring(0,this.band.before.length-1);
+      }else{
+        this.band.before+=write;
+        this.band.at=this.band.after.length>0 ? this.band.after.charAt(0): " ";
+        this.band.after=this.band.after.substring(1);
       }
       this.runtime.state=cmd.newState;
       this.runtime.command=getCommand(this.commands,this.runtime.state,this.band.at);
@@ -414,35 +467,64 @@ export default{
       nextTick(()=>{
         this.scrollHead();
       });
+      if(this.isTuringMachine){
+        if(!this.runtime.state || this.runtime.state.toLowerCase().startsWith("halt")){
+          this.stop();
+        }
+      }else{
+        if(this.band.at===" " && this.band.after.length===0){
+          this.stop();
+        }
+      }
+      
     },
     stop(){
       this.running=false;
+      if(this.accepting){
+        if(this.band.at===" " && this.band.after.length===0){
+          if(this.isInAcceptingState()){
+            this.runState="accepted";
+          }else{
+            this.runState="refused";
+          }
+        }else{
+          this.runState="refused";
+        }
+        
+      }
     },
     setUserData(data){
       if(data){
         this.startState=data.startState;
         this.code=data.code;
+        if(data.acceptingStates){
+          this.acceptingStates=data.acceptingStates;
+        }
       }else{
         this.startState=this.machine.startState;
         this.code=this.machine.code;
+        this.acceptingStates="";
       }
       this.input=this.machine.exampleInput;
       this.$refs.editor.setValue(this.code);
     },
     getUserData(){
+      let machine={
+        startState: this.startState,
+        code: this.$refs.editor.getValue()
+      };
+      if(this.accepting){
+        machine.acceptingStates=this.acceptingStates;
+      }
       return {
-        machine: {
-          startState: this.startState,
-          code: this.$refs.editor.getValue()
-        }
+        machine
       }
     }
   }
 }
 
 
-function parseLine(line){
-  let state,read,write,move,newState;
+function parseLine(line,parts){
   let words=parts;
   let cmd={};
   for(let i=0;i<words.length;i++){
@@ -457,6 +539,9 @@ function parseLine(line){
     let c=line.charAt(i);
     if(/\s/.test(c)){
       if(word.length>0){
+        if(words[wordIndex].allowed && !words[wordIndex].allowed.test(word)){
+          throw "Unerlaubter "+words[wordIndex].label+"-Teil: "+JSON.stringify(word)
+        }
         cmd[words[wordIndex].key]=word;
         wordIndex++;
         word="";
@@ -472,9 +557,7 @@ function parseLine(line){
   for(let i=0;i<words.length;i++){
     if(cmd[words[i].key]===null) throw "Unvollständige Zeile ("+words[i].label+" fehlt)";
   }
-  if(cmd[parts[2].key].length>1){
-    throw "Bei 'Schreiben' darf nur ein einzelnes Zeichen stehen, hier steht aber '"+cmd[parts[2].key]+"'."
-  }
+  
   cmd.read={
     raw: cmd.read,
     regex: null,

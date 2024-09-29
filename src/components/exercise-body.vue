@@ -13,10 +13,11 @@
           @show-feedback="$refs.dialogFeedback.open()"
         />
       </template>
-      <template v-else-if="turingMachine">
+      <template v-else-if="turingMachine||finiteStateMachine">
         <TuringMachineLauncher
           :exercise-data="exerciseData"
-          :machine="turingMachine"
+          :machine="machine"
+          :type="machineType"
           @show-feedback="$refs.dialogFeedback.open()"
         />
       </template>
@@ -65,9 +66,18 @@ export default {
       default: false
     },
     turingMachine: Object,
+    finiteStateMachine: Object,
     java: Object
   },
   computed: {
+    machine(){
+      if(this.finiteStateMachine) return this.finiteStateMachine;
+      if(this.turingMachine) return this.turingMachine;
+    },
+    machineType(){
+      if(this.finiteStateMachine) return "fsm";
+      if(this.turingMachine) return "tm";
+    },
     exerciseChecked(){
       return this.exerciseData?.userProject!==undefined;
     },

@@ -1,4 +1,9 @@
 
+export * as EaSubstring from './ea/ea-substring.vue';
+export * as EaEnden from './ea/ea-enden.vue';
+export * as EaBinGerade from './ea/ea-bin-gerade.vue';
+export * as EaMin2 from './ea/ea-min-2.vue';
+export * as EaAll  from './ea/ea-all.vue';
 export * as List from './data-structures/list.vue';
 export * as Fibonacci from './rekursion/fibonacci.vue';
 export * as OutputRec1 from './rekursion/output-rec-1.vue';
@@ -19,6 +24,9 @@ export * as MehrfachAusgabe from './loops/mehrfach-ausgabe.vue';
 export * as Prim from './loops/prim.vue';
 export * as Letters from './loops/letters.vue';
 export * as Teiler from './loops/teiler.vue';
+export * as Strichliste from './loops/strichliste.vue';
+export * as Sum1 from './loops/sum-1.vue';
+export * as OutLoop1 from './loops/out-loop-1.vue';
 export * as AsciiArt from './ascii-art.vue';
 export * as Rechnen from './rechnen.vue';
 export * as Durchschnitt  from './durchschnitt.vue';

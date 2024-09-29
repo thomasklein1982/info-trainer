@@ -1,6 +1,6 @@
 <template>
   
-  <Button @click="openDialog" label="TM-Simulator öffnen"/>
+  <Button @click="openDialog" :label="launchButtonLabel"/>
   <Dialog ref="dialog" :header="exerciseData? exerciseData.title:'Turing-Maschine'" v-model:visible="show" :closable="true" maximizable :close-on-escape="false">
     <template #maximizeicon>
       <div style="position: relative">
@@ -14,6 +14,7 @@
     </template>
     <TmSimulator
       ref="tmSimulator"
+      :type="type"
       :machine="machine"
       :exercise-data="exerciseData"
       @save="save()"
@@ -37,6 +38,10 @@ export default{
     "show-feedback"
   ],
   computed: {
+    launchButtonLabel(){
+      if(this.type==="tm") return "TM-Simulator öffnen";
+      if(this.type==="fsm") return "EA-Simulator öffnen";
+    },
     hasUserData(){
       return this.exerciseData.userMachine!==undefined;
     },
@@ -47,7 +52,12 @@ export default{
   },
   props: {
     exerciseData: Object,
-    machine: Object
+    machine: Object,
+    /*tm, fsm, pdm */
+    type: {
+      type: String,
+      default: "tm"
+    }
   },
   data(){
     return {

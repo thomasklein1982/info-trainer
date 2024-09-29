@@ -15,7 +15,7 @@ let Java={
     },
     {
       label: "Schleifen",
-      exercises: ["mehrfach-ausgabe","prim","letters","teiler"]
+      exercises: ["out-loop-1", "mehrfach-ausgabe","strichliste","prim","letters","sum-1", "teiler"]
     },
     {
       label: "Arrays",
@@ -43,6 +43,10 @@ let Java={
 let TheoretischeInformatik={
   name: "Theoretische Informatik",
   paths: [
+    {
+      label: "Endliche Automaten",
+      exercises: ["ea-all","ea-min-2","ea-bin-gerade","ea-substring", "ea-enden"]
+    },
     {
       label: "Turingmaschinen",
       exercises: ["tm-hi","tm-loeschen","tm-bits-kippen","tm-paritaet","tm-zaehlen-1","tm-durch-3","tm-palindrom","tm-inkrement","tm-verdoppeln","tm-zaehlen-2", "tm-addieren"]

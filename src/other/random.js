@@ -57,6 +57,17 @@ class RandomClazz{
     }
     return b;
   }
+  string(fromCodePoint,toCodePoint, length){
+    if(length===undefined) length=1;
+    let from=fromCodePoint.codePointAt(0);
+    let to=toCodePoint.codePointAt(0);
+    let s="";
+    for(let i=0;i<length;i++){
+      let x=this.int(from,to);
+      s+=String.fromCodePoint(x);
+    }
+    return s;
+  }
   int(min,max){
     let x=this.randomSeeded();
     return Math.floor(x*(max-min+1))+min;
