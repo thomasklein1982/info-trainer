@@ -27,7 +27,7 @@ let Java={
     },
     {
       label: "Rekursion",
-      exercises: ["output-rec-1","fakultaet","fibonacci","ggt","palindrom","output-rec-2","binary-search"]
+      exercises: ["output-rec-1","fakultaet","fibonacci","ggt","palindrom","output-rec-2","binary-search","hanoi"]
     },
     {
       label: "Objektorientierung",
@@ -45,7 +45,7 @@ let TheoretischeInformatik={
   paths: [
     {
       label: "Endliche Automaten",
-      exercises: ["ea-all","ea-min-2","ea-bin-gerade","ea-substring", "ea-enden"]
+      exercises: ["ea-all","ea-min-2","ea-bin-gerade","ea-substring", "ea-zahl", "ea-enden", "ea-gleich-viele", "ea-bin-bigger"]
     },
     {
       label: "Turingmaschinen",

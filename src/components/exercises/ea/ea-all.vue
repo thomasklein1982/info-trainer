@@ -28,13 +28,6 @@ export const data={
     testcases: [
       {
         check: (input, accepted)=>{
-          if(input.length>0) return true;
-          return accepted===true;
-        },
-        info: 'Das leere wort wird akzeptiert.'
-      },
-      {
-        check: (input, accepted)=>{
           if(input.match(/[^abc]/)) return true;
           return accepted===true;
         },

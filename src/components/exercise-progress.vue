@@ -15,7 +15,7 @@ export default{
   },
   computed: {
     percent(){
-      if(!this.exerciseData) return 0;
+      if(!this.exerciseData||!this.exerciseData.total) return 0;
       return this.exerciseData.points/this.exerciseData.total*100;
     }
   }

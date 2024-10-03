@@ -43,6 +43,9 @@
           </span>
         </template>
       </div>
+      <div v-if="accepting">
+        Akzeptierende Zustände: <code style="border-width: 3pt;border-color: white; border-style: double;border-radius: 100%; padding: 0.2rem; margin: 0.2rem;" v-for="(z,i) in acceptingStatesArray">{{z}}</code>
+      </div>
       <div style="flex: 1; overflow: auto">
         <table class="transition-table" style="text-align: center; margin: auto">
           <tr>
@@ -219,7 +222,7 @@ export default{
     acceptingStatesError(){
       if(!this.accepting) return null;
       if(this.acceptingStates.trim().length===0){
-        return "Es gibt keine akzeptierenden Zustände.";
+        return "Du musst mindestens einen akzeptierenden Zustand angeben.";
       }
       return null;
     },

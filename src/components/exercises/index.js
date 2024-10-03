@@ -1,4 +1,7 @@
 
+export * as EaZahl from './ea/ea-zahl.vue';
+export * as EaBinBigger from './ea/ea-bin-bigger.vue';
+export * as EaGleichViele from './ea/ea-gleich-viele.vue';
 export * as EaSubstring from './ea/ea-substring.vue';
 export * as EaEnden from './ea/ea-enden.vue';
 export * as EaBinGerade from './ea/ea-bin-gerade.vue';
@@ -8,6 +11,7 @@ export * as List from './data-structures/list.vue';
 export * as Fibonacci from './rekursion/fibonacci.vue';
 export * as OutputRec1 from './rekursion/output-rec-1.vue';
 export * as OutputRec2 from './rekursion/output-rec-2.vue';
+export * as Hanoi from './rekursion/hanoi.vue';
 export * as Fakultaet  from './rekursion/fakultaet.vue';
 export * as Palindrom from './rekursion/palindrom.vue';
 export * as Ggt from './rekursion/ggt.vue';
