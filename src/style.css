@@ -30,9 +30,13 @@ body{
 
 .teilaufgaben>li:before{
   content: counter(item, lower-latin) ") ";
+  color: orange;
   counter-increment: item;
 }
 
+.teilaufgaben>li{
+  margin-bottom: 0.5rem;
+}
 
 
 .cm-editor{
