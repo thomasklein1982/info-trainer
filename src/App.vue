@@ -18,7 +18,8 @@ const STORAGE_DATA="INFO-TRAINER-USER-DATA";
 const STORAGE_SETTINGS="INFO-TRAINER-SETTINGS";
 let mode={
   type: "normal",
-  useStorage: true
+  useStorage: true,
+  icon: "favicon.svg"
 };
 
 let hash=location.hash;
@@ -35,9 +36,16 @@ if(hash.toLowerCase().startsWith("#ab=")){
       title,ids,
       useStorage: false,
       reloadOnHome: true,
-      unloadWarning: "Möchtest du das Arbeitsblatt wirklich beenden?\nDeine Ergebnisse werden NICHT gespeichert!"
-    }
+      unloadWarning: true,
+      icon: "icon-ab.svg",
+    };
   }
+}else if(hash.toLowerCase()==="#practise"){
+  mode={
+    type: "practise",
+    useStorage: false,
+    icon: "icon-practise.svg"
+  };
 }
 
 window.onbeforeunload=function(ev){

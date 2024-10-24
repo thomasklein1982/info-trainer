@@ -37,6 +37,8 @@ import InputCheck from './components/InputCheck.vue';
 import JImage from './components/j-image.vue';
 import ClipboardJS from 'clipboard';
 import ConsoleInputCheck from './components/console-input-check.vue';
+import Tooltip from 'primevue/tooltip';
+
 const updateSW=registerSW({
   onNeedRefresh(){
     let a=confirm("Eine neue Version ist verfügbar. Willst du aktualisieren (empfohlen!)?");
@@ -60,7 +62,7 @@ app.use(PrimeVue, {
     }
 });
 app.use(ConfirmationService);
-
+app.directive('tooltip', Tooltip);
 
 app.component('Button', Button);
 app.component('InputText', InputText);

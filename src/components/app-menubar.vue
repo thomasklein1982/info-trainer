@@ -3,7 +3,7 @@
     :model="[]"
   >
   <template #start>
-    <img alt="logo" src="/favicon.svg" style="height: 2rem" ><Button icon="pi pi-bars" text @click="$emit('show-exercises')"/>
+    <img alt="logo" :src="$root.mode.icon" style="height: 2rem" ><Button icon="pi pi-bars" text @click="$emit('show-exercises')"/>
   </template>
   <template #end>
     <Button size="small" text rounded @click="$emit('settings')">

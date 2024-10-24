@@ -10,6 +10,10 @@ html,body{
   overflow: hidden;
 }
 
+strong{
+  color: orange;
+}
+
 body{
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }

@@ -12,7 +12,6 @@ export default{
   
   },
   props: {
-
     pathData: Object
   },
   computed: {
