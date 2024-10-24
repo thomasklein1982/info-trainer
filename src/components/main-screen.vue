@@ -19,7 +19,7 @@
         <p>Klicke auf <Button icon="pi pi-home" text rounded @click="clickHome()"/>, um das Arbeitsblatt zu verlassen und zum "normalen" Info-Trainer zurückzukehren.</p>
       </Drawer>
       <template v-if="showHome">
-        <Home/>
+        <Home :ab="ab"/>
       </template>
       <ExercisePath v-else :path="currentPath"/>
       
@@ -48,7 +48,8 @@ export default{
   },
   props: {
     settings: Object,
-    mode: Object
+    mode: Object,
+    ab: Object
   },
   data() {
     return {

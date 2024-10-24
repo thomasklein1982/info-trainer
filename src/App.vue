@@ -3,6 +3,8 @@
   <MainScreen 
     :settings="settings"
     :mode="mode"
+    :ab="ab"
+    @create-ab="createAB()"
   />
 </template>
 
@@ -24,10 +26,16 @@ let mode={
 
 let hash=location.hash;
 if(hash.toLowerCase().startsWith("#ab=")){
+  hash=hash.substring(4);
+  try{
+    hash=decodeURI(hash);
+  }catch(e){
+    
+  }
   let pos1=hash.indexOf("[");
   let pos2=hash.indexOf("]");
   if(pos1>=0 && pos2>pos1){
-    let title=hash.substring(4,pos1);
+    let title=hash.substring(0,pos1);
     let ids=hash.substring(pos1+1,pos2);
     console.log(title,ids);
     ids=ids.split(",");
@@ -117,6 +125,11 @@ export default{
       console.log("difficulty",difficulty);
     }
   },
+  computed: {
+    addExercisesToAB(){
+      return this.ab!==null;
+    }
+  },
   data() {
       return {
         version: packageJson.version,
@@ -124,13 +137,52 @@ export default{
         exerciseDataCollection: exerciseDataCollection,
         settings: {
           javaAppDifficulty: difficulty
-        }
+        },
+        ab: null
       };
   },
   async mounted(){
     await this.load();
   },
   methods: {
+    isExerciseInAB(id){
+      if(!this.ab) return false;
+      return this.ab.exercises.indexOf(id)>=0;
+    },
+    removeExerciseFromAB(id){
+      if(!this.ab) return;
+      let index=this.ab.exercises.indexOf(id);
+      if(index<0) return;
+      this.ab.exercises.splice(index,1);
+    },
+    addExerciseToAB(id){
+      if(!this.ab) return;
+      this.ab.exercises.push(id);
+    },
+    moveExerciseUpOnAB(id){
+      if(!this.ab) return;
+      let index=this.ab.exercises.indexOf(id);
+      if(index<=0) return;
+      this.ab.exercises.splice(index,1);
+      this.ab.exercises.splice(index-1,0,id);
+    },
+    moveExerciseDownOnAB(id){
+      if(!this.ab) return;
+      let index=this.ab.exercises.indexOf(id);
+      if(index<0 || index===this.ab.exercises.length-1) return;
+      this.ab.exercises.splice(index,1);
+      this.ab.exercises.splice(index+1,0,id);
+    },
+    createAB(){
+      this.ab={
+        label: "",
+        exercises: [],
+        category: "Arbeitsblatt"
+      };
+    },
+    removeAB(){
+      this.ab=null;
+    },
     getExerciseData(id){
       let ed=this.exerciseDataCollection[id];
       return ed; 

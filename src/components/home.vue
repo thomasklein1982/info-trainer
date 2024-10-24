@@ -5,9 +5,9 @@
       <Card>
         <template #title>Du bist im <strong>Fortschritts-Modus</strong></template>
         <template #content>
-          <p>Jede Aufgabe, die du machst, wird gespeichert.</p>
-          <h3>Errungenschaften</h3>
-          <div><template v-for="(a,i) in achievements"><span v-tooltip="a.name" :style="{border: '2pt solid '+(a.achieved? 'orange':'black')}" style="overflow: hidden; position: relative; border-radius: 1rem; display: inline-block"><img  :src="a.icon+'.svg'" style="height: 3em; width: 3em;"><div v-if="!a.achieved" style="position: absolute; left: 0; top: 0;bottom: 0; right: 0; background-color: black; opacity: 0.9"/></span></template></div>
+          <p>Jede Aufgabe, die du machst, wird gespeichert. Schließe Aufgabenpfade ab, um Achievements zu erhalten.</p>
+          <h3>Achievements</h3>
+          <div><template v-for="(a,i) in achievements"><span  :style="{border: '2pt solid '+(a.achieved? 'orange':'black')}" style="overflow: hidden; position: relative; border-radius: 1rem; display: inline-block"><img v-tooltip="a.name" :src="a.icon+'.svg'" style="height: 3em; width: 3em;"><div v-if="!a.achieved" style="position: absolute; left: 0; top: 0;bottom: 0; right: 0; background-color: black; opacity: 0.9"/></span></template></div>
         </template>
       </Card>
       <Card>
@@ -35,6 +35,21 @@
         </template>
       </Card>
     </template>
+    <Card>
+      <template #title>Aufgabenblatt erstellen</template>
+      <template #content>
+        Du kannst beliebige Aufgaben zu einem <strong>Aufgabenblatt (AB)</strong> zusammenfassen. Dieses AB kannst du dann per Link teilen.
+        <div style="text-align: right">
+          <Button v-if="ab===null" label="AB erstellen" @click="createAB()"/>
+          <Button v-else label="AB entfernen" @click="removeAB()"/>
+        </div>
+        <div v-if="ab">
+          <p style="text-align: center"><template v-if="linkToAB"><a :href="linkToAB" target="_blank">Link zum AB</a> <Button class="clipboard" size="small" text :data-clipboard-text="linkToAB" icon="pi pi-copy" label="Kopieren"/></template><template v-else>Füge Aufgaben hinzu, damit der Link erzeugt wird.</template></p> 
+          Titel: <InputText v-model="ab.label"/>
+          <ExercisePath :path="ab" disabled/>
+        </div>
+      </template>
+    </Card>
     <!-- <h2>Aufgabenpfade</h2>
     <p>Klicke auf den Button <Button class="nopointer" text rounded icon="pi pi-bars"/> oben links, um die Aufgabenpfade anzuzeigen und auszuwählen.</p>
     <h2>Zum freien Üben</h2>
@@ -95,12 +110,22 @@ import ClassDiagram from './UmlClazz.vue';
 import TuringMachineLauncher from './turing-machine-launcher.vue';
 import WebEditorLauncher from './web-editor-launcher.vue';
 import { isCompletelyTrue } from '../other/bool-array';
+import ExercisePath from './exercise-path.vue';
 
 export default{
   components: {
-    TuringMachineLauncher, ClassDiagram, WebEditorLauncher
+    TuringMachineLauncher, ClassDiagram, WebEditorLauncher, ExercisePath
+  },
+  props: {
+    ab: Object
   },
   computed: {
+    linkToAB(){
+      if(!this.ab || this.ab.exercises.length===0) return null;
+      let hash=this.ab.label+"["+this.ab.exercises.toString()+"]";
+      hash=encodeURI(hash);
+      return location.origin+location.pathname+"#ab="+hash;
+    },
     achievements(){
       let achievements=[];
       for(let j=0;j<paths.length;j++){
@@ -134,6 +159,17 @@ export default{
     changeModeToPractise(){
       location.hash="practise";
       location.reload();
+    },
+    createAB(){
+      this.$root.createAB();
+    },
+    removeAB(){
+      this.$root.removeAB();
+    }
+  },
+  data(){
+    return {
+      
     }
   }
 }
