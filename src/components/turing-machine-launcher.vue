@@ -69,7 +69,7 @@ export default{
   methods: {
     closeDialog(){
       if(this.exerciseData){
-        this.save();
+        this.save(this.exerciseData);
       }else{
         let a=confirm("Dein Programm wird nicht gespeichert.\n\nTrotzem beenden?");
         if(!a) return;

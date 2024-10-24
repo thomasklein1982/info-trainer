@@ -1,5 +1,5 @@
 <template>
-  <h2>Aufgabenserie {{ path.label }} [{{path.category}}]</h2>
+  <h2>{{path.category}}: {{ path.label }}</h2>
   <template v-for="(e,i) in path.exercises">
     <ExerciseWrapper :number="i+1" :id="e">
       <component :is="e"/>

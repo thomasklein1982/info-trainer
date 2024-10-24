@@ -14,6 +14,15 @@
           Das bedeutet, dass die beiden gelb markierten Steine von Position 0 zu Position 2 versetzt werden sollen.
           <p>Das Ergebnis würde folgendermaßen aussehen:</p>
           <HanoiDisplay show-positions style="width: 6cm; height: 4cm" :width-factor="10" :height-factor="10" :tuerme="[[3],[6,4],[6,{width: 2, color: 'yellow'},{width: 1, color: 'yellow'}]]"/>
+          <p>Das geht aber natürlich nicht direkt. Die Methode müsste in mehreren Schritten vorgehen, zum Beispiel folgendermaßen:</p>
+          <div class="responsive-grid-2-1" style="display: grid; justify-content: center; gap: 0.5rem 2rem;">
+            <HanoiDisplay label="A" show-positions style="width: 6cm; height: 4cm" :width-factor="10" :height-factor="10" :tuerme="[[3,{width: 2},{width: 1, color: 'yellow'}],[6,4],[6]]"/>
+            <HanoiDisplay label="B" show-positions style="width: 6cm; height: 4cm" :width-factor="10" :height-factor="10" :tuerme="[[3,{width: 2}],[6,4,{width: 1, color: 'yellow'}],[6]]"/>
+            <HanoiDisplay label="C" show-positions style="width: 6cm; height: 4cm" :width-factor="10" :height-factor="10" :tuerme="[[3,{width: 2,color: 'yellow'}],[6,4,{width: 1}],[6]]"/>
+            <HanoiDisplay label="D" show-positions style="width: 6cm; height: 4cm" :width-factor="10" :height-factor="10" :tuerme="[[3],[6,4,{width: 1}],[6,{width: 2,color: 'yellow'}]]"/>
+            <HanoiDisplay label="E" show-positions style="width: 6cm; height: 4cm" :width-factor="10" :height-factor="10" :tuerme="[[3],[6,4,{width: 1,color: 'yellow'}],[6,{width: 2}]]"/>
+            <HanoiDisplay label="F" show-positions style="width: 6cm; height: 4cm" :width-factor="10" :height-factor="10" :tuerme="[[3],[6,4],[6,{width: 2},{width: 1,color: 'yellow'}]]"/>
+          </div>
         </Example>
       </li>
       <li>Analysiere die Laufzeit deiner Implementierung.</li>

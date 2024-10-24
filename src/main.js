@@ -96,3 +96,4 @@ for(let a in exercises){
 new ClipboardJS(".clipboard");
 
 app.mount('#app');
+

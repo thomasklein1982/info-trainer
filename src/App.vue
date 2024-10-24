@@ -2,6 +2,7 @@
 <template>
   <MainScreen 
     :settings="settings"
+    :mode="mode"
   />
 </template>
 
@@ -15,6 +16,36 @@ import { toRaw } from 'vue';
 import packageJson from '../package.json';
 const STORAGE_DATA="INFO-TRAINER-USER-DATA";
 const STORAGE_SETTINGS="INFO-TRAINER-SETTINGS";
+let mode={
+  type: "normal",
+  useStorage: true
+};
+
+let hash=location.hash;
+if(hash.toLowerCase().startsWith("#ab=")){
+  let pos1=hash.indexOf("[");
+  let pos2=hash.indexOf("]");
+  if(pos1>=0 && pos2>pos1){
+    let title=hash.substring(4,pos1);
+    let ids=hash.substring(pos1+1,pos2);
+    console.log(title,ids);
+    ids=ids.split(",");
+    mode={
+      type: "ab",
+      title,ids,
+      useStorage: false,
+      reloadOnHome: true,
+      unloadWarning: "Möchtest du das Arbeitsblatt wirklich beenden?\nDeine Ergebnisse werden NICHT gespeichert!"
+    }
+  }
+}
+
+window.onbeforeunload=function(ev){
+  if(!mode.unloadWarning) return;
+  ev.preventDefault();
+  ev.returnValue = true;
+  return true;
+}
 
 let exerciseDataCollection={};
 for(let a in exercises){
@@ -65,6 +96,7 @@ export function calcPoints(exerciseData){
 }
 
 export let difficulty="Hard";
+let userData=null;
 
 export default{
   components: {
@@ -80,6 +112,7 @@ export default{
   data() {
       return {
         version: packageJson.version,
+        mode,
         exerciseDataCollection: exerciseDataCollection,
         settings: {
           javaAppDifficulty: difficulty
@@ -87,11 +120,7 @@ export default{
       };
   },
   async mounted(){
-
     await this.load();
-    // setInterval(()=>{
-    //   this.save();
-    // },1000);
   },
   methods: {
     getExerciseData(id){
@@ -116,7 +145,7 @@ export default{
     restoreUserDataObject(userData){
       for(let id in userData){
         let o=userData[id];
-        let ed=this.getExerciseData(id);//exerciseDataCollection[a];
+        let ed=this.getExerciseData(id);
         if(ed){
           ed.correct=0;
           let count=ed.data.check? ed.data.check.testcases.length : ed.data.tasks.length;
@@ -148,10 +177,38 @@ export default{
         }
       }
       let data=await storage.getItem(STORAGE_DATA);
-      this.restoreUserDataObject(data);
+      if(this.mode.useStorage){
+        this.restoreUserDataObject(data);
+      }else{
+        userData=data;
+      }
     },
-    save(){
-      storage.setItem(STORAGE_DATA,this.createUserDataObject());
+    save(exerciseData){
+      if(this.mode.useStorage){
+        storage.setItem(STORAGE_DATA,this.createUserDataObject());
+      }else if(exerciseData){
+        let savedExerciseData=userData[exerciseData.data.id];
+        if(savedExerciseData.correct===true) return;
+        let ed=exerciseData;
+        let points=ed.points;
+        let correct=ed.correct;
+
+        let array=intToBoolArray(savedExerciseData.correct);
+        ed.correct=array;
+        calcPoints(ed);
+        if(points>ed.points){
+          //verbessert: speichern
+          let obj={
+            correct: isCompletelyTrue(correct)? true: boolArrayToInt(correct),
+            project: toRaw(ed.userProject)
+          };
+          console.log("save better",obj,points,ed.points);
+          userData[ed.data.id]=obj;
+          storage.setItem(STORAGE_DATA,userData);
+        }
+        ed.points=points;
+        ed.correct=correct;
+      }
     },
     saveSettings(){
       storage.setItem(STORAGE_SETTINGS,toRaw(this.settings)).catch((err)=>{

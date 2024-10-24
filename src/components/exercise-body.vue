@@ -148,14 +148,14 @@ export default {
         data.project.clazzes=clazzes;
         this.exerciseData.userProject=data.project;
       }
-      this.$root.save();
+      this.$root.save(this.exerciseData);
     },
     checkExercise(){
       let resArray=this.$parent.check();
       this.exerciseData.correct=resArray;
       this.exerciseData.userProject=this.seed;
       calcPoints(this.exerciseData);
-      this.$root.save();
+      this.$root.save(this.exerciseData);
     },
     refreshExercise(){
       this.seed=random(1000,99999999);

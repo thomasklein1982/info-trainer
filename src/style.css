@@ -113,6 +113,10 @@ body{
   border: 1pt solid white;
 }
 
+.responsive-grid-2-1{
+  grid-template-columns: auto auto;
+}
+
 @media screen and (min-width: 550px) {
   .float-right{
     float: right;
@@ -124,5 +128,8 @@ body{
     display: grid;
     place-content: center;
     width: 100%;
+  }
+  .responsive-grid-2-1{
+    grid-template-columns: auto;
   }
 }

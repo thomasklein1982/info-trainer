@@ -11,11 +11,11 @@ let Java={
     },
     {
       label: "if-else",
-      exercises: ["minimum-2", "even", "roman", "monat-tage","vokal","uppercase","minimum-3","dreieck","schaltjahr","strom"]
+      exercises: ["out-if-1","minimum-2", "even", "roman", "monat-tage","vokal","uppercase","minimum-3","dreieck","schaltjahr","strom"]
     },
     {
       label: "Schleifen",
-      exercises: ["out-loop-1", "mehrfach-ausgabe","strichliste","prim","letters","sum-1", "teiler"]
+      exercises: ["out-loop-1", "mehrfach-ausgabe","strichliste","prim","letters","sum-1", "teiler", "prim-2"]
     },
     {
       label: "Arrays",

@@ -5,6 +5,7 @@
       <div v-for="(s,j) in t" class="scheibe" :style="{width: ((getWidth(s)+2)*widthFactor)+'%', height: heightFactor+'%', left: (50-(getWidth(s)+2)*widthFactor/2)+'%', bottom: ((j)*heightFactor)+'%', backgroundColor: s.color? s.color: 'red'}"/>
       <div class="positionLabel" v-if="showPositions">{{ i }}</div>
     </div>
+    <span style="position: absolute; left: -1rem; top: 0.1rem; font-weight: bold; text-align: right">{{ label }}</span>
   </div>
 </template>
 
@@ -23,7 +24,8 @@ export default{
     showPositions: {
       type: Boolean,
       default: false
-    }
+    },
+    label: String
   },
   data() {
     return {};
