@@ -50,6 +50,15 @@
         </div>
       </template>
     </Card>
+    <Card>
+      <template #title>Gespeicherte Daten</template>
+      <template #content>
+        Im lokalen Speicher deines Browsers werden deine Lösungen zu den Aufgaben gespeichert. Aktuell sind etwa <strong>{{ $root.userDataSizeDisplay }}</strong> gespeichert.
+        <p style="text-align: left">
+          <SpeedDial :model="savedDataActions" direction="right"/>
+        </p>
+      </template>
+    </Card>
     <!-- <h2>Aufgabenpfade</h2>
     <p>Klicke auf den Button <Button class="nopointer" text rounded icon="pi pi-bars"/> oben links, um die Aufgabenpfade anzuzeigen und auszuwählen.</p>
     <h2>Zum freien Üben</h2>
@@ -111,10 +120,11 @@ import TuringMachineLauncher from './turing-machine-launcher.vue';
 import WebEditorLauncher from './web-editor-launcher.vue';
 import { isCompletelyTrue } from '../other/bool-array';
 import ExercisePath from './exercise-path.vue';
+import SpeedDial from 'primevue/speeddial';
 
 export default{
   components: {
-    TuringMachineLauncher, ClassDiagram, WebEditorLauncher, ExercisePath
+    TuringMachineLauncher, ClassDiagram, WebEditorLauncher, ExercisePath, SpeedDial
   },
   props: {
     ab: Object
@@ -152,6 +162,17 @@ export default{
     }
   },
   methods: {
+    removeSavedData(){
+      let a=confirm("Bist du wirklich sicher, dass du alle Lösungen und deinen gesamten Fortschritt löschen willst?\n\nDies kann nicht rückgängig gemacht werden!");
+      if(!a) return;
+      this.$root.removeSavedUserData();
+    },
+    downloadSavedData(){
+      this.$root.downloadSavedData();
+    },
+    uploadSavedData(){
+      this.$root.uploadSavedData();
+    },
     changeModeToNormal(){
       location.hash="";
       location.reload();
@@ -169,7 +190,29 @@ export default{
   },
   data(){
     return {
-      
+      savedDataActions: [
+        {
+          label: "Herunterladen",
+          icon: "pi pi-download",
+          command: (ev)=>{
+            this.downloadSavedData();
+          }
+        },
+        {
+          label: "Hochladen",
+          icon: "pi pi-upload",
+          command: (ev)=>{
+            this.uploadSavedData();
+          }
+        },
+        {
+          label: "Löschen",
+          icon: "pi pi-trash",
+          command: (ev)=>{
+            this.removeSavedData();
+          }
+        },
+      ]
     }
   }
 }

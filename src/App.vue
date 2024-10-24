@@ -16,6 +16,7 @@ import * as exercises from './components/exercises/index';
 import { boolArrayToInt, createBoolArray, intToBoolArray, isCompletelyTrue } from './other/bool-array';
 import { toRaw } from 'vue';
 import packageJson from '../package.json';
+import { download, upload } from './other/helper';
 const STORAGE_DATA="INFO-TRAINER-USER-DATA";
 const STORAGE_SETTINGS="INFO-TRAINER-SETTINGS";
 let mode={
@@ -128,6 +129,16 @@ export default{
   computed: {
     addExercisesToAB(){
       return this.ab!==null;
+    },
+    userDataSizeDisplay(){
+      let size=this.userDataSize;
+      let units=["Byte","Kilo-Byte","Mega-Byte","Giga-Byte"];
+      let unitIndex=0;
+      while(size>=1000 && unitIndex<units.length-1){
+        size=Math.round(size/100)/10;
+        unitIndex++;
+      }
+      return size+" "+units[unitIndex];
     }
   },
   data() {
@@ -138,13 +149,46 @@ export default{
         settings: {
           javaAppDifficulty: difficulty
         },
-        ab: null
+        ab: null,
+        userDataSize: 0
       };
   },
   async mounted(){
     await this.load();
   },
   methods: {
+    removeSavedUserData(){
+      storage.removeItem(STORAGE_DATA);
+      storage.removeItem(STORAGE_SETTINGS);
+      location.reload();
+    },
+    downloadSavedData(){
+      let data={};
+      let userData=this.createUserDataObject();
+      let date=new Date();
+      data.userData=userData;
+      data.settings=toRaw(this.settings);
+      data.date=date.getTime();
+      data=JSON.stringify(data);
+      let fileName="Info-Trainer-"+date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+".txt";
+      download(data,fileName,"text/plain");
+    },
+    async uploadSavedData(){
+      let file=await upload({accept: 'text/plain'});
+      console.log(file);
+      let code;
+      try{
+        code=JSON.parse(file.code);
+      }catch(e){
+        alert("Fehler beim Hochladen der Datei.");
+        return;
+      }
+      console.log(code);
+      let a =confirm("Sollen die Daten wirklich überschrieben werden?\n\nDas kann nicht rückgängig gemacht werden!");
+      if(code.userData) storage.setItem(STORAGE_DATA,code.userData);
+      if(code.settings) storage.setItem(STORAGE_SETTINGS,code.settings);
+      location.reload();
+    },
     isExerciseInAB(id){
       if(!this.ab) return false;
       return this.ab.exercises.indexOf(id)>=0;
@@ -237,6 +281,7 @@ export default{
         }
       }
       let data=await storage.getItem(STORAGE_DATA);
+      this.userDataSize=data? JSON.stringify(data).length: 0;
       if(this.mode.useStorage){
         this.restoreUserDataObject(data);
       }else{
@@ -245,7 +290,9 @@ export default{
     },
     save(exerciseData){
       if(this.mode.useStorage){
-        storage.setItem(STORAGE_DATA,this.createUserDataObject());
+        let data=this.createUserDataObject();
+        storage.setItem(STORAGE_DATA,data);
+        this.userDataSize=JSON.stringify(data).length;
       }else if(exerciseData){
         let savedExerciseData=userData[exerciseData.data.id];
         if(savedExerciseData.correct===true) return;
@@ -265,6 +312,7 @@ export default{
           console.log("save better",obj,points,ed.points);
           userData[ed.data.id]=obj;
           storage.setItem(STORAGE_DATA,userData);
+          this.userDataSize=JSON.stringify(userData).length;
         }
         ed.points=points;
         ed.correct=correct;
