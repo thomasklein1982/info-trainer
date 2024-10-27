@@ -21,7 +21,6 @@ import ConfirmPopup from 'primevue/confirmpopup';
 import * as exercises from './components/exercises/index';
 import ExerciseBody from './components/exercise-body.vue';
 import ConsoleOutput from './components/console-output.vue';
-import { boolArrayToInt, intToBoolArray } from './other/bool-array';
 import { registerSW } from 'virtual:pwa-register';
 import AppPreview from './components/app-preview.vue';
 import JFrame from './components/j-frame.vue';
@@ -38,6 +37,8 @@ import JImage from './components/j-image.vue';
 import ClipboardJS from 'clipboard';
 import ConsoleInputCheck from './components/console-input-check.vue';
 import Tooltip from 'primevue/tooltip';
+import ToggleButton from 'primevue/togglebutton';
+import SelectButton from 'primevue/selectbutton';
 
 const updateSW=registerSW({
   onNeedRefresh(){
@@ -89,6 +90,8 @@ app.component("JPanel",JPanel);
 app.component("OverlayBatch",OverlayBadge);
 app.component("Check",Check);
 app.component("InputCheck",InputCheck);
+app.component("ToggleButton",ToggleButton);
+app.component("SelectButton", SelectButton);
 
 for(let a in exercises){
   let m=exercises[a];

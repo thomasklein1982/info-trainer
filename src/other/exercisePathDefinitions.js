@@ -58,6 +58,11 @@ let TheoretischeInformatik={
       exercises: ["ea-all","ea-min-2","ea-bin-gerade","ea-substring", "ea-zahl", "ea-enden", "ea-gleich-viele", "ea-bin-bigger"]
     },
     {
+      label: "Reguläre Ausdrücke",
+      icon: "regexp",
+      exercises: ["re-match-1","re-match-2","re-match-3", "re-date", "re-match-4"]
+    },
+    {
       label: "Turingmaschinen",
       icon: "tm",
       exercises: ["tm-hi","tm-loeschen","tm-bits-kippen","tm-paritaet","tm-zaehlen-1","tm-durch-3","tm-palindrom","tm-inkrement","tm-verdoppeln","tm-zaehlen-2", "tm-addieren"]

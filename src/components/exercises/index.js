@@ -1,4 +1,9 @@
 
+export * as ReMatch1 from './regex/re-match-1.vue';
+export * as ReMatch2 from './regex/re-match-2.vue';
+export * as ReMatch3 from './regex/re-match-3.vue';
+export * as ReDate from './regex/re-date.vue';
+export * as ReMatch4 from './regex/re-match-4.vue';
 export * as EaZahl from './ea/ea-zahl.vue';
 export * as EaBinBigger from './ea/ea-bin-bigger.vue';
 export * as EaGleichViele from './ea/ea-gleich-viele.vue';

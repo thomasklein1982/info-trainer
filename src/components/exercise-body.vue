@@ -21,6 +21,14 @@
           @show-feedback="$refs.dialogFeedback.open()"
         />
       </template>
+      <template v-else-if="regexp">
+        <RegexpLauncher
+          :exercise-data="exerciseData"
+          :regexp="regexp"
+        >
+          <slot></slot>
+        </RegexpLauncher>
+      </template>
       <template v-else>
         <Button label="Aufgabe bearbeiten" @click="showExercise()"/>
         <Dialog modal v-model:visible="showExerciseDialog" :header="title">
@@ -31,8 +39,7 @@
           <div style="position: relative">
             <slot name="exercise"></slot>
           </div>
-          
-          <template #footer>
+          <template v-if="!noRandom" #footer>
             <Button v-if="!exerciseChecked" icon="pi pi-list-check" label="Überprüfen" @click="checkExercise()"/>
             <Button v-else icon="pi pi-refresh" label="Neue Aufgabe" @click="refreshExercise()"/>
           </template>
@@ -52,12 +59,14 @@ import { Random, random } from "../other/random";
 import DialogFeedback from "./dialog-feedback.vue";
 import ExerciseProgress from "./exercise-progress.vue";
 import JavaApp from "./java-app.vue";
+import RegexpLauncher from "./regexp-launcher.vue";
 import TuringMachineLauncher from "./turing-machine-launcher.vue";
+import Message from "primevue/message";
 
 
 export default {
   components: {
-    JavaApp, DialogFeedback,ExerciseProgress, TuringMachineLauncher
+    JavaApp, DialogFeedback,ExerciseProgress, TuringMachineLauncher, Message, RegexpLauncher
   },
   props: {
     exercise: Object,
@@ -67,7 +76,12 @@ export default {
     },
     turingMachine: Object,
     finiteStateMachine: Object,
-    java: Object
+    java: Object,
+    regexp: Object,
+    noRandom: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     machine(){
@@ -118,6 +132,10 @@ export default {
   },
   methods: {
     showExercise(){
+      if(this.noRandom){
+        this.showExerciseDialog=true;
+        return;
+      }
       let resArray;
       if(this.exerciseData?.userProject!==undefined){
         this.seed=this.exerciseData.userProject;

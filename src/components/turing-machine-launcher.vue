@@ -87,7 +87,7 @@ export default{
       if(data.machine){
         this.exerciseData.userProject=data.machine;
       }
-      this.$root.save();
+      this.$root.save(this.exerciseData);
     },
     showFeedback(){
       this.newInfos=false;

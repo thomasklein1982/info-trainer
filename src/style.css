@@ -18,6 +18,14 @@ body{
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.code{
+  background-color: white;
+  color: blue;
+  padding: 0.2rem;
+  font-family: 'Courier New', Courier, monospace;
+  border-radius: 0.1rem;
+}
+
 #app{
   height: 100%;
   width: 100%;
