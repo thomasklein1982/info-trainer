@@ -1,10 +1,15 @@
 <template>
-  <ExerciseBody :exercise="$data">
-    
+  <ExerciseBody :exercise="$data" no-footer>
+    <template #preview>
+      {{person.icon}} {{person.teaser}}
+    </template>
     <template #exercise>
       <InternetGame
         :person="person"
-        :seed="seed"
+        :tasks="tasks"
+        :exercise-id="id"
+        :random="random"
+        @check-request="checkRequest"
       />
       
     </template>
@@ -18,11 +23,48 @@ import InternetGame from './InternetGame.vue';
 
 export const data={
   id: "igada",
-  title: "Das Internet-Spiel",
+  title: "Adas Programmier-Problem",
   tasks: [
     {
-      
-    }
+      info: "Finde den Namen (die Domain) der Webseite, auf der Ada ihre Frage zur Programmierung gestellt hat.",
+      check: (request)=>{
+        if(request.server.name==="goggle" && request.data && "programmierung.de".indexOf(request.data.query)>=0){
+          return true;
+        }
+        // if(request.server.name==="programmierung.de" && request.path==="forum.html"){
+        //   return true;
+        // }
+        return false;
+      }
+    },
+    {
+      info: "Finde die IP-Adresse der Website, auf der Ada ihre Frage gestellt hat.",
+      check: (request)=>{
+        if(request.server.name==="dns" && request.data && request.data.query==="programmierung.de"){
+          return true;
+        }
+        return false;
+      }
+    },
+    {
+      info: "Finde die Antwort auf die Frage, die Ada im Internet-Forum gestellt hat.",
+      check: (request)=>{
+        console.log("antwort check",request);
+        if(request.server.name==="easy-forums.de" && request.file?.name==="diskussion204.php"){
+          return true;
+        }
+        return false;
+      }
+    },
+    {
+      info: "Bedanke dich bei demjenigen, der die Frage beantwortet hat, indem du eine Nachricht mit dem Wort 'Danke' postest.",
+      check: (request)=>{
+        if(request.method==='post' && request.server.name==="easy-forums.de" && request.file?.name==="diskussion204.php" && request.data?.data!==undefined){
+          return true;
+        }
+        return false;
+      }
+    },
   ],
   person: {
     name: "Ada",
@@ -35,7 +77,7 @@ export const data={
       "Finde die Antwort auf die Frage, die Ada im Internet-Forum gestellt hat.",
       "Bedankt euch bei demjenigen, der die Frage beantwortet hat, indem ihr eine neue Nachricht postet."
     ],
-    losgehts: "Ada klappt ihren Laptop auf ...",
+    losgehts: "Klappe Adas Laptop auf...",
     geraet: "Laptop"
   },
   screen: "start",
@@ -51,24 +93,20 @@ export default{
   },
   methods: {
     create(Random, resArray){
+      this.random=Random;
       this.seed=Random.seed;
       for(let i=0;i<this.tasks.length;i++){
         let t=this.tasks[i];
-        t.solution=Random.int(t.from,t.to);
         t.correct=resArray? resArray[i]: false;
-        t.number=t.solution.toString(2);
-        t.checked=resArray? true: false;
-        t.input=resArray && resArray[i]? t.solution: "";
       }
     },
-    check(){
-      let resArray=[];
+    checkRequest(request){
       for(let i=0;i<this.tasks.length;i++){
         let t=this.tasks[i];
-        t.checked=true;
-        resArray.push(t.correct);
+        if(t.check && t.check(request)){
+          t.correct=true;
+        }
       }
-      return resArray;
     }
   }
 }

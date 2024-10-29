@@ -2,34 +2,37 @@
   <div style="width: 100%; height: 100%; display: flex; flex-direction: column">
     <Menubar style="margin-bottom: 0.3rem" v-if="screen!=='intro'">
       <template #start>
-        {{ person.icon }} {{ person.name }}
-      </template>  
+        <strong>Client:</strong>&nbsp;{{person.geraet}} von {{ person.icon }} {{ person.name }}
+      </template>
+      <template #end>
+        <div style="display: flex">
+          <Knob rangeColor="green" valueColor="red" :textColor="danger*2<maxDanger? 'green':'red'" :size="50" v-model="danger" :max="maxDanger"/>
+          <Button icon="pi pi-list" label="Aufgaben" @click="showTasks=true"/>
+        </div>
+      </template>
     </Menubar>
     <div class="screen" v-if="screen==='intro'">
-      <span class="portrait" style="float-left">
-        
-      </span>
       <h2>{{ person.icon }} {{ person.name }}, {{ person.title }}</h2>
       <div>
         {{ person.teaser }}
       </div>
       <h3>Deine Aufgaben</h3>
       <ul>
-        <li v-for="(t,i) in person.tasks">{{ t }}</li>
+        <li v-for="(t,i) in tasks" :style="{color: t.correct? 'green': ''}">{{ t.info }}<span style="color: green; margin-left: 0.5rem" v-if="t.correct" class="pi pi-check"/></li>
       </ul>
-      Es ist egal, in welcher Reihenfolge du die Aufgaben erledigst.
       <div>
         <Button :label="person.losgehts" @click="screen='internet'"/>
       </div>
     </div>
     <div class="screen" v-else-if="screen==='internet'">
-      <p>Hier siehst du einen Teil des Internets. Das Internet besteht aus vielen Computern, die <strong>Server</strong> genannt werden. {{person.name}}s {{ person.geraet }} ist ein <strong>Client</strong>. Klicke einen Server an, um eine <strong>Anfrage</strong> an ihn zu stellen.</p>
-      <p>Das <strong>DNS (Domain Name System)</strong> und die <strong>Suchmaschine Goggle</strong> sind besondere Server. Klicke sie an, um mehr zu erfahren.</p>
-      <Button v-for="(s,i) in server" text @click="clickServer(s)">
+      <p>Hier siehst du einen Teil des Internets. Das Internet besteht aus vielen Computern, die <strong>Server</strong> genannt werden. Klicke einen Server an, um eine <strong>Anfrage</strong> an ihn zu stellen.</p>
+      <p>Spezielle Server sind das <strong>DNS (Domain Name System)</strong> und die <strong>Suchmaschine Goggle</strong>.</p>
+      <Button label="🖥️ DNS" @click="makeRequest('get',{name: 'dns'})"/>
+      <Button label="🖥️ Goggle" @click="makeRequest('get',{name: 'goggle'})"/>
+      <Button v-for="(s,i) in server" text @click="makeRequest('get',s)">
         🖥️ {{ s.ip.join(".") }}
       </Button>
-      <Button label="🖥️ DNS" @click="screen='dns'"/>
-      <Button label="🖥️ Goggle" @click="screen='goggle'"/>
+      
     </div>
     <div class="screen" v-else-if="screen==='dns'">
       <h2>Willkommen beim <strong>Domain Name System (DNS)</strong></h2> 
@@ -37,7 +40,7 @@
       <p>Nennen Sie einen Domain-Namen und wir geben Ihnen die zugehörige IP-Adresse.</p>
       <InputGroup>
         <InputText type="search" v-model="dns.search" fluid placeholder="Geben Sie den Domain-Namen ein, z. B. mathe-info.com"/>
-        <Button @click="searchDNS(dns.search)" icon="pi pi-search"/>  
+        <Button @click="makeRequest('get',{name: 'dns'},{query: dns.search})" icon="pi pi-search"/>  
       </InputGroup>
       <p v-if="dns.searched">
         <template v-if="dns.result">
@@ -47,14 +50,15 @@
           Ich kann die Domain <strong>{{ dns.search }}</strong> nicht finden.
         </template>
       </p>
-      <p><Button fluid @click="screen='internet'" label="Zurück"/></p>
+      <p><Button fluid @click="screen='internet'" label="Zurück zum Internet"/></p>
     </div>
+    
     <div class="screen" v-else-if="screen==='goggle'">
       <h1 style="text-align: center; font-variant: small-caps"><span style="color: blue">G</span><span style="color: red">o</span><span style="color: yellow">g</span><span style="color: blue">g</span><span style="color: green">l</span><span style="color: red">e</span></h1> 
       <p style="text-align: center">Die beste Suchmaschine im Netz.</p>
       <InputGroup>
         <InputText type="search" v-model="goggle.search" fluid placeholder="Geben Sie einen Suchbegriff ein..."/>
-        <Button @click="searchGoggle(goggle.search)" icon="pi pi-search"/>  
+        <Button @click="makeRequest('get',{name: 'goggle'},{query: goggle.search})" icon="pi pi-search"/>  
       </InputGroup>
       <p v-if="goggle.results">
         <template v-if="goggle.results.length>0">
@@ -69,28 +73,40 @@
           Keine Suchergebnisse gefunden.
         </template>
       </p>
-      <p><Button fluid @click="screen='internet'" label="Zurück"/></p>
+      <p><Button fluid @click="screen='internet'" label="Zurück zum Internet"/></p>
     </div>
+
+    <div class="screen" v-else-if="screen==='darknet'" style="text-align: center">
+      <p>Es ist gefährlich, einfach auf irgendeine unbekannte Seite zu surfen. Du bist im <strong>Darknet</strong> gelandet. {{person.name}}s {{person.geraet}} wird von <strong>Viren</strong>, <strong>Trojanern</strong> und anderer <strong>Malware</strong> infiziert.</p>
+      <p>Die Gefährdung beträgt insgesamt</p>
+      <div><Knob rangeColor="green" valueColor="red" :textColor="danger*2<maxDanger? 'green':'red'" v-model="danger" :max="maxDanger"/></div>
+      <p v-if="danger===maxDanger">{{person.name}}s {{person.geraet}} kann leider nicht mehr verwendet werden. Du musst die Aufgabe neu starten.</p>
+      <p v-else><Button fluid @click="screen='internet'" label="Zurück zum Internet"/></p>
+    </div>
+
     <div class="screen" v-else-if="screen==='domain'">
-      <div style="font-family: monospace; font-size: 130%">
+      <div style="font-family: monospace; font-size: 130%; margin-bottom: 0.8rem;">
         Dies ist der Server {{domain.server.name}}.
         <p>Geben Sie an, welche Datei Sie anfordern möchten (z. B. <code>index.html</code> für die Startseite):</p>
+        <InputGroup>
+          <InputText type="search" v-model="domain.search" fluid placeholder="Geben Sie den Namen der Datei ein, z. B. index.html"/>
+          <Button @click="searchDomain(domain.search)" icon="pi pi-search"/>  
+        </InputGroup>
       </div>
-      <InputGroup>
-        <InputText type="search" v-model="domain.search" fluid placeholder="Geben Sie den Namen der Datei ein, z. B. index.html"/>
-        <Button @click="searchDomain(domain.search)" icon="pi pi-search"/>  
-      </InputGroup>
-      <p style="font-family: monospace; font-size: 130%" v-if="domain.notFound">
-        Fehler <strong>404</strong>: Datei nicht gefunden.
-      </p>
-      <Card v-else-if="domain.file!==null">
+      
+      <Card style="background-color: white; color: black;">
         <template #title>
-          [Datei <code>{{domain.file.name}}</code> auf dem Server <code>{{domain.server.name}}</code>]
+          <template v-if="domain.file===null">
+            Fehler <strong>404</strong>: Datei nicht gefunden.
+          </template>
+          <template v-else>
+            [Datei <code>{{domain.file.name}}</code> auf dem Server <code>{{domain.server.name}}</code>]
+          </template>
         </template>
         <template #content>
           <template v-if="domainFileName==='programmierung.de/index.html'">
             <p>Willkommen, Coder!</p>
-            <p>Hier findest du alle Infos rund ums Programmieren. Hast du Fragen? Dann schau doch mal im <Button @click="showLink('Forum.html')" label="Forum" icon="pi pi-external-link" text/> vorbei. Wenn du ein*e Anfänger*in bist, empfehlen wir dir unsere Unterseite zum <Button @click="showLink('Internet.html')" label="Internet" icon="pi pi-external-link" text/>.</p>
+            <p>Hier findest du alle Infos rund ums Programmieren. Hast du Fragen? Dann schau doch mal im <Button @click="showLink('forum.html')" label="Forum" icon="pi pi-external-link" text/> vorbei. Wenn du ein*e Anfänger*in bist, empfehlen wir dir unsere Unterseite zum <Button @click="showLink('internet.html')" label="Internet" icon="pi pi-external-link" text/>.</p>
           </template>
           <template v-if="domainFileName==='programmierung.de/internet.html'">
             <p>Web-Programmierung</p>
@@ -126,23 +142,23 @@
           <template v-if="domainFileName==='easy-forums.de/diskussion204.php'">
             <table class="forum">
               <tr>
-                <td>👩&nbsp;Ada&nbsp;L.</td><td>Hey Leute, ich habe da ein Problem bei der Programmierung meiner App. Vielleicht könnt ihr mir ja helfen?<br/>Wie schaffe ich es, dass meine App die aktuelle Uhrzeit anzeigt?</td>
+                <td style="vertical-align: baseline">👩&nbsp;Ada&nbsp;L.</td><td>Hey Leute, ich habe da ein Problem bei der Programmierung meiner App. Vielleicht könnt ihr mir ja helfen?<br/>Wie schaffe ich es, dass meine App die aktuelle Uhrzeit anzeigt?</td>
               </tr>
               <tr>
-                <td>👴&nbsp;Don&nbsp;K.</td><td>Uh, da habe ich keine Ahnung. Viel Erfolg weiterhin!</td>
+                <td style="vertical-align: baseline">👴&nbsp;Don&nbsp;K.</td><td>Uh, da habe ich keine Ahnung. Viel Erfolg weiterhin!</td>
               </tr>
               <tr>
-                <td>👱🏼‍♂️&nbsp;Marc&nbsp;Z.</td><td>wenn du es rausgefunden hast, sag mir Bescheid. Ich brauche diese Info auch.</td>
+                <td style="vertical-align: baseline">👱🏼‍♂️&nbsp;Marc&nbsp;Z.</td><td>Wenn du es rausgefunden hast, sag mir Bescheid. Ich brauche diese Info auch.</td>
               </tr>
               <tr>
-                <td>👵&nbsp;Grace&nbsp;H.</td><td>Schau mal, es ist ganz einfach: Verwende folgenden Code:<br/><code>date d = new Date();</code></td>
+                <td style="vertical-align: baseline">👵&nbsp;Grace&nbsp;H.</td><td>Schau mal, es ist ganz einfach: Verwende folgenden Code:<br/><code>date d = new Date();</code></td>
               </tr>
               <tr v-if="antwortFix">
-                <td>👩&nbsp;Ada&nbsp;L.</td><td>{{antwortFix}}</td>
+                <td style="vertical-align: baseline">👩&nbsp;Ada&nbsp;L.</td><td>{{antwortFix}}</td>
               </tr>
             </table>
             
-            <p v-if="!antwortFix">Antworten: <InputText v-model.trim="antwort"/> <Button :diabled="antwort.length===0" @click="antwortFix=antwort" label="Absenden" icon="pi pi-send"/> </p>
+            <p v-if="person.name==='Ada' && !antwortFix">Antworten: <InputText v-model.trim="antwort"/> <Button :diabled="antwort.length===0" @click="postAnswer(antwort)" label="Absenden" icon="pi pi-send"/> </p>
           </template>
 
           <template v-if="domainFileName==='wiki-wissen.de/index.html'">
@@ -153,7 +169,7 @@
             </ul>
           </template>
           <template v-if="domainFileName==='wiki-wissen.de/enigma.html'">
-            <p >The Enigma ist eine Band, die vor allem Rock und Pop spielt. Ihr letztes Album "Bletchley Park" erhielt einen Grammy. <Button @click="showLink('index.html','enigma-band.de')" label="Zur offiziellen Website" icon="pi pi-external-link" text/></p>
+            <p >The Enigma ist eine Band, die vor allem Rock und Pop spielt. Ihr aktuelles Album "Bletchley Park" erhielt einen Grammy. <Button @click="showLink('index.html','enigma-band.de')" label="Zur offiziellen Website" icon="pi pi-external-link" text/></p>
           </template>
           <template v-if="domainFileName==='wiki-wissen.de/internet.html'">
             <p >Das Internet entsteht durch den Zusammenschluss vieler Computer, die über die ganze Welt verteilt sind.</p>
@@ -177,6 +193,16 @@
         Dieser Link führt zur Datei <strong>{{link.filename}}</strong> auf dem Server <strong>{{link.servername}}</strong>. Um diese Datei anzufordern, musst du zuerst auf den Server <strong>{{link.servername}}</strong> wechseln.
       </template>
     </Dialog>
+    <Dialog modal v-model:visible="showTasks" header="Deine Aufgaben">
+      <h2>{{ person.icon }} {{ person.name }}, {{ person.title }}</h2>
+      <div>
+        {{ person.teaser }}
+      </div>
+      <h3>Deine Aufgaben</h3>
+      <ul>
+        <li v-for="(t,i) in tasks" :style="{color: t.correct? 'green': ''}">{{ t.info }}<span style="color: green; margin-left: 0.5rem" v-if="t.correct" class="pi pi-check"/></li>
+      </ul>
+    </Dialog>
   </div>
 </template>
 
@@ -184,34 +210,44 @@
 import Menubar from 'primevue/menubar';
 import { RandomClazz } from '../../../../other/random';
 import InputGroup from 'primevue/inputgroup';
+import { calcPoints } from '../../../../App.vue';
+import Knob from 'primevue/knob';
+import { sleep } from '../../../../other/sleep';
 
 
 export default{
   components: {
-    Menubar, InputGroup
+    Menubar, InputGroup, Knob
   },
   watch: {
-    seed(nv,ov){
-      this.random.seed=nv;
-      this.dns.search="";
-      this.randomizeServerIPs(this.server);
-      screen="intro";
+    random(nv){
+      this.seed=nv.seed;
     }
+    // seed(nv,ov){
+    //   //this.random.seed=nv;
+    //   this.dns.search="";
+    //   this.randomizeServerIPs(this.server);
+    //   screen="intro";
+    // }
   },
   props: {
     person: Object,
-    seed: Number
+    random: Object,
+    tasks: Array,
+    exerciseId: String
   },
   computed: {
     domainFileName(){
       if(!this.domain.server || !this.domain.file) return null;
       return this.domain.server.name+"/"+this.domain.file.name;
-    }
+    },
+    exerciseData(){
+      return this.$root.getExerciseData(this.exerciseId);
+    },
   },
   data(){
     return {
       screen: 'intro',
-      random: null,
       server: null,
       dns: {
         search: "",
@@ -234,14 +270,98 @@ export default{
         servername: null
       },
       antwort: "",
-      antwortFix: null
+      antwortFix: null,
+      showTasks: false,
+      danger: 0,
+      maxDanger: 3,
+      seed: -1
     }
   },
   mounted(){
-    this.random=new RandomClazz(this.seed);
+    
     this.server=this.createServer();
   },
   methods: {
+    postAnswer(antwort){
+      console.log("post answer",antwort);
+      if(antwort.toLowerCase().indexOf("danke")<0){
+        alert("Ada soll sich für die Hilfe bedanken!");
+        return;
+      }
+      this.makeRequest('post',this.domain.server,{data:antwort},this.domain.file)
+    },
+    async makeRequest(method,server,data,file){
+      console.log("request",method,server,data,file);
+      this.$emit("check-request",{
+        method,server,data,file
+      });
+      // this.$parent.check({
+      //   method,server,data,path
+      // });
+      if(server.name==="goggle"){
+        if(data){
+          this.searchGoggle(data.query);
+        }else{
+          this.screen="goggle";
+        }
+        return this.finishRequest();
+      }
+      if(server.name==="dns"){
+        if(data){
+          this.searchDNS(data.query);
+        }else{
+          this.screen="dns";
+        }
+        return this.finishRequest();
+      }
+      if(!file && server.files){
+        console.log("redirect");
+        this.makeRequest(method,server,data,server.files[0]);
+        return this.finishRequest();
+      }
+      this.domain.file=file;
+      await this.clickServer(server);
+      if(data){
+        // if(data.path!==undefined){
+        //   this.searchDomain(data.path);
+          
+        // }
+        if(data.data!==undefined){
+          this.antwortFix=data.data;
+          this.antwort="";
+          return this.finishRequest();
+        }
+      }
+      this.finishRequest();
+    },
+    finishRequest(){
+      let resArray=[];
+      for(let i=0;i<this.tasks.length;i++){
+        let t=this.tasks[i];
+        if(t.correct){
+          resArray.push(true);
+        }else{
+          resArray.push(false);
+        }
+      }
+      this.exerciseData.correct=resArray;
+      this.exerciseData.userProject=this.seed;
+      calcPoints(this.exerciseData);
+      this.$root.save(this.exerciseData);
+    },
+    loseGame(){
+      let resArray=[];
+      for(let i=0;i<this.tasks.length;i++){
+        resArray.push(false);
+      }
+      this.exerciseData.correct=resArray;
+      this.seed=Math.round(Math.random()*100000);
+      delete this.exerciseData.userProject;
+      this.random.setSeed(this.seed);
+      calcPoints(this.exerciseData);
+      this.$root.save(this.exerciseData);
+      this.randomizeServerIPs(this.server);
+    },
     showLink(filename,servername){
       this.link.filename=filename;
       this.link.show=true;
@@ -262,8 +382,9 @@ export default{
       }
       for(let i=0;i<this.domain.server.files.length;i++){
         let f=this.domain.server.files[i];
-        if(f.name===this.domain.search){
+        if(f.name===text){
           this.domain.file=f;
+          this.makeRequest('get',this.domain.server,null,f);
           return;
         }
       }
@@ -282,6 +403,7 @@ export default{
         let s=this.server[i];
         if(s.name && s.name===text){
           this.dns.result=s;
+          s.known=true;
           return;
         }
       }
@@ -307,12 +429,16 @@ export default{
         }
       }
     },
-    clickServer(s){
+    async clickServer(s){
       if(s.name){
         this.domain.server=s;
         this.screen="domain";
       }else{
-        
+        this.screen="darknet";
+        this.danger++;
+        if(this.danger===this.maxDanger){
+          this.loseGame();
+        }
       }
     },
 
@@ -399,7 +525,7 @@ export default{
           ]
         },
       ];
-      for(let i=0;i<12;i++){
+      for(let i=0;i<35;i++){
         array.push({
           ip: 0
         });

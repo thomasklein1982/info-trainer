@@ -1,5 +1,7 @@
 
 export * as Igada from './ikg/internet/igada.vue';
+export * as Igtim from './ikg/internet/igtim.vue';
+export * as Igalan from './ikg/internet/igalan.vue';
 export * as ReMatch1 from './regex/re-match-1.vue';
 export * as ReMatch2 from './regex/re-match-2.vue';
 export * as ReMatch3 from './regex/re-match-3.vue';

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <slot name="preview"></slot>
     <slot></slot>
     <div style="display: grid; place-content: end;">
       
@@ -41,9 +42,11 @@
               <slot name="exercise"></slot>
             </div>
           </div>
-          <template v-if="!noRandom" #footer>
-            <Button v-if="!exerciseChecked" icon="pi pi-list-check" label="Überprüfen" @click="checkExercise()"/>
-            <Button v-else icon="pi pi-refresh" label="Neue Aufgabe" @click="refreshExercise()"/>
+          <template #footer>
+            <template v-if="!noRandom && !noFooter">
+              <Button v-if="!exerciseChecked" icon="pi pi-list-check" label="Überprüfen" @click="checkExercise()"/>
+              <Button v-else icon="pi pi-refresh" label="Neue Aufgabe" @click="refreshExercise()"/>
+            </template>
           </template>
         </Dialog>
       </template>
@@ -81,6 +84,10 @@ export default {
     java: Object,
     regexp: Object,
     noRandom: {
+      type: Boolean,
+      default: false
+    },
+    noFooter: {
       type: Boolean,
       default: false
     }
