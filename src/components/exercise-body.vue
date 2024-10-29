@@ -31,13 +31,15 @@
       </template>
       <template v-else>
         <Button label="Aufgabe bearbeiten" @click="showExercise()"/>
-        <Dialog modal v-model:visible="showExerciseDialog" :header="title">
+        <Dialog modal v-model:visible="showExerciseDialog" :header="title" maximizable>
           <template #header>
             {{ title }} <ExerciseProgress style="flex: 1" :exercise-data="exerciseData"/>
           </template>
-          <slot></slot>
-          <div style="position: relative">
-            <slot name="exercise"></slot>
+          <div style="height: 100%; width: 100%; display: flex; flex-direction: column">
+            <slot></slot>
+            <div style="position: relative; width: 100%; flex: 1">
+              <slot name="exercise"></slot>
+            </div>
           </div>
           <template v-if="!noRandom" #footer>
             <Button v-if="!exerciseChecked" icon="pi pi-list-check" label="Überprüfen" @click="checkExercise()"/>

@@ -33,7 +33,7 @@
 <script>
 
 export const data={
-  id: "ui-taschenrechner",
+  id: "ui-tr",
   title: "Taschenrechner",
   check: {
     init: async ()=>{

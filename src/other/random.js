@@ -2,7 +2,7 @@ export function random(min, max){
   return Math.floor(Math.random()*(max-min+1))+min;
 }
 
-class RandomClazz{
+export class RandomClazz{
   seed=0
   constructor(seed){
     this.setSeed(seed);

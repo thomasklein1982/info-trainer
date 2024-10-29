@@ -1,5 +1,7 @@
 <template>
-  <p>Regulärer Ausdruck: <code class="code">{{ edata.regexp }}</code></p>
+  <p>Regulärer Ausdruck: 
+    <pre><code class="code">{{ edata.regexp }}</code></pre>
+  </p>
   <table>
     <tr style="text-align: left">
       <th>Text</th>

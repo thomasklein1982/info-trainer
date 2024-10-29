@@ -7,23 +7,29 @@
     </template>
     <slot></slot>
     <p>
-      <InputText :disabled="checking" placeholder="Gib den regulären Ausdruck ein" fluid v-model="input"/>
+      <InputText style="font-family:'Courier New', Courier, monospace" :disabled="checking" placeholder="Gib den regulären Ausdruck ein" fluid v-model="input"/>
       <div class="error" v-if="error">Deine Eingabe ist fehlerhaft.</div>
     </p>
     
     <table>
-      <tr style="text-align: left">
-        <th>Aufgabe</th>
-        <th>Text</th>
+      <tr>
+        <th style="text-align: left">Testfall</th>
+        <th>Soll passen</th>
+        <th>Passt</th>
         <th></th>
       </tr>
       <tr v-for="(t,i) in texts">
-        <td>{{ t.shouldMatch? 'Match': 'Skip' }}</td>
         <td><code class="code"><template v-if="t.match">{{t.text.substring(0,t.match.index)}}<span style="background-color: cyan">{{t.text.substring(t.match.index,t.match.index+t.match[0].length)}}</span>{{ t.text.substring(t.match.index+t.match[0].length) }}</template><template v-else>{{t.text}}</template></code></td>
-        <td>
+        <td  style="text-align: center">
+          {{ t.shouldMatch? 'Ja':'Nein' }}
+        </td>
+        <td  style="text-align: center">
+          <span v-if="re">{{ t.matches? 'Ja':'Nein' }}</span>
+        </td>
+        <td  style="padding-left: 0.2rem">
           <template v-if="!error && re">
-            <span v-if="t.matches && t.shouldMatch" class="pi pi-check" style="color: green"/>
-            <span v-else-if="!t.matches && t.shouldMatch || !t.shouldMatch && t.matches" class="pi pi-times" style="color: red"/>
+            <span v-if="t.matches===t.shouldMatch" class="pi pi-check" style="color: green"/>
+            <span v-else class="pi pi-times" style="color: red"/>
           </template>
         </td>
       </tr>
@@ -175,6 +181,8 @@ export default{
       }
       if(this.exerciseData.userProject){
         this.input=this.exerciseData.userProject;
+      }else{
+        this.input="";
       }
       this.newExamples();
       this.show=true;

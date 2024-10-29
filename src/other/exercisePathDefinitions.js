@@ -4,7 +4,7 @@ let Java={
     {
       label: "UI",
       icon: "ui",
-      exercises: ["steck","css1","ui-taschenrechner"]
+      exercises: ["steck","css1","ui-tr","seiten1"]
     },
     {
       label: "Methoden",
@@ -60,7 +60,7 @@ let TheoretischeInformatik={
     {
       label: "Reguläre Ausdrücke",
       icon: "regexp",
-      exercises: ["re-match-1","re-match-2","re-match-3", "re-date", "re-match-4"]
+      exercises: ["re-match-1","re-passed","re-match-2","re-cool","re-int", "re-match-3", "re-even", "re-match-4", "re-date"]
     },
     {
       label: "Turingmaschinen",
@@ -95,8 +95,19 @@ let Grundlagen={
   ]
 }
 
+let IKG={
+  name: "IKG",
+  paths: [
+    {
+      label: "Das Internet",
+      icon: "",
+      exercises: ["igada"]
+    }
+  ]
+}
+
 let paths=[
-  Grundlagen, Java, TheoretischeInformatik
+  IKG, Grundlagen, Java, TheoretischeInformatik
 ];
 
 for(let i=0;i<paths.length;i++){
