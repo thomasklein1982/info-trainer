@@ -100,7 +100,7 @@ let IKG={
   paths: [
     {
       label: "Das Internet",
-      icon: "",
+      icon: "internet",
       exercises: ["iggrace","igeliz","igtim","igada","igalan"]
     }
   ]
