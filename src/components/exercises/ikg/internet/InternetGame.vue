@@ -178,6 +178,10 @@
           <template v-if="domainFileName==='wiki-wissen.de/lee-foto.jpg'">
             <p style="text-align: center"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Sir_Tim_Berners-Lee_%28cropped%29.jpg" style="width: 40%"></p>
           </template>
+
+          <template v-if="domainFileName==='mathe-info.com/index.html'">
+            <p>Die Hausaufgaben in Mathe sind: Buch Seite 37, Aufgabe 3 a) und b)</p>
+          </template>
         </template>
       </Card>
       <p><Button fluid @click="screen='internet'" label="Zurück zum Internet"/></p>
@@ -522,6 +526,17 @@ export default{
               name: "internet.html",
               content: `Internet`
             },
+          ]
+        },
+        {
+          name: "mathe-info.com",
+          ip: 0,
+          files: [
+            {
+              name: "index.html",
+              content: `Index`,
+              
+            }
           ]
         },
       ];

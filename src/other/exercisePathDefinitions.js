@@ -101,7 +101,7 @@ let IKG={
     {
       label: "Das Internet",
       icon: "",
-      exercises: ["igtim","igada","igalan"]
+      exercises: ["iggrace","igeliz","igtim","igada","igalan"]
     }
   ]
 }
