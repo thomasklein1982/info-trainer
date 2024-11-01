@@ -7,6 +7,11 @@ let Java={
       exercises: ["steck","css1","ui-tr","seiten1"]
     },
     {
+      label: "EVA",
+      icon: "eva",
+      exercises: ["tr"]
+    },
+    {
       label: "Methoden",
       icon: "methods",
       exercises: ["ausgabe-ermitteln-main","hallo-welt","ascii-art","ausgabe-ermitteln", "rechnen", "ausgabe-ermitteln-params", "durchschnitt", "nullstelle", "ausgabe-ermitteln-return", "preis"]

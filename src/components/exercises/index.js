@@ -49,7 +49,7 @@ export * as OutLoop1 from './loops/out-loop-1.vue';
 export * as AsciiArt from './ascii-art.vue';
 export * as Rechnen from './rechnen.vue';
 export * as Durchschnitt  from './durchschnitt.vue';
-export * as Taschenrechner from './taschenrechner.vue';
+export * as Tr from './eva/tr.vue';
 export * as Steckbrief from './ui/steckbrief.vue';
 export * as Seiten1 from './ui/seiten1.vue';
 export * as Css1 from './ui/css1.vue';

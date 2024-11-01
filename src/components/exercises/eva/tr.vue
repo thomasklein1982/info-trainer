@@ -31,12 +31,12 @@
 </template>
 
 <script>
-import App from '../../App.vue';
+import App from '../../../App.vue';
 
 
 
 export const data={
-  id: "taschenrechner",
+  id: "tr",
   title: "Taschenrechner",
   check: {
     init: async ()=>{

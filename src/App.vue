@@ -25,6 +25,8 @@ let mode={
   icon: "favicon.svg"
 };
 
+export let difficulty="Hard";
+
 let hash=location.hash;
 if(hash.toLowerCase().startsWith("#ab=")){
   hash=hash.substring(4);
@@ -40,9 +42,13 @@ if(hash.toLowerCase().startsWith("#ab=")){
     let ids=hash.substring(pos1+1,pos2);
     console.log(title,ids);
     ids=ids.split(",");
+    let diff=hash.substring(pos2+1);
+    if(!["Hard","Normal","Easy"].indexOf(diff)>=0){
+      diff=null;
+    }
     mode={
       type: "ab",
-      title,ids,
+      title,ids,difficulty: diff,
       useStorage: false,
       reloadOnHome: true,
       unloadWarning: true,
@@ -112,7 +118,7 @@ export function calcPoints(exerciseData){
   exerciseData.points=p;
 }
 
-export let difficulty="Hard";
+
 let userData=null;
 
 export default{
@@ -220,6 +226,7 @@ export default{
     createAB(){
       this.ab={
         label: "",
+        diff: "n",
         exercises: [],
         category: "Arbeitsblatt"
       };
@@ -278,6 +285,9 @@ export default{
           if(settings[a]!==undefined){
             this.settings[a]=settings[a];
           }
+        }
+        if(this.mode.difficulty){
+          this.settings.javaAppDifficulty=this.mode.difficulty;
         }
       }
       let data=await storage.getItem(STORAGE_DATA);

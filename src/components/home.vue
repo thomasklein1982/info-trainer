@@ -36,6 +36,15 @@
       </Card>
     </template>
     <Card>
+      <template #title>Gespeicherte Daten</template>
+      <template #content>
+        Im lokalen Speicher deines Browsers werden deine Lösungen zu den Aufgaben gespeichert. Aktuell sind etwa <strong>{{ $root.userDataSizeDisplay }}</strong> gespeichert.
+        <p style="text-align: left">
+          <SpeedDial :model="savedDataActions" direction="right"/>
+        </p>
+      </template>
+    </Card>
+    <Card>
       <template #title>Aufgabenblatt erstellen</template>
       <template #content>
         Du kannst beliebige Aufgaben zu einem <strong>Aufgabenblatt (AB)</strong> zusammenfassen. Dieses AB kannst du dann per Link teilen.
@@ -46,19 +55,12 @@
         <div v-if="ab">
           <p style="text-align: center"><template v-if="linkToAB"><a :href="linkToAB" target="_blank">Link zum AB</a> <Button class="clipboard" size="small" text :data-clipboard-text="linkToAB" icon="pi pi-copy" label="Kopieren"/></template><template v-else>Füge Aufgaben hinzu, damit der Link erzeugt wird.</template></p> 
           Titel: <InputText v-model="ab.label"/>
+          JavaApp-Schwierigkeit: <Select v-model="ab.diff" option-label="label" option-value="value" :options="difficultyOptions"/>
           <ExercisePath :path="ab" disabled/>
         </div>
       </template>
     </Card>
-    <Card>
-      <template #title>Gespeicherte Daten</template>
-      <template #content>
-        Im lokalen Speicher deines Browsers werden deine Lösungen zu den Aufgaben gespeichert. Aktuell sind etwa <strong>{{ $root.userDataSizeDisplay }}</strong> gespeichert.
-        <p style="text-align: left">
-          <SpeedDial :model="savedDataActions" direction="right"/>
-        </p>
-      </template>
-    </Card>
+    
     <!-- <h2>Aufgabenpfade</h2>
     <p>Klicke auf den Button <Button class="nopointer" text rounded icon="pi pi-bars"/> oben links, um die Aufgabenpfade anzuzeigen und auszuwählen.</p>
     <h2>Zum freien Üben</h2>
@@ -121,10 +123,11 @@ import WebEditorLauncher from './web-editor-launcher.vue';
 import { isCompletelyTrue } from '../other/bool-array';
 import ExercisePath from './exercise-path.vue';
 import SpeedDial from 'primevue/speeddial';
+import Select from 'primevue/select';
 
 export default{
   components: {
-    TuringMachineLauncher, ClassDiagram, WebEditorLauncher, ExercisePath, SpeedDial
+    TuringMachineLauncher, ClassDiagram, WebEditorLauncher, ExercisePath, SpeedDial, Select
   },
   props: {
     ab: Object
@@ -132,7 +135,7 @@ export default{
   computed: {
     linkToAB(){
       if(!this.ab || this.ab.exercises.length===0) return null;
-      let hash=this.ab.label+"["+this.ab.exercises.toString()+"]";
+      let hash=this.ab.label+"["+this.ab.exercises.toString()+"]"+this.ab.diff;
       hash=encodeURI(hash);
       return location.origin+location.pathname+"#ab="+hash;
     },
@@ -190,6 +193,24 @@ export default{
   },
   data(){
     return {
+      difficultyOptions: [
+        {
+          label: "keine Festlegung",
+          value: "n"
+        },
+        {
+          label: "Easy",
+          value: "Easy"
+        },
+        {
+          label: "Normal",
+          value: "Normal"
+        },
+        {
+          label: "Hard",
+          value: "Hard"
+        }
+      ],
       savedDataActions: [
         {
           label: "Herunterladen",
