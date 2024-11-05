@@ -1,4 +1,5 @@
 
+export * as JsHw from './internet/js/js-hw.vue';
 export * as Igada from './ikg/internet/igada.vue';
 export * as Igeliz from './ikg/internet/igeliz.vue';
 export * as Iggrace from './ikg/internet/iggrace.vue';

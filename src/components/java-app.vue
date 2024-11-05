@@ -70,6 +70,14 @@ export default{
         }
         if(c.type==="UI"){
           project.clazzes[i]=c.code;
+          continue;
+        }
+        if(c.type==="html" || c.type==="css" || c.type==="js"){
+          project.clazzes[i]={
+            name: c.name,
+            fileType: c.type,
+            src: c.src
+          };
           //c.code=JSON.parse(c.code);
           continue;
         }

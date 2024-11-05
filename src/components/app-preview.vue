@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper" :style="{width: width, height: height}">
+    <div v-if="resetable" style="text-align: right"><Button text icon="pi pi-refresh" label="Reset" @click="$emit('reset')"/></div>
     <slot></slot>
   </div>
 </template>
@@ -17,6 +18,10 @@ export default{
     height: {
       type: String,
       default: "12rem"
+    },
+    resetable: {
+      type: Boolean,
+      default: false
     }
   }
 }

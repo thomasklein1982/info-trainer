@@ -75,16 +75,16 @@ let TheoretischeInformatik={
   ]
 }
 
-let Html={
-  name: "Html",
+let Internet={
+  name: "Das Internet",
   paths: [
     {
-      label: "Bla",
-      exercises: ["hallo-welt","array-swap"]
+      label: "HTML & CSS",
+      exercises: []
     },
     {
-      label: "Blub",
-      exercises: ["array-swap"]
+      label: "JavaScript",
+      exercises: ["js-hw"]
     }
   ]
 }
@@ -112,7 +112,7 @@ let IKG={
 }
 
 let paths=[
-  IKG, Grundlagen, Java, TheoretischeInformatik
+  IKG, Grundlagen, Internet, Java, TheoretischeInformatik
 ];
 
 for(let i=0;i<paths.length;i++){
