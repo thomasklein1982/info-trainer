@@ -9,6 +9,7 @@
         :tasks="tasks"
         :exercise-id="id"
         :random="random"
+        
         @check-request="checkRequest"
       />
       
@@ -23,6 +24,7 @@ import InternetGame from './InternetGame.vue';
 
 export const data={
   id: "iggrace",
+  closable: true,
   title: "Grace nutzt eine Suchmaschine",
   tasks: [
   {

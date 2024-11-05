@@ -1,5 +1,5 @@
 <template>
-  <ExerciseBody :exercise="$data" no-footer>
+  <ExerciseBody :exercise="$data" no-footer >
     <template #preview>
       {{person.icon}} {{person.teaser}}
     </template>

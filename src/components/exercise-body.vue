@@ -32,13 +32,13 @@
       </template>
       <template v-else>
         <Button label="Aufgabe bearbeiten" @click="showExercise()"/>
-        <Dialog modal v-model:visible="showExerciseDialog" :header="title" maximizable>
+        <Dialog modal v-model:visible="showExerciseDialog" :header="title" maximizable :closable="closable">
           <template #header>
             {{ title }} <ExerciseProgress style="flex: 1" :exercise-data="exerciseData"/>
           </template>
           <div style="height: 100%; width: 100%; display: flex; flex-direction: column">
             <slot></slot>
-            <div style="position: relative; width: 100%; flex: 1">
+            <div style="position: relative; width: 100%; flex: 1; height: 100%;">
               <slot name="exercise"></slot>
             </div>
           </div>
@@ -136,7 +136,8 @@ export default {
   data(){
     return {
       showExerciseDialog: false,
-      seed: 0
+      seed: 0,
+      closable: true
     };
   },
   methods: {

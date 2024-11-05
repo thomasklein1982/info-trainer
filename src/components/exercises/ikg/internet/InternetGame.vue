@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%; height: 100%; display: flex; flex-direction: column">
-    <Menubar style="margin-bottom: 0.3rem" v-if="screen!=='intro'">
+    <Menubar style="width: 100%; visibility: hidden; margin-bottom: 0.3rem" v-if="screen!=='intro'">
       <template #start>
         <strong>Client:</strong>&nbsp;{{person.geraet}} von {{ person.icon }} {{ person.name }}
       </template>
@@ -8,6 +8,19 @@
         <div style="display: flex">
           <Knob rangeColor="green" valueColor="red" :textColor="danger*2<maxDanger? 'green':'red'" :size="50" v-model="danger" :max="maxDanger"/>
           <Button icon="pi pi-list" label="Aufgaben" @click="showTasks=true"/>
+          <Button icon="pi pi-times" text @click="backToInternet()"/>
+        </div>
+      </template>
+    </Menubar>
+    <Menubar style="position: fixed; width: calc( 100% - 50px ); z-index: 1;" v-if="screen!=='intro'">
+      <template #start>
+        <strong>Client:</strong>&nbsp;{{person.geraet}} von {{ person.icon }} {{ person.name }}
+      </template>
+      <template #end>
+        <div style="display: flex">
+          <Knob rangeColor="green" valueColor="red" :textColor="danger*2<maxDanger? 'green':'red'" :size="50" v-model="danger" :max="maxDanger"/>
+          <Button icon="pi pi-list" label="Aufgaben" @click="showTasks=true"/>
+          <Button icon="pi pi-times" text @click="backToInternet()"/>
         </div>
       </template>
     </Menubar>
@@ -21,7 +34,7 @@
         <li v-for="(t,i) in tasks" :style="{color: t.correct? 'green': ''}">{{ t.info }}<span style="color: green; margin-left: 0.5rem" v-if="t.correct" class="pi pi-check"/></li>
       </ul>
       <div>
-        <Button :label="person.losgehts" @click="screen='internet'"/>
+        <Button :label="person.losgehts" @click="setScreen('internet')"/>
       </div>
     </div>
     <div class="screen" v-else-if="screen==='internet'">
@@ -29,35 +42,35 @@
       <p>Spezielle Server sind das <strong>DNS (Domain Name System)</strong> und die <strong>Suchmaschine Goggle</strong>.</p>
       <Button label="🖥️ DNS" @click="makeRequest('get',{name: 'dns'})"/>
       <Button label="🖥️ Goggle" @click="makeRequest('get',{name: 'goggle'})"/>
-      <Button v-for="(s,i) in server" text @click="makeRequest('get',s)">
-        🖥️ {{ s.ip.join(".") }}
-      </Button>
-      
+      <template v-for="(s,i) in server">
+        <Button v-if="!s.unknown" :text="s.unknown!==false" @click="makeRequest('get',s)">
+          🖥️ {{ s.ip.join(".") }}
+        </Button>
+      </template>
     </div>
     <div class="screen" v-else-if="screen==='dns'">
       <h2>Willkommen beim <strong>Domain Name System (DNS)</strong></h2> 
       <p>Wir sind die Auskunft im Internet und kennen alle <strong>IP-Adressen</strong> aller Server.</p>
       <p>Nennen Sie einen Domain-Namen und wir geben Ihnen die zugehörige IP-Adresse.</p>
       <InputGroup>
-        <InputText type="search" v-model="dns.search" fluid placeholder="Geben Sie den Domain-Namen ein, z. B. mathe-info.com"/>
+        <InputText @keyup.enter="makeRequest('get',{name: 'dns'},{query: dns.search})" type="search" v-model="dns.search" fluid placeholder="Geben Sie den Domain-Namen ein, z. B. mathe-info.com"/>
         <Button @click="makeRequest('get',{name: 'dns'},{query: dns.search})" icon="pi pi-search"/>  
       </InputGroup>
       <p v-if="dns.searched">
         <template v-if="dns.result">
-          Die IP-Adresse von {{ dns.result.name }} lautet <strong>{{ dns.result.ip.join(".") }}</strong>.
+          Die IP-Adresse von <strong>{{ dns.result.name }}</strong> lautet <strong>{{ dns.result.ip.join(".") }}</strong>.
         </template>
         <template v-else>
-          Ich kann die Domain <strong>{{ dns.search }}</strong> nicht finden.
+          Ich kann die Domain <strong>{{ dns.search }}</strong> nicht finden. Hast du den Namen richtig geschrieben?
         </template>
       </p>
-      <p><Button fluid @click="screen='internet'" label="Zurück zum Internet"/></p>
     </div>
     
     <div class="screen" v-else-if="screen==='goggle'">
       <h1 style="text-align: center; font-variant: small-caps"><span style="color: blue">G</span><span style="color: red">o</span><span style="color: yellow">g</span><span style="color: blue">g</span><span style="color: green">l</span><span style="color: red">e</span></h1> 
       <p style="text-align: center">Die beste Suchmaschine im Netz.</p>
       <InputGroup>
-        <InputText type="search" v-model="goggle.search" fluid placeholder="Geben Sie einen Suchbegriff ein..."/>
+        <InputText @keyup.enter="makeRequest('get',{name: 'goggle'},{query: goggle.search})" type="search" v-model="goggle.search" fluid placeholder="Geben Sie einen Suchbegriff ein..."/>
         <Button @click="makeRequest('get',{name: 'goggle'},{query: goggle.search})" icon="pi pi-search"/>  
       </InputGroup>
       <p v-if="goggle.results">
@@ -65,7 +78,8 @@
           <p>Zum Suchbegriff <strong>{{ goggle.search }}</strong> habe folgende Domains gefunden:</p>
           <ul>
             <li  v-for="(r,i) in goggle.results">
-              {{ r.before }}<span style="color: orange; font-weight: bold">{{ r.hit }}</span>{{ r.after }}
+              {{ r.server.name }}
+              <!-- {{ r.before }}<span style="color: orange; font-weight: bold">{{ r.hit }}</span>{{ r.after }} -->
             </li>
           </ul>
         </template>
@@ -73,7 +87,6 @@
           Keine Suchergebnisse gefunden.
         </template>
       </p>
-      <p><Button fluid @click="screen='internet'" label="Zurück zum Internet"/></p>
     </div>
 
     <div class="screen" v-else-if="screen==='darknet'" style="text-align: center">
@@ -81,7 +94,6 @@
       <p>Die Gefährdung beträgt insgesamt</p>
       <div><Knob rangeColor="green" valueColor="red" :textColor="danger*2<maxDanger? 'green':'red'" v-model="danger" :max="maxDanger"/></div>
       <p v-if="danger===maxDanger">{{person.name}}s {{person.geraet}} kann leider nicht mehr verwendet werden. Du musst die Aufgabe neu starten.</p>
-      <p v-else><Button fluid @click="screen='internet'" label="Zurück zum Internet"/></p>
     </div>
 
     <div class="screen" v-else-if="screen==='domain'">
@@ -89,7 +101,7 @@
         Dies ist der Server {{domain.server.name}}.
         <p>Geben Sie an, welche Datei Sie anfordern möchten (z. B. <code>index.html</code> für die Startseite):</p>
         <InputGroup>
-          <InputText type="search" v-model="domain.search" fluid placeholder="Geben Sie den Namen der Datei ein, z. B. index.html"/>
+          <InputText @keyup.enter="searchDomain(domain.search)" type="search" v-model="domain.search" fluid placeholder="Geben Sie den Namen der Datei ein, z. B. index.html"/>
           <Button @click="searchDomain(domain.search)" icon="pi pi-search"/>  
         </InputGroup>
       </div>
@@ -184,7 +196,6 @@
           </template>
         </template>
       </Card>
-      <p><Button fluid @click="screen='internet'" label="Zurück zum Internet"/></p>
     </div>
     <div class="screen" v-else-if="screen==='programmierung.de/index.html'">
       
@@ -241,6 +252,9 @@ export default{
     exerciseId: String
   },
   computed: {
+    closable(){
+      return (this.screen==='intro');
+    },
     domainFileName(){
       if(!this.domain.server || !this.domain.file) return null;
       return this.domain.server.name+"/"+this.domain.file.name;
@@ -286,6 +300,28 @@ export default{
     this.server=this.createServer();
   },
   methods: {
+    setScreen(screen){
+      let dialog=this.$parent.$parent.$parent;
+      if(this.danger>=this.maxDanger){
+        dialog.close();
+        return;
+      }
+      let isIntro=screen==='intro';
+      dialog.$parent.closable=isIntro;
+      if(!dialog.maximized && !isIntro || dialog.maximized && isIntro){
+        dialog.maximize();
+      }
+      this.screen=screen;
+      console.log("!set screen");
+    },
+    backToInternet(){
+      
+      if(this.screen==='internet'){
+        this.setScreen('intro');
+      }else{
+        this.setScreen('internet');
+      }
+    },
     postAnswer(antwort){
       console.log("post answer",antwort);
       if(antwort.toLowerCase().indexOf("danke")<0){
@@ -306,7 +342,7 @@ export default{
         if(data){
           this.searchGoggle(data.query);
         }else{
-          this.screen="goggle";
+          this.setScreen("goggle");
         }
         return this.finishRequest();
       }
@@ -314,7 +350,7 @@ export default{
         if(data){
           this.searchDNS(data.query);
         }else{
-          this.screen="dns";
+          this.setScreen("dns");
         }
         return this.finishRequest();
       }
@@ -378,7 +414,7 @@ export default{
     searchDomain(text){
       this.domain.notFound=false;
       if(!this.domain.server) return;
-      text=text.trim();
+      text=text.trim().toLowerCase();
       if(text.length===0){
         this.domain.file=null;
         
@@ -397,7 +433,7 @@ export default{
     },
     searchDNS(text){
       this.dns.result=null;
-      text=text.trim();
+      text=text.trim().toLowerCase();
       if(text.length===0){
         this.dns.searched=false;
         return;
@@ -407,14 +443,14 @@ export default{
         let s=this.server[i];
         if(s.name && s.name===text){
           this.dns.result=s;
-          s.known=true;
+          s.unknown=false;
           return;
         }
       }
     },
     searchGoggle(text){
       this.goggle.results=null;
-      text=text.trim();
+      text=text.toLowerCase().trim();
       if(text.length===0){
         return;
       }
@@ -422,13 +458,21 @@ export default{
       for(let i=0;i<this.server.length;i++){
         let s=this.server[i];
         if(!s.name) continue;
-        let pos=s.name.indexOf(text);
-        if(pos>=0){
+        let hit=false;
+        if(s.goggle && s.goggle(text)){
+          hit=true;
+        }
+        if(!hit){
+          if(s.name.indexOf(text)>=0){
+            hit=true;
+          }
+        }
+        if(hit){
           this.goggle.results.push({
             server: s,
-            before: s.name.substring(0,pos),
-            hit: s.name.substring(pos,pos+text.length),
-            after: s.name.substring(pos+text.length)
+            // before: s.name.substring(0,pos),
+            // hit: s.name.substring(pos,pos+text.length),
+            // after: s.name.substring(pos+text.length)
           });
         }
       }
@@ -436,9 +480,9 @@ export default{
     async clickServer(s){
       if(s.name){
         this.domain.server=s;
-        this.screen="domain";
+        this.setScreen("domain");
       }else{
-        this.screen="darknet";
+        this.setScreen("darknet");
         this.danger++;
         if(this.danger===this.maxDanger){
           this.loseGame();
@@ -469,6 +513,7 @@ export default{
         },
         {
           name: "easy-forums.de",
+          info: "",
           ip: 0,
           files: [
             {
@@ -488,7 +533,17 @@ export default{
         },
         {
           name: "wiki-wissen.de",
+          info: "Hier findet man die Antworten auf viele Fragen.",
           ip: 0,
+          goggle: (text)=>{
+            if(text.indexOf(" ")>0) return true;
+            let tags=["html","internet","wikipedia","musik"];
+            for(let i=0;i<tags.length;i++){
+              let s=tags[i];
+              if(s.indexOf(text)>=0) return true;
+              if(text.indexOf(s)>=0) return true;
+            }
+          },
           files: [
             {
               name: "index.html",
@@ -512,6 +567,14 @@ export default{
         {
           name: "programmierung.de",
           ip: 0,
+          goggle: (text)=>{
+            let tags=["html","web","java","code","program"];
+            for(let i=0;i<tags.length;i++){
+              let s=tags[i];
+              if(s.indexOf(text)>=0) return true;
+              if(text.indexOf(s)>=0) return true;
+            }
+          },
           files: [
             {
               name: "index.html",
@@ -540,12 +603,16 @@ export default{
           ]
         },
       ];
-      for(let i=0;i<35;i++){
+      for(let i=0;i<array.length;i++){
+        array[i].unknown=true;
+      }
+      for(let i=0;i<65;i++){
         array.push({
           ip: 0
         });
       }
       this.randomizeServerIPs(array);
+      
       return array;
     },
     randomizeServerIPs(server){
@@ -559,7 +626,7 @@ export default{
           if(d<0) return -1;
         }
         return 1;
-      })
+      });
     }
   }
 }
@@ -572,6 +639,7 @@ export default{
   .screen{
     flex: 1;
     width: 100%;
+    overflow: auto;
   }
 
   table.forum{
