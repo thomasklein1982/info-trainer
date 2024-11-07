@@ -20,7 +20,7 @@
 
 export const data={
   id: "binary-search",
-  title: "Schnelle Suche",
+  title: "Binäre Suche",
   check: {
     init: async ()=>{
       $Exercise.deleteMain();
@@ -114,7 +114,7 @@ export const data={
   },
 
   project: {
-    name: "ggt",
+    name: "Binäre Suche",
     constraints: {
       loops: true,
     },

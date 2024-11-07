@@ -36,7 +36,7 @@ import App from '../../../App.vue';
 
 
 export const data={
-  id: "tr",
+  id: "eva-tr",
   title: "Taschenrechner",
   check: {
     init: async ()=>{

@@ -9,7 +9,7 @@ let Java={
     {
       label: "EVA",
       icon: "eva",
-      exercises: ["tr"]
+      exercises: ["eva-tr"]
     },
     {
       label: "Methoden",
@@ -32,11 +32,6 @@ let Java={
       exercises: ["array-basics","array-erzeugen","array-swap","array-ausgabe","array-ausgabe-liste","array-summe","array-shift", "array-addieren", "array-zaehlen"]
     },
     {
-      label: "Algorithmen",
-      icon: "algorithms",
-      exercises: ["iterative-suche"]
-    },
-    {
       label: "Rekursion",
       icon: "recursion",
       exercises: ["output-rec-1","fakultaet","fibonacci","ggt","palindrom","output-rec-2","binary-search","hanoi"]
@@ -50,6 +45,11 @@ let Java={
       label: "Datenstrukturen",
       icon: "data",
       exercises: ["list"]
+    },
+    {
+      label: "Algorithmen",
+      icon: "algorithms",
+      exercises: ["iterative-suche","binary-search","bubble","merge"]
     },
   ]
 }
@@ -80,10 +80,12 @@ let Internet={
   paths: [
     {
       label: "HTML & CSS",
+      icon: "html",
       exercises: []
     },
     {
       label: "JavaScript",
+      icon: "js",
       exercises: ["js-hw"]
     }
   ]
