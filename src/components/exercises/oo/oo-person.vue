@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import UmlClazz from '../UmlClazz.vue';
+import UmlClazz from '../../UmlClazz.vue';
 
 
 export const data={

@@ -6,9 +6,9 @@
         :clazz="uml"
       />
     </span>
-    Die Methode <Code no-numbers>Auto auto(String marke, int kmStand)</Code> soll nacheinander die folgenden Dinge tun:
+    Die Methode <Code no-numbers>Auto auto(String automarke, int km)</Code> soll nacheinander die folgenden Dinge tun:
     <ol>
-      <li>Es soll ein neues Auto erzeugt werden mit der angegebenen Marke <Code inline>marke</Code> und dem angegebenen Kilometerstand <Code inline>kmStand</Code>.</li>
+      <li>Es soll ein neues Auto erzeugt werden mit der angegebenen Marke <Code inline>automarke</Code> und dem angegebenen Kilometerstand <Code inline>km</Code>.</li>
       <li>Das Auto soll 100 km weit fahren.</li>
       <li>Es soll die Tankfüllung in Prozent in den Konsole ausgegeben werden (inklusive Prozentzeichen, also z. B. <code>76%</code>).</li>
       <li>Das Auto soll zurückgegeben werden.</li>
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import ClassDiagram from '../UmlClazz.vue';
+import ClassDiagram from '../../UmlClazz.vue';
 
 
 export const data={
@@ -109,7 +109,7 @@ export const data={
     clazzes: [
       {
         name: "Aufgabe",
-        src: `Auto auto(String marke, int kmStand){
+        src: `Auto auto(String automarke, int km){
   //hierhin kommt der Code:
   
 }

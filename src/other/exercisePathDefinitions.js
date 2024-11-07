@@ -86,7 +86,7 @@ let Internet={
     {
       label: "JavaScript",
       icon: "js",
-      exercises: ["js-hw"]
+      exercises: ["js-hw", "js-tr"]
     }
   ]
 }

@@ -68,7 +68,7 @@ export const data={
 }
 
 $void main(){
-  int s = a.summe(new int[]{3, 5, -1}); 
+  int s = summe(new int[]{3, 5, -1}); 
   System.out.println(s);
 }`
       }
