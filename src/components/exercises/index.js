@@ -1,6 +1,7 @@
 
 export * as JsHw from './internet/js/js-hw.vue';
 export * as JsTr from './internet/js/js-tr.vue';
+export * as JsMax from './internet/js/js-max.vue';
 export * as Igada from './ikg/internet/igada.vue';
 export * as Igeliz from './ikg/internet/igeliz.vue';
 export * as Iggrace from './ikg/internet/iggrace.vue';
