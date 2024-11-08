@@ -1,30 +1,23 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
-    <p>Es soll eine Website erstellt werden, die einen einfachen Taschenrechner enthält (siehe Abbildung).</p>
+    <p>Es soll eine Website erstellt werden mit einem Eingabefeld, einem Button und einem <code>div</code>-Element (siehe Abbildung.</p>
     <div class="float-right">
       <AppPreview height="auto" width="20em"  resetable @reset="example.ergebnis='Ergebnis'">
         <JFrame style="padding: 0.2rem;">
-          <h2>Taschenrechner</h2>
-          <p>Geben Sie zwei Zahlen ein und klicken Sie auf die gewünschte Rechenoperation:</p>
-          <div>
-            Zahl 1: <input style="width: 4em" type="number" v-model="example.a"/>
-            Zahl 2: <input style="width: 4em" type="number" v-model="example.b"/>
-          </div>
-          <div>
-            <button @click="example.ergebnis=example.a+example.b">+</button>
-            <button @click="example.ergebnis=example.a-example.b">-</button>
-            <button @click="example.ergebnis=example.a*example.b">*</button>
-            <button @click="example.ergebnis=example.a/example.b">:</button>
-          </div>
+          <h2>Verdoppeln</h2>
+          <p>Gib die Zahl ein, die du verdoppeln willst:</p>
+          <input style="width: 4em" type="number" v-model="example.a"/>
+          <button @click="example.ergebnis=example.a*2">Verdoppeln</button>
           <div>{{ example.ergebnis }}</div>
         </JFrame>
       </AppPreview>
     </div> 
-    Beachte dabei die folgenden Details:
+    Sobald der Button geklickt wird, soll die Zahl, die der*die User eingegeben hat, verdoppelt werden und das Ergebnis in dem <code>div</code>-Element angezeigt werden. 
+    
+    <p>Beachte dabei die folgenden Details:</p>
     <ul>
-      <li>Die Seite muss genau zwei Eingabefelder für die beiden Zahlen enthalten.</li>
-      <li>Die Seite muss vier Buttons enthalten, mit den Aufschriften '+', '-', '*' und ':'.</li>
-      <li>Wenn auf einen der Buttons geklickt wird, sollen die beiden eingegebenen Zahlen miteinander verrechnet werden und das Ergebnis in einem DIV-Element angezeigt.</li>
+      <li>Die Seite muss genau ein Eingabefeld enthalten.</li>
+      <li>Die Seite muss einen Button mit der Aufschrift 'Verdoppeln' enthalten.</li>
       <li>In dem DIV-Element, in dem das Ergebnis angezeigt wird, muss zu Beginn 'Ergebnis' stehen.</li>
     </ul>
     <p>Implementiere diese Webseite.</p>
@@ -35,22 +28,30 @@
 
 
 export const data={
-  id: "js-tr",
-  title: "Taschenrechner",
+  id: "js-io",
+  title: "Input und Output",
   example: {
     a: 0,
-    b: 0,
     ergebnis: "Ergebnis"
   },
-  showText: false,
   check: {
     init: async ()=>{
       let page=$Exercise.getSingleHtmlPage();
-      if(!page) return null;
-      let div=page.querySelector("div",(d)=>{
-        return d.textContent.toLowerCase().trim()==='ergebnis';
-      });
-      let buttons=page.querySelectorAll("button");
+      if(!page){
+        return null;
+      }
+      
+      let doc=pages[0].contentWindow.document;
+      let divs=doc.querySelectorAll("div");
+      let div=null;
+      for(let i=0;i<divs.length;i++){
+        let d=divs[i];
+        if(d.textContent.toLowerCase().trim()==='ergebnis'){
+          div=d;
+          break;
+        }
+      }
+      let buttons=doc.querySelectorAll("button");
       let actionButtons={"+": null,"-": null,"*": null, ":": null};
       for(let i=0;i<buttons.length;i++){
         let b=buttons[i];
@@ -58,11 +59,11 @@ export const data={
           actionButtons[b.textContent]=b;
         }
       }
-      let inputs=page.querySelectorAll("input");
+      let inputs=doc.querySelectorAll("input");
+      console.log(inputs);
       let ok=true;
       if(!div) ok=false;
       if(inputs.length!==2) ok=false;
-      console.log("gefunden",div, inputs);
       if(ok){
         for(let a in actionButtons){
           if(!actionButtons[a]){
@@ -157,7 +158,8 @@ export const data={
               await $Exercise.sleep(100);
               init.buttons['+'].click();
               await $Exercise.sleep(100);
-              return $Exercise.doubleEquals(init.ausgabe.textContent.trim()*1,a+b);
+              if(init.ausgabe.textContent.trim()===(a+b)+"") return true;
+              return false;
             }
           }
         },
@@ -175,7 +177,8 @@ export const data={
               await $Exercise.sleep(100);
               init.buttons['-'].click();
               await $Exercise.sleep(100);
-              return $Exercise.doubleEquals(init.ausgabe.textContent.trim()*1,a-b);
+              if(init.ausgabe.textContent.trim()===(a-b)+"") return true;
+              return false;
             }
           }
         },
@@ -193,7 +196,7 @@ export const data={
               await $Exercise.sleep(100);
               init.buttons['*'].click();
               await $Exercise.sleep(100);
-              return $Exercise.doubleEquals(init.ausgabe.textContent.trim()*1,a*b);
+              if(init.ausgabe.textContent.trim()===(a*b)+"") return true;
               return false;
             }
           }
@@ -212,7 +215,8 @@ export const data={
               await $Exercise.sleep(100);
               init.buttons[':'].click();
               await $Exercise.sleep(100);
-              return $Exercise.doubleEquals(init.ausgabe.textContent.trim()*1,a/b);
+              if(init.ausgabe.textContent.trim()===(a/b)+"") return true;
+              return false;
             }
           }
         },

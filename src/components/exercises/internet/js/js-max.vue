@@ -13,16 +13,10 @@ export const data={
   title: "Maximum",
   check: {
     init: async ()=>{
-      let pages=$Exercise.getHtmlPages();
-      if(pages.length!==1){
-        return null;
-      }
-      let doc=pages[0].contentWindow.document;
+      let page=$Exercise.getSingleHtmlPage();
+      if(!page) return;
       return {
-        doc,
-        window: pages[0].contentWindow,
-        button: doc.querySelector("button"),
-        ausgabe: doc.querySelector("div#ausgabe")
+        window: page.$el.contentWindow
       };
     },
     testcases: [
@@ -34,15 +28,12 @@ export const data={
               let z2=z3-Math.random()*5;
               let z1=z3-Math.random()*5;
               return [z3,z1,z2];
-              let ist=data.window.maximum(a,b,c);
-              let soll=Math.max(a,b,c);
-              return ist===soll;
             },
             info: "a"
           };
         },
         info: "Klappt, wenn a die größte Zahl ist.",
-        count: 1
+        count: 4
       },
       {
         data: (data)=>{
@@ -52,15 +43,12 @@ export const data={
               let z2=z3-Math.random()*5;
               let z1=z3-Math.random()*5;
               return [z1,z3,z2];
-              let ist=data.window.maximum(a,b,c);
-              let soll=Math.max(a,b,c);
-              return ist===soll;
             },
             info: "b"
           };
         },
         info: "Klappt, wenn b die größte Zahl ist.",
-        count: 1
+        count: 4
       },
       {
         data: (data)=>{
@@ -70,24 +58,18 @@ export const data={
               let z2=z3-Math.random()*5;
               let z1=z3-Math.random()*5;
               return [z2,z1,z3];
-              let ist=data.window.maximum(a,b,c);
-              let soll=Math.max(a,b,c);
-              return ist===soll;
             },
             info: "c"
           };
         },
         info: "Klappt, wenn c die größte Zahl ist.",
-        count: 1
+        count: 4
       }
     ],
     test: async (tc,init)=>{
-      console.log("check",tc.info)
       let z=tc.get();
-      console.log(z);
       let soll=Math.max.apply(null,z);
       let ist=init.window.maximum.apply(null,z);
-      console.log(soll,ist);
       return soll===ist;
     },
   },

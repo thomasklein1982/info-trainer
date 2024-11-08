@@ -23,14 +23,15 @@ export const data={
   showText: false,
   check: {
     init: async ()=>{
-      let pages=$Exercise.getHtmlPages();
-      if(pages.length!==1){
+      let page=$Exercise.getSingleHtmlPage();
+      if(!page){
         return null;
       }
-      let doc=pages[0].contentWindow.document;
+      let button=page.querySelector("button");
+      let ausgabe=page.querySelector("div#ausgabe");
       return {
-        button: doc.querySelector("button"),
-        ausgabe: doc.querySelector("div#ausgabe")
+        button,
+        ausgabe
       };
     },
     testcases: [
