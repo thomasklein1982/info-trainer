@@ -5,7 +5,7 @@
     <template #maximizeicon>
       <div style="position: relative">
         <div style="position: absolute; width: 200px; height: 200px;"/>
-        <Button v-if="exerciseData" :class="newInfos? 'shaking':''" rounded @click.stop="showFeedback" text size="large" :icon="'pi pi-'+(completed? 'check':'info')"/>
+        <Button v-if="exerciseData" rounded @click.stop="showFeedback" text size="large"><span :class="'pi pi-'+(completed? 'check':'info')+(newInfos? ' shaking':'')"></span></Button>
       </div>
     </template>
     <template #closeicon><Button rounded @click.stop="closeDialog" text icon="pi pi-times" severity="secondary"/></template>

@@ -18,11 +18,15 @@ body{
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+code{
+  font-family: monospace, monospace;
+}
+
 .code{
   background-color: white;
   color: blue;
   padding: 0.2rem;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: monospace, monospace;
   border-radius: 0.1rem;
   white-space: nowrap;
 }

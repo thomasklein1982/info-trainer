@@ -1,5 +1,5 @@
 <template>
-  <span class="jlabel" :style="{display: 'grid', alignItems: alignItems, justifyContent: justifyContent}"><slot></slot></span>
+  <span class="jlabel" :style="{display: 'grid', alignContent: alignContent, justifyContent: justifyContent}"><slot></slot></span>
 </template>
 
 <script>
@@ -14,7 +14,7 @@ export default{
     }
   },
   computed: {
-    alignItems(){
+    alignContent(){
       if(this.align==="center"){
         return "center";
       }

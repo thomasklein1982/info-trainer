@@ -5,7 +5,7 @@
   <Dialog ref="dialog" :header="project?.name" v-model:visible="show" :closable="true" maximizable :close-on-escape="false">
     <template #maximizeicon>
       <div style="position: relative" @click.stop="stopMaximize">
-        <Button :class="newInfos? 'shaking':''" rounded @click.stop="showFeedback" text size="large" :icon="'pi pi-'+(completed? 'check':'info')"/>
+        <Button  rounded @click.stop="showFeedback" text size="large"><span :class="'pi pi-'+(completed? 'check':'info')+(newInfos? ' shaking':'')"></span></Button>
       </div>
     </template>
     <template #closeicon><Button rounded @click.stop="closeDialog" text icon="pi pi-times" severity="secondary" :loading="saveResolve!==null"/></template>

@@ -57,6 +57,7 @@ export * as Steckbrief from './ui/steckbrief.vue';
 export * as Seiten1 from './ui/seiten1.vue';
 export * as Css1 from './ui/css1.vue';
 export * as UiTr  from './ui/ui-tr.vue';
+export * as UiList from './ui/ui-list.vue';
 export * as ArrayBasics from './arrays/array-basics.vue';
 export * as IterativeSuche from './algorithms/iterative-suche.vue';
 export * as Bubble from './algorithms/bubble.vue';
