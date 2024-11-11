@@ -59,6 +59,19 @@ export const data={
               let table=label.$el.querySelectorAll("table");
               if(table.length!==1) return false;
               table=table[0];
+              return table!==null && table!==undefined;
+            }
+          }
+        },
+        info: "Es gibt genau ein Tabellenelement."
+      },
+      {
+        data: ()=>{
+          return {
+            test: async(label)=>{
+              let table=label.$el.querySelectorAll("table");
+              if(table.length!==1) return false;
+              table=table[0];
               if(table.nextSibling) return false;
               if(table.previousElementSibling) return false;
               if(table.previousSibling?.textContent.trim().length>0) return false;
@@ -94,7 +107,6 @@ export const data={
             }
           }
         },
-        points: 9,
         info: "In dem Label ist der korrekte HTML-Code."
       }
     ],

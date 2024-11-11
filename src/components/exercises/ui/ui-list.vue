@@ -9,7 +9,7 @@
             <ul>
               <li>Blauwal: Eines der größten Tiere aller Zeiten.</li>
               <li>Buckelwal: Kommt häufig in Küstennähe vor.</li>
-              <li>Narwal: Das Einhorn des Meeres</li>
+              <li>Narwal: Das Einhorn des Meeres.</li>
             </ul>
           </JLabel>
         </JFrame>
@@ -48,47 +48,88 @@ export const data={
         data: ()=>{
           return {
             test: async(label)=>{
-              let ul=label.$el.querySelectorAll("ul");
-              if(ul.length!==1) return false;
-              ul=ul[0];
-              if(ul.nextSibling) return false;
-              console.log("test list");
-              let h1=ul.previousElementSibling;
-              console.log(h1);
-              if(!h1 || h1.tagName!=="H1") return false;
-              if(h1.innerHTML.trim()!=="Arten von Walen") return false;
-              let p=ul.parentNode?.parentNode;
-              if(p && p!==label.$el) return false;
-              console.log("lis");
+              let h1=label.$el.querySelector("h1");
+              if(!h1) return false;
+              return h1.textContent.trim()==="Arten von Walen";
+            }
+          }
+        },
+        info: "Es gibt eine Überschrift mit dem richtigen Text."
+      },
+      {
+        data: ()=>{
+          return {
+            test: async(label)=>{
+              let ul=label.$el.querySelector("ul");
               let lis=ul.children;
               if(lis.length!==3) return false;
               let soll=["Blauwal: Eines der größten Tiere aller Zeiten", "Buckelwal: Kommt häufig in Küstennähe vor", "Narwal: Das Einhorn des Meeres"]
               for(let i=0;i<lis.length;i++){
                 let li=lis[i];
-                console.log(li,li.textContent,soll[i],li.tagName,li.children.length);
                 if(li.tagName!=="LI") return false;
-                console.log(li.textContent.trim().startsWith(soll[i]));
-                if(!li.textContent.trim().startsWith(soll[i])) return false;
-                if(li.children.length>0) return false;
+                // console.log(li.textContent.trim().startsWith(soll[i]));
+                // if(!li.textContent.trim().startsWith(soll[i])) return false;
+                // if(li.children.length>0) return false;
               }
-              console.log("parser")
+              return true;
+            }
+          }
+        },
+        info: "Es gibt eine Liste mit 3 Unterpunkten."
+      },
+      {
+        data: ()=>{
+          return {
+            test: async(label)=>{
+              let ul=label.$el.querySelector("ul");
+              let lis=ul.children;
+              if(lis.length!==3) return false;
+              let soll=["Blauwal: Eines der größten Tiere aller Zeiten.", "Buckelwal: Kommt häufig in Küstennähe vor.", "Narwal: Das Einhorn des Meeres."]
+              for(let i=0;i<lis.length;i++){
+                let li=lis[i];
+                if(!li.innerHTML.trim()===(soll[i])) return false;
+                // if(li.children.length>0) return false;
+              }
+              return true;
+            }
+          }
+        },
+        info: "In den Unterpunkten der Liste stehen die richtigen Texte."
+      },
+      {
+        data: ()=>{
+          return {
+            test: async(label)=>{
               let dp=new DOMParser();
               try{
-                console.log("parse",label.$value);
                 let doc=dp.parseFromString("<xml>"+label.$value+"</xml>","application/xml");
                 let error=doc.querySelector("parsererror");
-                console.log("error",error)
                 if(error) return false;
               }catch(e){
-                console.log("error",e)
                 return false;
               }
               return true;
             }
           }
         },
-        points: 9,
-        info: "In dem Label ist der korrekte HTML-Code"
+        info: "Der HTML-Code ist syntaktisch korrekt, d.h., die Tags werden korrekt geöffnet und geschlossen."
+      },
+      {
+        data: ()=>{
+          return {
+            test: async(label)=>{
+              let ul=label.$el.querySelector("ul");
+              let h1=label.$el.querySelector("h1");
+              if(h1.nextElementSibling!==ul) return false;
+              if(ul.nextElementSibling) return false;
+              if(h1.previousElementSibling) return false;
+              // let complete=label.$el.textContent.trim();
+              // if(complete.startsWith())
+              return true;
+            }
+          }
+        },
+        info: "Die Elemente stehen in der richtigen Reihenfolge und es gibt keine zusätzlichen Elemente."
       }
     ],
     test: async (tc,init)=>{
