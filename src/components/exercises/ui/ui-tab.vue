@@ -1,6 +1,6 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
-    Es soll die dargestellte UI erstellt werden, die aus einem einzelnen <code>JLabel</code> besteht, das HTML-Code enthält.
+    Implementiere die folgende UI mit Hilfe von HTML. Es darf nur ein einzelnes <code>JLabel</code> verwendet werden.
     <div>
       <AppPreview width="100%" height="auto" style="margin: auto">
         <JFrame layout="1" style="padding: 0.2rem">
@@ -37,8 +37,17 @@ export const data={
       let label=null;
       if(comps.length===2) label=comps[1];
       if(!(label instanceof JLabel)) label=null;
+      let doc=null;
+      if(label){
+        let dp=new DOMParser();
+        try{
+          doc=dp.parseFromString("<xml>"+label.$value+"</xml>","application/xml");
+        }catch(e){
+          
+        }
+      }
       return {
-        label
+        label, doc
       };
     },
     testcases: [
@@ -58,8 +67,7 @@ export const data={
             test: async(label)=>{
               let table=label.$el.querySelectorAll("table");
               if(table.length!==1) return false;
-              table=table[0];
-              return table!==null && table!==undefined;
+              return true;
             }
           }
         },
@@ -68,33 +76,115 @@ export const data={
       {
         data: ()=>{
           return {
+            test: async(label,doc)=>{
+              let table=doc.querySelectorAll("table");
+              if(table.length!==1) return false;
+              table=table[0];
+              console.log(table.children);
+              if(table.children.length!==4) return false;
+              for(let i=0;i<table.children.length;i++){
+                let tr=table.children[i];
+                console.log("tr",tr,tr.tagName);
+                if(tr.tagName.toUpperCase()!=="TR") return false;
+              }
+              return true;
+            }
+          }
+        },
+        info: "Die Tabelle hat genau vier Zeilen."
+      },
+      {
+        data: ()=>{
+          return {
             test: async(label)=>{
               let table=label.$el.querySelectorAll("table");
               if(table.length!==1) return false;
               table=table[0];
-              if(table.nextSibling) return false;
-              if(table.previousElementSibling) return false;
-              if(table.previousSibling?.textContent.trim().length>0) return false;
-              if(!table || table.tagName!=="TABLE") return false;
-              if(table.children.length===0) return false;
-              let trs=table.children[0].children;
-              if(trs.length!==4) return false;
-              let soll=[
-                ["Land","Einwohner","Hauptstadt","CO2 pro Kopf"], 
-                ["England","54 Mio.","London","4,72 t"], 
-                ["Deutschland", "84 Mio.", "Berlin", "7,26 t"],
-                ["Kenia", "55 Mio.", "Nairobi", "0,37 t"]
-              ];
-              for(let i=0;i<trs.length;i++){
-                let tr=trs[i];
-                if(tr.tagName!=="TR") return false;
-                if(tr.children.length!==soll[i].length) return false;
-                for(let j=0;j<tr.children.length;j++){
-                  let td=tr.children[j];
-                  if(i===0 && td.tagName!=="TH" || i>0 && td.tagName!=="TD") return false;
-                  if(td.innerHTML.trim()!==soll[i][j]) return false;
-                }
+              let tr=table.children[0].children[0];
+              if(!tr) return false;
+              if(tr.children.length!==4) return false;
+              let soll=["Land","Einwohner","Hauptstadt","CO2 pro Kopf"];
+              for(let i=0;i<soll.length;i++){
+                let td=tr.children[i];
+                if(td.innerHTML.trim()!==soll[i]) return false;
+                if(td.tagName!=="TH") return false;
               }
+              return true;
+            }
+          }
+        },
+        info: "Die erste Zeile der Tabelle ist korrekt."
+      },
+      {
+        data: ()=>{
+          return {
+            test: async(label)=>{
+              let table=label.$el.querySelectorAll("table");
+              if(table.length!==1) return false;
+              table=table[0];
+              let tr=table.children[0].children[1];
+              if(!tr) return false;
+              if(tr.children.length!==4) return false;
+              let soll=["England","54 Mio.","London","4,72 t"];
+              for(let i=0;i<soll.length;i++){
+                let td=tr.children[i];
+                if(td.innerHTML.trim()!==soll[i]) return false;
+                if(td.tagName!=="TD") return false;
+              }
+              return true;
+            }
+          }
+        },
+        info: "Die zweite Zeile der Tabelle ist korrekt."
+      },
+      {
+        data: ()=>{
+          return {
+            test: async(label)=>{
+              let table=label.$el.querySelectorAll("table");
+              if(table.length!==1) return false;
+              table=table[0];
+              let tr=table.children[0].children[2];
+              if(!tr) return false;
+              if(tr.children.length!==4) return false;
+              let soll=["Deutschland", "84 Mio.", "Berlin", "7,26 t"];
+              for(let i=0;i<soll.length;i++){
+                let td=tr.children[i];
+                if(td.innerHTML.trim()!==soll[i]) return false;
+                if(td.tagName!=="TD") return false;
+              }
+              return true;
+            }
+          }
+        },
+        info: "Die dritte Zeile der Tabelle ist korrekt."
+      },
+      {
+        data: ()=>{
+          return {
+            test: async(label)=>{
+              let table=label.$el.querySelectorAll("table");
+              if(table.length!==1) return false;
+              table=table[0];
+              let tr=table.children[0].children[3];
+              if(!tr) return false;
+              if(tr.children.length!==4) return false;
+              let soll=["Kenia", "55 Mio.", "Nairobi", "0,37 t"];
+              for(let i=0;i<soll.length;i++){
+                let td=tr.children[i];
+                if(td.innerHTML.trim()!==soll[i]) return false;
+                if(td.tagName!=="TD") return false;
+              }
+              return true;
+            }
+          }
+        },
+        info: "Die vierte Zeile der Tabelle ist korrekt."
+      },
+      {
+        data: ()=>{
+          return {
+            test: async(label)=>{
               let dp=new DOMParser();
               try{
                 let doc=dp.parseFromString("<xml>"+label.$value+"</xml>","application/xml");
@@ -107,13 +197,29 @@ export const data={
             }
           }
         },
-        info: "In dem Label ist der korrekte HTML-Code."
+        info: "Der HTML-Code ist syntaktisch korrekt, d.h., die Tags werden korrekt geöffnet und geschlossen."
+      },
+      {
+        data: ()=>{
+          return {
+            test: async(label)=>{
+              let table=label.$el.querySelectorAll("table");
+              if(table.length!==1) return false;
+              table=table[0];
+              if(table.nextSibling) return false;
+              if(table.previousElementSibling) return false;
+              if(table.previousSibling?.textContent.trim().length>0) return false;
+              return true;
+            }
+          }
+        },
+        info: "Es gibt außer der Tabelle keine weiteren Elemente."
       }
     ],
     test: async (tc,init)=>{
       let label=init.label;
       if(!label) return false;
-      return await tc.test(label);
+      return await tc.test(label,init.doc);
     },
   },
   project: {
