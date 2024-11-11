@@ -16,27 +16,27 @@ export default{
   computed: {
     alignContent(){
       if(this.align==="center"){
-        return "center";
+        return "safe center";
       }
       let a="center";
       if(this.align.indexOf("left")>=0){
-        a="start";
+        a="safe start";
       }
       if(this.align.indexOf("right")>=0){
-        a="end";
+        a="safe end";
       }
       return a;
     },
     justifyContent(){
       if(this.align==="center"){
-        return "center";
+        return "safe center";
       }
-      let a="center";
+      let a="safe center";
       if(this.align.indexOf("top")>=0){
-        a="start";
+        a="safe start";
       }
       if(this.align.indexOf("bottom")>=0){
-        a="end";
+        a="safe end";
       }
       return a;
     }

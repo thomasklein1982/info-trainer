@@ -46,5 +46,6 @@ export default{
   border: 2pt solid gray;
   align-items: stretch;
   justify-items: stretch;
+  overflow: auto;
 }
 </style>

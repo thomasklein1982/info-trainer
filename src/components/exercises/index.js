@@ -1,4 +1,5 @@
 
+
 export * as JsHw from './internet/js/js-hw.vue';
 export * as JsTr from './internet/js/js-tr.vue';
 export * as JsMax from './internet/js/js-max.vue';
@@ -58,6 +59,7 @@ export * as Seiten1 from './ui/seiten1.vue';
 export * as Css1 from './ui/css1.vue';
 export * as UiTr  from './ui/ui-tr.vue';
 export * as UiList from './ui/ui-list.vue';
+export * as UiTab from './ui/ui-tab.vue';
 export * as ArrayBasics from './arrays/array-basics.vue';
 export * as IterativeSuche from './algorithms/iterative-suche.vue';
 export * as Bubble from './algorithms/bubble.vue';
