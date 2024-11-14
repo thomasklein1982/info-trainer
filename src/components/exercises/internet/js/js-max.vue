@@ -94,7 +94,8 @@ export const data={
     <input type="number" id="a"/>
     <input type="number" id="b"/>
     <input type="number" id="c"/>
-    <button onclick="alert(maximum(a.value*1,b.value*1,c.value*1))">Maximum anzeigen</button>
+    <button onclick="ausgabe.innerHTML=maximum(a.value*1,b.value*1,c.value*1)">Maximum bestimmen</button>
+    <div id="ausgabe"></div>
   </body>
 </html>`
       },
