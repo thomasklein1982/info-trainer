@@ -90,6 +90,7 @@ export * as OoBasics from './oo/oo-basics.vue';
 export * as OoBeziehungen from './oo/oo-beziehungen.vue';
 export * as OoPerson from './oo/oo-person.vue';
 export * as OoFunktion from './oo/oo-funktion.vue';
+export * as OoPat from './oo/oo-pat.vue';
 export * as Roman from './if/roman.vue';
 export * as MonatTage from './if/monat-tage.vue';
 export * as Vokal from './if/vokal.vue';

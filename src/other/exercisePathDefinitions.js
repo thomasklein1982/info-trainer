@@ -39,7 +39,7 @@ let Java={
     {
       label: "Objektorientierung",
       icon: "oo",
-      exercises: ["oo-basics","oo-beziehungen","oo-person", "oo-funktion"]
+      exercises: ["oo-basics","oo-beziehungen","oo-person", "oo-pat"]
     },
     {
       label: "Datenstrukturen",
