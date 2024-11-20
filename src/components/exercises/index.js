@@ -30,6 +30,7 @@ export * as List from './data-structures/list.vue';
 export * as Fibonacci from './rekursion/fibonacci.vue';
 export * as OutputRec1 from './rekursion/output-rec-1.vue';
 export * as OutputRec2 from './rekursion/output-rec-2.vue';
+export * as Damen from './rekursion/damen.vue';
 export * as Hanoi from './rekursion/hanoi.vue';
 export * as Fakultaet  from './rekursion/fakultaet.vue';
 export * as Palindrom from './rekursion/palindrom.vue';

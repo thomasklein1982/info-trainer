@@ -32,14 +32,14 @@ let Java={
       exercises: ["array-basics","array-erzeugen","array-swap","array-ausgabe","array-ausgabe-liste","array-summe","array-shift", "array-addieren", "array-zaehlen"]
     },
     {
-      label: "Rekursion",
-      icon: "recursion",
-      exercises: ["output-rec-1","fakultaet","fibonacci","ggt","palindrom","output-rec-2","binary-search","hanoi"]
-    },
-    {
       label: "Objektorientierung",
       icon: "oo",
       exercises: ["oo-basics","oo-beziehungen","oo-person", "oo-pat"]
+    },
+    {
+      label: "Rekursion",
+      icon: "recursion",
+      exercises: ["output-rec-1","fakultaet","fibonacci","ggt","palindrom","output-rec-2","binary-search","hanoi","damen"]
     },
     {
       label: "Datenstrukturen",

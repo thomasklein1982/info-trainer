@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
     <div>
-      <AppPreview class="float-right" width="20em" height="25em">
+      <AppPreview class="float-right" width="20em" height="25em" resetable @reset="example.textArea='Index Name Vorname Alter Zustand\n0 Müller Max 39 Grippe\n1 Dill Janine 24 Erkältung\n2 Meier Clara 65 gesund'">
         <JFrame layout="auto 1fr auto/">
           <JLabel>Patientenverwaltung</JLabel>
           <JTextArea v-model="example.textArea"/>
