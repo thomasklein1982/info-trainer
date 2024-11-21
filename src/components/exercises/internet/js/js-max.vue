@@ -1,6 +1,6 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
-    Die Funktion <Code>maximum(a, b, c)</Code> soll die größte Zahl unter den drei Zahlen <Code inline>a</Code>, <Code inline>b</Code> und <Code inline>c</Code> finden und zurückgeben.
+    Die Funktion <Code no-numbers>maximum(a, b, c)</Code> soll die größte Zahl unter den drei Zahlen <Code inline>a</Code>, <Code inline>b</Code> und <Code inline>c</Code> finden und zurückgeben.
     <p>Implementiere diese Funktion.</p>
   </ExerciseBody>
 </template>
