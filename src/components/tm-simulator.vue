@@ -63,8 +63,15 @@
     </div>
     <Splitter v-show="mode==='edit'" style="flex: 1;overflow: hidden">
       <SplitterPanel>
-        <div style="height: 100%; overflow: auto">
-          <CodeMirror ref="editor"/>
+        <div style="display: flex; flex-direction: column; height: 100%; overflow: auto">
+          <div style="flex: 1">
+            <CodeMirror ref="editor"/>
+          </div>
+          <Message v-if="errors.length>0" severity="error" >
+            <div v-for="(e,i) in errors">
+              Z{{e.line}}: {{e.message}}
+            </div>
+          </Message>
         </div>
       </SplitterPanel>
       <SplitterPanel style="overflow-y: auto">
@@ -243,6 +250,7 @@ export default{
       acceptingStates: "",
       acceptingStatesArray: null,
       speed: 100,
+      errors: [],
       input: "",
       commands: null,
       code: "",
@@ -369,6 +377,7 @@ export default{
       this.code=code;
       let lines=code.split("\n");
       this.commands=[];
+      this.errors=[];
       for(let i=0;i<lines.length;i++){
         let line=lines[i];
         try{
@@ -377,11 +386,17 @@ export default{
           c.line=i;
           this.commands.push(c);
         }catch(e){
-          alert("Fehler in Zeile "+(i+1)+"\n"+e);
-          return false;
+          this.errors.push({
+            line: i+1,
+            message: e
+          });
         }
       }
-      return true;
+      if(this.errors.length===0){
+        return true;
+      }else{
+        return false;
+      }
     },
     toRunView(){
       this.save();
@@ -577,14 +592,17 @@ function parseLine(line,parts){
 }
 
 function getCommand(commands,state,character){
+  let matchesAll=null;
   for(let i=0;i<commands.length;i++){
     let cmd=commands[i];
     if(cmd.state===state){
-      if(cmd.read.matchesAll) return cmd;
-      if(cmd.read.regex.test(character)) return cmd;
+      if(cmd.read.matchesAll){
+        matchesAll=cmd;
+      }
+      else if(cmd.read.regex.test(character)) return cmd;
     }
   }
-  return null;
+  return matchesAll;
 }
 
 function getBlanks(n){
