@@ -581,7 +581,8 @@ function parseLine(line,parts){
     regex: null,
     matchesAll: (cmd.read==="*")
   };
-  if(cmd.read.raw==="."||cmd.read.raw==="+"){
+  let r=cmd.read.raw;
+  if(r==="."||r==="+"||r==="("||r===")"||r==="["||r==="]"||r==="{"||r==="}"||r==="|"){
     cmd.read.regex=new RegExp("\\"+cmd.read.raw);
   }else if(cmd.read.raw==="_"){
     cmd.read.regex=/ /;
