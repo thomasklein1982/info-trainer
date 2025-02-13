@@ -54,6 +54,17 @@ let Java={
   ]
 }
 
+let Datenbanken={
+  name: "Datenbanken",
+  paths: [
+    {
+      label: "SQL-SELECT",
+      icon: "",
+      exercises: ["db-select-all"]
+    }
+  ]
+}
+
 let TheoretischeInformatik={
   name: "Theoretische Informatik",
   paths: [
@@ -78,11 +89,11 @@ let TheoretischeInformatik={
 let Internet={
   name: "Das Internet",
   paths: [
-    {
-      label: "HTML & CSS",
-      icon: "html",
-      exercises: []
-    },
+    // {
+    //   label: "HTML & CSS",
+    //   icon: "html",
+    //   exercises: []
+    // },
     {
       label: "JavaScript",
       icon: "js",
@@ -114,7 +125,7 @@ let IKG={
 }
 
 let paths=[
-  IKG, Grundlagen, Internet, Java, TheoretischeInformatik
+  IKG, Grundlagen, Internet, Java, Datenbanken, TheoretischeInformatik
 ];
 
 for(let i=0;i<paths.length;i++){

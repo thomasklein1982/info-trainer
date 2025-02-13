@@ -1,4 +1,5 @@
 
+export * as DbSelectAll from './databases/select/db-select-all.vue';
 export * as JsHw from './internet/js/js-hw.vue';
 export * as JsTr from './internet/js/js-tr.vue';
 export * as JsMax from './internet/js/js-max.vue';

@@ -30,6 +30,13 @@
           <slot></slot>
         </RegexpLauncher>
       </template>
+      <template v-else-if="database">
+        <DatabaseLauncher
+          :exercise-data="exerciseData"
+          :code="code"
+          :database="database"
+        />
+      </template>
       <template v-else>
         <Button label="Aufgabe bearbeiten" @click="showExercise()"/>
         <Dialog modal v-model:visible="showExerciseDialog" :header="title" maximizable :closable="closable">
@@ -66,12 +73,13 @@ import ExerciseProgress from "./exercise-progress.vue";
 import JavaApp from "./java-app.vue";
 import RegexpLauncher from "./regexp-launcher.vue";
 import TuringMachineLauncher from "./turing-machine-launcher.vue";
+import DatabaseLauncher from "./database-launcher.vue";
 import Message from "primevue/message";
 
 
 export default {
   components: {
-    JavaApp, DialogFeedback,ExerciseProgress, TuringMachineLauncher, Message, RegexpLauncher
+    JavaApp, DialogFeedback,ExerciseProgress, TuringMachineLauncher, Message, RegexpLauncher, DatabaseLauncher
   },
   props: {
     exercise: Object,
@@ -83,6 +91,8 @@ export default {
     finiteStateMachine: Object,
     java: Object,
     regexp: Object,
+    database: Object,
+    code: String,
     noRandom: {
       type: Boolean,
       default: false
