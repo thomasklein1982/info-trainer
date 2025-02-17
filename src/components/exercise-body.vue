@@ -35,7 +35,9 @@
           :exercise-data="exerciseData"
           :code="code"
           :database="database"
-        />
+        >
+          <slot></slot>
+        </DatabaseLauncher>
       </template>
       <template v-else>
         <Button label="Aufgabe bearbeiten" @click="showExercise()"/>
@@ -65,7 +67,7 @@
 </template>
 
 <script>
-import { calcPoints } from "../App.vue";
+import { calcPoints, difficulty } from "../App.vue";
 import { isCompletelyTrue, setArrayToValue } from "../other/bool-array";
 import { Random, random } from "../other/random";
 import DialogFeedback from "./dialog-feedback.vue";
@@ -122,7 +124,18 @@ export default {
     },
     project(){
       if(!this.java) return null;
-      return JSON.parse(JSON.stringify(this.java));
+      let p=JSON.parse(JSON.stringify(this.java));
+      let mode=difficulty;
+      if(p.clazzes){
+        for(let i=0;i<p.clazzes.length;i++){
+          let c=p.clazzes[i];
+          if(c.modes && c.modes.indexOf(mode)<0){
+            p.clazzes.splice(i,1);
+            i--;
+          }
+        }
+      }
+      return p;
     },
     userProject(){
       if(this.exerciseData.userProject){

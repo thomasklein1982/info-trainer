@@ -162,18 +162,10 @@ export const data={
     clazzes: [
       {
         name: "Main",
-        src: `
-$void main(){
+        src: `$void main(){
   
 }`,
-      }, 
-      {
-        type: "UI",
-        code: {
-          "name": "Taschenrechner",
-          "components":[]
-        }
-      },
+      }
     ]
   }
 };

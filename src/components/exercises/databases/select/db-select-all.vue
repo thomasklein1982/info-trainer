@@ -1,27 +1,22 @@
 <template>
     <ExerciseBody :exercise="$data" :code="code" :database="database">
-      Gib alle Daten der Haustier-Tabelle aus.
+      Gib alle Daten der Lehrkräfte aus.
     </ExerciseBody>
   </template>
   
   <script>
-  
+  import { areResultsEqualIgnoreOrder } from "../databases/database";
+import schule from "../databases/schule";
   
   export const data={
     id: "db-select-all",
     title: "Alle Daten abfragen",
-    database: null,
+    database: schule,
     check: {
-      input: ()=>{
-        return "";
-      },
       testcases: [
         {
-          check: (input, output)=>{
-            //if(input.length!==output.length) return false;
-            return output.trim()==="Hi!";
-          },
-          info: 'Es wird "Hi!" auf das Band geschrieben.'
+          sqlDo: "select * from Lehrkraft",
+          func: areResultsEqualIgnoreOrder
         }
       ]
     },

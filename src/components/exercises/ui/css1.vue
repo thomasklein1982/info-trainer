@@ -1,6 +1,6 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
-      Die angezeigte UI besteht ausschließlich aus JLabels. Implementiere die benötigten CSS-Regeln.
+      Die angezeigte UI besteht ausschließlich aus JLabels, die mit CSS gestylt wurden. Implementiere diese UI.
       <div class="float-right">
         <AppPreview width="11rem">
           <JFrame layout="1">
@@ -9,7 +9,6 @@
             <JLabel style="text-decoration: underline; font-style: italic;">Label 3</JLabel>
             <JLabel style="font-size: 200%">Label 4</JLabel>
             <JLabel style="border: 4pt solid green; background-color: yellow">Label 5</JLabel>
-            <JLabel style="font-variant: small-caps; font-weight: bold">Label 6</JLabel>
           </JFrame>
         </AppPreview>
       </div>
@@ -134,75 +133,20 @@ export const data={
         },
         info: "Das JLabel 'Label 5' ist korrekt."
       },
-      {
-        data: ()=>{
-          return {
-            check: async (labels)=>{
-              let l=labels[5];
-              if(!l) throw "Es gibt kein 'Label 6'.";
-              let panel=l.getPanel();
-              let comp=$new(JLabel,"Label 1");
-              panel.add(comp);
-              comp.setCSS("font-weight: bold; font-variant: small-caps");
-              let res=$Exercise.compareStyles(l,comp,["font-weight","font-variant"]);
-              panel.remove(comp);
-              if(!res.ok){
-                throw res.keys.join("; ");
-              }
-              return res.ok;
-            }
-          }
-        },
-        info: "Das JLabel 'Label 6' ist korrekt."
-      },
     ],
     test: async (tc,init)=>{
       return await tc.check(init.labels);
     },
   },
   project: {
-    name: "Steckbrief",
+    name: "Labels mit CSS",
     clazzes: [
       {
         name: "Main",
-        src: `
-$void main(){
+        src: `$void main(){
   
 }`,
-      },  
-      {
-        type: "UI",
-        code: {
-          "name": "Labels",
-          "components":[
-            {
-              "type": "JLabel",
-              "value": "Label 1",
-            },
-            {
-              "type": "JLabel",
-              "value": "Label 2",
-            },
-            {
-              "type": "JLabel",
-              "value": "Label 3",
-            },
-            {
-              "type": "JLabel",
-              "value": "Label 4",
-            },
-            {
-              "type": "JLabel",
-              "value": "Label 5",
-            },
-            {
-              "type": "JLabel",
-              "value": "Label 6",
-            }
-          ]
-        }
-      },
-      
+      }
     ]
   }
 };

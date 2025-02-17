@@ -4,7 +4,7 @@ let Java={
     {
       label: "UI",
       icon: "ui",
-      exercises: ["steck","css1","ui-tr","seiten1","ui-list","ui-tab"]
+      exercises: ["steck","css1","ui-tr","ui-list","ui-tab"]
     },
     {
       label: "EVA",

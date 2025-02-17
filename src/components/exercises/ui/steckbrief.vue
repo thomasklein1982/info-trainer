@@ -123,22 +123,14 @@ export const data={
   },
   project: {
     name: "Steckbrief",
-    clazzes: [
+    clazzes:  [
       {
         name: "Main",
         src: `
 $void main(){
   
 }`,
-      },  
-      {
-        type: "UI",
-        code: {
-          "name": "Steckbrief",
-          "components":[]
-        }
       },
-      
     ]
   }
 };

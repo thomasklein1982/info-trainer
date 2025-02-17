@@ -15,7 +15,7 @@ export class RandomClazz{
     let z=Math.sin(this.seed)*100;
     return z-Math.floor(z);
   }
-  mixArray(a){
+  mixArray(a,inplace){
     let o=this.order(0,a.length-1);
     let b=[];
     for(let i=0;i<a.length;i++){

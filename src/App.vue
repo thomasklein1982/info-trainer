@@ -27,6 +27,17 @@ let mode={
 
 export let difficulty="Hard";
 
+export function isHardMode(){
+  return difficulty==="Hard";
+}
+
+export function isNormalMode(){
+  return difficulty==="Normal";
+}
+export function isEasyMode(){
+  return difficulty==="Easy";
+}
+
 let hash=location.hash;
 if(hash.toLowerCase().startsWith("#ab=")){
   hash=hash.substring(4);
@@ -332,6 +343,15 @@ export default{
       storage.setItem(STORAGE_SETTINGS,toRaw(this.settings)).catch((err)=>{
         console.error(err);
       });
+    },
+    isHardMode(){
+      return isHardMode();
+    },
+    isNormalMode(){
+      return isNormalMode();
+    },
+    isEasyMode(){
+      return isEasyMode();
     }
   }
 }

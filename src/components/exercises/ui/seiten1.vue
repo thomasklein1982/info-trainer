@@ -11,13 +11,12 @@
         </JFrame>
       </AppPreview>
     </div>
-    Es soll eine App mit zwei verschiedenen Bildschirmen programmiert werden, bei der man per Buttonklick die Seite wechseln kann. Zu Beginn soll "Seite 1" angezeigt werden.
+    Es soll eine App mit zwei verschiedenen {{$root.isHardMode()? 'JFrames':'UI-Klassen'}} programmiert werden, bei der man per Buttonklick die Seite wechseln kann. Zu Beginn soll "Seite 1" angezeigt werden.
     <p>Implementiere diese Anforderungen.</p>
   </ExerciseBody>
 </template>
 
 <script>
-
 
 export const data={
   id: "seiten1",
@@ -25,11 +24,26 @@ export const data={
   title: "Wechseln zwischen Bildschirmen",
   check: {
     init: async ()=>{
+      let seiten=$Exercise.getComponents("JFrame");
+      console.log(seiten);
+      let seite1,seite2;
+      if(seiten[0].$el.textContent.endsWith("Seite 1")){
+        seite1=seiten[0];
+        seite2=seiten[1];
+      }else{
+        seite1=seiten[1];
+        seite2=seiten[0];
+      }
+      let lSeite1=seite1.querySelector(".__jlabel");
+      let lSeite2=seite2.querySelector(".__jlabel");
+      let bSeite1=seite1.querySelectorAll(".__jbutton");
+      let bSeite2=seite2.querySelectorAll(".__jbutton");
       return {
-        lSeite1: $Exercise.getComponent("JLabel",(e)=>{return e.getValue().trim()==="Seite 1"}),
-        lSeite2: $Exercise.getComponent("JLabel",(e)=>{return e.getValue().trim()==="Seite 2"}),
-        bSeite1: $Exercise.getComponents("JButton",(e)=>{return e.getValue().trim()==="Zu Seite 1"}),
-        bSeite2: $Exercise.getComponents("JButton",(e)=>{return e.getValue().trim()==="Zu Seite 2"}),
+        seite1,seite2,
+        lSeite1: lSeite1,
+        lSeite2: lSeite2,
+        bSeite1: bSeite1,
+        bSeite2: bSeite2,
       };
     },
     testcases: [
@@ -37,7 +51,7 @@ export const data={
         data: ()=>{
           return {
             test: (init)=>{
-              return ($Exercise.isComponentBeforeComponent(Seite2.$self,Seite1.$self));
+              return init.seite1 && init.seite2 && ($Exercise.isComponentBeforeComponent(init.seite2,init.seite1));
             }
           }
         },
@@ -131,8 +145,16 @@ export const data={
   project: {
     name: "Wechseln-zwischen-Seiten",
     clazzes: [
+    {
+        name: "Main",
+        modes: ["Hard"],
+        src: `$void main(){
+  
+}`,
+      },
       {
         name: "Main",
+        modes: ["Easy","Normal"],
         src: `
 $void main(){
   
@@ -141,9 +163,10 @@ $void main(){
 $void onAction( JComponent trigger ){
   
 }`,
-      },  
+      }, 
       {
         type: "UI",
+        modes: ["Easy"],
         code: {
           "name": "Seite1",
           "components":[
@@ -208,6 +231,7 @@ $void onAction( JComponent trigger ){
       },
       {
         type: "UI",
+        modes: ["Easy"],
         code: {
           "name": "Seite2",
           "components":[
