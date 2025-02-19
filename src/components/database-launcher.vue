@@ -26,7 +26,7 @@
                   <th v-for="(c,i) in result[0]">{{ i }}</th>
                 </tr>
                 <tr v-for="(r,i) in result">
-                  <td v-for="(c,j) in r">{{ c }}</td>
+                  <td v-for="(c,j) in r">{{ (c===null||c===undefined)? 'NULL':c }}</td>
                 </tr>
               </table>
               <div v-if="truncated>0" style="font-style: italic;text-align: center">
@@ -112,6 +112,17 @@ export default{
           while(res.length>300) res.pop();
         }
         this.result=res;
+        if(res.length>0){
+          let r=res[0];
+          let neu={};
+          for(let a in r){
+            if(a.startsWith("'") && a.endsWith("'")) neu[a]=a.substring(1,a.length-1);
+          }
+          for(let a in neu){
+            r[neu[a]]=r[a];
+            delete r[a];
+          }
+        }
       }catch(e){
         this.error=e;
       }

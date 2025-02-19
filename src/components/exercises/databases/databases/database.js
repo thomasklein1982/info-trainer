@@ -72,7 +72,9 @@ export class Database{
         }
       }
     }
-    return ast.toString();
+    let r=ast.toString();
+    r=r.replace(/AS 'undefined.undefined'/gi,"");
+    return r;
   }
   sql(cmd){
     if(!cmd || cmd.length===0) return null;
@@ -150,6 +152,8 @@ export class Table{
       if(val!==null){
         if(attr.type==="STRING"){
           val=JSON.stringify(val);
+        }else if(attr.type==="DATE"){
+          val="'"+val+"'";
         }
       }else{
         val="null";
@@ -157,7 +161,12 @@ export class Table{
       code+=(i>0?", ":"")+val;
     }
     code+=")";
-    alasql(code);
+    try{
+      alasql(code);
+    }catch(e){
+      console.log("insert error",code);
+      throw e;
+    }
   }
 }
 

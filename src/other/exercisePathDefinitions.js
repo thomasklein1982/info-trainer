@@ -60,7 +60,7 @@ let Datenbanken={
     {
       label: "SQL-SELECT",
       icon: "",
-      exercises: ["db-select-all"]
+      exercises: ["db-select-all","db-select-berufe"]
     }
   ]
 }
