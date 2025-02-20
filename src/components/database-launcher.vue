@@ -23,7 +23,7 @@
               </div>
               <table v-else class="database-relation">
                 <tr>
-                  <th v-for="(c,i) in result[0]">{{ i }}</th>
+                  <th v-for="(c,i) in result_captions">{{ c }}</th>
                 </tr>
                 <tr v-for="(r,i) in result">
                   <td v-for="(c,j) in r">{{ (c===null||c===undefined)? 'NULL':c }}</td>
@@ -92,6 +92,7 @@ export default{
       showInfos: false,
       input: "",
       result: null,
+      result_captions: null,
       truncated: 0,
       error: false,
       correct: false,
@@ -101,12 +102,21 @@ export default{
   methods: {
     runSQL(){
       this.result=null;
+      this.result_captions=null;
       this.error=false;
       this.truncated=0;
       this.input=this.$refs.editor.getValue();
       try{
         let res=this.database.sql(this.input);
         if(!res) return;
+        if(res.length>0){
+          let captions=[];
+          for(let i in res[0] ){
+            let c=i.split("_")[1];
+            captions.push(c);
+          }
+          this.result_captions=captions;
+        }
         if(res.length>300){
           this.truncated=res.length-200;
           while(res.length>300) res.pop();
@@ -130,6 +140,7 @@ export default{
     refreshData(){
       this.result=null;
       this.error=false;
+      this.result_captions=null;
       this.truncated=0;
       this.database.refresh();
     },

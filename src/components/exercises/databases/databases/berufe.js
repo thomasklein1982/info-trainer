@@ -23,7 +23,7 @@ function fillZero(n){
 let db = new Database();
 db.addTable(
   "Person",
-  ["id","nachname","vorname","beruf",{name: "geburtstag", type: "DATE"},{name: "groesse", type: "NUMERIC"},{name: "gewicht", type: "NUMERIC"}, "wohnort"],
+  ["id","nachname","vorname","beruf",{name: "geburtstag", type: "DATE"},{name: "groesse", type: "NUMERIC"},{name: "gewicht", type: "NUMERIC"}, "plz"],
   ["id"],
   ["wohnort"]
 );

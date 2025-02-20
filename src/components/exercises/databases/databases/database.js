@@ -1,5 +1,6 @@
 
 alasql.options.casesensitive=false;
+alasql.options.joinstar = 'underscore';
 
 export class Database{
   tables={};
@@ -12,6 +13,7 @@ export class Database{
     this.tables[name]=new Table(name,attributes,primaryKey, foreignKeys);
   }
   prepareStatement(sqlSource){
+    return sqlSource;
     /**muss kopiert werden in additionalJScode! */
     let ast=alasql.parse(sqlSource);
     /**untersucht die statements darauf, ob mehr als eine Tabelle abgefragt wird
