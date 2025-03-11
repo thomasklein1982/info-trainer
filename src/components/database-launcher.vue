@@ -18,15 +18,12 @@
         </div>
         <div style="display: flex; flex-direction: column; overflow: auto;">
           <div style="flex: 1">
-            <template v-if="result">
-              <div v-if="result.length===0">
-                Keine Ergebnisse.
-              </div>
-              <table v-else class="database-relation">
+            <template v-if="result && result.length>0">
+              <table class="database-relation">
                 <tr>
-                  <th v-for="(c,i) in result_captions">{{ c }}</th>
+                  <th v-for="(c,i) in result[0].columns">{{ c }}</th>
                 </tr>
-                <tr v-for="(r,i) in result">
+                <tr v-for="(r,i) in result[0].values">
                   <td v-for="(c,j) in r">{{ (c===null||c===undefined)? 'NULL':c }}</td>
                 </tr>
               </table>
@@ -96,7 +93,6 @@ export default{
       showInfos: false,
       input: "",
       result: null,
-      result_captions: null,
       truncated: 0,
       error: false,
       correct: false,
@@ -107,43 +103,28 @@ export default{
   methods: {
     runSQL(){
       this.result=null;
-      this.result_captions=null;
       this.error=false;
       this.truncated=0;
       //this.input=this.$refs.editor.getValue();
       try{
         let res=this.database.sql(this.input);
         if(!res) return;
-        if(res.length>0){
-          let captions=[];
-          for(let i in res[0] ){
-            let pos=i.indexOf("_");
-            let c;
-            if(pos>0){
-              c=i.substring(pos+1);
-            }else{
-              c=i;
-            }
-            captions.push(c);
-          }
-          this.result_captions=captions;
-        }
-        if(res.length>300){
-          this.truncated=res.length-200;
-          while(res.length>300) res.pop();
+        if(res.values.length>300){
+          this.truncated=res.values.length-200;
+          while(res.values.length>300) res.values.pop();
         }
         this.result=res;
-        if(res.length>0){
-          let r=res[0];
-          let neu={};
-          for(let a in r){
-            if(a.startsWith("'") && a.endsWith("'")) neu[a]=a.substring(1,a.length-1);
-          }
-          for(let a in neu){
-            r[neu[a]]=r[a];
-            delete r[a];
-          }
-        }
+        // if(res.length>0){
+        //   let r=res[0];
+        //   let neu={};
+        //   for(let a in r){
+        //     if(a.startsWith("'") && a.endsWith("'")) neu[a]=a.substring(1,a.length-1);
+        //   }
+        //   for(let a in neu){
+        //     r[neu[a]]=r[a];
+        //     delete r[a];
+        //   }
+        // }
       }catch(e){
         this.error=e;
       }
@@ -151,7 +132,6 @@ export default{
     async refreshData(){
       this.result=null;
       this.error=false;
-      this.result_captions=null;
       this.truncated=0;
       await this.database.refresh();
       this.dbready=true;
@@ -166,10 +146,10 @@ export default{
       }
       this.runSQL();
       let correct=false;
-      if(this.error){
+      if(this.error || this.result.length!==1){
         correct=false;
       }else{
-        correct=tc.func(soll,this.result);
+        correct=tc.func(soll[0],this.result[0]);
       }
       this.exerciseData.correct=[correct];
       calcPoints(this.exerciseData);

@@ -1,6 +1,6 @@
+import SQL from "../../../../other/sql";
 
-alasql.options.casesensitive=false;
-alasql.options.joinstar = 'underscore';
+let database=SQL;
 
 export class Database{
   tables={};
@@ -12,90 +12,19 @@ export class Database{
   addTable(name, attributes, primaryKey, foreignKeys){
     this.tables[name]=new Table(name,attributes,primaryKey, foreignKeys);
   }
-  prepareStatement(sqlSource){
-    return sqlSource;
-    /**muss kopiert werden in additionalJScode! */
-    let ast=alasql.parse(sqlSource);
-    /**untersucht die statements darauf, ob mehr als eine Tabelle abgefragt wird
-     * falls ja, werden alle mehrfach vorkommenden Spaltennamen per 'as' in 'Tabelle.Spalte' umbenannt
-     * Sinn: doppelt vorkommende Spaltennamen kollabieren ansonsten
-     * damit StringValue erzeugt werden kann, musste in alasql.min.ja folgender Code eingefügt werden:
-     * window.alasqlX=X;
-     * an der Stelle:
-     * X=(T.Recordset=function(e){q(this,e)},y.yy=T.yy={});window.alasqlX=X;X.extend=
-     */
-    for(let i=0;i<ast.statements.length;i++){
-      let s=ast.statements[i];
-      if(!s || !s.columns || !s.from || s.from.length===0) continue;
-      let tables={};
-      for(let j=0;j<s.from.length;j++){
-        let t=s.from[j];
-        let label=t.as? t.as:t.tableid;
-        tables[label]=t.tableid;
-      }
-      /**spezialfall 'select *': * durch alle Spalten ersetzen: */
-      if(s.columns.length===1 && s.columns[0].columnid==='*'){
-        let spalten=[];
-        for(let j=0;j<s.from.length;j++){
-          let t=s.from[j];
-          let label=t.as? t.as:t.tableid;
-          let table=alasql.tables[t.tableid];
-          if(!table) continue;
-          for(let k=0;k<table.columns.length;k++){
-            let c=table.columns[k];
-            let spalte=label+"."+c.columnid;
-            spalten.push({
-              spalte, columnid: c.columnid, tableid: label
-            });
-          }
-        }
-        for(let j=0;j<spalten.length;j++){
-          let spalte=spalten[j];
-          s.columns[j]=new alasqlX.Column({columnid: spalte.columnid, tableid: spalte.tableid});
-        }
-      }
-      /**finde doppelte spalten: */
-      for(let j=0;j<s.columns.length;j++){
-        let c=s.columns[j];
-        if(c.as) continue;
-        let changeC=false;
-        for(let k=j+1;k<s.columns.length;k++){
-          let c2=s.columns[k];
-          if(c2.as) continue;
-          if(c2.columnid===c.columnid){
-            changeC=true;
-            let tableid=tables[c2.tableid];
-            c2.as=new window.alasqlX.StringValue({value: tableid+"."+c2.columnid});
-          }
-        }
-        if(changeC){
-          let tableid=tables[c.tableid];
-          c.as=new window.alasqlX.StringValue({value: tableid+"."+c.columnid});
-        }
-      }
-    }
-    let r=ast.toString();
-    r=r.replace(/AS 'undefined.undefined'/gi,"");
-    return r;
-  }
   sql(cmd){
     if(!cmd || cmd.length===0) return null;
-    let prep;
-    if(cmd.trim().toLowerCase().startsWith("insert")){
-      prep=cmd;
-    }else{
-      prep=this.prepareStatement(cmd);
-    }
-    let res=alasql(prep);
+    
+    let res=database.exec(cmd);
     return res;
   }
   clear(){
-    let tables=Object.keys(alasql.tables);
+    let tables=database.exec("select name from sqlite_master where type='table'");
     if(tables){
-      for(let i=0;i<tables.length;i++){
-        let c="drop table "+tables[i];
+      for(let i=0;i<tables.values.length;i++){
+        let c="drop table if exists "+tables.values[i];
         try{
-          alasql(c);
+          database.run(c);
         }catch(e){
           console.log(e);
         }
@@ -143,17 +72,18 @@ export class Table{
     }
   }
   create(){
-    let code="create table "+this.name+"(\n";
+    let code="drop table if exists "+this.name+";\n";
+    code+="create table "+this.name+"(\n";
     for(let i=0;i<this.attributes.length;i++){
       let attr=this.attributes[i];
       code+=(i>0? ",\n": "")+attr.name+" "+attr.type;
     }
     code+=")";
-    alasql(code);
+    database.run(code);
   }
   insert(){
     if(this.attributes.length!==arguments.length) throw "Insert impossible, wrong data count";
-    let code="insert into "+this.name+"("
+    let code="insert into "+this.name+" values ("
     for(let i=0;i<this.attributes.length;i++){
       let attr=this.attributes[i];
       let name,type;
@@ -171,7 +101,7 @@ export class Table{
     }
     code+=")";
     try{
-      alasql(code);
+      database.run(code);
     }catch(e){
       console.log("insert error",code);
       throw e;
@@ -179,72 +109,87 @@ export class Table{
   }
 }
 
-export function areResultsEqualIgnoreOrder(array1,array2){
-  if(!array1 || !array2) return false;
-  if(array1.length===0){
-    if(array2.length===0){
+function inititalChecks(res1,res2){
+  if(!res1 || !res2) return false;
+  //spaltennamen checken
+  if(res1.columns.length!==res2.columns.length) return false;
+  let order1=getOrder(res1.columns);
+  let order2=getOrder(res2.columns);
+  for(let i=0;i<order1.length;i++){
+    if(order1[i].column!==order2[i].column) return false;
+  }
+  if(res1.values.length===0){
+    if(res2.values.length===0){
       return true;
     }else{
       return false;
     }
   }else{
-    if(array2.length===0 || array2.length!==array1.length){
+    if(res2.values.length===0 || res2.values.length!==res1.values.length){
       return false;
     }
   }
-  var r1=array1[0];
-  var r2=array2[0];
-  var attributes=[];
-  var sortFunc=(r,s)=>{
-    for(var attr in r1){
-      if(r[attr]<s[attr]){
+  return true;
+}
+
+function getOrder(columns){
+  let order=[];
+  for(let i=0;i<columns.length;i++){
+    order[i]={index: i, column: columns[i]};
+  }
+  order.sort((a,b)=>{
+    return a.column>=b.column ? 1: -1;
+  });
+  return order;
+}
+
+export function areResultsEqualIgnoreOrder(res1,res2){
+  if(!inititalChecks(res1,res2)) return false;
+  let order1=getOrder(res1.columns);
+  let order2=getOrder(res2.columns);
+  let sortFunc1=(r,s)=>{
+    for(let i=0;i<res1.columns.length;i++){
+      let w1=r[order1[i].index];
+      let w2=s[order1[i].index];
+      if(w1<w2){
         return -1;
-      }else if(r[attr]>s[attr]){
+      }else if(w1>w2){
         return 1;
       }
     }
     return -1;
   };
-  array1.sort(sortFunc);
-  array2.sort(sortFunc);
-  return areResultsEqual(array1,array2);
+  let sortFunc2=(r,s)=>{
+    for(let i=0;i<res1.columns.length;i++){
+      let w1=r[order2[i].index];
+      let w2=s[order2[i].index];
+      if(w1<w2){
+        return -1;
+      }else if(w1>w2){
+        return 1;
+      }
+    }
+    return -1;
+  };
+  res1.values.sort(sortFunc1);
+  res2.values.sort(sortFunc2);
+  return areResultsEqual(res1,res2, true );
 }
 
-export function areResultsEqual(array1,array2){
-  if(!array1 || !array2) return false;
-  if(array1.length!==array2.length){
-    return false;
+export function areResultsEqual(res1,res2,noInitChecks){
+  if(!noInitChecks){
+    inititalChecks(res1,res2);
   }
-  if(array1.length===0){
-    return true;
-  }
-  var n1=0;
-  var r1=array1[0];
-  for(var a in r1){
-    n1++;
-  }
-  var r2=array2[0];
-  var n2=0;
-  for(var a in r2){
-    n2++;
-  }
-  if(n1!==n2) return false;
-  for(var i=0;i<n1;i++){
-    var r1=array1[i];
-    var s1=0;
-    for(var a in r1){
-      s1++;
-    }
-    var s2=0;
-    for(var a in r2){
-      s2++;
-    }
-    if(s1!==s2) return false;
-    var r2=array2[i];
-    for(var a in r1){
-      if(a in r2){
-        if(r1[a]!==r2[a]) return false;
-      }else{
+  let array1=res1.values;
+  let array2=res2.values;
+  let n=array1.length;
+  let order1=getOrder(res1.columns);
+  let order2=getOrder(res2.columns);
+  for(let i=0;i<n;i++){
+    let r1=array1[i];
+    let r2=array2[i];
+    for(let j=0;j<r1.length;j++){
+      if(r1[order1[j].index]!==r2[order2[j].index]) {
         return false;
       }
     }
