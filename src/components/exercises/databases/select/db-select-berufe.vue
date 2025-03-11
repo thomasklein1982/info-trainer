@@ -15,7 +15,7 @@
     check: {
       testcases: [
         {
-          sqlDo: "select distinct beruf from Person",
+          sqlDo: "select distinct beruf from Person where beruf is not null",
           func: areResultsEqualIgnoreOrder
         }
       ]

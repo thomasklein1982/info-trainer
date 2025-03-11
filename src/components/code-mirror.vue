@@ -4,6 +4,7 @@
 
 <script>
 import {EditorView, basicSetup} from "codemirror";
+import {Compartment,EditorState} from '@codemirror/state';
 import {keymap} from '@codemirror/view';
 import {indentWithTab, undo, redo} from '@codemirror/commands';
 
@@ -30,6 +31,7 @@ export default{
 
   },
   props: {
+    modelValue: String,
     insertTab: {
       type: Boolean,
       default: false
@@ -37,11 +39,22 @@ export default{
   },
   mounted(){
     editor = new EditorView({
-      extensions: [
-        basicSetup,
-        keymap.of(this.insertTab? insertTab:indentWithTab)
-      ],
-      parent: this.$refs.wrapper
+      state: EditorState.create(
+        {
+          doc: this.modelValue,
+          extensions: [
+            basicSetup,
+            keymap.of(this.insertTab? insertTab:indentWithTab),
+            EditorView.updateListener.of((v) => {
+              if(!v.docChanged) return;
+              this.$emit('update:modelValue', this.getValue());
+            }),
+          ],
+        },
+      ),
+      
+      parent: this.$refs.wrapper,
+      
     })
   },
   methods: {

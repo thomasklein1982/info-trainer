@@ -13,6 +13,7 @@
           <CodeMirror
             ref="editor"
             insert-tab
+            v-model="input"
           />
         </div>
         <div style="display: flex; flex-direction: column; overflow: auto;">
@@ -45,8 +46,8 @@
     </div>
     <template #footer>
       <Button icon="pi pi-refresh" :disabled="checking" label="Neue Daten" @click="refreshData()"/>
-      <Button label="Überprüfen" :loading="checking" @click="check()"/>
-      <Button icon="pi pi-play" @click="runSQL()" label="Ausführen"/>
+      <Button label="Überprüfen" :loading="checking || !dbready" @click="check()"/>
+      <Button icon="pi pi-play" :loading="!dbready" @click="runSQL()" label="Ausführen"/>
     </template>
   </Dialog>
   <Dialog ref="infos" header="Relationenmodell" v-model:visible="showInfos">
@@ -70,7 +71,10 @@ export default{
     ProgressBar,ExerciseProgress, CodeMirror
   },
   watch: {
-    
+    input(){
+      this.exerciseData.userProject=this.input;
+      this.save();
+    }
   },
   computed: {
     hasUserData(){
@@ -96,7 +100,8 @@ export default{
       truncated: 0,
       error: false,
       correct: false,
-      checking: false
+      checking: false,
+      dbready: false
     }
   },
   methods: {
@@ -105,14 +110,20 @@ export default{
       this.result_captions=null;
       this.error=false;
       this.truncated=0;
-      this.input=this.$refs.editor.getValue();
+      //this.input=this.$refs.editor.getValue();
       try{
         let res=this.database.sql(this.input);
         if(!res) return;
         if(res.length>0){
           let captions=[];
           for(let i in res[0] ){
-            let c=i.split("_")[1];
+            let pos=i.indexOf("_");
+            let c;
+            if(pos>0){
+              c=i.substring(pos+1);
+            }else{
+              c=i;
+            }
             captions.push(c);
           }
           this.result_captions=captions;
@@ -137,15 +148,17 @@ export default{
         this.error=e;
       }
     },
-    refreshData(){
+    async refreshData(){
       this.result=null;
       this.error=false;
       this.result_captions=null;
       this.truncated=0;
-      this.database.refresh();
+      await this.database.refresh();
+      this.dbready=true;
     },
-    check(){
-      this.refreshData();
+    async check(){
+      this.checking=true;
+      await this.refreshData();
       let tc=this.exerciseData.data.check.testcases[0];
       let soll=this.database.sql(tc.sqlDo);
       if(tc.sqlUndo){
@@ -161,6 +174,7 @@ export default{
       this.exerciseData.correct=[correct];
       calcPoints(this.exerciseData);
       this.save();
+      this.checking=false;
     },
     save(){
       this.$root.save(this.exerciseData);
@@ -171,8 +185,9 @@ export default{
       }else{
         this.input="";
       }
-      this.refreshData();
       this.show=true;
+      this.refreshData();
+
     }
   }
 }

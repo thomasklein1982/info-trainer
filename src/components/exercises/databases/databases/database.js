@@ -103,11 +103,18 @@ export class Database{
     }
   }
   refresh(){
-    this.clear();
-    for(let a in this.tables){
-      this.tables[a].create();
-    }
-    this.create();
+    let p=new Promise((resolve,reject)=>{
+      setTimeout(()=>{
+        console.log("refresh");
+        this.clear();
+        for(let a in this.tables){
+          this.tables[a].create();
+        }
+        this.create();
+        resolve();
+      },100);
+    });
+    return p;
   }
 }
 
