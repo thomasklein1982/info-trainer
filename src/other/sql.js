@@ -1,7 +1,9 @@
 import initSqlJs from 'sql.js';
+import workletURL from "sql.js/dist/sql-wasm.wasm?url";
+
 
 let SQLite=await initSqlJs({
-  locateFile: (file) => `https://sql.js.org/dist/${file}`,
+  locateFile: (file) => workletURL,
 });
 
 const SQL = new SQLite.Database();

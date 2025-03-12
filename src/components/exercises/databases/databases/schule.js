@@ -96,9 +96,15 @@ db.create=function(){
 
   //Lehrkraefte & Leitung:
   let kuerzel={};
+  let codd=false;
   for(let i=0;i<counts.lehrer;i++){
     let v=Random.drawFrom(vornamen,1)[0];
     let n=Random.drawFrom(nachnamen,1)[0];
+    if(!codd && i>0 && (Random.int(1,10)<3 || i===counts.lehrer-1)){
+      codd=true;
+      n="Codd";
+      v="Edgar";
+    }
     let a=Random.int(12,33)+Random.int(12,33);
     let gehalt;
     let leitung=i<counts.leitung.length;
@@ -138,6 +144,7 @@ db.create=function(){
     raeume.push(i);
   }
   raeume=Random.mixArray(raeume);
+  //todo: Codd muss Klassenlehrer sein
   let klassenlehrer=Random.mixArray(lehrkraefte);
   let klassenIndex=0;
   let schueler={};
