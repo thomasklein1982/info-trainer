@@ -1,4 +1,5 @@
 
+export * as DbSelectBeste from './databases/select/db-select-beste.vue';
 export * as DbSelectKlassenliste from './databases/select/db-select-klassenliste.vue';
 export * as DbSelectAlter from './databases/select/db-select-alter.vue';
 export * as DbSelectFachbereiche from './databases/select/db-select-fachbereiche.vue';

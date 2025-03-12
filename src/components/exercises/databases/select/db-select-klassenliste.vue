@@ -6,7 +6,7 @@
   </template>
   
   <script>
-  import { areResultsEqualIgnoreOrder } from "../databases/database";
+  import { areResultsEqual } from "../databases/database";
 import schule from "../databases/schule";
   
   export const data={
@@ -16,8 +16,8 @@ import schule from "../databases/schule";
     check: {
       testcases: [
         {
-          sqlDo: "select k.name, count(*) as Anzahl, klassenlehrkraft as KL from Klasse k, schueler s where k.name=s.klasse group by k.name order by 2 desc",
-          func: areResultsEqualIgnoreOrder
+          sqlDo: "select k.name, count(*) as Anzahl, klassenlehrkraft as KL from Klasse k, schueler s where k.name=s.klasse group by k.name having Anzahl>=15 order by 2 desc",
+          func: areResultsEqual
         }
       ]
     },

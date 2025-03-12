@@ -6,6 +6,11 @@ import prism from 'vite-plugin-prismjs'
 // https://vitejs.dev/config/
 export default defineConfig({
   base: './',
+  esbuild: {
+    supported: {
+      'top-level-await': true //browsers can handle top-level-await features
+    },
+  },
   plugins: [
     vue({
       template: {
