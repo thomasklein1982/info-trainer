@@ -34,6 +34,8 @@ db.addTable(
 );
 
 db.create=function(){
+  this.name="Personen";
+  this.info="<em>Info: Die Daten der Personen werden zufällig generiert. Namensgleichheiten mit Personen aus der echten Welt sind rein zufällig.</em>";
   let r=Random;
   let staedte=r.drawFrom(cities,6);
   let jobs=r.drawFrom(berufe,10);

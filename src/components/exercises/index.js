@@ -1,4 +1,5 @@
 
+export * as DbSelectSchuelerCodd from './databases/select/db-select-schueler-codd.vue';
 export * as DbSelectKlassenraum from './databases/select/db-select-klassenraum.vue';
 export * as DbSelectBeste from './databases/select/db-select-beste.vue';
 export * as DbSelectKlassenliste from './databases/select/db-select-klassenliste.vue';

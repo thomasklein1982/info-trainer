@@ -6,6 +6,7 @@ export class Database{
   tables={};
   name=null;
   create=null;
+  info=null;
   constructor(){
 
   }

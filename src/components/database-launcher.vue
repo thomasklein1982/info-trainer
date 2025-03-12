@@ -18,6 +18,7 @@
         </div>
         <div style="display: flex; flex-direction: column; overflow: auto;">
           <div style="flex: 1">
+            <p style="margin-top: 0; font-style: italic" v-if="isExpectedResult">Dies wäre das erwartete Ergebnis für die aktuell generierten Daten:</p>
             <div style="color: red" v-if="error">
               {{ error }}
             </div>
@@ -46,14 +47,16 @@
     </div>
     <template #footer>
       <Button icon="pi pi-refresh" :disabled="checking" label="Neue Daten" @click="refreshData()"/>
+      <Button icon="pi pi-search" :disabled="checking" label="Ergebnis" @click="showResult()"/>
       <Button label="Überprüfen" :loading="checking || !dbready" @click="check()"/>
-      <Button icon="pi pi-play" :loading="!dbready" @click="runSQL()" label="Ausführen"/>
+      <Button icon="pi pi-play" :loading="!dbready" @click="runSQL(input)" label="Ausführen"/>
     </template>
   </Dialog>
-  <Dialog ref="infos" header="Relationenmodell" v-model:visible="showInfos">
+  <Dialog ref="infos" :header="'Relationenmodell der Datenbank '+database.name+''" v-model:visible="showInfos">
     <div v-for="(r,i) in database.tables">
       {{r.name}} ( <template v-for="(c,j) in r.attributes">{{ j>0? ', ':'' }}<span :class="(c.primary?'primary':'') + (c.foreign?' foreign':'')">{{ c.name }}</span></template> )
     </div>
+    <p v-html="database.info"/>
   </Dialog>
 </template>
 
@@ -100,18 +103,20 @@ export default{
       error: false,
       correct: false,
       checking: false,
-      dbready: false
+      dbready: false,
+      isExpectedResult: false
     }
   },
   methods: {
-    runSQL(){
+    runSQL(sqlCode){
+      this.isExpectedResult=false;
       this.result=null;
       this.error=false;
       this.truncated=0;
       let res=null;
       //this.input=this.$refs.editor.getValue();
       try{
-        res=this.database.sql(this.input);
+        res=this.database.sql(sqlCode);
         if(!res) return;
         if(res.values.length>300){
           this.truncated=res.values.length-200;
@@ -135,11 +140,21 @@ export default{
       return res;
     },
     async refreshData(){
+      this.isExpectedResult=false;
       this.result=null;
       this.error=false;
       this.truncated=0;
       await this.database.refresh();
       this.dbready=true;
+    },
+    showResult(){
+      let tc=this.exerciseData.data.check.testcases[0];
+      //let soll=this.database.sql(tc.sqlDo);
+      this.runSQL(tc.sqlDo);
+      if(tc.sqlUndo){
+        this.database.sql(tc.sqlUndo);
+      }
+      this.isExpectedResult=true;
     },
     async check(){
       this.checking=true;
@@ -149,7 +164,7 @@ export default{
       if(tc.sqlUndo){
         this.database.sql(tc.sqlUndo);
       }
-      let ist=this.runSQL();
+      let ist=this.runSQL(this.input);
       let correct=false;
       if(this.error || ist.length!==1){
         correct=false;

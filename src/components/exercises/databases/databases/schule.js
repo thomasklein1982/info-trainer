@@ -71,6 +71,8 @@ db.addTable(
 );
 
 db.create=function(){
+  this.name="Schule";
+  this.info="<em>Info: Die Daten in dieser Datenbank werden zufällig generiert. Namensgleichheiten mit Personen aus der echten Welt (außer einem gewissen Edgar Codd) sind rein zufällig.</em>";
   let minStufe=7;
   let maxStufe=10;
   let minAlter=10;
