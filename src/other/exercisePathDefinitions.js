@@ -59,7 +59,7 @@ let Datenbanken={
   paths: [
     {
       label: "SQL-SELECT",
-      icon: "",
+      icon: "database-select",
       exercises: ["db-select-all","db-select-avg", "db-select-gehalt", "db-select-frieda", "db-select-fachbereiche", "db-select-alter", "db-select-klassenliste","db-select-berufe"]
     }
   ]
