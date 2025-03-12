@@ -96,15 +96,10 @@ db.create=function(){
 
   //Lehrkraefte & Leitung:
   let kuerzel={};
-  let codd=false;
+  let codd=null;
   for(let i=0;i<counts.lehrer;i++){
     let v=Random.drawFrom(vornamen,1)[0];
     let n=Random.drawFrom(nachnamen,1)[0];
-    if(!codd && i>0 && (Random.int(1,10)<3 || i===counts.lehrer-1)){
-      codd=true;
-      n="Codd";
-      v="Edgar";
-    }
     let a=Random.int(12,33)+Random.int(12,33);
     let gehalt;
     let leitung=i<counts.leitung.length;
@@ -113,7 +108,16 @@ db.create=function(){
     }else{
       gehalt=Random.int(10,40)*200;
     }
-    let k=n.charAt(0)+v.charAt(0);
+    let k;
+    let thisIsCodd=false;
+    if(!codd && i>0 && (Random.int(1,10)<3 || i===counts.lehrer-1)){
+      n="Codd";
+      v="Edgar";
+      k=String.fromCodePoint(Random.int(65,90))+String.fromCodePoint(Random.int(65,90));
+      thisIsCodd=true;
+    }else{
+      k=n.charAt(0)+v.charAt(0);
+    }
     let kuerz=k;
     let index=1;
     while(kuerzel[k]){
@@ -122,6 +126,9 @@ db.create=function(){
     }
     kuerzel[k]=true;
     this.tables.Lehrkraft.insert(k,v,n,a,gehalt);
+    if(thisIsCodd){
+      codd=k;
+    }
     if(leitung){
       this.tables.Leitung.insert(k,counts.leitung[i]);
     }
@@ -144,19 +151,24 @@ db.create=function(){
     raeume.push(i);
   }
   raeume=Random.mixArray(raeume);
-  //todo: Codd muss Klassenlehrer sein
   let klassenlehrer=Random.mixArray(lehrkraefte);
   let klassenIndex=0;
   let schueler={};
   let alter=minAlter;
   let friedaIn8a=false;
   let friedaIn8b=false;
+  let stufeCodd=Random.int(minStufe,maxStufe);
   for(let i=minStufe;i<=maxStufe;i++){
     let classCount=Random.int(1,2)+Random.int(1,2);
     for(let j=0;j<classCount;j++){
       let n=i+String.fromCodePoint(97+j);
       let r=raeume[klassenIndex];
-      let kl=klassenlehrer[klassenIndex];
+      let kl;
+      if(i===stufeCodd && j===0){
+        kl=codd;
+      }else{
+        kl=klassenlehrer[klassenIndex];
+      }
       this.tables.Klasse.insert(n,r,kl);
       klassenIndex++;
       let schuelerCount=Math.round(counts.schuelerPerClass*Random.int(7,15)*0.1);

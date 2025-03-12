@@ -20,9 +20,9 @@ export class Database{
   }
   clear(){
     let tables=database.exec("select name from sqlite_master where type='table'");
-    if(tables){
-      for(let i=0;i<tables.values.length;i++){
-        let c="drop table if exists "+tables.values[i];
+    if(tables && tables[0]){
+      for(let i=0;i<tables[0].values.length;i++){
+        let c="drop table if exists "+tables[0].values[i];
         try{
           database.run(c);
         }catch(e){
