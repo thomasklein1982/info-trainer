@@ -1,22 +1,22 @@
 <template>
     <ExerciseBody :exercise="$data" :code="code" :database="database">
-      Gib alle Daten der Lehrkräfte-Tabelle aus, sortiert nach ihrem Kürzel.
+      Gesucht ist das durchschnittliche Alter der Schüler*innen der 7. Klasse.
     </ExerciseBody>
   </template>
   
   <script>
-  import { areResultsEqual } from "../databases/database";
+  import { areResultsEqualIgnoreOrder } from "../databases/database";
 import schule from "../databases/schule";
   
   export const data={
-    id: "db-select-all",
-    title: "Alle Daten abfragen",
+    id: "db-select-avg",
+    title: "Durchschnittsalter der Siebtklässler*innen",
     database: schule,
     check: {
       testcases: [
         {
-          sqlDo: "select * from Lehrkraft order by kuerzel",
-          func: areResultsEqual
+          sqlDo: "select avg(alterJahre) from Schueler where klasse like '7%'",
+          func: areResultsEqualIgnoreOrder
         }
       ]
     },

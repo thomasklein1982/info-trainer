@@ -1,22 +1,22 @@
 <template>
     <ExerciseBody :exercise="$data" :code="code" :database="database">
-      Gib alle Daten der Lehrkräfte-Tabelle aus, sortiert nach ihrem Kürzel.
+      Gesucht ist der Notenschnitt von Frieda aus der 8b.
     </ExerciseBody>
   </template>
   
   <script>
-  import { areResultsEqual } from "../databases/database";
+  import { areResultsEqualIgnoreOrder } from "../databases/database";
 import schule from "../databases/schule";
   
   export const data={
-    id: "db-select-all",
-    title: "Alle Daten abfragen",
+    id: "db-select-frieda",
+    title: "Notenschnitt",
     database: schule,
     check: {
       testcases: [
         {
-          sqlDo: "select * from Lehrkraft order by kuerzel",
-          func: areResultsEqual
+          sqlDo: "select avg(note) from Schueler s, bewertung b where s.id=b.schueler and vorname='Frieda' and klasse='8b'",
+          func: areResultsEqualIgnoreOrder
         }
       ]
     },

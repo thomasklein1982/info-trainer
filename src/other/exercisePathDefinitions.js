@@ -60,7 +60,7 @@ let Datenbanken={
     {
       label: "SQL-SELECT",
       icon: "",
-      exercises: ["db-select-all","db-select-berufe"]
+      exercises: ["db-select-all","db-select-avg", "db-select-gehalt", "db-select-frieda", "db-select-fachbereiche", "db-select-alter", "db-select-klassenliste","db-select-berufe"]
     }
   ]
 }

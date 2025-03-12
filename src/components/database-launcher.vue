@@ -7,8 +7,8 @@
       <Button rounded text @click="showInfos=true" icon="pi pi-info"/>
     </template>
     <div :style="{height: '100%', display: 'flex', 'flex-direction': 'column'}" style="overflow: hidden">
-      <slot></slot>
-      <div style="flex: 1; display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); overflow: hidden;">
+      <p><slot></slot></p>
+      <div style="flex: 1; display: grid; gap: 0.5rem; grid-template-columns: minmax(0,1fr) minmax(0,1fr); overflow: hidden;">
         <div>
           <CodeMirror
             ref="editor"
@@ -18,7 +18,16 @@
         </div>
         <div style="display: flex; flex-direction: column; overflow: auto;">
           <div style="flex: 1">
-            <template v-if="result && result.length>0">
+            <div style="color: red" v-if="error">
+              {{ error }}
+            </div>
+            <template v-else-if="!result">
+              keine Abfrage
+            </template>
+            <template v-else-if="result.length===0">
+              keine Ergebnisse gefunden
+            </template>
+            <template v-else>
               <table class="database-relation">
                 <tr>
                   <th v-for="(c,i) in result[0].columns">{{ c }}</th>
@@ -30,12 +39,6 @@
               <div v-if="truncated>0" style="font-style: italic;text-align: center">
                 + {{ truncated }} weitere Datensätze
               </div>
-            </template>
-            <div style="color: red" v-else-if="error">
-              {{ error }}
-            </div>
-            <template v-else>
-              keine Abfrage
             </template>
           </div>
         </div>
@@ -105,15 +108,16 @@ export default{
       this.result=null;
       this.error=false;
       this.truncated=0;
+      let res=null;
       //this.input=this.$refs.editor.getValue();
       try{
-        let res=this.database.sql(this.input);
+        res=this.database.sql(this.input);
         if(!res) return;
         if(res.values.length>300){
           this.truncated=res.values.length-200;
           while(res.values.length>300) res.values.pop();
         }
-        this.result=res;
+        this.result=JSON.parse(JSON.stringify(res));
         // if(res.length>0){
         //   let r=res[0];
         //   let neu={};
@@ -128,6 +132,7 @@ export default{
       }catch(e){
         this.error=e;
       }
+      return res;
     },
     async refreshData(){
       this.result=null;
@@ -144,12 +149,12 @@ export default{
       if(tc.sqlUndo){
         this.database.sql(tc.sqlUndo);
       }
-      this.runSQL();
+      let ist=this.runSQL();
       let correct=false;
-      if(this.error || this.result.length!==1){
+      if(this.error || ist.length!==1){
         correct=false;
       }else{
-        correct=tc.func(soll[0],this.result[0]);
+        correct=tc.func(soll[0],ist[0]);
       }
       this.exerciseData.correct=[correct];
       calcPoints(this.exerciseData);

@@ -109,14 +109,16 @@ export class Table{
   }
 }
 
-function inititalChecks(res1,res2){
+function inititalChecks(res1,res2,alwaysCheckColumnNames){
   if(!res1 || !res2) return false;
   //spaltennamen checken
   if(res1.columns.length!==res2.columns.length) return false;
-  let order1=getOrder(res1.columns);
-  let order2=getOrder(res2.columns);
-  for(let i=0;i<order1.length;i++){
-    if(order1[i].column!==order2[i].column) return false;
+  if(alwaysCheckColumnNames || res1.columns.length>1){
+    let order1=getOrder(res1.columns);
+    let order2=getOrder(res2.columns);
+    for(let i=0;i<order1.length;i++){
+      if(order1[i].column.toLowerCase()!==order2[i].column.toLowerCase()) return false;
+    }
   }
   if(res1.values.length===0){
     if(res2.values.length===0){
@@ -138,13 +140,14 @@ function getOrder(columns){
     order[i]={index: i, column: columns[i]};
   }
   order.sort((a,b)=>{
-    return a.column>=b.column ? 1: -1;
+    return a.column.toLowerCase()>=b.column.toLowerCase() ? 1: -1;
   });
   return order;
 }
 
-export function areResultsEqualIgnoreOrder(res1,res2){
-  if(!inititalChecks(res1,res2)) return false;
+export function areResultsEqualIgnoreOrder(res1,res2,alwaysCheckColumnNames
+){
+  if(!inititalChecks(res1,res2,alwaysCheckColumnNames)) return false;
   let order1=getOrder(res1.columns);
   let order2=getOrder(res2.columns);
   let sortFunc1=(r,s)=>{
@@ -173,12 +176,12 @@ export function areResultsEqualIgnoreOrder(res1,res2){
   };
   res1.values.sort(sortFunc1);
   res2.values.sort(sortFunc2);
-  return areResultsEqual(res1,res2, true );
+  return areResultsEqual(res1,res2, alwaysCheckColumnNames, true );
 }
 
-export function areResultsEqual(res1,res2,noInitChecks){
+export function areResultsEqual(res1,res2,alwaysCheckColumnNames,noInitChecks){
   if(!noInitChecks){
-    inititalChecks(res1,res2);
+    inititalChecks(res1,res2,alwaysCheckColumnNames);
   }
   let array1=res1.values;
   let array2=res2.values;

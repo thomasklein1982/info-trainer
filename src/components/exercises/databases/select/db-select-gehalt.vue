@@ -1,22 +1,22 @@
 <template>
     <ExerciseBody :exercise="$data" :code="code" :database="database">
-      Gib alle Daten der Lehrkräfte-Tabelle aus, sortiert nach ihrem Kürzel.
+      Wie hoch ist das Gehalt des*der Schulleiter*in?
     </ExerciseBody>
   </template>
   
   <script>
-  import { areResultsEqual } from "../databases/database";
+  import { areResultsEqualIgnoreOrder } from "../databases/database";
 import schule from "../databases/schule";
   
   export const data={
-    id: "db-select-all",
-    title: "Alle Daten abfragen",
+    id: "db-select-gehalt",
+    title: "Gehalt der Schulleitung",
     database: schule,
     check: {
       testcases: [
         {
-          sqlDo: "select * from Lehrkraft order by kuerzel",
-          func: areResultsEqual
+          sqlDo: "select gehalt from Lehrkraft natural join Leitung where amt='Schulleiter*in'",
+          func: areResultsEqualIgnoreOrder
         }
       ]
     },

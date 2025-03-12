@@ -38,7 +38,7 @@ db.addTable(
 );
 db.addTable(
   "Leitung",
-  ["kuerzel"],
+  ["kuerzel","amt"],
   ["kuerzel"],
   ["kuerzel"]
 );
@@ -77,21 +77,21 @@ db.create=function(){
   let counts={
     schuelerPerClass: 15,
     lehrer: 50,
-    leitung: 3
+    leitung: ["Schulleiter*in","Stellvertreter*in"]
   };
   //Faecher:
   let faecher=["DEU","ENG","GES","GEO","REL","MAT","NAW","INF","SPO"];
-  this.tables.Fach.insert("DEU","Deutsch","1");
-  this.tables.Fach.insert("ENG","Englisch","1");
+  this.tables.Fach.insert("DEU","Deutsch","FB 1");
+  this.tables.Fach.insert("ENG","Englisch","FB 1");
   // this.tables.Fach.insert("MUS","Musik","1");
   // this.tables.Fach.insert("KUN","Kunst","1");
   // this.tables.Fach.insert("POW","PoWi","2");
-  this.tables.Fach.insert("GES","Geschichte","2");
-  this.tables.Fach.insert("GEO","Geografie","2");
-  this.tables.Fach.insert("REL","Religion","2");
-  this.tables.Fach.insert("MAT","Mathematik","3");
-  this.tables.Fach.insert("NAW","Naturwissenschaften","3");
-  this.tables.Fach.insert("INF","Informatik","3");
+  this.tables.Fach.insert("GES","Geschichte","FB 2");
+  this.tables.Fach.insert("GEO","Geografie","FB 2");
+  this.tables.Fach.insert("REL","Religion","FB 2");
+  this.tables.Fach.insert("MAT","Mathematik","FB 3");
+  this.tables.Fach.insert("NAW","Naturwissenschaften","FB 3");
+  this.tables.Fach.insert("INF","Informatik","FB 3");
   this.tables.Fach.insert("SPO","Sport",null);
 
   //Lehrkraefte & Leitung:
@@ -101,9 +101,9 @@ db.create=function(){
     let n=Random.drawFrom(nachnamen,1)[0];
     let a=Random.int(12,33)+Random.int(12,33);
     let gehalt;
-    let leitung=i<counts.leitung;
+    let leitung=i<counts.leitung.length;
     if(leitung){
-      gehalt=Random.int(30,50)*200;
+      gehalt=Random.int(30,40)*200;
     }else{
       gehalt=Random.int(10,40)*200;
     }
@@ -117,7 +117,7 @@ db.create=function(){
     kuerzel[k]=true;
     this.tables.Lehrkraft.insert(k,v,n,a,gehalt);
     if(leitung){
-      this.tables.Leitung.insert(k);
+      this.tables.Leitung.insert(k,counts.leitung[i]);
     }
     let fc;
     if(Random.int(1,5)===1) fc=3; else fc=2;
@@ -142,6 +142,8 @@ db.create=function(){
   let klassenIndex=0;
   let schueler={};
   let alter=minAlter;
+  let friedaIn8a=false;
+  let friedaIn8b=false;
   for(let i=minStufe;i<=maxStufe;i++){
     let classCount=Random.int(1,2)+Random.int(1,2);
     for(let j=0;j<classCount;j++){
@@ -151,6 +153,7 @@ db.create=function(){
       this.tables.Klasse.insert(n,r,kl);
       klassenIndex++;
       let schuelerCount=Math.round(counts.schuelerPerClass*Random.int(7,15)*0.1);
+      let frieda=false;
       for(let s=0;s<schuelerCount;s++){
         let sid=Random.int(0,99999);
         while(schueler[sid]) sid++;
@@ -163,11 +166,15 @@ db.create=function(){
         if(w>6) a++;
         if(w>8) a++;
         if(w===10) a++;
+        if(!frieda && (n==="8b" && s===schuelerCount-1 || Random.int(1,10)<3)){
+          frieda=true;
+          vn="Frieda";
+        }
         this.tables.Schueler.insert(sid,vn,nn,a,n);
 
         //noten:
         for(let k=0;k<faecher.length;k++){
-          this.tables.Bewertung.insert(sid,faecher[k],Random.int(0,2)+Random.int(0,2)+Random.int(1,2));
+          this.tables.Bewertung.insert(sid,faecher[k],Random.int(0,1)+Random.int(0,1)+Random.int(1,3));
         }
       }
     }

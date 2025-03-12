@@ -1,3 +1,10 @@
+
+export * as DbSelectKlassenliste from './databases/select/db-select-klassenliste.vue';
+export * as DbSelectAlter from './databases/select/db-select-alter.vue';
+export * as DbSelectFachbereiche from './databases/select/db-select-fachbereiche.vue';
+export * as DbSelectFrieda from './databases/select/db-select-frieda.vue';
+export * as DbSelectGehalt from './databases/select/db-select-gehalt.vue';
+export * as DbSelectAvg from './databases/select/db-select-avg.vue';
 export * as DbSelectBerufe from './databases/select/db-select-berufe.vue';
 export * as DbSelectAll from './databases/select/db-select-all.vue';
 export * as JsHw from './internet/js/js-hw.vue';
