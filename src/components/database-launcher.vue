@@ -8,7 +8,7 @@
     </template>
     <div :style="{height: '100%', display: 'flex', 'flex-direction': 'column'}" style="overflow: hidden">
       <p><slot></slot></p>
-      <div style="flex: 1; display: grid; gap: 0.5rem; grid-template-columns: minmax(0,1fr) minmax(0,1fr); overflow: hidden;">
+      <div :style="{'grid-template-columns': showResultUI? 'minmax(0,1fr) minmax(0,1fr)':'minmax(0,1fr)'}" style="flex: 1; display: grid; gap: 0.5rem; overflow: hidden;">
         <div>
           <CodeMirror
             ref="editor"
@@ -16,9 +16,13 @@
             v-model="input"
           />
         </div>
-        <div style="display: flex; flex-direction: column; overflow: auto;">
+        <div :style="{display: showResultUI? 'flex':'none'}" style="position: relative; flex-direction: column; overflow: auto;">
           <div style="flex: 1">
             <p style="margin-top: 0; font-style: italic" v-if="isExpectedResult">Dies wäre das erwartete Ergebnis für die aktuell generierten Daten:</p>
+            <p v-else-if="lastQuery && result">Ihre SQL-Abfrage 
+            <pre style="white-space: pre-wrap;">{{ lastQuery }}</pre>
+            lieferte das folgende Ergebnis:
+            </p>
             <div style="color: red" v-if="error">
               {{ error }}
             </div>
@@ -42,6 +46,7 @@
               </div>
             </template>
           </div>
+          <Button rounded outlined size="small" icon="pi pi-times" @click="showResultUI=false" style="position: absolute; right: 0; top: 0;"/>
         </div>
       </div>
     </div>
@@ -97,7 +102,9 @@ export default{
     return {
       show: false,
       showInfos: false,
+      showResultUI: false,
       input: "",
+      lastQuery: null,
       result: null,
       truncated: 0,
       error: false,
@@ -109,6 +116,8 @@ export default{
   },
   methods: {
     runSQL(sqlCode){
+      this.lastQuery=sqlCode;
+      this.showResultUI=true;
       this.isExpectedResult=false;
       this.result=null;
       this.error=false;
@@ -144,7 +153,7 @@ export default{
       this.result=null;
       this.error=false;
       this.truncated=0;
-      await this.database.refresh();
+      await this.database.refresh(this.exerciseData.data.refreshOptions);
       this.dbready=true;
     },
     showResult(){
@@ -161,10 +170,20 @@ export default{
       await this.refreshData();
       let tc=this.exerciseData.data.check.testcases[0];
       let soll=this.database.sql(tc.sqlDo);
+      if(tc.sqlTest){
+        soll=this.database.sql(tc.sqlTest);
+      }
       if(tc.sqlUndo){
         this.database.sql(tc.sqlUndo);
       }
       let ist=this.runSQL(this.input);
+      if(tc.sqlTest){
+        try{
+          ist=this.database.sql(tc.sqlTest);
+        }catch(e){
+          this.error=e;
+        }
+      }
       let correct=false;
       if(this.error || ist.length!==1){
         correct=false;
@@ -180,6 +199,7 @@ export default{
       this.$root.save(this.exerciseData);
     },
     openDialog(){
+      this.checking=false;
       if(this.exerciseData.userProject){
         this.input=this.exerciseData.userProject;
       }else{

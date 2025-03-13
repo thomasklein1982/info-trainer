@@ -1,4 +1,6 @@
 
+export * as DbDmlInsert from './databases/dml/db-dml-insert.vue';
+export * as DbDmlTable from './databases/dml/db-dml-table.vue';
 export * as DbSelectSchuelerCodd from './databases/select/db-select-schueler-codd.vue';
 export * as DbSelectKlassenraum from './databases/select/db-select-klassenraum.vue';
 export * as DbSelectBeste from './databases/select/db-select-beste.vue';

@@ -32,15 +32,16 @@ export class Database{
       }
     }
   }
-  refresh(){
+  refresh(options){
     let p=new Promise((resolve,reject)=>{
       setTimeout(()=>{
-        console.log("refresh");
         this.clear();
-        for(let a in this.tables){
-          this.tables[a].create();
+        if(!options || !options.dontCreateTables){
+          for(let a in this.tables){
+            this.tables[a].create();
+          }
+          this.create(options);
         }
-        this.create();
         resolve();
       },100);
     });
@@ -153,8 +154,8 @@ export function areResultsEqualIgnoreOrder(res1,res2,alwaysCheckColumnNames
   let order2=getOrder(res2.columns);
   let sortFunc1=(r,s)=>{
     for(let i=0;i<res1.columns.length;i++){
-      let w1=r[order1[i].index];
-      let w2=s[order1[i].index];
+      let w1=r[order1[i].index]+"";
+      let w2=s[order1[i].index]+"";
       if(w1<w2){
         return -1;
       }else if(w1>w2){
@@ -165,8 +166,8 @@ export function areResultsEqualIgnoreOrder(res1,res2,alwaysCheckColumnNames
   };
   let sortFunc2=(r,s)=>{
     for(let i=0;i<res1.columns.length;i++){
-      let w1=r[order2[i].index];
-      let w2=s[order2[i].index];
+      let w1=r[order2[i].index]+"";
+      let w2=s[order2[i].index]+"";
       if(w1<w2){
         return -1;
       }else if(w1>w2){
@@ -182,7 +183,8 @@ export function areResultsEqualIgnoreOrder(res1,res2,alwaysCheckColumnNames
 
 export function areResultsEqual(res1,res2,alwaysCheckColumnNames,noInitChecks){
   if(!noInitChecks){
-    inititalChecks(res1,res2,alwaysCheckColumnNames);
+    let ok=inititalChecks(res1,res2,alwaysCheckColumnNames);
+    if(!ok) return false;
   }
   let array1=res1.values;
   let array2=res2.values;
@@ -193,7 +195,7 @@ export function areResultsEqual(res1,res2,alwaysCheckColumnNames,noInitChecks){
     let r1=array1[i];
     let r2=array2[i];
     for(let j=0;j<r1.length;j++){
-      if(r1[order1[j].index]!==r2[order2[j].index]) {
+      if(r1[order1[j].index]+""!==r2[order2[j].index]+"") {
         return false;
       }
     }
