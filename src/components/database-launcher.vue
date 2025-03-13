@@ -199,6 +199,7 @@ export default{
       this.$root.save(this.exerciseData);
     },
     openDialog(){
+      this.showResultUI=false;
       this.checking=false;
       if(this.exerciseData.userProject){
         this.input=this.exerciseData.userProject;
