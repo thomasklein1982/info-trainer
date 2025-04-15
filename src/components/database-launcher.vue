@@ -1,15 +1,20 @@
 <template>
   
-  <Button @click="openDialog" label="SQL-Aufgabe bearbeiten"/>
+  <Button @click="openDialog" :label="exerciseData? 'SQL-Aufgabe bearbeiten':'SQL-Playground'"/>
   <Dialog ref="dialog" @hide="save()" modal v-model:visible="show" class="p-dialog-maximized maximized">
     <template #header>
-      <ExerciseProgress style="flex: 1" :exercise-data="exerciseData"/>
-      <Button rounded text @click="showInfos=true" icon="pi pi-info"/>
+      <template v-if="exerciseData">
+        <ExerciseProgress style="flex: 1" :exercise-data="exerciseData"/>
+        <Button rounded text @click="showInfos=true" icon="pi pi-info"/>
+      </template>
+      <template v-else>
+        SQL-Playground
+      </template>
     </template>
     <div :style="{height: '100%', display: 'flex', 'flex-direction': 'column'}" style="overflow: hidden">
-      <p><slot></slot></p>
+      <p v-if="exerciseData"><slot></slot></p>
       <div :style="{'grid-template-columns': showResultUI? 'minmax(0,1fr) minmax(0,1fr)':'minmax(0,1fr)'}" style="flex: 1; display: grid; gap: 0.5rem; overflow: hidden;">
-        <div>
+        <div style="overflow: auto">
           <CodeMirror
             ref="editor"
             insert-tab
@@ -51,9 +56,9 @@
       </div>
     </div>
     <template #footer>
-      <Button icon="pi pi-refresh" :disabled="checking" label="Neue Daten" @click="refreshData()"/>
-      <Button icon="pi pi-search" :disabled="checking" label="Ergebnis" @click="showResult()"/>
-      <Button label="Überprüfen" :loading="checking || !dbready" @click="check()"/>
+      <Button v-if="exerciseData" icon="pi pi-refresh" :disabled="checking" label="Neue Daten" @click="refreshData()"/>
+      <Button v-if="exerciseData" icon="pi pi-search" :disabled="checking" label="Ergebnis" @click="showResult()"/>
+      <Button v-if="exerciseData" label="Überprüfen" :loading="checking || !dbready" @click="check()"/>
       <Button icon="pi pi-play" :loading="!dbready" @click="runSQL(input)" label="Ausführen"/>
     </template>
   </Dialog>
@@ -80,6 +85,7 @@ export default{
   },
   watch: {
     input(){
+      if(!this.exerciseData) return;
       this.exerciseData.userProject=this.input;
       this.save();
     }
@@ -153,7 +159,9 @@ export default{
       this.result=null;
       this.error=false;
       this.truncated=0;
-      await this.database.refresh(this.exerciseData.data.refreshOptions);
+      if(this.exerciseData){
+        await this.database.refresh(this.exerciseData.data.refreshOptions);
+      }
       this.dbready=true;
     },
     showResult(){
@@ -201,7 +209,7 @@ export default{
     openDialog(){
       this.showResultUI=false;
       this.checking=false;
-      if(this.exerciseData.userProject){
+      if(this.exerciseData && this.exerciseData.userProject){
         this.input=this.exerciseData.userProject;
       }else{
         this.input="";

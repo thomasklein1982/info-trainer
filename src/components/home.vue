@@ -60,7 +60,22 @@
         </div>
       </template>
     </Card>
-    
+    <Card>
+      <template #title>Playgrounds</template>
+      <template #content>
+        Hier kannst du die verschiedenen Editoren des Info-Trainers nutzen für andere Zwecke als die Aufgaben.
+      </template>
+      <template #footer>
+        <div style="text-align: right">
+          <a href="https://thomaskl.uber.space/Apps/java-app/" target="_blank"><Button label="Zu JavaApp"/></a>
+          <TuringMachineLauncher
+            type="fsm"
+          />
+          <TuringMachineLauncher/>
+          <DatabaseLauncher :database="database"/>
+        </div>
+      </template>
+    </Card>
     <!-- <h2>Aufgabenpfade</h2>
     <p>Klicke auf den Button <Button class="nopointer" text rounded icon="pi pi-bars"/> oben links, um die Aufgabenpfade anzuzeigen und auszuwählen.</p>
     <h2>Zum freien Üben</h2>
@@ -124,10 +139,12 @@ import { isCompletelyTrue } from '../other/bool-array';
 import ExercisePath from './exercise-path.vue';
 import SpeedDial from 'primevue/speeddial';
 import Select from 'primevue/select';
+import DatabaseLauncher from './database-launcher.vue';
+import empty from './exercises/databases/databases/empty';
 
 export default{
   components: {
-    TuringMachineLauncher, ClassDiagram, WebEditorLauncher, ExercisePath, SpeedDial, Select
+    TuringMachineLauncher, ClassDiagram, WebEditorLauncher, ExercisePath, SpeedDial, Select, DatabaseLauncher
   },
   props: {
     ab: Object
@@ -193,6 +210,7 @@ export default{
   },
   data(){
     return {
+      database: empty,
       difficultyOptions: [
         {
           label: "keine Festlegung",
