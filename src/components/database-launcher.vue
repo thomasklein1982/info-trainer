@@ -15,16 +15,24 @@
       <p v-if="exerciseData"><slot></slot></p>
       <div :style="{'grid-template-columns': showResultUI? 'minmax(0,1fr) minmax(0,1fr)':'minmax(0,1fr)'}" style="flex: 1; display: grid; gap: 0.5rem; overflow: hidden;">
         <div style="overflow: auto">
-          <CodeMirror
-            ref="editor"
-            insert-tab
-            v-model="input"
-          />
+          <template v-if="mode==='sql'">
+            <CodeMirror
+              ref="editor"
+              insert-tab
+              v-model="input"
+            />
+          </template>
+          <template v-else>
+            <RelationalAlgebraInput
+              ref="raInput"
+              v-model="input"
+            />
+          </template>
         </div>
         <div :style="{display: showResultUI? 'flex':'none'}" style="position: relative; flex-direction: column; overflow: auto;">
           <div style="flex: 1">
             <p style="margin-top: 0; font-style: italic" v-if="isExpectedResult">Dies wäre das erwartete Ergebnis für die aktuell generierten Daten:</p>
-            <p v-else-if="lastQuery && result">Ihre SQL-Abfrage 
+            <p v-else-if="lastQuery && result">Ihre Abfrage 
             <pre style="white-space: pre-wrap;">{{ lastQuery }}</pre>
             lieferte das folgende Ergebnis:
             </p>
@@ -78,10 +86,11 @@ import { nextTick } from 'vue';
 import { RandExpSeeded } from '../other/RandExpSeeded';
 import { sleep } from '../other/sleep';
 import CodeMirror from './code-mirror.vue';
+import RelationalAlgebraInput from './relational-algebra-input.vue';
 
 export default{
   components: {
-    ProgressBar,ExerciseProgress, CodeMirror
+    ProgressBar,ExerciseProgress, CodeMirror, RelationalAlgebraInput
   },
   watch: {
     input(){
@@ -102,7 +111,8 @@ export default{
   props: {
     exerciseData: Object,
     database: Object,
-    code: String
+    code: String,
+    mode: String
   },
   data(){
     return {

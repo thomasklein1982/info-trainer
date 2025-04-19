@@ -40,6 +40,7 @@ import ConsoleInputCheck from './components/console-input-check.vue';
 import Tooltip from 'primevue/tooltip';
 import ToggleButton from 'primevue/togglebutton';
 import SelectButton from 'primevue/selectbutton';
+import { parseTerm } from './other/parse-term';
 
 const updateSW=registerSW({
   onNeedRefresh(){
@@ -104,3 +105,9 @@ new ClipboardJS(".clipboard");
 
 app.mount('#app');
 
+console.log(parseTerm("C n (A n B)"));
+console.log(parseTerm("(A n B)"));
+console.log(parseTerm("A n B"));
+console.log(parseTerm("A n B u C n D"));
+console.log(parseTerm("A n (B u C) n D"));
+console.log(parseTerm("((r[Name>Bla](Abla) n (A n B) ixi[Name=Mieter] C)) x Durch"));
