@@ -23,8 +23,9 @@
             />
           </template>
           <template v-else>
-            <RelationalAlgebraInput
-              ref="raInput"
+            <CodeMirror
+              ref="editor"
+              insert-tab
               v-model="input"
             />
           </template>
@@ -33,7 +34,7 @@
           <div style="flex: 1">
             <p style="margin-top: 0; font-style: italic" v-if="isExpectedResult">Dies wäre das erwartete Ergebnis für die aktuell generierten Daten:</p>
             <p v-else-if="lastQuery && result">Ihre Abfrage 
-            <pre style="white-space: pre-wrap;">{{ lastQuery }}</pre>
+            <pre style="white-space: pre-wrap;font-family: monospace,monospace" v-html="lastQuery"></pre>
             lieferte das folgende Ergebnis:
             </p>
             <div style="color: red" v-if="error">
@@ -67,7 +68,7 @@
       <Button v-if="exerciseData" icon="pi pi-refresh" :disabled="checking" label="Neue Daten" @click="refreshData()"/>
       <Button v-if="exerciseData" icon="pi pi-search" :disabled="checking" label="Ergebnis" @click="showResult()"/>
       <Button v-if="exerciseData" label="Überprüfen" :loading="checking || !dbready" @click="check()"/>
-      <Button icon="pi pi-play" :loading="!dbready" @click="runSQL(input)" label="Ausführen"/>
+      <Button icon="pi pi-play" :loading="!dbready" @click="clickPlay()" label="Ausführen"/>
     </template>
   </Dialog>
   <Dialog ref="infos" :header="'Relationenmodell der Datenbank '+database.name+''" v-model:visible="showInfos">
@@ -86,11 +87,11 @@ import { nextTick } from 'vue';
 import { RandExpSeeded } from '../other/RandExpSeeded';
 import { sleep } from '../other/sleep';
 import CodeMirror from './code-mirror.vue';
-import RelationalAlgebraInput from './relational-algebra-input.vue';
+import { parseTerm } from '../other/parse-term';
 
 export default{
   components: {
-    ProgressBar,ExerciseProgress, CodeMirror, RelationalAlgebraInput
+    ProgressBar,ExerciseProgress, CodeMirror
   },
   watch: {
     input(){
@@ -112,7 +113,10 @@ export default{
     exerciseData: Object,
     database: Object,
     code: String,
-    mode: String
+    mode: {
+      type: String,
+      default: "sql"
+    }
   },
   data(){
     return {
@@ -131,6 +135,22 @@ export default{
     }
   },
   methods: {
+    clickPlay(){
+      if(this.mode==="sql") this.runSQL(this.input);
+      else this.runRelationalAlgebra(this.input);
+    },
+    runRelationalAlgebra(termInput){
+      console.log("run relational",termInput);
+      let term=parseTerm(termInput);
+      if(term.error){
+        this.runSQL();
+        this.error=term.error;
+      }else{
+        this.runSQL(term.sql);
+      }
+      this.lastQuery=term.display;
+      
+    },
     runSQL(sqlCode){
       this.lastQuery=sqlCode;
       this.showResultUI=true;
@@ -140,6 +160,7 @@ export default{
       this.truncated=0;
       let res=null;
       //this.input=this.$refs.editor.getValue();
+      if(sqlCode===undefined) return res;
       try{
         res=this.database.sql(sqlCode);
         if(!res) return;
@@ -148,17 +169,6 @@ export default{
           while(res.values.length>300) res.values.pop();
         }
         this.result=JSON.parse(JSON.stringify(res));
-        // if(res.length>0){
-        //   let r=res[0];
-        //   let neu={};
-        //   for(let a in r){
-        //     if(a.startsWith("'") && a.endsWith("'")) neu[a]=a.substring(1,a.length-1);
-        //   }
-        //   for(let a in neu){
-        //     r[neu[a]]=r[a];
-        //     delete r[a];
-        //   }
-        // }
       }catch(e){
         this.error=e;
       }

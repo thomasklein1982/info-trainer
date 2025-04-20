@@ -66,7 +66,12 @@ let Datenbanken={
       label: "SQL - DML und DDL",
       icon: "database-dml",
       exercises: ["db-dml-table","db-dml-insert"]
-    }
+    },
+    {
+      label: "Relationale Algebra",
+      icon: "database-relational-algebra",
+      exercises: ["db-ra-lk"]
+    },
   ]
 }
 

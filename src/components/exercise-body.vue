@@ -35,6 +35,7 @@
           :exercise-data="exerciseData"
           :code="code"
           :database="database"
+          :mode="dbMode"
         >
           <slot></slot>
         </DatabaseLauncher>
@@ -94,6 +95,10 @@ export default {
     java: Object,
     regexp: Object,
     database: Object,
+    dbMode: {
+      type: String,
+      default: "sql"
+    },
     code: String,
     noRandom: {
       type: Boolean,

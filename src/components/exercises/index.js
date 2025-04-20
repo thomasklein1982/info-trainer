@@ -1,4 +1,4 @@
-
+export * as DbRaLk from './databases/relational-algebra/db-ra-lk.vue';
 export * as DbDmlInsert from './databases/dml/db-dml-insert.vue';
 export * as DbDmlTable from './databases/dml/db-dml-table.vue';
 export * as DbSelectSchuelerCodd from './databases/select/db-select-schueler-codd.vue';

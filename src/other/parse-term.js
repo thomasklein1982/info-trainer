@@ -1,78 +1,144 @@
 export function parseTerm(input){
-  //operator precendence:
-  // u (union)
-  // n (intersect)
-  // x ixi (products)
-  // \ (set minus)
-  // s,p,r (functions)
-  // () (parentheses)
-  
-  console.log(input);
+  let term=parseUPNAndDisplay(input);
+  if(!term.error){
+    term.sql=upnToSQL(term.upn);
+  }
+  return term;
+}
 
-  input=input.replace(/\s+u\s+/g,"∪");
-  input=input.replace(/\s+n\s+/g,"∩");
-  input=input.replace(/\s+x\s+/g,"×");
-  input=input.replace(/\s+ixi\s+/g,"⨝");
-  input=input.replace(/\s*\\\s*/g,"∖");
-  
-  console.log(input);
+function upnToSQL(upn){
+  console.log("to SQL:",upn);
+  //let sql="";
+  for(let i=0;i<upn.length;i++){
+    let f=upn[i];
+    if(f==="π"){
+      let params=upn[i+2];
+      let sql="select "+params+" from ("+upn[i-1]+")";
+      upn.splice(i-1,4,sql);
+      i-=3;
+    }else if(f==="σ"){
+      let cond=upn[i+2];
+      let sql="select * from ("+upn[i-1]+") where "+cond;
+      upn.splice(i-1,4,sql);
+      i-=3;
+    }
+  }
+  return upn[0];
+}
 
-  let upn=[{text: input,from: 0, len: input.length}];
+function parseUPNAndDisplay(input){
+  let tokens=tokenizeTerm(input);
+  let upn=[tokens];
   parseTermRecursive(upn,0);
-  return upn;
-  for(let i=0;i<operators.length;i++){
-    let op=operators[i];
-    for(let j=upn.length-1;j>=0;j--){
-      let p=upn[j];
-      while(p.length>=2 && p.charAt(0)==="(" && p.charAt(p.length-1)===")"){
-        p=p.substring(1,p.length-1);
-      }
-      upn[j]=p;
-      let bracketsDepth=0;
-      for(let k=p.length-1;k>=0;k--){
-        let c=p.charAt(k);
-        if(c===")"){
-          bracketsDepth++;
-        }else if(c==="("){
-          if(bracketsDepth===0){
-            throw "Schließende Klammer zu viel";
-          }
-          bracketsDepth--;
-        }else if(bracketsDepth>0){
-          continue;
+  let display=createDisplayTerm(tokens);
+  return {
+    upn, display
+  };
+}
+
+function translateCharacter(c){
+  switch (c) {
+    case "p": 
+      return "π";
+    case "r":
+      return "ρ";
+    case "s":
+      return "σ";
+    case "ixi":
+      return "⨝";
+    case "n":
+      return "∩";
+    case "u":
+      return "∪";
+    case "x":
+      return "×";
+  }
+  return c;
+}
+
+function createDisplayTerm(tokens){
+  let term="";
+  let mode=null;
+  for(let i=0;i<tokens.length;i++){
+    let t=tokens[i];
+    if(!mode){
+      if(t==="π"||t==="ρ"||t==="σ"){
+        term+=t;
+        mode="func";
+      }else if(t==="⨝"){
+        let next=tokens[i+1];
+        if(next==="["){
+          term+="<table style='text-align: center'><tr><td>⨝</td></tr><tr><td>"
+          mode="joinParams";
+          i++;
         }else{
-          let rop=p.substring(k-op.length+1,k+1);
-          if(rop===op){
-            upn.splice(j,1,p.substring(0,k-op.length+1),p.substring(k+1),op.trim());
-            j+=2;
-            break;
-          }
+          term+=t;
         }
+      }else{
+        term+=t;
+      }
+    }else if(mode==="joinParams"){
+      if(t==="]"){
+        term+="</td></tr></table>";
+        mode=null;
+      }else{
+        term+=t;
+      }
+    }else if(mode==="func"){ 
+      if(t==="["){
+        term+="<sub>";
+        mode="params";
+      }
+    }else if(mode==="params"){
+      if(t==="]"){
+        term+="</sub>";
+        mode="bracket";
+      }else{
+        term+=t;
+      }
+    }else if(mode==="bracket"){
+      if(t==="("){
+        term+=t;
+        mode=null;
       }
     }
   }
-  return upn;
+  return term;
+}
+
+function tokenizeTerm(input){
+  let split=input.split('"');
+  for(let i=0;i<split.length;i+=2){
+    split[i]=split[i].replace(/(\b)(p|r|s|ixi|n|u|x)(\b)/g,(v,l,c,r)=>{
+      return l+translateCharacter(c)+r;
+    });
+  }
+  let neu=split.join('"');
+  let rawTokens=neu.split(/(\[|\]|\(|\)|[πρσ⨝∩∪×])/);
+  let tokens=[];
+  for(let i=0;i<rawTokens.length;i++){
+    let t=rawTokens[i].trim();
+    if(t.length===0) continue;
+    tokens.push(t);
+  }
+  return tokens;
 }
 
 function parseTermRecursive(upn,index){
-  let offset=0;
   let operators=["∪","∩","×⨝","∖"];
   for(let i=0;i<operators.length;i++){
     let op=operators[i];
-    let part=upn[index];
-    let p=part.text;
-    let from=part.from;
-    let len=0;
-    while(p.length>=2 && p.charAt(0)==="(" && p.charAt(p.length-1)===")"){
-      p=p.substring(1,p.length-1);
-      from++;
-      len+=2;
+    let op1=op.charAt(0);
+    let op2=op.charAt(op.length-1);
+    let tokens=upn[index];
+    while(tokens.length>=2 && tokens[0]==="(" && tokens[tokens.length-1]===")"){
+      tokens.splice(0,1);
+      tokens.splice(tokens.length-1,1);
     }
-    upn[index].text=p;
+    upn[index]=tokens;
     let bracketsDepth=0;
-    for(let k=p.length-1;k>=0;k--){
-      let c=p.charAt(k);
-      len++;
+    for(let k=tokens.length-1;k>=0;k--){
+      let c=tokens[k];
       if(c===")"){
         bracketsDepth++;
       }else if(c==="("){
@@ -83,8 +149,8 @@ function parseTermRecursive(upn,index){
       }else if(bracketsDepth>0){
         continue;
       }else{
-        if(c===op.charAt(0)||c===op.charAt(op.length-1)){
-          upn.splice(index,1,{text: p.substring(0,k), from: from, len: part.len-len},{text: p.substring(k+1), from: from+part.len-len+1, len: len-1},{text: op.trim(),from: 0, len: 1});
+        if(c===op1||c===op2){
+          upn.splice(index,1,tokens.slice(0,k),tokens.slice(k+1),c);
           let off1=parseTermRecursive(upn,index);
           let off2=parseTermRecursive(upn,index+1+off1);
           return off1+off2;
@@ -92,5 +158,5 @@ function parseTermRecursive(upn,index){
       }
     }
   }
-  return offset;
+  return 0;
 }

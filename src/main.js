@@ -105,9 +105,10 @@ new ClipboardJS(".clipboard");
 
 app.mount('#app');
 
-console.log(parseTerm("C n (A n B)"));
-console.log(parseTerm("(A n B)"));
-console.log(parseTerm("A n B"));
-console.log(parseTerm("A n B u C n D"));
-console.log(parseTerm("A n (B u C) n D"));
-console.log(parseTerm("((r[Name>Bla](Abla) n (A n B) ixi[Name=Mieter] C)) x Durch"));
+// console.log(parseTerm("C n (A n B)"));
+// console.log(parseTerm("(A n B)"));
+// console.log(parseTerm("A n B"));
+// console.log(parseTerm("A n B u C n D"));
+// console.log(parseTerm("A n (B u C) n D"));
+console.log(parseTerm("A n C ixi[A=B] B"));
+console.log(parseTerm("(r[Name>Bla](Abla) n (A n B) ixi[Name=Mieter] C) x Durch"));
