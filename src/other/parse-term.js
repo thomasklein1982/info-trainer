@@ -7,7 +7,7 @@ export function parseTerm(input){
 }
 
 function upnToSQL(upn){
-  console.log("to SQL:",upn);
+  console.log("to SQL (klappt noch nicht):",upn);
   //let sql="";
   for(let i=0;i<upn.length;i++){
     let f=upn[i];
