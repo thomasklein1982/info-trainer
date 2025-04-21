@@ -110,5 +110,5 @@ app.mount('#app');
 // console.log(parseTerm("A n B"));
 // console.log(parseTerm("A n B u C n D"));
 // console.log(parseTerm("A n (B u C) n D"));
-console.log(parseTerm("A n C ixi[A=B] B"));
-console.log(parseTerm("(r[Name>Bla](Abla) n (A n B) ixi[Name=Mieter] C) x Durch"));
+console.log(parseTerm('s[Name="Thomas"](A n p[Name](B))'));
+//console.log(parseTerm("(r[Name>Bla](Abla) n (A n B) ixi[Name=Mieter] C) x Durch"));

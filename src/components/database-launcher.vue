@@ -87,7 +87,7 @@ import { nextTick } from 'vue';
 import { RandExpSeeded } from '../other/RandExpSeeded';
 import { sleep } from '../other/sleep';
 import CodeMirror from './code-mirror.vue';
-import { parseTerm } from '../other/parse-term';
+import { evaluateTerm, parseTerm } from '../other/parse-term';
 
 export default{
   components: {
@@ -140,16 +140,32 @@ export default{
       else this.runRelationalAlgebra(this.input);
     },
     runRelationalAlgebra(termInput){
+      this.showResultUI=true;
+      this.isExpectedResult=false;
+      this.result=null;
+      this.error=false;
+      this.truncated=0;
+      let res=null;
       console.log("run relational",termInput);
       let term=parseTerm(termInput);
-      if(term.error){
-        this.runSQL();
-        this.error=term.error;
-      }else{
-        this.runSQL(term.sql);
-      }
+      console.log(JSON.stringify(term.upn));
       this.lastQuery=term.display;
-      
+      if(term.error){
+        this.error=term.error;
+        return;
+      }
+      res=evaluateTerm(term.upn,this.database);
+      if(res.error){
+        this.error=res.error;
+        return;
+      }
+      res=res.relation;
+      if(res.values.length>300){
+        this.truncated=res.values.length-200;
+        while(res.values.length>300) res.values.pop();
+      }
+      this.result=[JSON.parse(JSON.stringify(res))];
+      return this.result;
     },
     runSQL(sqlCode){
       this.lastQuery=sqlCode;

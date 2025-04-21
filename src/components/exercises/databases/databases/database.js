@@ -19,6 +19,10 @@ export class Database{
     let res=database.exec(cmd);
     return res;
   }
+  sqlParams(cmd,params){
+    let res=database.exec(cmd,params);
+    return res;
+  }
   clear(){
     let tables=database.exec("select name from sqlite_master where type='table'");
     if(tables && tables[0]){
