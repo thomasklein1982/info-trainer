@@ -4,51 +4,79 @@ export function parseTerm(input){
 }
 
 export function evaluateTerm(upn,database){
-  for(let i=0;i<upn.length;i++){
-    let f=upn[i];
-    if(f.length===1){
-      try{
-        let res=database.sql("select * from "+f[0]);
-        upn[i]=res[0];
-      }catch(e){
-        return {
-          error: "Datenbank kann nicht abgefragt werden: "+f[0]
+  try{
+    for(let i=0;i<upn.length;i++){
+      let f=upn[i];
+      if(f.length===1){
+        if(f[0]==="×"){
+          let res=applyCartesianProduct(upn[i-2],upn[i-1]);
+          upn.splice(i-2,3,res);
+          i-=2;
+        }else if(f[0]==="⨝"){
+          let res=applyJoin(upn[i-2],upn[i-1],database);
+          upn.splice(i-2,3,res);
+          i-=2;
+        }else{
+          try{
+            let res=database.sql("select * from "+f[0]);
+            upn[i]=res[0];
+          }catch(e){
+            return {
+              error: "Datenbank kann nicht abgefragt werden: "+f[0]
+            }
+          }
+        }
+      }else if(f.length===2){
+        if(f[0]==="π"){
+          let params=f[1];
+          let res=upn[i-1];
+          res=applyProjection(res,params.split(","));
+          upn.splice(i-1,2,res);
+          i-=1;
+        }else if(f[0]==="⨝"){
+          let res=applyJoin(upn[i-2],upn[i-1],database,f[1]);
+          upn.splice(i-2,3,res);
+          i-=2;
+        }else if(f[0]==="σ"){
+          let conditions=f[1];
+          let res=upn[i-1];
+          res=applySelection(res,conditions,database);
+          upn.splice(i-1,2,res);
+          i-=1;
+        }else if(f[0]==="ρ"){
+          let changes=f[1].split(",");
+          let res=upn[i-1];
+          res=applyRename(res,changes);
+          upn.splice(i-1,2,res);
+          i-=1;
         }
       }
-    }else if(f.length===2){
-      if(f[0]==="π"){
-        let params=f[1];
-        let res=upn[i-1];
-        res=applyProjection(res,params.split(","));
-        upn.splice(i-1,2,res);
-        i-=1;
-      }else if(f[0]==="σ"){
-        let conditions=f[1];
-        let res=upn[i-1];
-        res=applySelection(res,conditions,database);
-        upn.splice(i-1,2,res);
-        i-=1;
-      }else if(f[0]==="ρ"){
-        let changes=f[1];
-        let res=upn[i-1];
-        res=applyRename(res,changes);
-        upn.splice(i-1,2,res);
-        i-=1;
-      }
+    }
+    if(upn.length!==1) throw "Syntax-Fehler: Eingabe kann nicht geparst werden :(";
+  }catch(e){
+    return {
+      error: e
     }
   }
-  if(upn.length!==1) throw "Syntax-Fehler";
   return {
     relation: upn[0]
   };
 }
 
 function parseUPNAndDisplay(input){
-  let tokens=tokenizeTerm(input);
+  let tokens;
+  try{
+    tokens=tokenizeTerm(input);
+  }catch(e){
+    return {
+      error: e
+    };
+  }
   let upn=[tokens];
   console.log("tokens:");
   console.log(JSON.stringify(upn));
   parseTermRecursive(upn,0);
+  //parseParams(upn);
   let display=createDisplayTerm(tokens);
   return {
     upn, display
@@ -90,18 +118,58 @@ function applyRename(table,changes){
   let neu=[];
   for(let i=0;i<changes.length;i++){
     let c=changes[i].split("→");
+    alt.push(c[0]);
+    neu.push(c[1]);
   }
-  // for(let i=0;i<table.columns.length;i++){
-  //   let col=table.columns[i];
-  //   if(indexOfIgnoreCase(columns,col)<0){
-  //     table.columns.splice(i,1);
-  //     for(let j=0;j<table.values.length;j++){
-  //       table.values[j].splice(i,1);
-  //     }
-  //     i--;
-  //   }
-  // }
+  for(let i=0;i<table.columns.length;i++){
+    let col=table.columns[i];
+    let index=indexOfIgnoreCase(alt,col);
+    if(index>=0){
+      table.columns[i]=neu[index];
+    }
+  }
   return table;
+}
+
+function applyCartesianProduct(table1,table2){
+  for(let i=0;i<table1.columns.length;i++){
+    let col1=table1.columns[i];
+    if(indexOfIgnoreCase(table2.columns,col1)>=0){
+      throw "Fehler: Das kartesische Produkt kann nicht gebildet werden, da beide Relationen ein Attribut '"+col1+"' besitzen.";
+    }
+  }
+  let table={
+    columns: [],
+    values: []
+  };
+  for(let i=0;i<table1.columns.length;i++){
+    table.columns.push(table1.columns[i]);
+  }
+  for(let i=0;i<table2.columns.length;i++){
+    table.columns.push(table2.columns[i]);
+  }
+  for(let i=0;i<table1.values.length;i++){
+    let v1=table1.values[i];
+    for(let j=0;j<table2.values.length;j++){
+      let v2=table2.values[j];
+      let v=v1.concat(v2);
+      table.values.push(v);
+    }
+  }
+  return table;
+}
+
+function applyJoin(table1,table2,database,params){
+  createTempTable("temp_table_0",table1,database);
+  createTempTable("temp_table_1",table2,database);
+  let res;
+  if(params){
+    let condition=params.replace(/,/g," and ");
+    res=database.sql("select * from temp_table_0 join temp_table_1 on "+condition)[0];
+  }else{
+    res=database.sql("select * from temp_table_0 natural join temp_table_1;")[0];
+  }
+  return res;
 }
 
 function createTempTable(tablename,table,database){
@@ -129,7 +197,7 @@ function createTempTable(tablename,table,database){
     sql+="\ninsert into "+tablename+" values (";
     for(let j=0;j<vals.length;j++){
       let v=vals[j];
-      if(v.substring){
+      if(v && v.substring){
         v=JSON.stringify(v);
       }
       sql+=(j>0?",":"")+v;
@@ -176,18 +244,22 @@ function createDisplayTerm(tokens){
       }else if(t==="⨝"){
         let next=tokens[i+1];
         if(next==="["){
-          term+="<table style='text-align: center'><tr><td>⨝</td></tr><tr><td>"
+          term+=" <table style='text-align: center;display: inline'><tr><td>⨝</td></tr><tr><td>"
           mode="joinParams";
           i++;
         }else{
-          term+=t;
+          term+=" "+t+" ";
         }
+      }else if(t==="×"||t==="∩"||t==="∪"){
+        term+=" "+t+" ";
+      }else if(t===")"){
+        term+=" )";
       }else{
         term+=t;
       }
     }else if(mode==="joinParams"){
       if(t==="]"){
-        term+="</td></tr></table>";
+        term+="</td></tr></table> ";
         mode=null;
       }else{
         term+=t;
@@ -206,7 +278,7 @@ function createDisplayTerm(tokens){
       }
     }else if(mode==="bracket"){
       if(t==="("){
-        term+=t;
+        term+=t+" ";
         mode=null;
       }
     }
@@ -222,6 +294,16 @@ function tokenizeTerm(input){
     });
   }
   let neu=split.join('"');
+  let rhos=neu.split("ρ");
+  for(let i=1;i<rhos.length;i++){
+    let rho=rhos[i];
+    let res=/^\s*\[([^\]]*)\]/.exec(rho);
+    if(res){
+      let params="["+res[1].replace(/>/g,"→")+"]";
+      rhos[i]=rhos[i].replace(res[0],params);
+    }
+  }
+  neu=rhos.join("ρ");
   let rawTokens=neu.split(/(\[|\]|\(|\)|[πρσ⨝∩∪×])/);
   let tokens=[];
   for(let i=0;i<rawTokens.length;i++){
@@ -229,11 +311,23 @@ function tokenizeTerm(input){
     if(t.length===0) continue;
     tokens.push(t);
   }
+  let funcs="πρσ";
+  for(let i=0;i<tokens.length;i++){
+    let t=tokens[i];
+    if(t.length===1 && funcs.indexOf(t)>=0){
+      if(tokens[i+1]!=="["){
+        throw "Syntax-Fehler: '[' hinter '"+t+"' erwartet.";
+      }
+      if(tokens[i+3]!=="]"){
+        throw "Syntax-Fehler: ']' hinter '"+t+"[...' erwartet.";
+      }
+    }
+  }
   return tokens;
 }
 
 function parseTermRecursive(upn,index){
-  let operators=["∪","∩","×⨝","∖"];
+  let operators=["∪","∩","×⨝","∖","πρσ"];
   let funcs="πρσ";
   for(let i=0;i<operators.length;i++){
     let op=operators[i];
@@ -258,12 +352,28 @@ function parseTermRecursive(upn,index){
       }else if(bracketsDepth>0){
         continue;
       }else{
-        if(c===op1||c===op2){
-          upn.splice(index,1,tokens.slice(0,k),tokens.slice(k+1),[c]);
+        if(i<operators.length-1 && (c===op1||c===op2)){
+          let t1,t2,t3;
+          let standard=true;
+          if(c==="⨝"){
+            if(tokens[k+1]==="["){
+              t1=tokens.slice(0,k);
+              t2=tokens.slice(k+4);
+              t3=[c,tokens[k+2]];
+              standard=false;
+            }
+          }
+          if(standard){
+            t1=tokens.slice(0,k);
+            t2=tokens.slice(k+1);
+            t3=[c];
+          }
+          upn.splice(index,1,t1,t2,t3);
+          //upn.splice(index,1,tokens.slice(0,k),tokens.slice(k+1),[c]);
           let off1=parseTermRecursive(upn,index);
           let off2=parseTermRecursive(upn,index+1+off1);
           return off1+off2;
-        }else if(funcs.indexOf(c)>=0){
+        }else if(i===operators.length-1 && funcs.indexOf(c)>=0){
           upn.splice(index,1,tokens.slice(k+4),[tokens[k],tokens[k+2]]);
           parseTermRecursive(upn,index);
           return 1;
