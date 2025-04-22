@@ -1,3 +1,6 @@
+//TODO:
+//select name="Gertrud", wenn keine Gertrud vorhanden: Absturz
+
 export function parseTerm(input){
   let term=parseUPNAndDisplay(input);
   return term;
