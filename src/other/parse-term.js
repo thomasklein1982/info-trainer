@@ -3,6 +3,15 @@ export function parseTerm(input){
   return term;
 }
 
+// case "n":
+//       return "∩";
+//     case "u":
+//       return "∪";
+//     case "x":
+//       return "×";
+//     case "\\":
+//       return "∖";
+
 export function evaluateTerm(upn,database){
   try{
     for(let i=0;i<upn.length;i++){
@@ -16,9 +25,21 @@ export function evaluateTerm(upn,database){
           let res=applyJoin(upn[i-2],upn[i-1],database);
           upn.splice(i-2,3,res);
           i-=2;
+        }else if(f[0]==="∩"){
+          let res=applyIntersect(upn[i-2],upn[i-1],database);
+          upn.splice(i-2,3,res);
+          i-=2;
+        }else if(f[0]==="∪"){
+          let res=applyUnion(upn[i-2],upn[i-1],database);
+          upn.splice(i-2,3,res);
+          i-=2;
+        }else if(f[0]==="∖"){
+          let res=applyMinus(upn[i-2],upn[i-1],database);
+          upn.splice(i-2,3,res);
+          i-=2;
         }else{
           try{
-            let res=database.sql("select * from "+f[0]);
+            let res=database.sql("select distinct * from "+f[0]);
             upn[i]=res[0];
           }catch(e){
             return {
@@ -30,7 +51,7 @@ export function evaluateTerm(upn,database){
         if(f[0]==="π"){
           let params=f[1];
           let res=upn[i-1];
-          res=applyProjection(res,params.split(","));
+          res=applyProjection(res,params,database);
           upn.splice(i-1,2,res);
           i-=1;
         }else if(f[0]==="⨝"){
@@ -92,24 +113,28 @@ function indexOfIgnoreCase(array,string){
   return -1;
 }
 
-function applyProjection(table,columns){
-  for(let i=0;i<table.columns.length;i++){
-    let col=table.columns[i];
-    if(indexOfIgnoreCase(columns,col)<0){
-      table.columns.splice(i,1);
-      for(let j=0;j<table.values.length;j++){
-        table.values[j].splice(i,1);
-      }
-      i--;
-    }
-  }
-  return table;
+function applyProjection(table,columns,database){
+  createTempTable("temp_table_0",table,database);
+
+  let res=database.sql("select distinct "+columns+" from temp_table_0");
+  return res[0];
+  // for(let i=0;i<table.columns.length;i++){
+  //   let col=table.columns[i];
+  //   if(indexOfIgnoreCase(columns,col)<0){
+  //     table.columns.splice(i,1);
+  //     for(let j=0;j<table.values.length;j++){
+  //       table.values[j].splice(i,1);
+  //     }
+  //     i--;
+  //   }
+  // }
+  // return table;
 }
 
 function applySelection(table,conditions,database){
   createTempTable("temp_table_0",table,database);
 
-  let res=database.sql("select * from temp_table_0 where "+conditions);
+  let res=database.sql("select distinct * from temp_table_0 where "+conditions);
   return res[0];
 }
 
@@ -165,11 +190,89 @@ function applyJoin(table1,table2,database,params){
   let res;
   if(params){
     let condition=params.replace(/,/g," and ");
-    res=database.sql("select * from temp_table_0 join temp_table_1 on "+condition)[0];
+    res=database.sql("select distinct * from temp_table_0 join temp_table_1 on "+condition)[0];
   }else{
-    res=database.sql("select * from temp_table_0 natural join temp_table_1;")[0];
+    res=database.sql("select distinct * from temp_table_0 natural join temp_table_1;")[0];
   }
   return res;
+}
+
+function areTablesCompatible(table1,table2){
+  if(table1.columns.length!==table2.columns.length) return false;
+  for(let i=0;i<table1.columns.length;i++){
+    let col1=table1.columns[i];
+    if(indexOfIgnoreCase(table2.columns,col1)<0){
+      return false;
+    }
+  }
+  return true;
+}
+
+function applyIntersect(table1,table2,database){
+  if(!areTablesCompatible(table1,table2)) throw "Fehler: Schnitt-Bildung ist nur möglich, wenn ...";
+  createTempTable("temp_table_0",table1,database);
+  createTempTable("temp_table_1",table2,database);
+  let res=database.sql("select * from temp_table_0 intersect select * from temp_table_1;")[0];
+  return res;
+}
+
+function applyUnion(table1,table2,database){
+  if(!areTablesCompatible(table1,table2)) throw "Fehler: Vereinigungs-Bildung ist nur möglich, wenn ...";
+  createTempTable("temp_table_0",table1,database);
+  createTempTable("temp_table_1",table2,database);
+  let res=database.sql("select * from temp_table_0 union select * from temp_table_1;")[0];
+  return res;
+}
+
+function swapIfBigger(array1,array2,i){
+  if(array1[i]>array1[i+1]){
+    let c=array1[i];
+    array1[i]=array1[i+1];
+    array1[i+1]=c;
+    c=array2[i];
+    array2[i]=array2[i+1];
+    array2[i+1]=c;
+  }
+}
+
+function areRecordsEqual(r1,r2,colIndices1,colIndices2){
+  for(let k=0;k<r1.length;k++){
+    if(r1[colIndices1[k]]!==r2[colIndices2[k]]) return false;
+  }
+  return true;
+}
+
+function applyMinus(table1,table2,database){
+  if(!areTablesCompatible(table1,table2)) throw "Fehler: Differenz-Bildung ist nur möglich, wenn ...";
+  let colIndices1=[];
+  let colIndices2=[];
+  for(let i=0;i<table1.columns.length;i++){
+    colIndices1.push(i);
+    colIndices2.push(i);
+  }
+  let columns=JSON.parse(JSON.stringify(table1.columns));
+  for(let i=0;i<table2.columns.length;i++){
+    for(let j=0;j<table2.columns.length-i-1;j++){
+      swapIfBigger(table1.columns,colIndices1,j);
+      swapIfBigger(table2.columns,colIndices2,j);
+    }
+  }
+  table1.columns=columns;
+  for(let i=0;i<table2.values.length;i++){
+    let vMinus=table2.values[i];
+    for(let j=0;j<table1.values.length;j++){
+      let v=table1.values[j];
+      if(areRecordsEqual(v,vMinus,colIndices1,colIndices2)){
+        table1.values.splice(j,1);
+        break;
+      }
+    }
+  }
+  return table1;
+  // createTempTable("temp_table_0",table1,database);
+  // createTempTable("temp_table_1",table2,database);
+  // let res=database.sql("select * from temp_table_0 minus (select * from temp_table_1);")[0];
+  // return res;
 }
 
 function createTempTable(tablename,table,database){
@@ -228,6 +331,8 @@ function translateCharacter(c){
       return "∪";
     case "x":
       return "×";
+    case "\\":
+      return "∖";
   }
   return c;
 }
@@ -250,8 +355,8 @@ function createDisplayTerm(tokens){
         }else{
           term+=" "+t+" ";
         }
-      }else if(t==="×"||t==="∩"||t==="∪"){
-        term+=" "+t+" ";
+      }else if(t==="×"||t==="∩"||t==="∪"||t==="∖"){
+        term+="&thinsp;"+t+"&thinsp;";
       }else if(t===")"){
         term+=" )";
       }else{
@@ -292,6 +397,7 @@ function tokenizeTerm(input){
     split[i]=split[i].replace(/(\b)(p|r|s|ixi|n|u|x)(\b)/g,(v,l,c,r)=>{
       return l+translateCharacter(c)+r;
     });
+    split[i]=split[i].replace("\\","∖")
   }
   let neu=split.join('"');
   let rhos=neu.split("ρ");
@@ -304,7 +410,7 @@ function tokenizeTerm(input){
     }
   }
   neu=rhos.join("ρ");
-  let rawTokens=neu.split(/(\[|\]|\(|\)|[πρσ⨝∩∪×])/);
+  let rawTokens=neu.split(/(\[|\]|\(|\)|[πρσ⨝∩∪×∖])/);
   let tokens=[];
   for(let i=0;i<rawTokens.length;i++){
     let t=rawTokens[i].trim();
