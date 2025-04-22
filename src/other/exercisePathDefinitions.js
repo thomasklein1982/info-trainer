@@ -58,14 +58,14 @@ let Datenbanken={
   name: "Datenbanken",
   paths: [
     {
-      label: "SQL - SELECT",
+      label: "Abfragen mit SQL",
       icon: "database-select",
       exercises: ["db-select-all","db-select-avg", "db-select-klassenraum","db-select-gehalt", "db-select-frieda", "db-select-fachbereiche", "db-select-alter", "db-select-schueler-codd", "db-select-klassenliste", "db-select-beste","db-select-berufe"]
     },
     {
-      label: "SQL - DML und DDL",
+      label: "Administration mit SQL",
       icon: "database-dml",
-      exercises: ["db-dml-table","db-dml-insert"]
+      exercises: ["db-dml-table","db-dml-insert","db-dml-setup"]
     },
     {
       label: "Relationale Algebra",

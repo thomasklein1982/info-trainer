@@ -150,3 +150,23 @@ code{
     grid-template-columns: auto;
   }
 }
+
+.database-relation{
+  text-align: center;
+  border-collapse: collapse;
+}
+.database-relation tr:hover{
+  background-color: #555;
+}
+.database-relation th{
+  text-transform: uppercase;
+}
+.database-relation td, .database-relation th{
+  border: 1pt solid white;
+}
+.primary{
+  text-decoration: underline;
+}
+.foreign::before{
+  content: "↑";
+}

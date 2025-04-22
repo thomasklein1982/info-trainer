@@ -1,6 +1,6 @@
 <template>
   
-  <Button @click="openDialog" :label="exerciseData? 'SQL-Aufgabe bearbeiten':'SQL-Playground'"/>
+  <Button @click="openDialog" :label="buttonLabel"/>
   <Dialog ref="dialog" @hide="save()" modal v-model:visible="show" class="p-dialog-maximized maximized">
     <template #header>
       <template v-if="exerciseData">
@@ -11,7 +11,7 @@
         SQL-Playground
       </template>
     </template>
-    <div :style="{height: '100%', display: 'flex', 'flex-direction': 'column'}" style="overflow: hidden">
+    <div :style="{height: '100%', display: 'flex', 'flex-direction': 'column'}" style="position: relative;overflow: hidden">
       <p v-if="exerciseData"><slot></slot></p>
       <div :style="{'grid-template-columns': showResultUI? 'minmax(0,1fr) minmax(0,1fr)':'minmax(0,1fr)'}" style="flex: 1; display: grid; gap: 0.5rem; overflow: hidden;">
         <div style="overflow: auto">
@@ -33,9 +33,12 @@
         <div :style="{display: showResultUI? 'flex':'none'}" style="position: relative; flex-direction: column; overflow: auto;">
           <div style="flex: 1">
             <p style="margin-top: 0; font-style: italic" v-if="isExpectedResult">Dies wäre das erwartete Ergebnis für die aktuell generierten Daten:</p>
-            <p v-else-if="lastQuery && result">Ihre Abfrage 
-            <pre style="white-space: pre-wrap;font-family: monospace,monospace" v-html="lastQuery"></pre>
-            lieferte das folgende Ergebnis:
+            <p v-else-if="lastQuery">
+              <template v-if="mode==='sql'">Die SQL-Abfrage</template> 
+              <template v-else>Der Term</template>
+              <pre style="white-space: pre-wrap;font-family: monospace,monospace" v-html="lastQuery"></pre>
+              <template v-if="result">lieferte das folgende Ergebnis:</template>
+              <template v-else-if="error">führte zu folgendem Fehler:</template>
             </p>
             <div style="color: red" v-if="error">
               {{ error }}
@@ -44,7 +47,7 @@
               keine Abfrage
             </template>
             <template v-else-if="result.length===0">
-              keine Ergebnisse gefunden
+              leere Tabelle
             </template>
             <template v-else>
               <table class="database-relation">
@@ -62,6 +65,10 @@
           </div>
           <Button rounded outlined size="small" icon="pi pi-times" @click="showResultUI=false" style="position: absolute; right: 0; top: 0;"/>
         </div>
+      </div>
+      <div style="background-color: rgb(24,24,27); position: absolute; bottom: 0; left: 0; width: 100%; height: auto" v-if="mode==='algebra'" id="ra-preview">
+        <div style="font-size: 120%" v-html="parsedInput.display"></div>
+        <div style="color: red; height: 2em;">{{ parsedInput.error }}</div>
       </div>
     </div>
     <template #footer>
@@ -87,7 +94,7 @@ import { nextTick } from 'vue';
 import { RandExpSeeded } from '../other/RandExpSeeded';
 import { sleep } from '../other/sleep';
 import CodeMirror from './code-mirror.vue';
-import { evaluateTerm, parseTerm } from '../other/parse-term';
+import { evaluateTerm, parseTerm, parseDisplay } from '../other/parse-term';
 
 export default{
   components: {
@@ -95,12 +102,24 @@ export default{
   },
   watch: {
     input(){
+      if(this.mode==="algebra"){
+        let p=parseDisplay(this.input);
+        if(p.display){
+          this.parsedInput.display=p.display;
+          this.parsedInput.error=p.error;
+        }
+      }
       if(!this.exerciseData) return;
       this.exerciseData.userProject=this.input;
       this.save();
     }
   },
   computed: {
+    buttonLabel(){
+      if(!this.exerciseData) return "SQL-Playgroud";
+      if(this.mode==="sql") return 'SQL-Aufgabe bearbeiten';
+      return 'Aufgabe bearbeiten';
+    },
     hasUserData(){
       return this.exerciseData.userData!==undefined;
     },
@@ -124,6 +143,10 @@ export default{
       showInfos: false,
       showResultUI: false,
       input: "",
+      parsedInput: {
+        display: "",
+        error: null
+      },
       lastQuery: null,
       result: null,
       truncated: 0,
@@ -160,11 +183,15 @@ export default{
         return;
       }
       res=res.relation;
-      if(res.values.length>300){
+      if(res && res.values.length>300){
         this.truncated=res.values.length-200;
         while(res.values.length>300) res.values.pop();
       }
-      this.result=[JSON.parse(JSON.stringify(res))];
+      if(!res){
+        this.result=[];
+      }else{
+        this.result=[JSON.parse(JSON.stringify(res))];
+      }
       return this.result;
     },
     runSQL(sqlCode){

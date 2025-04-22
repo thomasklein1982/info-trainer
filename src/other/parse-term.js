@@ -42,8 +42,9 @@ export function evaluateTerm(upn,database){
           i-=2;
         }else{
           try{
-            let res=database.sql("select distinct * from "+f[0]);
-            upn[i]=res[0];
+            let res=database.sql("select distinct * from "+f[0])[0];
+            if(!res) res=null;
+            upn[i]=res;
           }catch(e){
             return {
               error: "Datenbank kann nicht abgefragt werden: "+f[0]
@@ -87,6 +88,23 @@ export function evaluateTerm(upn,database){
   };
 }
 
+export function parseDisplay(input){
+  input=translateSpecialCharacters(input);
+  let tokens;
+  try{
+    tokens=tokenizeTerm(input);
+  }catch(e){
+    return {
+      display: input,
+      error: e
+    };
+  }
+  let display=createDisplayTerm(tokens);
+  return {
+    display
+  };
+}
+
 function parseUPNAndDisplay(input){
   let tokens;
   try{
@@ -96,12 +114,19 @@ function parseUPNAndDisplay(input){
       error: e
     };
   }
+  let display=createDisplayTerm(tokens);
   let upn=[tokens];
   console.log("tokens:");
   console.log(JSON.stringify(upn));
-  parseTermRecursive(upn,0);
-  //parseParams(upn);
-  let display=createDisplayTerm(tokens);
+  try{
+    parseTermRecursive(upn,0);
+  }catch(e){
+    return {
+      error: e,
+      display
+    }
+  }
+  
   return {
     upn, display
   };
@@ -117,10 +142,13 @@ function indexOfIgnoreCase(array,string){
 }
 
 function applyProjection(table,columns,database){
+  if(!table) return null;
   createTempTable("temp_table_0",table,database);
 
-  let res=database.sql("select distinct "+columns+" from temp_table_0");
-  return res[0];
+  let res=database.sql("select distinct "+columns+" from temp_table_0")[0];
+  dropTempTable("temp_table_0",database);
+  if(!res) res=null;
+  return res;
   // for(let i=0;i<table.columns.length;i++){
   //   let col=table.columns[i];
   //   if(indexOfIgnoreCase(columns,col)<0){
@@ -135,13 +163,17 @@ function applyProjection(table,columns,database){
 }
 
 function applySelection(table,conditions,database){
+  if(!table) return null;
   createTempTable("temp_table_0",table,database);
 
-  let res=database.sql("select distinct * from temp_table_0 where "+conditions);
-  return res[0];
+  let res=database.sql("select distinct * from temp_table_0 where "+conditions)[0];
+  dropTempTable("temp_table_0",database);
+  if(!res) res=null;
+  return res;
 }
 
 function applyRename(table,changes){
+  if(!table) return null;
   let alt=[];
   let neu=[];
   for(let i=0;i<changes.length;i++){
@@ -160,6 +192,7 @@ function applyRename(table,changes){
 }
 
 function applyCartesianProduct(table1,table2){
+  if(!table1 || !table2) return null;
   for(let i=0;i<table1.columns.length;i++){
     let col1=table1.columns[i];
     if(indexOfIgnoreCase(table2.columns,col1)>=0){
@@ -188,6 +221,7 @@ function applyCartesianProduct(table1,table2){
 }
 
 function applyJoin(table1,table2,database,params){
+  if(!table1 || !table2) return null;
   createTempTable("temp_table_0",table1,database);
   createTempTable("temp_table_1",table2,database);
   let res;
@@ -197,10 +231,14 @@ function applyJoin(table1,table2,database,params){
   }else{
     res=database.sql("select distinct * from temp_table_0 natural join temp_table_1;")[0];
   }
+  dropTempTable("temp_table_0",database);
+  dropTempTable("temp_table_1",database);
+  if(!res) res=null;
   return res;
 }
 
 function areTablesCompatible(table1,table2){
+  if(!table1 || !table2) return true;
   if(table1.columns.length!==table2.columns.length) return false;
   for(let i=0;i<table1.columns.length;i++){
     let col1=table1.columns[i];
@@ -212,18 +250,29 @@ function areTablesCompatible(table1,table2){
 }
 
 function applyIntersect(table1,table2,database){
+  if(!table1 || !table2) return null;
   if(!areTablesCompatible(table1,table2)) throw "Fehler: Schnitt-Bildung ist nur möglich, wenn ...";
   createTempTable("temp_table_0",table1,database);
   createTempTable("temp_table_1",table2,database);
   let res=database.sql("select * from temp_table_0 intersect select * from temp_table_1;")[0];
+  dropTempTable("temp_table_0",database);
+  dropTempTable("temp_table_1",database);
+  if(!res) res=null;
   return res;
 }
 
 function applyUnion(table1,table2,database){
+  if(!table1){
+    if(!table2) return null;
+    return table2;
+  }else if(!table2) return table1;
   if(!areTablesCompatible(table1,table2)) throw "Fehler: Vereinigungs-Bildung ist nur möglich, wenn ...";
   createTempTable("temp_table_0",table1,database);
   createTempTable("temp_table_1",table2,database);
   let res=database.sql("select * from temp_table_0 union select * from temp_table_1;")[0];
+  dropTempTable("temp_table_0",database);
+  dropTempTable("temp_table_1",database);
+  if(!res) res=null;
   return res;
 }
 
@@ -246,6 +295,8 @@ function areRecordsEqual(r1,r2,colIndices1,colIndices2){
 }
 
 function applyMinus(table1,table2,database){
+  if(!table2) return table1;
+  if(!table1) return null;
   if(!areTablesCompatible(table1,table2)) throw "Fehler: Differenz-Bildung ist nur möglich, wenn ...";
   let colIndices1=[];
   let colIndices2=[];
@@ -271,6 +322,7 @@ function applyMinus(table1,table2,database){
       }
     }
   }
+  if(table1.values.length===0) return null;
   return table1;
   // createTempTable("temp_table_0",table1,database);
   // createTempTable("temp_table_1",table2,database);
@@ -394,7 +446,7 @@ function createDisplayTerm(tokens){
   return term;
 }
 
-function tokenizeTerm(input){
+function translateSpecialCharacters(input){
   let split=input.split('"');
   for(let i=0;i<split.length;i+=2){
     split[i]=split[i].replace(/(\b)(p|r|s|ixi|n|u|x)(\b)/g,(v,l,c,r)=>{
@@ -413,6 +465,11 @@ function tokenizeTerm(input){
     }
   }
   neu=rhos.join("ρ");
+  return neu;
+}
+
+function tokenizeTerm(input){
+  let neu=translateSpecialCharacters(input);
   let rawTokens=neu.split(/(\[|\]|\(|\)|[πρσ⨝∩∪×∖])/);
   let tokens=[];
   for(let i=0;i<rawTokens.length;i++){
@@ -427,8 +484,19 @@ function tokenizeTerm(input){
       if(tokens[i+1]!=="["){
         throw "Syntax-Fehler: '[' hinter '"+t+"' erwartet.";
       }
+      if(tokens[i+2]==="]"){
+        if(t==="π") throw "Syntax-Fehler: Attributsnamen der Projektion erwartet.";
+        if(t==="ρ") throw "Syntax-Fehler: Umbenennungen erwartet.";
+        if(t==="σ") throw "Syntax-Fehler: Bedingung der Selektion erwartet.";
+      }
       if(tokens[i+3]!=="]"){
         throw "Syntax-Fehler: ']' hinter '"+t+"[...' erwartet.";
+      }
+      if(tokens[i+4]!=="("){
+        throw "Syntax-Fehler: '(' hinter '"+t+"[...]' erwartet.";
+      }
+      if(tokens[i+5]===")"){
+        throw "Syntax-Fehler: Tabelle fehlt.";
       }
     }
   }
@@ -455,7 +523,7 @@ function parseTermRecursive(upn,index){
         bracketsDepth++;
       }else if(c==="("){
         if(bracketsDepth===0){
-          throw "Schließende Klammer zu viel";
+          throw "')' erwartet";
         }
         bracketsDepth--;
       }else if(bracketsDepth>0){
