@@ -40,7 +40,7 @@ db.create=function(options){
     ["pate","Der Pate","Francis Ford Coppola",1972,175,"Mafiafilm"],
     ["leni","Goodbye, Lenin!","Wolfgang Becker",2003,121,"Tragikomödie"],
     ["tita","Titanic","James Cameron",1997,194,"Drama"],
-    ["froz","Frozen","Chris Buck, Jennifer Lee",2013,101,"Animationsfilm"]
+    ["froz","Frozen","Jennifer Lee",2013,101,"Animationsfilm"]
   ];
   if(options?.removeFilme){
     for(let i=0;i<options.removeFilme;i++){

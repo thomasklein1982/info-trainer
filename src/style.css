@@ -160,13 +160,21 @@ code{
 }
 .database-relation th{
   text-transform: uppercase;
+  padding: 0.2rem;
 }
 .database-relation td, .database-relation th{
   border: 1pt solid white;
+  padding: 0.2rem;
 }
 .primary{
   text-decoration: underline;
 }
 .foreign::before{
   content: "↑";
+}
+
+.overflow-x{
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
 }

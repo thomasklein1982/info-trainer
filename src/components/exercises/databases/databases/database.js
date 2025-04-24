@@ -1,5 +1,23 @@
 import SQL from "../../../../other/sql";
 
+// drop table if exists test;
+// drop table if exists test2;
+// create table test(
+// 	a varchar(100),
+//     b string not null,
+//     c numeric,
+//     d integer,
+//     primary key (b,c),
+//     foreign key (d) references test2(z)
+// );
+
+// create table test2(
+// 	z numeric
+// );
+
+// pragma table_info(test);
+// PRAGMA foreign_key_list(test);
+
 let database=SQL;
 
 export class Database{
@@ -7,6 +25,7 @@ export class Database{
   name=null;
   create=null;
   info=null;
+  $db=database;
   constructor(){
 
   }

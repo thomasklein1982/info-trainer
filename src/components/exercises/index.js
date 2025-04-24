@@ -1,5 +1,7 @@
 export * as DbRaLk from './databases/relational-algebra/db-ra-lk.vue';
 
+export * as DbDml from './databases/dml/db-dml.vue';
+export * as DbDmlDroptable from './databases/dml/db-dml-droptable.vue';
 export * as DbDmlSetup from './databases/dml/db-dml-setup.vue';
 export * as DbDmlInsert from './databases/dml/db-dml-insert.vue';
 export * as DbDmlTable from './databases/dml/db-dml-table.vue';

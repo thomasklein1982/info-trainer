@@ -65,7 +65,7 @@ let Datenbanken={
     {
       label: "Administration mit SQL",
       icon: "database-dml",
-      exercises: ["db-dml-table","db-dml-insert","db-dml-setup"]
+      exercises: ["db-dml-table","db-dml-insert","db-dml-droptable","db-dml","db-dml-setup"]
     },
     {
       label: "Relationale Algebra",

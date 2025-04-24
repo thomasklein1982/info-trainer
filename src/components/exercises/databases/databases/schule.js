@@ -75,7 +75,7 @@ db.create=function(){
   this.info="<em>Info: Die Daten in dieser Datenbank werden zufällig generiert. Namensgleichheiten mit Personen aus der echten Welt (außer einem gewissen Edgar Codd) sind rein zufällig.</em>";
   let minStufe=7;
   let maxStufe=10;
-  let minAlter=10;
+  let minAlter=12;
   let counts={
     schuelerPerClass: 15,
     lehrer: 50,
@@ -185,8 +185,7 @@ db.create=function(){
         let w=Random.int(1,10);
         if(w<3) a--;
         if(w>6) a++;
-        if(w>8) a++;
-        if(w===10) a++;
+        if(w>9) a++;
         if(!frieda && (n==="8b" && s===schuelerCount-1 || Random.int(1,10)<3)){
           frieda=true;
           vn="Frieda";

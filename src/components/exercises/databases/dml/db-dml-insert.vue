@@ -1,6 +1,7 @@
 <template>
     <ExerciseBody :exercise="$data" :code="code" :database="database">
-      Füge der Film-Tabelle die beiden folgenden Filme hinzu:
+      <p>Implementiere in SQL:</p> 
+      Der Film-Tabelle sollen die beiden folgenden Filme hinzugefügt werden:
       <ol>
         <li>
           "Titanic" (Drama von 1997) von Regisseur James Cameron mit einer Länge von 194 Minuten.
@@ -14,7 +15,6 @@
   </template>
   
   <script>
-  import { areResultsEqualIgnoreOrder } from "../databases/database";
   import filme from "../databases/filme";
   
   export const data={
@@ -24,16 +24,23 @@
     refreshOptions: {
       removeFilme: 2
     },
-    // ["tita","Titanic","James Cameron",1997,194,"Drama"],
-    // ["froz","Frozen","Chris Buck, Jennifer Lee",2013,101,"Animationsfilm"]
     check: {
+      init: function(db_launcher){
+        return db_launcher.runSQLInput();
+      },
       testcases: [
         {
-          sqlDo: `insert into film values("tita", "Titanic", "James Cameron", 1997, 194, "Drama");
-          insert into film values("froz", "Frozen", "Jennifer Lee", 2013, 101, "Animationsfilm");`,
-          sqlUndo: `delete from film where id in ("froz","tita");`,
-          sqlTest: `select * from film;`,
-          func: areResultsEqualIgnoreOrder
+          info: "Der Film Titanic wird korrekt hinzugefügt.",
+          check: function(db_launcher){
+            return db_launcher.runSQLAndCheckResult("select * from Film where id='tita'", ["tita","Titanic","James Cameron",1997,194,"Drama"]);
+          }
+          // insert into film values("tita", "Titanic", "James Cameron", 1997, 194, "Drama");
+        },
+        {
+          info: "Der Film Frozen wird korrekt hinzugefügt.",
+          check: function(db_launcher){
+            return db_launcher.runSQLAndCheckResult("select * from Film where id='froz'", ["froz","Frozen","Jennifer Lee",2013,101,"Animationsfilm"]);
+          }
         }
       ]
     },
