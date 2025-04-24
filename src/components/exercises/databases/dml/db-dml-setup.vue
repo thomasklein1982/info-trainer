@@ -60,7 +60,7 @@
               <tr>
                 <th class="primary foreign">Username</th>
                 <th class="primary foreign">Website</th>
-                <th>Zeitpunkt</th>
+                <th class="primary">Zeitpunkt</th>
               </tr>
               <tr>
                 <td>greatness67</td>
@@ -121,6 +121,12 @@
           },
         },
         {
+          info: "Die Website-Tabelle hat die richtigen Datensätze.",
+          check: function(db_launcher){
+            return db_launcher.runSQLAndCheckResult("select * from Website order by url desc", [["mathe-info.com", "Materialien zu Mathe und Informatik", "thomaskl"], ["beauty-tipps.de", "Tipps und Tricks für deine Schönheit", "sari930"]]);
+          }
+        },
+        {
           info: "Es gibt eine Tabelle User.",
           check: function(db_launcher){
             return db_launcher.existsTable("User");
@@ -145,9 +151,15 @@
           },
         },
         {
+          info: "Die User-Tabelle hat die richtigen Datensätze.",
+          check: function(db_launcher){
+            return db_launcher.runSQLAndCheckResult("select * from User order by username", [["greatness67","Emma","2007-07-13"], ["sari930","Sarah","2004-09-30"], ["thomaskl","Thomas","1982-12-13"]]);
+          }
+        },
+        {
           info: "Es gibt eine Tabelle Aufruf.",
           check: function(db_launcher){
-            return db_launcher.existsTable("User");
+            return db_launcher.existsTable("Aufruf");
           },
         },
         {
@@ -159,7 +171,7 @@
         {
           info: "Die Aufruf-Tabelle hat den korrekten Primärschlüssel.",
           check: function(db_launcher){
-            return db_launcher.hasCorrectPrimaryKey("Aufruf",["username","website"]);
+            return db_launcher.hasCorrectPrimaryKey("Aufruf",["username","website","zeitpunkt"]);
           },
         },
         {
@@ -167,6 +179,12 @@
           check: function(db_launcher){
             return db_launcher.hasCorrectForeignKeys("Aufruf",[["username","user","username"],["website","website","url"]]);
           },
+        },
+        {
+          info: "Die Aufruf-Tabelle hat die richtigen Datensätze.",
+          check: function(db_launcher){
+            return db_launcher.runSQLAndCheckResult("select * from Aufruf order by zeitpunkt", [["greatness67","mathe-info.com","2023-11-05 12:02:05"], ["greatness67","mathe-info.com","2025-01-19 20:10:00"]]);
+          }
         },
       ]
     },
@@ -188,7 +206,7 @@
 // 	username varchar(200),
 //     website varchar(200),
 //     zeitpunkt datetime,
-//     primary key (username,website),
+//     primary key (username,website,zeitpunkt),
 //     foreign key (username) references User(username),
 //     foreign key (website) references Website(url)
 // );
@@ -196,6 +214,18 @@
 // ("mathe-info.com", "Materialien zu Mathe und Informatik", "thomaskl");
 // insert into Website values 
 // ("beauty-tipps.de", "Tipps und Tricks für deine Schönheit", "sari930");
+
+// insert into user
+// values("greatness67","Emma","2007-07-13");
+// insert into user
+// values ("thomaskl","Thomas","1982-12-13");
+// insert into user
+// values ("sari930","Sarah","2004-09-30");
+
+// insert into aufruf
+// values ("greatness67","mathe-info.com","2023-11-05 12:02:05");
+// insert into aufruf
+// values ("greatness67","mathe-info.com","2025-01-19 20:10:00");
 
   export default{
     components: {

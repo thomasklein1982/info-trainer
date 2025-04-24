@@ -7,7 +7,7 @@
         <li>Frieda aus der 9a wechselt in die 9c.</li>
         <li>Es ist ein Jahr vergangen: Alle Lehrkräfte und Schüler*innen werden ein Jahr älter.</li>
         <li>Die Lehrerin Svenja Horst (Kürzel: HS) verlässt die Schule. Ihre Daten sollen vollständig aus der Datenbank entfernt werden.</li>
-        <li>Der Lehrer Göhkan Münch hat Informatik als drittes Fach berufsbegleitend studiert und darf es ab sofort unterrichten.</li>
+        <li>Der Lehrer Gökhan Münch hat Informatik als drittes Fach berufsbegleitend studiert und darf es ab sofort unterrichten.</li>
         <li>Alle Lehrkräfte, deren Gehalt unter 4000 € liegt, erhalten eine Gehaltserhöhung von 10%.</li>
       </ol>
     </ExerciseBody>
