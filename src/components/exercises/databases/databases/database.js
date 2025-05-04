@@ -26,8 +26,8 @@ export class Database{
   create=null;
   info=null;
   $db=database;
-  constructor(){
-
+  constructor(name){
+    this.name=name;
   }
   addTable(name, attributes, primaryKey, foreignKeys){
     this.tables[name]=new Table(name,attributes,primaryKey, foreignKeys);

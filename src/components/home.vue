@@ -72,7 +72,7 @@
             type="fsm"
           />
           <TuringMachineLauncher/>
-          <DatabaseLauncher :database="database"/>
+          <DatabaseLauncher :database="database" allow-choose-database allow-choose-mode/>
         </div>
       </template>
     </Card>

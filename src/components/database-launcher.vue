@@ -5,16 +5,16 @@
     <template #header>
       <template v-if="exerciseData">
         <ExerciseProgress style="flex: 1" :exercise-data="exerciseData"/>
-        <Button rounded text @click="showInfos=true" icon="pi pi-info"/>
       </template>
       <template v-else>
-        SQL-Playground
+        Datenbank-Playground
       </template>
+      <Button rounded text @click="showInfos=true" icon="pi pi-info"/>
     </template>
     <div :style="{height: '100%', display: 'flex', 'flex-direction': 'column'}" style="position: relative;overflow: hidden">
       <div :style="{'grid-template-columns': showResultUI? 'minmax(0,1fr) minmax(0,1fr)':'minmax(0,1fr)'}" style="flex: 1; display: grid; gap: 0.5rem; overflow: hidden;">
         <div style="overflow: auto">
-          <template v-if="mode==='sql'">
+          <template v-if="realMode==='sql'">
             <CodeMirror
               ref="editor"
               insert-tab
@@ -33,7 +33,7 @@
           <div style="flex: 1">
             <p style="margin-top: 0; font-style: italic" v-if="isExpectedResult">Dies wäre das erwartete Ergebnis für die aktuell generierten Daten:</p>
             <p v-else-if="lastQuery">
-              <template v-if="mode==='sql'">Die SQL-Abfrage</template> 
+              <template v-if="realMode==='sql'">Die SQL-Abfrage</template> 
               <template v-else>Der Term</template>
               <pre style="white-space: pre-wrap;font-family: monospace,monospace" v-html="lastQuery"></pre>
               <template v-if="result">lieferte das folgende Ergebnis:</template>
@@ -65,35 +65,58 @@
         </div>
         <Button v-show="showResultUI" rounded outlined size="small" icon="pi pi-times" @click="showResultUI=false" style="position: absolute; right: 0; top: 0;"/>
       </div>
-      <div style="background-color: rgb(24,24,27); position: absolute; bottom: 0; left: 0; width: 100%; height: auto" v-if="mode==='algebra'" id="ra-preview">
-        <div style="font-size: 120%" v-html="parsedInput.display"></div>
-        <div style="color: red; height: 2em;">{{ parsedInput.error }}</div>
+      <div style="background-color: rgb(24,24,27); width: 100%; height: auto" v-if="realMode==='algebra'" id="ra-preview">
+        <div :style="{display: 'flex'}">
+          <div :style="{flex: 1}">
+            <div style="font-size: 120%; font-family: monospace, monospace;">Term: <span v-html="parsedInput.display"></span></div>
+            <div style="color: red; height: 2em;">{{ parsedInput.error }}</div>
+          </div>
+          <div>
+            <Button rounded text icon="pi pi-question" @click="toggleAlgebraHelp"/>
+            <Popover ref="algebraHelp">
+              <div style="max-height: 70vh; overflow: auto">
+                <h2>Terme in relationaler Algebra</h2>
+                <table class="wertetabelle">
+                  <tr><th>Term</th><th>Eingabe</th></tr>
+                  <tr v-for="(e,i) in examples">
+                    <td v-html="e.display"></td>
+                    <td>{{ e.input }}</td>
+                  </tr>
+                </table>
+              </div>
+            </Popover>
+          </div>
+        </div>
       </div>
     </div>
     <template #footer>
       <Button v-if="exerciseData" icon="pi pi-refresh" :disabled="checking" label="Neue Daten" @click="refreshData()"/>
       <Button v-if="showShowResultButton" icon="pi pi-search" :disabled="checking" label="Ergebnis" @click="showResult()"/>
       <Button v-if="exerciseData" label="Überprüfen" :loading="checking || !dbready" @click="check()"/>
+      <SelectButton v-if="allowChooseMode" :options="['sql','algebra']" v-model="realMode"/>
       <Button icon="pi pi-play" :loading="!dbready" @click="clickPlay()" label="Ausführen"/>
     </template>
   </Dialog>
-  <Dialog ref="infos" :header="headerInfos" v-model:visible="showInfos">
-    <Card>
+  <Dialog ref="infos" :header="headerInfos" v-model:visible="showInfos" @hide="onCloseInfoDialog">
+    <Card v-if="exerciseData">
       <template #title>Aufgabe</template>
       <template #content>
         <slot></slot>
       </template>
     </Card>
+    <div v-if="allowChooseDatabase">
+      <Select v-model="db" :options="possibleDatabases" option-label="name" placeholder="Wähle eine Datenbank"/>
+    </div>
     <Card v-if="tableCount>0">
-      <template #title>Relationenmodell der Datenbank {{ database.name }}</template>
+      <template #title>Relationenmodell der Datenbank {{ db.name }}</template>
       <template #content>
-        <div v-for="(r,i) in database.tables">
+        <div v-for="(r,i) in db.tables">
           {{r.name}} ( <template v-for="(c,j) in r.attributes">{{ j>0? ', ':'' }}<span :class="(c.primary?'primary':'') + (c.foreign?' foreign':'')">{{ c.name }}</span></template> )
         </div>
-        <div style="margin-top: 0.5rem" v-html="database.info"></div>
+        <div style="margin-top: 0.5rem" v-html="db.info"></div>
       </template>
     </Card>
-    <Card>
+    <Card v-if="exerciseData">
       <template #title>Teilaufgaben</template>
       <template #content>
         <Message :icon="'pi pi-'+(completed || exerciseData.correct[i]===true?'check':'times')" :severity="(completed || exerciseData.correct[i]===true?'success':'error')" v-for="(t,i) in exerciseData.data.check.testcases">
@@ -121,18 +144,35 @@ import Message from 'primevue/message';
 import { isCompletelyTrue } from '../other/bool-array';
 import Card from 'primevue/card';
 import { Random } from '../other/random';
+import DBBerufe from '../components/exercises/databases/databases/berufe';
+import DBFilme from '../components/exercises/databases/databases/filme';
+import DBSchule from '../components/exercises/databases/databases/schule';
+import DBMarketplace from '../components/exercises/databases/databases/marketplace';
+import DBEmpty from '../components/exercises/databases/databases/empty';
+import Select from 'primevue/select';
+import SelectButton from 'primevue/selectbutton';
+import Popover from 'primevue/popover';
+
 
 export default{
   components: {
-    ProgressBar,ExerciseProgress, CodeMirror, Message, Card
+    ProgressBar,ExerciseProgress, CodeMirror, Message, Card, Select, SelectButton, Popover
   },
   watch: {
+    db(nv,ov){
+      this.refreshDatabaseOnCloseDialog=true;
+    },
     input(){
-      if(this.mode==="algebra"){
-        let p=parseDisplay(this.input);
-        if(p.display){
-          this.parsedInput.display=p.display;
-          this.parsedInput.error=p.error;
+      if(this.realMode==="algebra"){
+        if(this.input.trim().length===0){
+          this.parsedInput.display="";
+          this.parsedInput.error=null;
+        }else{
+          let p=parseDisplay(this.input);
+          if(p.display){
+            this.parsedInput.display=p.display;
+            this.parsedInput.error=p.error;
+          }
         }
       }
       if(!this.exerciseData) return;
@@ -142,8 +182,8 @@ export default{
   },
   computed: {
     buttonLabel(){
-      if(!this.exerciseData) return "SQL-Playgroud";
-      if(this.mode==="sql") return 'SQL-Aufgabe bearbeiten';
+      if(!this.exerciseData) return "DB-Playgroud";
+      if(this.realMode==="sql") return 'SQL-Aufgabe bearbeiten';
       return 'Aufgabe bearbeiten';
     },
     hasUserData(){
@@ -161,7 +201,7 @@ export default{
     },
     tableCount(){
       let c=0;
-      for(let t in this.database.tables){
+      for(let t in this.db.tables){
         c++;
       }
       return c;
@@ -181,6 +221,14 @@ export default{
     mode: {
       type: String,
       default: "sql"
+    },
+    allowChooseMode: {
+      type: Boolean,
+      default: false
+    },
+    allowChooseDatabase: {
+      type: Boolean,
+      default: false
     }
   },
   data(){
@@ -200,16 +248,41 @@ export default{
       correct: false,
       checking: false,
       dbready: false,
-      isExpectedResult: false
+      db: this.database,
+      isExpectedResult: false,
+      possibleDatabases: [DBEmpty,DBBerufe,DBFilme,DBMarketplace,DBSchule],
+      refreshDatabaseOnCloseDialog: false,
+      realMode: this.mode,
+      examples: this.generateExamples()
     }
   },
   methods: {
+    generateExamples(){
+      let examples=["A u B","A n B", "A \\ B", "A x B", "A ixi B", "A ixi[V=W] B", "p[V,W](A)","s[V=a and W=b](A)","r[V>R,W>S](A)"];
+      for(let i=0;i<examples.length;i++){
+        let e=examples[i];
+        examples[i]={
+          input: e,
+          display: parseDisplay(e).display
+        };
+      }
+      return examples;
+    },
+    toggleAlgebraHelp(event){
+      this.$refs.algebraHelp.toggle(event)
+    },
+    onCloseInfoDialog(){
+      if(this.refreshDatabaseOnCloseDialog){
+        this.refreshData();
+      }
+      this.refreshDatabaseOnCloseDialog=false;
+    },
     /** soll may be array with values or array of arrays*/
     runSQLAndCheckResult(cmd,soll){
       let multiple=soll && Array.isArray(soll[0]);
       if(!multiple) soll=[soll];
       try{
-        let res=this.database.sql(cmd)[0];
+        let res=this.db.sql(cmd)[0];
         if(res.values.length!==soll.length) return false;
         for(let j=0;j<soll.length;j++){
           for(let i=0;i<res.values[j].length;i++){
@@ -227,13 +300,13 @@ export default{
     },
     runSQLInput(){
       try{
-        this.database.sql(this.input);
+        this.db.sql(this.input);
       }catch(e){
         return e;
       }
     },
     existsTable(tablename){
-      let res=this.database.sql("pragma table_info("+tablename+")");
+      let res=this.db.sql("pragma table_info("+tablename+")");
       if(res.length===0) return false;
       return true;
     },
@@ -243,7 +316,7 @@ export default{
         return a[0]>=b[0]? 1 : -1;
       });
 
-      let res=this.database.sql("pragma foreign_key_list('"+tablename+"')")[0];
+      let res=this.db.sql("pragma foreign_key_list('"+tablename+"')")[0];
       if(!res && fk.length===0) return true;
       if(!res || res.values.length!==fk.length) return false;
       if(fk.length===0) return true;
@@ -265,7 +338,7 @@ export default{
       return true;
     },
     hasCorrectPrimaryKey(tablename,primaryKey){
-      let res=this.database.sql("pragma table_info("+tablename+")");
+      let res=this.db.sql("pragma table_info("+tablename+")");
       if(res.length===0) return false;
       res=res[0];
       for(let i=0;i<res.values.length;i++){
@@ -284,7 +357,7 @@ export default{
       return this.hasCorrectDatatypes(tablename,datatypes);
     },
     hasCorrectAttributeNames(tablename,names){
-      let res=this.database.sql("pragma table_info("+tablename+")");
+      let res=this.db.sql("pragma table_info("+tablename+")");
       if(res.length===0) return false;
       res=res[0];
       for(let i=0;i<res.values.length;i++){
@@ -296,7 +369,7 @@ export default{
       return true;
     },
     hasCorrectDatatypes(tablename,types){
-      let res=this.database.sql("pragma table_info("+tablename+")");
+      let res=this.db.sql("pragma table_info("+tablename+")");
       if(res.length===0) return false;
       res=res[0];
       for(let i=0;i<res.values.length;i++){
@@ -334,7 +407,7 @@ export default{
       return false;
     },
     clickPlay(){
-      if(this.mode==="sql") this.runSQL(this.input);
+      if(this.realMode==="sql") this.runSQL(this.input);
       else this.runRelationalAlgebra(this.input);
     },
     runRelationalAlgebra(termInput){
@@ -352,7 +425,7 @@ export default{
         this.error=term.error;
         return;
       }
-      res=evaluateTerm(term.upn,this.database);
+      res=evaluateTerm(term.upn,this.db);
       if(res.error){
         this.error=res.error;
         return;
@@ -380,7 +453,7 @@ export default{
       //this.input=this.$refs.editor.getValue();
       if(sqlCode===undefined) return res;
       try{
-        res=this.database.sql(sqlCode);
+        res=this.db.sql(sqlCode);
         if(!res) return;
         if(res.values.length>300){
           this.truncated=res.values.length-200;
@@ -401,16 +474,18 @@ export default{
         if(this.exerciseData.data.refreshOptions && this.exerciseData.data.refreshOptions.seed){
           Random.setSeed(this.exerciseData.data.refreshOptions.seed);
         }
-        await this.database.refresh(this.exerciseData.data.refreshOptions);
+        await this.db.refresh(this.exerciseData.data.refreshOptions);
+      }else if(this.db && this.db.refresh){
+        await this.db.refresh();
       }
       this.dbready=true;
     },
     showResult(){
       let tc=this.exerciseData.data.check.testcases[0];
-      //let soll=this.database.sql(tc.sqlDo);
+      //let soll=this.db.sql(tc.sqlDo);
       this.runSQL(tc.sqlDo);
       if(tc.sqlUndo){
-        this.database.sql(tc.sqlUndo);
+        this.db.sql(tc.sqlUndo);
       }
       this.isExpectedResult=true;
     },
@@ -454,17 +529,17 @@ export default{
             }
             correctList[i]=res.correct;
           }else{
-            let soll=this.database.sql(tc.sqlDo);
+            let soll=this.db.sql(tc.sqlDo);
             if(tc.sqlTest){
-              soll=this.database.sql(tc.sqlTest);
+              soll=this.db.sql(tc.sqlTest);
             }
             if(tc.sqlUndo){
-              this.database.sql(tc.sqlUndo);
+              this.db.sql(tc.sqlUndo);
             }
             let ist=this.runSQL(this.input);
             if(tc.sqlTest){
               try{
-                ist=this.database.sql(tc.sqlTest);
+                ist=this.db.sql(tc.sqlTest);
               }catch(e){
                 this.error=e;
               }

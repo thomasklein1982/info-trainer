@@ -16,7 +16,7 @@ import { Database } from "./database";
  * spielt_in(film, schauspieler, hauptrolle)
  */
 
-let db = new Database();
+let db = new Database("Filme");
 db.addTable(
   "Film",
   ["id","name","regisseur",{name: "jahr", type: "NUMERIC"},{name: "laenge", type: "NUMERIC"}, "genre"],
@@ -35,7 +35,6 @@ db.addTable(
 );
 
 db.create=function(options){
-  this.name="Filme";
   let filme=[
     ["pate","Der Pate","Francis Ford Coppola",1972,175,"Mafiafilm"],
     ["leni","Goodbye, Lenin!","Wolfgang Becker",2003,121,"Tragikomödie"],

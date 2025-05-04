@@ -24,7 +24,7 @@ import { Database } from "./database";
  * Bewertung(↑schueler, ↑fach, note)
  */
 
-let db = new Database();
+let db = new Database("Schule");
 db.addTable(
   "Schueler",
   ["id","vorname","nachname",{name: "AlterJahre", type: "NUMERIC"},"klasse"],
@@ -71,7 +71,6 @@ db.addTable(
 );
 
 db.create=function(){
-  this.name="Schule";
   this.info="<em>Info: Die Daten in dieser Datenbank werden zufällig generiert. Namensgleichheiten mit Personen aus der echten Welt (außer einem gewissen Edgar Codd) sind rein zufällig.</em>";
   let minStufe=7;
   let maxStufe=10;

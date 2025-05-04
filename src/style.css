@@ -126,7 +126,7 @@ code{
   border-collapse: collapse;
 }
 
-.wertetabelle td, .wertetabelle th{
+.wertetabelle>tr>td, .wertetabelle>tr>th{
   border: 1pt solid white;
 }
 

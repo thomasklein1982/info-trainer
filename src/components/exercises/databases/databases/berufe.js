@@ -20,7 +20,7 @@ function fillZero(n){
  * Ort(PLZ, name, einwohner)
  */
 
-let db = new Database();
+let db = new Database("Personen");
 db.addTable(
   "Person",
   ["id","nachname","vorname","beruf",{name: "geburtstag", type: "DATE"},{name: "groesse", type: "NUMERIC"},{name: "gewicht", type: "NUMERIC"}, "plz"],
@@ -34,7 +34,6 @@ db.addTable(
 );
 
 db.create=function(){
-  this.name="Personen";
   this.info="<em>Info: Die Daten der Personen werden zufällig generiert. Namensgleichheiten mit Personen aus der echten Welt sind rein zufällig.</em>";
   let r=Random;
   let staedte=r.drawFrom(cities,6);
