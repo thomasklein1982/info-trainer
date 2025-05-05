@@ -61,6 +61,7 @@ export class Database{
         this.clear();
         if(!options || !options.dontCreateTables){
           for(let a in this.tables){
+            console.log("create table "+a);
             this.tables[a].create();
           }
           this.create(options);

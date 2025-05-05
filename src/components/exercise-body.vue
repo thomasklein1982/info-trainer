@@ -169,7 +169,7 @@ export default {
     };
   },
   methods: {
-    showExercise(){
+    async showExercise(){
       if(this.noRandom){
         this.showExerciseDialog=true;
         return;
@@ -183,7 +183,7 @@ export default {
         resArray=undefined;
       }
       Random.setSeed(this.seed);
-      this.$parent.create(Random,resArray);
+      await this.$parent.create(Random,resArray);
       this.showExerciseDialog=true;
       this.$root.save();
     },

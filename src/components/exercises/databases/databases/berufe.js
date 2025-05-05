@@ -25,7 +25,7 @@ db.addTable(
   "Person",
   ["id","nachname","vorname","beruf",{name: "geburtstag", type: "DATE"},{name: "groesse", type: "NUMERIC"},{name: "gewicht", type: "NUMERIC"}, "plz"],
   ["id"],
-  ["wohnort"]
+  ["plz"]
 );
 db.addTable(
   "Ort",
@@ -33,17 +33,25 @@ db.addTable(
   ["plz"]
 );
 
-db.create=function(){
+db.create=function(options){
   this.info="<em>Info: Die Daten der Personen werden zufällig generiert. Namensgleichheiten mit Personen aus der echten Welt sind rein zufällig.</em>";
   let r=Random;
-  let staedte=r.drawFrom(cities,6);
+  let count={
+    staedte: 6,
+    personen: 100
+  };
+  if(options && options.smallTables){
+    count.staedte=3;
+    count.personen=5;
+  }
+  let staedte=r.drawFrom(cities,count.staedte);
   let jobs=r.drawFrom(berufe,10);
   for(let i=0;i<staedte.length;i++){
     let s=staedte[i];
-    this.tables.Ort.insert(s.plz,s.name,s.einwohner);
+    this.tables.Ort.insert(s.plz,s.name,s.einwohner*1000);
   }
   let pids={};
-  for(let i=0;i<100;i++){
+  for(let i=0;i<count.personen;i++){
     let nn=nachnamen[r.int(0,nachnamen.length-1)];
     let vn=vornamen[r.int(0,vornamen.length-1)];
     let alter=(Math.random()+Math.random())*50;

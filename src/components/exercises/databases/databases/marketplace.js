@@ -64,6 +64,8 @@ db.create=function(){
 
   let alanTuring={
     exists: false,
+    alanExists: false,
+    turingExists: false,
     kundennummer: null,
     bestellnummer: null,
     artikel: null
@@ -125,6 +127,12 @@ db.create=function(){
       nach="Turing";
       alanTuring.exists=true;
       alanTuring.kundennummer=knr;
+    }else if(!alanTuring.alanExists && (Random.int(1,10)===1 || i===kundenCount-8)){
+      alanTuring.alanExists=true;
+      vor="Alan";
+    }else if(!alanTuring.turingExists && (Random.int(1,10)===1 || i===kundenCount-20)){
+      alanTuring.turingExists=true;
+      nach="Turing";
     }
     this.tables.Kunde.insert(knr,nach,vor);
     kundenNummern.push(knr);

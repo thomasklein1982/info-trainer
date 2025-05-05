@@ -1,4 +1,6 @@
 
+export * as DbRaEt1 from './databases/relational-algebra/db-ra-et1.vue';
+export * as DbRaAd from './databases/relational-algebra/db-ra-ad.vue';
 export * as DbRaAL from './databases/relational-algebra/db-ra-al.vue';
 export * as DbRaBm from './databases/relational-algebra/db-ra-bm.vue';
 export * as DbRaBm2 from './databases/relational-algebra/db-ra-bm2.vue';
