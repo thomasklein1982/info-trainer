@@ -1,21 +1,23 @@
 <template>
     <ExerciseBody :exercise="$data" :code="code" :database="database" db-mode="algebra">
-      Gib alle Kürzel der Lehrkräfte aus.
+      <p>Formuliere einen Term in relationaler Algebra:</p> 
+      <p>Gesucht sind die Bestellnummern aller Bestellungen, die der Kunde Alan Turing aufgegeben hat.</p>
     </ExerciseBody>
   </template>
   
   <script>
+  import { parseTerm } from "../../../../other/parse-term";
   import { areResultsEqualIgnoreOrder } from "../databases/database";
-  import schule from "../databases/schule";
+  import db from "../databases/marketplace";
   
   export const data={
-    id: "db-ra-lk",
-    title: "Kürzel der Lehrkräfte",
-    database: schule,
+    id: "db-ra-bm",
+    title: "Mr. Turings Bestellungen",
+    database: db,
     check: {
       testcases: [
         {
-          sqlDo: "select kuerzel from Lehrkraft",
+          term: parseTerm("s[nachname='Turing' ^ vorname='Alan'](p[Bestellnummer](Bestellung ixi Kunde))"),
           func: areResultsEqualIgnoreOrder
         }
       ]

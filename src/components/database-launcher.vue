@@ -210,7 +210,7 @@ export default{
       if(!this.exerciseData) return false;
       let tc=this.exerciseData.data.check.testcases[0];
       if(!tc) return false;
-      if(tc.sqlDo) return true;
+      if(tc.sqlDo || tc.term) return true;
       return false;
     }
   },
@@ -258,7 +258,7 @@ export default{
   },
   methods: {
     generateExamples(){
-      let examples=["A u B","A n B", "A \\ B", "A x B", "A ixi B", "A ixi[V=W] B", "p[V,W](A)","s[V=a and W=b](A)","r[V>R,W>S](A)"];
+      let examples=["A u B","A n B", "A \\ B", "A x B", "A ixi B", "A ixi[V=W] B", "p[V,W](A)","s[B=b ^ C=c v D=d](A)","r[V>R,W>S](A)"];
       for(let i=0;i<examples.length;i++){
         let e=examples[i];
         examples[i]={
@@ -418,8 +418,12 @@ export default{
       this.truncated=0;
       let res=null;
       console.log("run relational",termInput);
-      let term=parseTerm(termInput);
-      console.log(JSON.stringify(term.upn));
+      let term;
+      if(termInput.upn){
+        term=JSON.parse(JSON.stringify(termInput));
+      }else{
+        term=parseTerm(termInput);
+      }
       this.lastQuery=term.display;
       if(term.error){
         this.error=term.error;
@@ -483,9 +487,13 @@ export default{
     showResult(){
       let tc=this.exerciseData.data.check.testcases[0];
       //let soll=this.db.sql(tc.sqlDo);
-      this.runSQL(tc.sqlDo);
-      if(tc.sqlUndo){
-        this.db.sql(tc.sqlUndo);
+      if(tc.sqlDo){
+        this.runSQL(tc.sqlDo);
+        if(tc.sqlUndo){
+          this.db.sql(tc.sqlUndo);
+        }
+      }else{
+        this.runRelationalAlgebra(tc.term);
       }
       this.isExpectedResult=true;
     },
@@ -529,19 +537,42 @@ export default{
             }
             correctList[i]=res.correct;
           }else{
-            let soll=this.db.sql(tc.sqlDo);
-            if(tc.sqlTest){
-              soll=this.db.sql(tc.sqlTest);
-            }
-            if(tc.sqlUndo){
-              this.db.sql(tc.sqlUndo);
-            }
-            let ist=this.runSQL(this.input);
-            if(tc.sqlTest){
+            let soll, ist;
+            if(tc.term){
+              let upn=JSON.parse(JSON.stringify(tc.term.upn));
+              soll=evaluateTerm(upn,this.db);
+              soll=[soll.relation];
               try{
-                ist=this.db.sql(tc.sqlTest);
+                let term=parseTerm(this.input);
+                if(term.error){
+                  throw term.error;
+                }
+                ist=evaluateTerm(term.upn,this.db);
+                if(ist.error){
+                  throw ist.error;
+                }
+                ist=[ist.relation];
               }catch(e){
                 this.error=e;
+              }
+              if(this.error){
+                this.parsedInput.error=this.error;
+              }
+            }else{
+              soll=this.db.sql(tc.sqlDo);
+              if(tc.sqlTest){
+                soll=this.db.sql(tc.sqlTest);
+              }
+              if(tc.sqlUndo){
+                this.db.sql(tc.sqlUndo);
+              }
+              ist=this.runSQL(this.input);
+              if(tc.sqlTest){
+                try{
+                  ist=this.db.sql(tc.sqlTest);
+                }catch(e){
+                  this.error=e;
+                }
               }
             }
             let correct=false;

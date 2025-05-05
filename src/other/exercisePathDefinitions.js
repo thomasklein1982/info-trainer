@@ -69,8 +69,8 @@ let Datenbanken={
     },
     {
       label: "Relationale Algebra",
-      icon: "database-relational-algebra",
-      exercises: ["db-ra-lk"]
+      icon: "database-ra",
+      exercises: ["db-ra-al","db-ra-bm","db-ra-bm2"]
     },
   ]
 }

@@ -165,7 +165,8 @@ function applyProjection(table,columns,database){
 function applySelection(table,conditions,database){
   if(!table) return null;
   createTempTable("temp_table_0",table,database);
-
+  conditions=conditions.replace(/ ∧ /g," and ");
+  conditions=conditions.replace(/ ∨ /g," or ");
   let res=database.sql("select distinct * from temp_table_0 where "+conditions)[0];
   dropTempTable("temp_table_0",database);
   if(!res) res=null;
@@ -404,7 +405,7 @@ function createDisplayTerm(tokens){
       }else if(t==="⨝"){
         let next=tokens[i+1];
         if(next==="["){
-          term+=" <table style='text-align: center;display: inline'><tr><td>⨝</td></tr><tr><td>"
+          term+=" <table style='text-align: center;display: inline'><tr><td>⨝</td></tr><tr><td style='font-size: x-small'>"
           mode="joinParams";
           i++;
         }else{
@@ -426,7 +427,7 @@ function createDisplayTerm(tokens){
       }
     }else if(mode==="func"){ 
       if(t==="["){
-        term+="<sub>";
+        term+="<sub style='font-size: x-small'>";
         mode="params";
       }
     }else if(mode==="params"){
@@ -465,6 +466,19 @@ function translateSpecialCharacters(input){
     }
   }
   neu=rhos.join("ρ");
+  let selects=neu.split("σ");
+  for(let i=1;i<selects.length;i++){
+    let sel=selects[i];
+    let res=/^\s*\[([^\]]*)\]/.exec(sel);
+    if(res){
+      res[1]=res[1].replace(/ \^ /g," ∧ ");
+      res[1]=res[1].replace(/ v /g," ∨ ");
+      let params="["+res[1]+"]";
+
+      selects[i]=selects[i].replace(res[0],params);
+    }
+  }
+  neu=selects.join("σ");
   return neu;
 }
 
@@ -501,6 +515,37 @@ function tokenizeTerm(input){
     }
   }
   return tokens;
+}
+
+function checkParams(func,params){
+  if(func==="π"){
+    //liste von attributen:
+    let parts=params.split(",");
+    for(let i=0;i<parts.length;i++){
+      let p=parts[i].trim();
+      if(p.length===0){
+        return "Die Liste der Attribute in einer Projektion darf keinen leeren Eintrag enthalten.";
+      }
+      if(!/^[A-Za-zäöüÄÖÜß_][A-Za-zäöüÄÖÜß_0-9]*$/.test(p)){
+        return "Ungültige Attributsbezeichnung in Projektion '"+p+"'";
+      }
+    }
+  }else if(func==="ρ"){
+    //liste von umbenennungen:
+    let parts=params.split(",");
+    for(let i=0;i<parts.length;i++){
+      let p=parts[i].trim();
+      if(p.length===0){
+        return "Die Liste in einer Umbenennung darf keinen leeren Eintrag enthalten.";
+      }
+      if(!/^[A-Za-zäöüÄÖÜß_][A-Za-zäöüÄÖÜß_0-9]*→[A-Za-zäöüÄÖÜß_][A-Za-zäöüÄÖÜß_0-9]*$/.test(p)){
+        return "Ungültige Umbenennung '"+p+"'";
+      }
+    }
+  }else if(func==="σ"){
+
+  }
+  return undefined;
 }
 
 function parseTermRecursive(upn,index){
@@ -551,7 +596,10 @@ function parseTermRecursive(upn,index){
           let off2=parseTermRecursive(upn,index+1+off1);
           return off1+off2;
         }else if(i===operators.length-1 && funcs.indexOf(c)>=0){
-          upn.splice(index,1,tokens.slice(k+4),[tokens[k],tokens[k+2]]);
+          let params=tokens[k+2];
+          let error=checkParams(c,params);
+          if(error) throw error;
+          upn.splice(index,1,tokens.slice(k+4),[tokens[k],params]);
           parseTermRecursive(upn,index);
           return 1;
         }

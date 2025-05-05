@@ -59,8 +59,15 @@ db.addTable(
 db.create=function(){
   this.info="<em>Info: Die Daten in dieser Datenbank werden zufällig generiert. Namensgleichheiten mit Personen, Artikeln oder Firmen aus der echten Welt sind rein zufällig.</em>";
   
-  let adjektiv=["super","mega","ultra","edel","prima","giga","de luxe","dufte","epic","fresh","hammer","chic","tasty","longlife","maxi","premium","big"];
-  let artikelNamen=[["Flakes",2],["Sneekers",20],["Cookies",2],["Shirt",10],["Hose",50], ["Lichterkette",10],["Shorts",5],["Reinigungsmilch",8],["Motoröl",50],["Toilettenpapier",5],["Waschpulver",10],["Kopierpapier",15],["Klebeband",5],["Kugelschreiber",1],["Etikettendrucker",25],["Waschmaschine",500]];
+  let adjektiv=["super","mega","ultra","edel","prima","giga","deluxe","dufte","epic","fresh","hammer","chic","tasty","longlife","maxi","premium","big"];
+  let artikelNamen=[["Flakes",2],["Sneakers",20],["Cookies",2],["Shirt",10],["Hose",50], ["Lichterkette",10],["Shorts",5],["Reinigungsmilch",8],["Motoröl",50],["Toilettenpapier",5],["Waschpulver",10],["Kopierpapier",15],["Klebeband",5],["Kugelschreiber",1],["Etikettendrucker",25],["Waschmaschine",500]];
+
+  let alanTuring={
+    exists: false,
+    kundennummer: null,
+    bestellnummer: null,
+    artikel: null
+  }
 
   let anr=Random.int(100,1000);
   let artikelCount=Random.int(20,30);
@@ -73,7 +80,8 @@ db.create=function(){
       let a=Random.drawFrom(adjektiv,1)[0];
       name.push(a);
     }
-    name[0]=name[0].charAt(0).toUpperCase()+name[0].substring(1);
+    for(let i=0;i<name.length;i++)
+      name[i]=name[i].charAt(0).toUpperCase()+name[i].substring(1);
     name=name.join("-");
     let artikel=Random.drawFrom(artikelNamen,1)[0];
     name=name+"-"+artikel[0];
@@ -81,6 +89,10 @@ db.create=function(){
     let percent=Random.int(8,12)*10;
     preis=(preis*percent/100).toFixed(2)*1;
     let bestand=Random.int(0,100);
+    if(alanTuring.artikel===null && (Random.int(1,10)===1 || i===artikelCount-1)){
+      alanTuring.artikel=anr;
+      bestand=0;
+    }
     this.tables.Artikel.insert(anr,name,preis,bestand);
     artikelNummern.push(anr);
     artikelPreise[anr]=artikel[1];
@@ -108,6 +120,12 @@ db.create=function(){
   for(let i=0;i<kundenCount;i++){
     let vor=Random.drawFrom(vornamen,1)[0];
     let nach=Random.drawFrom(nachnamen,1)[0];
+    if(!alanTuring.exists && (Random.int(1,10)===1 || i===kundenCount-1)){
+      vor="Alan";
+      nach="Turing";
+      alanTuring.exists=true;
+      alanTuring.kundennummer=knr;
+    }
     this.tables.Kunde.insert(knr,nach,vor);
     kundenNummern.push(knr);
     knr+=Random.int(1,100);
@@ -129,6 +147,10 @@ db.create=function(){
   let bestellNummern=[];
   for(let i=0;i<bestellungCount;i++){
     let k=Random.drawFrom(kundenNummern,1)[0];
+    if(k===alanTuring.kundennummer || alanTuring.bestellnummer===null && (Random.int(1,8)===1 || i===bestellungCount-1)){
+      k=alanTuring.kundennummer;
+      alanTuring.bestellnummer=bnr;
+    }
     let y=Random.int(year-15,year);
     let m=fillZeroes(Random.int(1,12),2);
     let d=fillZeroes(Random.int(1,28),2);
@@ -139,10 +161,18 @@ db.create=function(){
 
   for(let i=0;i<bestellungCount;i++){
     let count=Random.int(1,3);
-    let artikel=Random.drawFrom(artikelNummern,count);
     let bnr=bestellNummern[i];
+    let anr;
+    if(bnr===alanTuring.bestellnummer){
+      count=3;
+      anr=Random.int(0,count-1);
+    }
+    let artikel=Random.drawFrom(artikelNummern,count);
     for(let j=0;j<count;j++){
       let a=artikel[j];
+      if(anr===j){
+        a=alanTuring.artikel;
+      }
       let anzahl=Random.int(1,10);
       let preis=artikelPreise[a];
       let percent=Random.int(8,12)*10;

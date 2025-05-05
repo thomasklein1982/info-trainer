@@ -128,6 +128,7 @@ code{
 
 .wertetabelle>tr>td, .wertetabelle>tr>th{
   border: 1pt solid white;
+  padding: 0.2rem;
 }
 
 .responsive-grid-2-1{
