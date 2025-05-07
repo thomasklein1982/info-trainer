@@ -193,14 +193,27 @@ function applyRename(table,changes){
   return table;
 }
 
-function applyCartesianProduct(table1,table2){
+function getFirstEqualAttribute(table1,table2){
   if(!table1 || !table2) return null;
   for(let i=0;i<table1.columns.length;i++){
     let col1=table1.columns[i];
     if(indexOfIgnoreCase(table2.columns,col1)>=0){
-      throw "Fehler: Das kartesische Produkt kann nicht gebildet werden, da beide Relationen ein Attribut '"+col1+"' besitzen.";
+      return col1;
     }
   }
+  return null;
+}
+
+function applyCartesianProduct(table1,table2){
+  if(!table1 || !table2) return null;
+  let col=getFirstEqualAttribute(table1,table2);
+  if(col) throw "Fehler: Das kartesische Produkt kann nicht gebildet werden, da beide Relationen ein Attribut '"+col+"' besitzen.";
+  // for(let i=0;i<table1.columns.length;i++){
+  //   let col1=table1.columns[i];
+  //   if(indexOfIgnoreCase(table2.columns,col1)>=0){
+  //     throw "Fehler: Das kartesische Produkt kann nicht gebildet werden, da beide Relationen ein Attribut '"+col1+"' besitzen.";
+  //   }
+  // }
   let table={
     columns: [],
     values: []
@@ -224,6 +237,10 @@ function applyCartesianProduct(table1,table2){
 
 function applyJoin(table1,table2,database,params){
   if(!table1 || !table2) return null;
+  if(params){
+    let col=getFirstEqualAttribute(table1,table2);
+    if(col) throw "Fehler: Der Equi-Join kann nicht gebildet werden, da beide Relationen ein Attribut '"+col+"' besitzen.";
+  }
   createTempTable("temp_table_0",table1,database);
   createTempTable("temp_table_1",table2,database);
   let res;
@@ -332,17 +349,29 @@ function applyMinus(table1,table2,database){
   // return res;
 }
 
+function getDatatype(table,index){
+  if(table.values.length===0) return "string";
+  let row=0;
+  while(true){
+    let v=table.values[row][index];
+    if(v!==null){
+      if(v.substring){
+        return "string";
+      }else{
+        return "numeric";
+      }
+    }
+    row++;
+    if(row>=table.values.length) return "string";
+  }
+}
+
 function createTempTable(tablename,table,database){
   let vals=table.values[0];
   let datatypes=[];
   for(let j=0;j<vals.length;j++){
     let v=vals[j];
-    let t;
-    if(v.substring){
-      t="string";
-    }else{
-      t="numeric";
-    }
+    let t=getDatatype(table,j);
     datatypes.push(t);
   }
   let sql="DROP Table if exists "+tablename+";";
@@ -399,6 +428,8 @@ function createDisplayTerm(tokens){
   let mode=null;
   for(let i=0;i<tokens.length;i++){
     let t=tokens[i];
+    t=t.replace(/</g,"&lt;");
+    t=t.replace(/>/g,"&gt;");
     if(!mode){
       if(t==="π"||t==="ρ"||t==="σ"){
         term+=t;

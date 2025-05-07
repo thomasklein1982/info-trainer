@@ -63,7 +63,7 @@ db.create=function(options){
     if(w===jobs.length) beruf=null;
     else beruf=jobs[w];
     let groesse=Math.round((Math.random()+Math.random()+Math.random()+Math.random())*25+120);
-    let gewicht=Math.round((groesse-100)*(Math.random()+0.5));
+    let gewicht=Math.round((groesse-100)*(Math.random()*0.4+0.8));
     let id=r.int(1,1000);
     let stadt=staedte[r.int(0,staedte.length-1)];
     while(pids[id]) id++;
