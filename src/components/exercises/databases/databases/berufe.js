@@ -58,7 +58,7 @@ db.create=function(options){
     let now=Date.now();
     let geb=new Date(now-alter*365*24*3600*1000);
     geb=geb.getFullYear()+"-"+fillZero(geb.getMonth()+1)+"-"+fillZero(geb.getDate());
-    let w=r.int(0,jobs.length);
+    let w=r.int(0,jobs.length - (options?.smallTables? 1: 0));
     let beruf;
     if(w===jobs.length) beruf=null;
     else beruf=jobs[w];

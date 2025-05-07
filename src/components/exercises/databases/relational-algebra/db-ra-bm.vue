@@ -17,7 +17,7 @@
     check: {
       testcases: [
         {
-          term: parseTerm("s[nachname='Turing' ^ vorname='Alan'](p[Bestellnummer](Bestellung ixi Kunde))"),
+          term: parseTerm("p[Bestellnummer](s[nachname='Turing' ^ vorname='Alan'](Bestellung ixi Kunde))"),
           func: areResultsEqualIgnoreOrder
         }
       ]

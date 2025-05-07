@@ -26,10 +26,11 @@
   import db from "../databases/berufe";
 import InputCheckRelation from "../../../InputCheckRelation.vue";
 import RelationTable from "../../../relation-table.vue";
+import { check, finishCreation } from "./db-ra-et1.vue";
 
 
   export const data={
-    id: "db-ra-et1",
+    id: "db-ra-et2",
     title: "Ergebnis eines Terms bestimmen",
     database: db,
     relations: [
@@ -42,13 +43,13 @@ import RelationTable from "../../../relation-table.vue";
     ],
     tasks: [
       {
-        term: 's[Beruf="$0"](Person)',
-        useTerm: 'r[PLZ>Wohnort](s[Beruf="$0"](p[ID,Nachname,Vorname,Beruf,PLZ](Person)))',
-        data: ["select beruf from Person limit 2,1"]
+        term: 'p[ID,Name](Person ixi[Wohnort=PLZ] Ort)',
+        useTerm: 'p[ID,Name](r[PLZ>Wohnort](Person) ixi[Wohnort=PLZ] Ort)'
       },
       {
-        term: "p[Name,Einwohner](Ort)",
-        useTerm: 'p[name,Einwohner](Ort)'
+        term: 'p[ID,Name](s[Beruf="$2"](Person) ixi[Wohnort=PLZ] s[Einwohner=$0 v PLZ=$1](Ort))',
+        useTerm: 'p[ID,Name](s[Beruf="$2"](r[PLZ>Wohnort](Person)) ixi[Wohnort=PLZ] s[Einwohner>$0 v PLZ=$1](Ort))',
+        data: ["select einwohner from ort order by einwohner limit 2,1","select plz from ort order by einwohner limit 1", "select beruf from Person where plz=(select plz from ort order by einwohner limit 1) limit 1"]
       }
     ]
   };
@@ -72,45 +73,5 @@ import RelationTable from "../../../relation-table.vue";
     }
   }
 
-  export function finishCreation(resArray,relations,tasks){
-    for(let i=0;i<relations.length;i++){
-      let r=relations[i];
-      let res=db.sql("select "+r.columns+" from "+r.name)[0];
-      r.data=res;
-    }
-    for(let i=0;i<tasks.length;i++){
-      let t=tasks[i];
-      t.correct=resArray? resArray[i]: false;
-      t.checked=resArray? true: false;
-      let term=t.term;
-      let useTerm=t.useTerm;
-      if(!useTerm) useTerm=term;
-      if(t.data){
-        let data=[];
-        for(let j=0;j<t.data.length;j++){
-          let d=t.data[j];
-          let res=db.sql(d)[0].values[0][0];
-          let re=new RegExp("\\$"+j,"g");
-          term=term.replace(re,res);
-          useTerm=useTerm.replace(re,res);
-        }
-      }
-      t.realTerm=term;
-      t.parsedTerm=parseTerm(term);
-      let parsedUseTerm=parseTerm(useTerm);
-      t.result=evaluateTerm(parsedUseTerm.upn,db);
-      if(t.input) t.input.reset();
-    }
-  }
-
-  export function check(tasks,options){
-    let resArray=[];
-    for(let i=0;i<tasks.length;i++){
-      let t=tasks[i];
-      t.checked=true;
-      t.correct=t.input.check(options);
-      resArray.push(t.correct);
-    }
-    return resArray;
-  }
+  
   </script>

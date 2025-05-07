@@ -70,7 +70,7 @@ let Datenbanken={
     {
       label: "Relationale Algebra",
       icon: "database-ra",
-      exercises: ["db-ra-al","db-ra-ad","db-ra-bm","db-ra-et1","db-ra-bm2"]
+      exercises: ["db-ra-et1","db-ra-al","db-ra-ad","db-ra-et2","db-ra-bm","db-ra-bm2"]
     },
   ]
 }

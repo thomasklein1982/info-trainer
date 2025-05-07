@@ -135,7 +135,7 @@ export class Table{
   }
 }
 
-function inititalChecks(res1,res2,alwaysCheckColumnNames){
+function inititalChecks(res1,res2,alwaysCheckColumnNames,checkColumnOrder){
   if(!res1 || !res2) return false;
   //spaltennamen checken
   if(res1.columns.length!==res2.columns.length) return false;
@@ -143,6 +143,7 @@ function inititalChecks(res1,res2,alwaysCheckColumnNames){
     let order1=getOrder(res1.columns);
     let order2=getOrder(res2.columns);
     for(let i=0;i<order1.length;i++){
+      if(checkColumnOrder && order1[i].index!==order2[i].index) return false;
       if(order1[i].column.toLowerCase()!==order2[i].column.toLowerCase()) return false;
     }
   }
@@ -171,9 +172,9 @@ function getOrder(columns){
   return order;
 }
 
-export function areResultsEqualIgnoreOrder(res1,res2,alwaysCheckColumnNames
+export function areResultsEqualIgnoreOrder(res1,res2,alwaysCheckColumnNames,checkColumnOrder
 ){
-  if(!inititalChecks(res1,res2,alwaysCheckColumnNames)) return false;
+  if(!inititalChecks(res1,res2,alwaysCheckColumnNames,checkColumnOrder)) return false;
   let order1=getOrder(res1.columns);
   let order2=getOrder(res2.columns);
   let sortFunc1=(r,s)=>{
@@ -202,12 +203,12 @@ export function areResultsEqualIgnoreOrder(res1,res2,alwaysCheckColumnNames
   };
   res1.values.sort(sortFunc1);
   res2.values.sort(sortFunc2);
-  return areResultsEqual(res1,res2, alwaysCheckColumnNames, true );
+  return areResultsEqual(res1,res2, alwaysCheckColumnNames, checkColumnOrder, true );
 }
 
-export function areResultsEqual(res1,res2,alwaysCheckColumnNames,noInitChecks){
+export function areResultsEqual(res1,res2,alwaysCheckColumnNames,checkColumnOrder,noInitChecks){
   if(!noInitChecks){
-    let ok=inititalChecks(res1,res2,alwaysCheckColumnNames);
+    let ok=inititalChecks(res1,res2,alwaysCheckColumnNames,checkColumnOrder);
     if(!ok) return false;
   }
   let array1=res1.values;

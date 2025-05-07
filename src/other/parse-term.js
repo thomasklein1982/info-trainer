@@ -520,6 +520,9 @@ function tokenizeTerm(input){
 function checkParams(func,params){
   if(func==="π"){
     //liste von attributen:
+    if(!params){
+      console.log("pi: params undefined");
+    }
     let parts=params.split(",");
     for(let i=0;i<parts.length;i++){
       let p=parts[i].trim();
@@ -532,6 +535,9 @@ function checkParams(func,params){
     }
   }else if(func==="ρ"){
     //liste von umbenennungen:
+    if(!params){
+      console.log("pi: params undefined");
+    }
     let parts=params.split(",");
     for(let i=0;i<parts.length;i++){
       let p=parts[i].trim();
@@ -597,6 +603,9 @@ function parseTermRecursive(upn,index){
           return off1+off2;
         }else if(i===operators.length-1 && funcs.indexOf(c)>=0){
           let params=tokens[k+2];
+          if(!params){
+            console.log("error params",tokens,k);
+          }
           let error=checkParams(c,params);
           if(error) throw error;
           upn.splice(index,1,tokens.slice(k+4),[tokens[k],params]);
