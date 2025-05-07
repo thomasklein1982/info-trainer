@@ -47,9 +47,9 @@ import { check, finishCreation } from "./db-ra-et1.vue";
         useTerm: 'p[ID,Name](r[PLZ>Wohnort](Person) ixi[Wohnort=PLZ] Ort)'
       },
       {
-        term: 'p[ID,Name](s[Beruf="$2"](Person) ixi[Wohnort=PLZ] s[Einwohner=$0 v PLZ=$1](Ort))',
-        useTerm: 'p[ID,Name](s[Beruf="$2"](r[PLZ>Wohnort](Person)) ixi[Wohnort=PLZ] s[Einwohner>$0 v PLZ=$1](Ort))',
-        data: ["select einwohner from ort order by einwohner limit 2,1","select plz from ort order by einwohner limit 1", "select beruf from Person where plz=(select plz from ort order by einwohner limit 1) limit 1"]
+        term: 'p[Wohnort,Name](s[Beruf="$2"](Person) ixi[Wohnort=PLZ] s[Einwohner=$0 v PLZ=$1](Ort))',
+        useTerm: 'p[Wohnort,Name](s[Beruf="$2"](r[PLZ>Wohnort](Person)) ixi[Wohnort=PLZ] s[Einwohner=$0 v PLZ=$1](Ort))',
+        data: ["select einwohner from ort order by einwohner limit 2,1","select plz from ort natural join person order by einwohner limit 1", "select beruf from Person where plz=(select plz from ort natural join person order by einwohner limit 1) limit 1"]
       }
     ]
   };
@@ -65,7 +65,7 @@ import { check, finishCreation } from "./db-ra-et1.vue";
       async create(Random, resArray){
         await db.refresh({smallTables: true, columns: {Person: [true,true,true,true,false,false,false,"Wohnort"]}, Ort: true});
         //db.sql("update Person set Beruf='Landwirt*in' where beruf is NULL and id=(select id from person limit 1);");
-        finishCreation(resArray,this.relations,this.tasks);
+        finishCreation(Random,resArray,this.relations,this.tasks);
       },
       check(){
         return check(this.tasks,{ignoreRowOrder: true});

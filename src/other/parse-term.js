@@ -106,6 +106,7 @@ export function parseDisplay(input){
 }
 
 function parseUPNAndDisplay(input){
+  console.log(input);
   let tokens;
   try{
     tokens=tokenizeTerm(input);
@@ -602,6 +603,7 @@ function parseTermRecursive(upn,index){
           let off2=parseTermRecursive(upn,index+1+off1);
           return off1+off2;
         }else if(i===operators.length-1 && funcs.indexOf(c)>=0){
+          //if(tokens.length===2) continue;
           let params=tokens[k+2];
           if(!params){
             console.log("error params",tokens,k);
@@ -609,8 +611,8 @@ function parseTermRecursive(upn,index){
           let error=checkParams(c,params);
           if(error) throw error;
           upn.splice(index,1,tokens.slice(k+4),[tokens[k],params]);
-          parseTermRecursive(upn,index);
-          return 1;
+          let off=parseTermRecursive(upn,index);
+          return off+1;
         }
       }
     }

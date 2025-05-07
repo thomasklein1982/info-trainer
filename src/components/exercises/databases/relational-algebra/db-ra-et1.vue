@@ -64,7 +64,7 @@ import RelationTable from "../../../relation-table.vue";
       async create(Random, resArray){
         await db.refresh({smallTables: true, columns: {Person: [true,true,true,true,false,false,false,"Wohnort"]}, Ort: true});
         //db.sql("update Person set Beruf='Landwirt*in' where beruf is NULL and id=(select id from person limit 1);");
-        finishCreation(resArray,this.relations,this.tasks);
+        finishCreation(Random,resArray,this.relations,this.tasks);
       },
       check(){
         return check(this.tasks,{ignoreRowOrder: true});
@@ -72,7 +72,7 @@ import RelationTable from "../../../relation-table.vue";
     }
   }
 
-  export function finishCreation(resArray,relations,tasks){
+  export function finishCreation(Random,resArray,relations,tasks){
     for(let i=0;i<relations.length;i++){
       let r=relations[i];
       let res=db.sql("select "+r.columns+" from "+r.name)[0];
@@ -89,7 +89,9 @@ import RelationTable from "../../../relation-table.vue";
         let data=[];
         for(let j=0;j<t.data.length;j++){
           let d=t.data[j];
-          let res=db.sql(d)[0].values[0][0];
+          let res=db.sql(d)[0];
+          let index=Random.int(0,res.values.length-1);
+          res=res.values[index][0];
           let re=new RegExp("\\$"+j,"g");
           term=term.replace(re,res);
           useTerm=useTerm.replace(re,res);
