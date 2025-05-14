@@ -180,8 +180,8 @@ function applyRename(table,changes){
   let neu=[];
   for(let i=0;i<changes.length;i++){
     let c=changes[i].split("→");
-    alt.push(c[0]);
-    neu.push(c[1]);
+    alt.push(c[0].trim());
+    neu.push(c[1].trim());
   }
   for(let i=0;i<table.columns.length;i++){
     let col=table.columns[i];

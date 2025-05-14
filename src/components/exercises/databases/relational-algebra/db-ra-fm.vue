@@ -1,7 +1,7 @@
 <template>
     <ExerciseBody :exercise="$data" :code="code" :database="database" db-mode="algebra">
       <p>Formuliere einen Term in relationaler Algebra:</p> 
-      <p>Gesucht ist eine Tabelle mit den Überschriften "Firma" und "Anzahl Mitarbeiter", die alle Firmen auflistet.</p>
+      <p>Gesucht ist eine Tabelle mit den Überschriften "Firma" und "AnzahlMitarbeiter", die alle Firmen auflistet.</p>
     </ExerciseBody>
   </template>
   
