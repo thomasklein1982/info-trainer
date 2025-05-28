@@ -1,4 +1,5 @@
 
+export * as AppZr from './apps/app-zr.vue';
 export * as DbRaGs from './databases/relational-algebra/db-ra-gs.vue';
 export * as DbRaFm from './databases/relational-algebra/db-ra-fm.vue';
 export * as DbRaEt2 from './databases/relational-algebra/db-ra-et2.vue';

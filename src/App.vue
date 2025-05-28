@@ -103,6 +103,12 @@ for(let a in exercises){
       data: data,
       total: data.tasks.length
     };
+  }else if(data.features){
+    ed={
+      correct: createBoolArray(data.features.length),
+      data: data,
+      total: data.features.length
+    }
   }
   exerciseDataCollection[data.id]=ed;
 }

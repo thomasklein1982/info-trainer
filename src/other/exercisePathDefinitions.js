@@ -51,6 +51,11 @@ let Java={
       icon: "algorithms",
       exercises: ["iterative-suche","binary-search","bubble","merge"]
     },
+    {
+      label: "Apps",
+      icon: "apps",
+      exercises: ["app-zr"]
+    },
   ]
 }
 
