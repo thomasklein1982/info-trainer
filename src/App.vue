@@ -83,6 +83,9 @@ window.onbeforeunload=function(ev){
 
 let exerciseDataCollection={};
 for(let a in exercises){
+  // if(a==="TvNum1"){
+  //   console.log(a);
+  // }
   let data=exercises[a].data;
   let ed;
   if(data.check){
@@ -125,6 +128,14 @@ export function calcPoints(exerciseData){
     }
   }else if(exerciseData.data.tasks){
     let tasks=exerciseData.data.tasks;
+    for(let i=0;i<tasks.length;i++){
+      let t=tasks[i];
+      if(exerciseData.correct===true || exerciseData.correct[i]===true){
+        p+=t.points? t.points: 1;
+      }
+    }
+  }else if(exerciseData.data.features){
+    let tasks=exerciseData.data.features;
     for(let i=0;i<tasks.length;i++){
       let t=tasks[i];
       if(exerciseData.correct===true || exerciseData.correct[i]===true){
@@ -276,7 +287,14 @@ export default{
         let ed=this.getExerciseData(id);
         if(ed){
           ed.correct=0;
-          let count=ed.data.check? ed.data.check.testcases.length : ed.data.tasks.length;
+          let count;
+          if(ed.data.check){
+            count=ed.data.check.testcases.length;
+          }else if(ed.data.tasks){
+            count=ed.data.tasks.length;
+          }else if(ed.data.features){
+            count=ed.data.features.length;
+          }
           let array;
           if(o.correct===true){
             array=createBoolArray(count,true);
@@ -322,6 +340,11 @@ export default{
         this.userDataSize=JSON.stringify(data).length;
       }else if(exerciseData){
         let savedExerciseData=userData[exerciseData.data.id];
+        if(!savedExerciseData){
+          savedExerciseData={
+            correct: false
+          };
+        }
         if(savedExerciseData.correct===true) return;
         let ed=exerciseData;
         let points=ed.points;

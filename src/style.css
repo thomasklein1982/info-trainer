@@ -10,6 +10,38 @@ html,body{
   overflow: hidden;
 }
 
+.flex{
+  display: flex;
+}
+
+.justify-between{
+  justify-content: space-between;
+}
+
+.justify-end{
+  justify-content: end;
+}
+
+.justify-start{
+  justify-content: start;
+}
+
+.justify-center{
+  justify-content: center;
+}
+
+.padding{
+  padding: 0.5rem;
+}
+
+.padding-2x{
+  padding: 1rem;
+}
+
+.padding-3x{
+  padding: 1.5rem;
+}
+
 strong{
   color: orange;
 }
@@ -43,6 +75,7 @@ code{
 .teilaufgaben{
   list-style-type: none;
   counter-reset: item;
+  padding-inline-start: 0;
 }
 
 .teilaufgaben>li:before{

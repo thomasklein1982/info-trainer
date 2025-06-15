@@ -2,6 +2,7 @@
   <div>
     <slot name="preview"></slot>
     <slot></slot>
+    <slot name="outerintro"></slot>
     <div style="display: grid; place-content: end;">
       
       <template v-if="java">
@@ -42,13 +43,13 @@
       </template>
       <template v-else>
         <Button label="Aufgabe bearbeiten" @click="showExercise()"/>
-        <Dialog modal v-model:visible="showExerciseDialog" :header="title" maximizable :closable="closable">
+        <Dialog modal v-model:visible="showExerciseDialog" :header="title" :class="maximized? 'p-dialog-maximized':''" :maximizable="maximized?false:true" :closable="closable">
           <template #header>
             {{ title }} <ExerciseProgress style="flex: 1" :exercise-data="exerciseData"/>
           </template>
           <div style="height: 100%; width: 100%; display: flex; flex-direction: column">
             <slot></slot>
-            <div style="position: relative; width: 100%; flex: 1; height: 100%;">
+            <div style="position: relative; width: 100%; flex: 1; height: 100%; display: flex; flex-direction: column">
               <slot name="exercise"></slot>
             </div>
           </div>
@@ -100,6 +101,10 @@ export default {
       default: "sql"
     },
     code: String,
+    maximized: {
+      type: Boolean,
+      default: false
+    },
     noRandom: {
       type: Boolean,
       default: false
@@ -212,6 +217,14 @@ export default {
       this.exerciseData.userProject=this.seed;
       calcPoints(this.exerciseData);
       this.$root.save(this.exerciseData);
+    },
+    setCorrect(index,value){
+      this.exerciseData.correct[index]=value;
+      calcPoints(this.exerciseData);
+      this.$root.save(this.exerciseData);
+    },
+    getCorrect(index){
+      return this.exerciseData.correct[index];
     },
     refreshExercise(){
       this.seed=random(1000,99999999);

@@ -54,7 +54,7 @@ let Java={
     {
       label: "Apps",
       icon: "apps",
-      exercises: ["app-zr"]
+      exercises: ["app-zr","app-vt"]
     },
   ]
 }
@@ -135,12 +135,33 @@ let IKG={
       label: "Das Internet",
       icon: "internet",
       exercises: ["iggrace","igeliz","igtim","igada","igalan"]
-    }
+    },
+    // {
+    //   label: "Textverarbeitung",
+    //   icon: "text",
+    //   exercises: ["tv-num-1"]
+    // }
+  ]
+}
+
+let Datenschutz={
+  name: "Datenschutz",
+  paths: [
+    {
+      label: "Nichts zu verbergen?!?",
+      icon: "internet",
+      exercises: ["verbergen-1","verbergen-2","verbergen-3"]
+    },
+    // {
+    //   label: "Textverarbeitung",
+    //   icon: "text",
+    //   exercises: ["tv-num-1"]
+    // }
   ]
 }
 
 let paths=[
-  IKG, Grundlagen, Internet, Java, Datenbanken, TheoretischeInformatik
+  IKG, Grundlagen, Internet, Java, Datenbanken, Datenschutz, TheoretischeInformatik
 ];
 
 for(let i=0;i<paths.length;i++){

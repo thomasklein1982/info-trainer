@@ -1,4 +1,8 @@
 
+export * as Verbergen3 from './datenschutz/verbergen-3.vue';
+export * as Verbergen2 from './datenschutz/verbergen-2.vue';
+export * as Verbergen1 from './datenschutz/verbergen-1.vue';
+export * as AppVt from './apps/app-vt.vue';
 export * as AppZr from './apps/app-zr.vue';
 export * as DbRaGs from './databases/relational-algebra/db-ra-gs.vue';
 export * as DbRaFm from './databases/relational-algebra/db-ra-fm.vue';

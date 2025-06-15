@@ -28,16 +28,16 @@ export const data={
       }
     },
     testcases: [
-        {
-          data: ()=>{
-            return {
-              
-            };
-          },
-          count: 20,  
-          info: 'Die Methode funktioniert.'
-        }
-      ],
+      {
+        data: ()=>{
+          return {
+            
+          };
+        },
+        count: 20,  
+        info: 'Die Methode funktioniert.'
+      }
+    ],
     test: async (tc,init)=>{
       let text=$Exercise.getRandomString($Exercise.random(5,20));
       await init.a.zeilenweise(text);

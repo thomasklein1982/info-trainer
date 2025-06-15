@@ -19,6 +19,9 @@
         <ul>
           <li v-for="(f,j) in t.items" v-html="f"></li>
         </ul>
+        <label>
+          <ToggleSwitch v-model="exerciseData.correct[i]" @change="recalculatePoints()" /> Feature implementiert
+        </label>
         
       </div>
     </template>
@@ -27,12 +30,14 @@
 
 <script>
 import Message from 'primevue/message';
+import ToggleSwitch from 'primevue/toggleswitch';
 import { isCompletelyTrue } from '../other/bool-array';
+import { calcPoints } from '../App.vue';
 
 
 export default{
   components: {
-    Message
+    Message, ToggleSwitch
   },
   props: {
     exerciseData: Object
@@ -55,6 +60,10 @@ export default{
     };
   },
   methods: {
+    recalculatePoints(){
+      console.log("calc p");
+      calcPoints(this.exerciseData);
+    },
     open(){
       console.log("open feedback",this.exerciseData);
       this.show=true;

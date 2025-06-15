@@ -1,7 +1,6 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
-    Bei der App "Zahlenraten" denkt sich der Computer eine geheime Zahl zwischen 1 und 100 aus und der User muss diese geheime Zahl erraten. Nach jedem missglückten Rateversuch teilt der Computer mit, ob die geheime Zahl größer oder kleiner ist als die geratene Zahl, sodass der User die geheime Zahl immer weiter eingrenzen kann.
-    <p>Dieses Spiel soll als App umgesetzt werden.</p>
+    <p>Aufgabe ist noch nicht fertig!</p>
     <!-- <div class="float-right">
       <AppPreview >
         <JFrame layout="1">
@@ -29,8 +28,8 @@ import App from '../../../App.vue';
 
 
 export const data={
-  id: "app-zr",
-  title: "Zahlenraten",
+  id: "app-vt",
+  title: "Vokabeltrainer (WIP)",
   features: [
     {
       name: "Gewinnen können",
@@ -81,9 +80,6 @@ int secretNumber, guessedNumber;
 
 /*Objekt zur Erzeugung von Zufallszahlen*/
 Random random=new Random();
-
-/*Objekt für den Speicherzugriff*/
-Storage store=new Storage("Zahlenraten");
 
 void main( ){
   createFrameStart();

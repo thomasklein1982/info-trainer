@@ -106,7 +106,6 @@ export function parseDisplay(input){
 }
 
 function parseUPNAndDisplay(input){
-  console.log(input);
   let tokens;
   try{
     tokens=tokenizeTerm(input);
@@ -117,8 +116,6 @@ function parseUPNAndDisplay(input){
   }
   let display=createDisplayTerm(tokens);
   let upn=[tokens];
-  console.log("tokens:");
-  console.log(JSON.stringify(upn));
   try{
     parseTermRecursive(upn,0);
   }catch(e){

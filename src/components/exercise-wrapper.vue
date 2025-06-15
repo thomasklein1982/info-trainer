@@ -23,7 +23,7 @@
 
 <script>
 import { calcPoints } from "../App.vue";
-import { createBoolArray } from "../other/bool-array";
+import { createBoolArray, intToBoolArray } from "../other/bool-array";
 import DialogFeedback from "./dialog-feedback.vue";
 import ExerciseProgress from "./exercise-progress.vue";
 import JavaApp from "./java-app.vue";
@@ -63,6 +63,9 @@ export default {
       root=this.$root;
       if(this.id===undefined) return;
       let ed=root.getExerciseData(this.id);
+      if(!Array.isArray(ed.correct)){
+        ed.correct=intToBoolArray(ed.correct);
+      }
       return ed;
       //return root.setExerciseData(this.exercise);
     }
@@ -74,7 +77,6 @@ export default {
   },
   methods: {
     confirmReset(event) {
-      console.log("confirm");
       this.$confirm.require({
         target: event.currentTarget,
         message: 'Soll die Aufgabe wirklich zurückgesetzt werden?',
@@ -99,7 +101,14 @@ export default {
     },
     reset(){
       delete this.exerciseData.userProject;
-      let count=this.exerciseData.data.check? this.exerciseData.data.check.testcases.length: this.exerciseData.data.tasks.length
+      let count;
+      if(this.exerciseData.data.check){
+        count=this.exerciseData.data.check.testcases.length;
+      }else if(this.exerciseData.data.tasks){
+        count=this.exerciseData.data.tasks.length;
+      }else if(this.exerciseData.data.features){
+        count=this.exerciseData.data.features.length;
+      }
       this.exerciseData.correct=createBoolArray(count);
       calcPoints(this.exerciseData);
       this.$root.save();
