@@ -43,7 +43,7 @@
       </template>
       <template v-else>
         <Button label="Aufgabe bearbeiten" @click="showExercise()"/>
-        <Dialog modal v-model:visible="showExerciseDialog" :header="title" :class="maximized? 'p-dialog-maximized':''" :maximizable="maximized?false:true" :closable="closable">
+        <Dialog modal v-model:visible="showExerciseDialog" :header="title" :class="maximized? 'p-dialog-maximized':''" :maximizable="maximized?false:true" :closable="closable" pt:mask:class="background-black">
           <template #header>
             {{ title }} <ExerciseProgress style="flex: 1" :exercise-data="exerciseData"/>
           </template>
@@ -54,10 +54,12 @@
             </div>
           </div>
           <template #footer>
-            <template v-if="!noRandom && !noFooter">
-              <Button v-if="!exerciseChecked" icon="pi pi-list-check" label="Überprüfen" @click="checkExercise()"/>
-              <Button v-else icon="pi pi-refresh" label="Neue Aufgabe" @click="refreshExercise()"/>
-            </template>
+            <slot name="footer">
+              <template v-if="!noRandom && !noFooter">
+                <Button v-if="!exerciseChecked" icon="pi pi-list-check" label="Überprüfen" @click="checkExercise()"/>
+                <Button v-else icon="pi pi-refresh" label="Neue Aufgabe" @click="refreshExercise()"/>
+              </template>
+            </slot>
           </template>
         </Dialog>
       </template>

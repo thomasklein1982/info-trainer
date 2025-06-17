@@ -72,16 +72,31 @@ code{
   pointer-events: none;
 }
 
-.teilaufgaben{
-  list-style-type: none;
-  counter-reset: item;
-  padding-inline-start: 0;
+
+@counter-style alpha-bracket {
+  system: alphabetic;
+  symbols: a b c d e f g h i j k l m n o p q r s t u v w x y z;
+  suffix: ") ";
 }
 
-.teilaufgaben>li:before{
-  content: counter(item, lower-latin) ") ";
+.center .p-steppanel{
+  
+}
+
+.background-black{
+  background-color: black !important;
+}
+
+
+.teilaufgaben{
+  list-style-type: alpha-bracket;
+  counter-reset: item;
+  list-style-position: outside;
+  padding-left: 20px;
+}
+
+.teilaufgaben>li::marker{
   color: orange;
-  counter-increment: item;
 }
 
 .teilaufgaben>li{
@@ -124,6 +139,10 @@ code{
 }
 
 .p-dialog{
+  max-width: min(100%,800px);
+}
+
+.p-dialog.p-dialog-maximized{
   max-width: 100%;
 }
 

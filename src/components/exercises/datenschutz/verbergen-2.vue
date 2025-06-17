@@ -1,5 +1,5 @@
 <template>
-  <ExerciseBody :exercise="$data" maximized no-random ref="body">
+  <ExerciseBody :exercise="$data" no-random ref="body">
     <template #outerintro>
       Synchronsprecher*innen fühlen sich von KI in ihrer Existenz bedroht.
     </template>
@@ -26,7 +26,7 @@
                 </ol>
               </li>
               <li>Aufgrund von KI hat sich die Bedeutung von Daten grundlegend geändert. Viele sprechen sogar davon, dass Daten die Währung des 21. Jahrhunderts sind.<br>Was meinst du zu diesen Aussagen?</li>
-              <li>Was denkst du: Hätten die Synchronsprecher vor 5 Jahren gesagt: "Ich habe doch nichts zu verbergen"?<br>Was würden sie heute dazu sagen?</li>
+              <li>Was denkst du: Hätten die Synchronsprecher <strong>vor 5 Jahren</strong> gesagt: "Wer nichts zu verbergen hat, hat auch nichts zu befürchten"?<br>Was würden sie <strong>heute</strong> dazu sagen?</li>
             </ol>
           </StepPanel>
           <StepPanel :value="3">
@@ -35,8 +35,8 @@
         </StepPanels>
       </Stepper>
       <div class="flex justify-between">
-        <Button v-if="pos>0" severity="secondary" icon="pi pi-arrow-left" @click="step(-1)" /><span v-else></span>
-        <Button v-if="pos<steps.length-1" icon="pi pi-arrow-right" iconPos="right" @click="step(1)" />
+        <Button v-if="pos>0" severity="secondary" label="Zurück" icon="pi pi-arrow-left" @click="step(-1)" /><span v-else></span>
+        <Button v-if="pos<steps.length-1" icon="pi pi-arrow-right" label="Weiter" iconPos="right" @click="step(1)" />
         <template v-else>
           <Button v-if="$refs.body.exerciseData.correct[0]===false" icon="pi pi-check" label="Erledigt" @click="done()"/>
           <Button v-else icon="pi pi-cross" label="Nicht erledigt" @click="notDone()"/>
