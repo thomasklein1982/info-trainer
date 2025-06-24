@@ -55,7 +55,7 @@
           <StepPanel :value="3">
             <ol class="teilaufgaben">
               <li>Die Nazis konnten fast alle jüdischen Einwohner Amsterdams innerhalb von drei Jahren deportieren. Wie war das möglich? Was hat die Einwohner-Registrierung damit zu tun?</li>
-              <li>Beurteile Artikel 9, Abstatz (1) der <a href="https://dsgvo-gesetz.de/" target="_blank">DSGVO</a> im Zusammenhang mit dieser Aufgabe.</li>
+              <li>Beurteile Artikel 9, Absatz (1) der <a href="https://dsgvo-gesetz.de/" target="_blank">DSGVO</a> im Zusammenhang mit dieser Aufgabe.</li>
               <li>Was denkst du: Hätten die Einwohner Amsterdams <strong>vor dem Einmarsch der Deutschen</strong> gesagt: "Wer nichts zu verbergen hat, hat auch nichts zu befürchten"?<br>Was hätten sie <strong>danach</strong> dazu gesagt?</li>
             </ol>
           </StepPanel>

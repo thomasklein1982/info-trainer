@@ -32,6 +32,11 @@ let Java={
       exercises: ["array-basics","array-erzeugen","array-swap","array-ausgabe","array-ausgabe-liste","array-summe","array-shift", "array-addieren", "array-zaehlen"]
     },
     {
+      label: "Verschlüsselung",
+      icon: "crypto",
+      exercises: ["char","caesar"]
+    },
+    {
       label: "Objektorientierung",
       icon: "oo",
       exercises: ["oo-basics","oo-beziehungen","oo-person", "oo-pat"]
@@ -149,7 +154,7 @@ let Datenschutz={
   paths: [
     {
       label: "Nichts zu verbergen?!?",
-      icon: "internet",
+      icon: "privacy",
       exercises: ["verbergen-1","verbergen-2","verbergen-3"]
     },
     // {

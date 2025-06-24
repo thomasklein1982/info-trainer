@@ -1,4 +1,6 @@
 
+export * as Char from './crypto/char.vue';
+export * as Caesar from './crypto/caesar.vue';
 export * as Verbergen3 from './datenschutz/verbergen-3.vue';
 export * as Verbergen2 from './datenschutz/verbergen-2.vue';
 export * as Verbergen1 from './datenschutz/verbergen-1.vue';
