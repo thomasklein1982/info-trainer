@@ -184,7 +184,8 @@ String entschluesseleText ( String geheimtext, int key ){
 $void main(){
   System.out.println( verschluesseleZeichen( 'A', 1 ) );
   System.out.println( entschluesseleZeichen( 'D', 2 ) );
-  System.out.println( entschluesseleZeichen( 'D', 28 ) );
+  System.out.println( verschluesseleText( "ZORRO", 2 ) );
+  System.out.println( entschluesseleText( "ABC", 2 ) );
 }`
     }
     ]

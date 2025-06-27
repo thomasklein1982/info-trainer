@@ -6,11 +6,14 @@
       <li>Führe Rechnungen mit den Zahlen durch.</li>
       <li>Wandle die Ergebnis-Zahlen wieder in Zeichen um.</li>
     </ol>
-    In dieser Aufgabe geht es darum, wie Zeichen in Zahlen umgewandelt werden können und anders herum.
+    In dieser Aufgabe geht es darum, Großbuchstaben 'A', 'B', 'C', ... in Zahlen 0, 1, 2, ... umzuwandeln und umgekehrt.
     <ol class="teilaufgaben">
-      <li>Die Methode <Code inline>int zeichenZuZahl( char z )</Code> soll zum Zeichen <Code inline>z</Code> den zugehörigen ASCII-Code zurückgeben (z. B. <code>'A'</code> &rightarrow; <code>65</code>).</li>
-      <li>Die Methode <Code inline>char zahlZuZeichen( int a )</Code> soll die Zahl <Code inline>a</Code> in das zugehörige Zeichen (laut  ASCII-Code) umwandeln und zurückgeben (z. B. <code>66</code> &rightarrow; <code>'B'</code>).</li>
+      <li>Die Methode <Code inline>int buchstabeZuZahl( char z )</Code> soll die zum Großbuchstaben <Code inline>z</Code> gehörige Zahl zurückgeben (<code>'A'</code> &rightarrow; <code>0</code>, <code>'B'</code> &rightarrow; <code>1</code>, ...).</li>
+      <li>Die Methode <Code inline>char zahlZuBuchstabe( int n )</Code> soll die Zahl <Code inline>n</Code> in den zugehörigen Großbuchstaben umwandeln und zurückgeben (z. B. <code>2</code> &rightarrow; <code>'C'</code>).</li>
     </ol>
+    <Hint>
+      Die Methoden müssen nur für Großbuchstaben funktionieren. 
+    </Hint>
   </ExerciseBody>
 </template>
 
@@ -33,8 +36,8 @@ export const data={
               zuZahl: true
             };
           },
-          count: 10,  
-          info: 'Die Methode <code>zeichenZuZahl</code> funktioniert.'
+          count: 26,  
+          info: 'Die Methode <code>buchstabeZuZahl</code> funktioniert.'
         },
         {
           data: ()=>{
@@ -43,21 +46,21 @@ export const data={
               zuZahl: false
             };
           },
-          count: 10,  
-          info: 'Die Methode <code>zahlZuZeichen</code> funktioniert.'
+          count: 26,  
+          info: 'Die Methode <code>zahlZuBuchstabe</code> funktioniert.'
         }
       ],
     test: async (tc,init)=>{
-      let a=tc.a;
-      let z1=String.fromCharCode(a);
+      let a=tc.$run.index;
+      let z1=String.fromCharCode(a+65);
       let z=$StringCharAtChar(z1,0);
       let ist,soll;
       soll=a;
       if(tc.zuZahl){
-        ist=await init.a.zeichenZuZahl(z);
+        ist=await init.a.buchstabeZuZahl(z);
       }else{
-        ist=await init.a.zahlZuZeichen(a);
-        ist=ist.int;
+        ist=await init.a.zahlZuBuchstabe(a);
+        ist=ist.int-65;
       }
       return (ist===soll);
     }
@@ -66,26 +69,28 @@ export const data={
     name: "Zeichen und Zahlen",
     clazzes: [{
       name: "Main",
-      src: `int zeichenZuZahl ( char z ){
+      src: `int buchstabeZuZahl ( char z ){
   
 }
 
-char zahlZuZeichen ( int a ){
+char zahlZuBuchstabe ( int n ){
   
 }
   
 $void main(){
-  System.out.println( zeichenZuZahl( 'A' ) );
-  System.out.println( zahlZuZeichen( 65 ) );
+  System.out.println( buchstabeZuZahl( 'A' ) );
+  System.out.println( zahlZuBuchstabe( 1 ) );
 }`
     }
     ]
   }
 }
 
+import Hint from "../../hint.vue"
+
 export default{
   components: {
-    
+    Hint
   },
   data() {
       return data;

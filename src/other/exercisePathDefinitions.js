@@ -34,7 +34,7 @@ let Java={
     {
       label: "Verschlüsselung",
       icon: "crypto",
-      exercises: ["char","caesar"]
+      exercises: ["char","caesar", "viginere"]
     },
     {
       label: "Objektorientierung",
