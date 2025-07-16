@@ -72,6 +72,7 @@
             type="fsm"
           />
           <TuringMachineLauncher/>
+          <RmLauncher/>
           <DatabaseLauncher :database="database" allow-choose-database allow-choose-mode/>
         </div>
       </template>
@@ -141,10 +142,11 @@ import SpeedDial from 'primevue/speeddial';
 import Select from 'primevue/select';
 import DatabaseLauncher from './database-launcher.vue';
 import empty from './exercises/databases/databases/empty';
+import RmLauncher from './rm-launcher.vue';
 
 export default{
   components: {
-    TuringMachineLauncher, ClassDiagram, WebEditorLauncher, ExercisePath, SpeedDial, Select, DatabaseLauncher
+    TuringMachineLauncher, ClassDiagram, WebEditorLauncher, ExercisePath, SpeedDial, Select, DatabaseLauncher, RmLauncher
   },
   props: {
     ab: Object

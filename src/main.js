@@ -113,3 +113,8 @@ app.mount('#app');
 //console.log(parseTerm('s[Name="Thomas"](A n p[Name](B))'));
 //console.log(parseTerm("(r[Name>Bla](Abla) n (A n B) ixi[Name=Mieter] C) x Durch"));
 
+
+
+import {parser as registerParser} from "./parsers/register-parser/register-parser";
+
+console.log(registerParser);
