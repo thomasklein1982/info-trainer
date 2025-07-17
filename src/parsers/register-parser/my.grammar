@@ -3,20 +3,20 @@
 @skip { space | Comment }
 
 @tokens {
-  space { " "+ }
+  space { (" "|"	")+ }
   Comment { "//" ![\n]* }
-  Word { $[A-Za-z_] $[A-Za-z0-9_]* }
+  Word { $[A-Za-z_ÄäÜüÖöß] $[A-Za-z0-9_ÄäÜüÖöß]* }
   Number { std.digit+ }
   NewLine { "\n" }
-  Marke { $[A-Za-z_] $[A-Za-z0-9_]* ":" }
+  Marke { $[A-Za-z_ÄäÜüÖöß] $[A-Za-z0-9_ÄäÜüÖöß]* ":" }
   @precedence{Word,Number}
 }
 
 Zeile { (Marke? Anweisung)|() }
 Ziel { Word }
 Anweisung { (CMD_VALUE VALUE | CMD_ZIEL Ziel | CMD_ZIEL Ziel | CMD_ZIEL Ziel | CMD_END) }
-CMD_VALUE { "LOAD"|"STORE"|"ADD"|"SUB"|"MUL"|"DIV" }
-CMD_ZIEL {"GOTO"|"JZERO"|"JNZERO"}
+CMD_VALUE { "LOAD"|"STORE"|"ADD"|"SUB"|"MUL"|"DIV"|"load"|"store"|"add"|"sub"|"mul"|"div" }
+CMD_ZIEL {"GOTO"|"JZERO"|"JNZERO"|"goto"|"jzero"|"jnzero"}
 CMD_END {"END"}
 VALUE { (KONSTANTE | DIREKT | INDIREKT) }
 KONSTANTE { "#" Number }

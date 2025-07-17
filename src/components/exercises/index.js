@@ -1,4 +1,5 @@
 
+export * as RmAddieren from './rm/rm-addieren.vue';
 export * as Viginere from './crypto/viginere.vue';
 export * as Char from './crypto/char.vue';
 export * as Caesar from './crypto/caesar.vue';

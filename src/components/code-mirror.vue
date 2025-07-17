@@ -4,12 +4,35 @@
 
 <script>
 import {EditorView, basicSetup} from "codemirror";
-import {Compartment,EditorState} from '@codemirror/state';
-import {keymap} from '@codemirror/view';
+import {Compartment,EditorState,StateEffect,StateField} from '@codemirror/state';
+import {keymap, Decoration} from '@codemirror/view';
 import {indentWithTab, undo, redo} from '@codemirror/commands';
 import {LRLanguage,LanguageSupport,foldNodeProp, foldInside, indentNodeProp} from "@codemirror/language";
 import {parser as registerParser} from "../parsers/register-parser/register-parser";
 import { oneDark } from '@codemirror/theme-one-dark';
+
+const addLineHighlight = StateEffect.define();
+
+const lineHighlightField = StateField.define({
+  create() {
+    return Decoration.none;
+  },
+  update(lines, tr) {
+    lines = lines.map(tr.changes);
+    for (let e of tr.effects) {
+      if (e.is(addLineHighlight)) {
+        lines = Decoration.none;
+        lines = lines.update({add: [lineHighlightMark.range(e.value)]});
+      }
+    }
+    return lines;
+  },
+  provide: (f) => EditorView.decorations.from(f),
+});
+
+const lineHighlightMark = Decoration.line({
+  attributes: {style: 'background-color: rgba(0,255,0,0.2)'},
+});
 
 //import {javascript} from "@codemirror/lang-javascript"
 let editor;
@@ -71,10 +94,20 @@ export default{
   props: {
     modelValue: String,
     language: String,
+    highlightedLineNumber: Number,
     insertTab: {
       type: Boolean,
       default: false
     }
+  },
+  watch: {
+    highlightedLineNumber(nv,ov){
+      this.highlightLine(nv);
+    },
+    // modelValue(nv,ov){
+    //   if(nv===ov) return;
+    //   this.setValue(nv);
+    // }
   },
   mounted(){
     let editorTheme=new Compartment();
@@ -82,9 +115,11 @@ export default{
       basicSetup,
       keymap.of(this.insertTab? insertTab:indentWithTab),
       editorTheme.of(oneDark),
+      lineHighlightField,
       EditorView.updateListener.of((v) => {
         if(!v.docChanged) return;
-        console.log(v.state.tree.toString());
+        //console.log(v.state.tree.toString());
+        this.$emit('update-tree',v.state.tree);
         this.$emit('update:modelValue', this.getValue());
       }),
     ];
@@ -104,6 +139,15 @@ export default{
     })
   },
   methods: {
+    highlightLine(lineNo) {
+      try{
+        if (lineNo <= 0) throw "";
+        const docPosition = editor.state.doc.line(lineNo).from;
+        editor.dispatch({effects: addLineHighlight.of(docPosition)});
+      }catch(e){
+        editor.dispatch({effects: addLineHighlight.of(-1)});
+      }
+    },
     undo(){
       undo();
     },

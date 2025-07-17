@@ -1,6 +1,6 @@
 <template>
   
-  <Button @click="openDialog" label="Registermaschinen-Simulator öffnen"/>
+  <Button @click="openDialog" label="RM-Simulator öffnen"/>
   <Dialog ref="dialog" :header="exerciseData? exerciseData.title:'Registermaschine'" v-model:visible="show" :closable="true" maximizable :close-on-escape="false">
     <template #maximizeicon>
       <div style="position: relative">

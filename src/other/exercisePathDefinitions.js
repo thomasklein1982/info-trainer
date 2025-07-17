@@ -102,6 +102,11 @@ let TheoretischeInformatik={
       label: "Turingmaschinen",
       icon: "tm",
       exercises: ["tm-hi","tm-loeschen","tm-bits-kippen","tm-paritaet","tm-zaehlen-1","tm-durch-3","tm-palindrom","tm-inkrement","tm-verdoppeln","tm-zaehlen-2", "tm-addieren"]
+    },
+    {
+      label: "Registermaschinen",
+      icon: "rm",
+      exercises: ["rm-addieren"]
     }
   ]
 }

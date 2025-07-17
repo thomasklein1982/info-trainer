@@ -23,6 +23,13 @@
           @show-feedback="$refs.dialogFeedback.open()"
         />
       </template>
+      <template v-else-if="registerMachine">
+        <RmLauncher
+          :exercise-data="exerciseData"
+          :machine="machine"
+          @show-feedback="$refs.dialogFeedback.open()"
+        />
+      </template>
       <template v-else-if="regexp">
         <RegexpLauncher
           :exercise-data="exerciseData"
@@ -79,13 +86,15 @@ import ExerciseProgress from "./exercise-progress.vue";
 import JavaApp from "./java-app.vue";
 import RegexpLauncher from "./regexp-launcher.vue";
 import TuringMachineLauncher from "./turing-machine-launcher.vue";
+
 import DatabaseLauncher from "./database-launcher.vue";
 import Message from "primevue/message";
+import RmLauncher from "./rm-launcher.vue";
 
 
 export default {
   components: {
-    JavaApp, DialogFeedback,ExerciseProgress, TuringMachineLauncher, Message, RegexpLauncher, DatabaseLauncher
+    JavaApp, DialogFeedback,ExerciseProgress, TuringMachineLauncher, Message, RegexpLauncher, DatabaseLauncher, RmLauncher
   },
   props: {
     exercise: Object,
@@ -95,6 +104,7 @@ export default {
     },
     turingMachine: Object,
     finiteStateMachine: Object,
+    registerMachine: Object,
     java: Object,
     regexp: Object,
     database: Object,
