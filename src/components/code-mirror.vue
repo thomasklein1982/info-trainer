@@ -213,10 +213,10 @@ export default{
       }
     },
     undo(){
-      undo();
+      undo(editor);
     },
     redo(){
-      redo();
+      redo(editor);
     },
     setValue(code){
       editor.dispatch({

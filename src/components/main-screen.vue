@@ -1,33 +1,53 @@
 <template>
   <div class="screen" style="display: flex; flex-direction: column">
-    <AppMenubar
-      :settings="settings"
-      @show-exercises="clickMenu()"
-      @settings="$refs.dialogSettings.open()"
-      @submit="$emit('settings-changed')"
-      @home="clickHome()"
-    />
-    <div style="flex: 1; overflow: auto" ref="content">
-      <ExerciseDrawer 
-        ref="exerciseDrawer"
-        @open-exercise-path="openExercisePath"
+    <template v-if="mode.type==='rm'">
+      <RmSimulator
+        :machine="{}"
       />
-      <Drawer v-model:visible="showABDrawer" header="Willkommen beim Info-Trainer">
-        Du bist im "Arbeitsblatt-Modus". Hier kannst du nur bestimmte Aufgaben bearbeiten.
-        <p>In diesem Modus werden deine vorherigen Lösungen nicht geladen, du musst also alle Aufgaben noch einmal neu lösen.</p>
-        <p>Deine Aufgaben werden nur dann gespeichert, wenn du dich verbessert hast.</p>
-        <p>Klicke auf <Button icon="pi pi-home" text rounded @click="clickHome()"/>, um das Arbeitsblatt zu verlassen und zum "normalen" Info-Trainer zurückzukehren.</p>
-      </Drawer>
-      <template v-if="showHome">
-        <Home :ab="ab"/>
-      </template>
-      <ExercisePath v-else :path="currentPath"/>
-      
-    </div>
-    <DialogSettings
-      ref="dialogSettings"
-      :settings="settings"
-    />
+    </template>
+    <template v-else-if="mode.type==='tm'">
+      <TmSimulator
+        :machine="{}"
+        type="tm"
+      />
+    </template>
+    <template v-else-if="mode.type==='db'">
+      <DatabaseLauncher
+        allow-choose-database
+        allow-choose-mode
+        show-from-start
+      />
+    </template>
+    <template v-else>
+      <AppMenubar
+        :settings="settings"
+        @show-exercises="clickMenu()"
+        @settings="$refs.dialogSettings.open()"
+        @submit="$emit('settings-changed')"
+        @home="clickHome()"
+      />
+      <div style="flex: 1; overflow: auto" ref="content">
+        <ExerciseDrawer 
+          ref="exerciseDrawer"
+          @open-exercise-path="openExercisePath"
+        />
+        <Drawer v-model:visible="showABDrawer" header="Willkommen beim Info-Trainer">
+          Du bist im "Arbeitsblatt-Modus". Hier kannst du nur bestimmte Aufgaben bearbeiten.
+          <p>In diesem Modus werden deine vorherigen Lösungen nicht geladen, du musst also alle Aufgaben noch einmal neu lösen.</p>
+          <p>Deine Aufgaben werden nur dann gespeichert, wenn du dich verbessert hast.</p>
+          <p>Klicke auf <Button icon="pi pi-home" text rounded @click="clickHome()"/>, um das Arbeitsblatt zu verlassen und zum "normalen" Info-Trainer zurückzukehren.</p>
+        </Drawer>
+        <template v-if="showHome">
+          <Home :ab="ab"/>
+        </template>
+        <ExercisePath v-else :path="currentPath"/>
+        
+      </div>
+      <DialogSettings
+        ref="dialogSettings"
+        :settings="settings"
+      />
+    </template>
   </div>
 </template>
 
@@ -41,10 +61,13 @@ import ExercisePathData from '../other/exercisePathDefinitions';
 import { updateServiceWorker } from '../main';
 import DialogSettings from './dialog-settings.vue';
 import Drawer from 'primevue/drawer';
+import RmSimulator from './rm-simulator.vue';
+import TmSimulator from './tm-simulator.vue';
+import DatabaseLauncher from './database-launcher.vue';
 
 export default{
   components: {
-    AppMenubar, Home, ExerciseDrawer, ExercisePath, DialogSettings, Drawer
+    AppMenubar, Home, ExerciseDrawer, ExercisePath, DialogSettings, Drawer, RmSimulator, TmSimulator, DatabaseLauncher
   },
   props: {
     settings: Object,

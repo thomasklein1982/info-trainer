@@ -229,11 +229,15 @@ export default{
     allowChooseDatabase: {
       type: Boolean,
       default: false
+    },
+    showFromStart: {
+      type: Boolean,
+      default: false
     }
   },
   data(){
     return {
-      show: false,
+      show: this.showFromStart,
       showInfos: false,
       showResultUI: false,
       input: "",

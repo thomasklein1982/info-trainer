@@ -194,7 +194,10 @@ export default{
       this.$emit("save");
     },
     undo(){
-
+      this.$refs.editor.undo();
+    },
+    redo(){
+      this.$refs.editor.redo();
     },
     async run(){
       if(this.maxSpeed){

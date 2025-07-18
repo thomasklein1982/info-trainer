@@ -72,6 +72,24 @@ if(hash.toLowerCase().startsWith("#ab=")){
     useStorage: false,
     icon: "icon-practise.svg"
   };
+}else if(hash.toLowerCase()==="#rm"){
+  mode={
+    type: "rm",
+    useStorage: false,
+    icon: "favicon.svg"
+  };
+}else if(hash.toLowerCase()==="#tm"){
+  mode={
+    type: "tm",
+    useStorage: false,
+    icon: "favicon.svg"
+  };
+}else if(hash.toLowerCase()==="#db"){
+  mode={
+    type: "db",
+    useStorage: false,
+    icon: "favicon.svg"
+  };
 }
 
 window.onbeforeunload=function(ev){
