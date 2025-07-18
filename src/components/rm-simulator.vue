@@ -1,5 +1,29 @@
 <template>
   <div class="screen" style="display: flex; flex-direction: column; overflow: hidden">
+    <Drawer v-model:visible="helpVisible" position="right" header="Hilfe zu Registermaschinen">
+        <h1>Operanden</h1>
+          <table>
+            <tr><th>Syntax</th><th>Name</th><th>Bedeutung</th></tr>
+            <tr><td><code>#n</code></td><td>Konstante</td><td>Die Zahl <code>n</code></td></tr>
+            <tr><td><code>n</code></td><td>Index</td><td>Das Register <code>R(n)</code></td></tr>
+            <tr><td><code>*n</code></td><td>Zeiger</td><td>Das Register, dessen Nummer in Register <code>R(n)</code> steht.</td></tr>
+            <tr><td><code>bel. Text</code></td><td>Marke</td><td>Eine Sprungmarke, die sich im Programm befindet</td></tr>
+          </table>
+        <h1>Befehlssatz</h1>
+          <table>
+            <tr><th>Befehl</th><th>Operand</th><th>Bedeutung</th></tr>
+            <tr><td><code>LOAD</code></td><td>Konstante / Index / Zeiger</td><td>Lädt den Wert in den Akkumulator.</td></tr>
+            <tr><td><code>STORE</code></td><td>Index / Zeiger</td><td>Speichert den Inhalt des Akkumulators in das entsprechende Register.</td></tr>
+            <tr><td><code>ADD</code></td><td>Konstante / Index / Zeiger</td><td>Addiert den Wert zum Akkumulator.</td></tr>
+            <tr><td><code>SUB</code></td><td>Konstante / Index / Zeiger</td><td>Subtrahiert den Wert vom Akkumulator. Wenn eine negative Zahl entstehen würde, wird der Akkumulator stattdessen auf 0 gesetzt.</td></tr>
+            <tr><td><code>MUL</code></td><td>Konstante / Index / Zeiger</td><td>Multipliziert den Wert mit dem Akkumulator.</td></tr>
+            <tr><td><code>DIV</code></td><td>Konstante / Index / Zeiger</td><td>Dividiert den Akkumulator durch den Wert ohne Rest. Wenn der Wert 0 ist, wird das Programm stattdessen beendet.</td></tr>
+            <tr><td><code>GOTO</code></td><td>Marke</td><td>Springt zur Sprungmarke.</td></tr>
+            <tr><td><code>JZERO</code></td><td>Marke</td><td>Falls der Akkumulator den Wert 0 hat, springt das Programm zur Sprungmarke.</td></tr>
+            <tr><td><code>JNZERO</code></td><td>Marke</td><td>Falls der Akkumulator <em>nicht</em> den Wert 0 hat, springt das Programm zur Sprungmarke.</td></tr>
+            <tr><td><code>END</code></td><td></td><td>Beendet das Programm.</td></tr>
+          </table>
+    </Drawer>
     <Menubar
       :model="[]"
     >
@@ -38,7 +62,8 @@
           </div>
         </div>
         <div>
-          <Button icon="pi pi-undo" fluid label="Reset" @click="resetMachine()"/>
+          <Button icon="pi pi-undo"  label="Reset" @click="resetMachine()"/>
+          <Button icon="pi pi-question"  label="Hilfe" @click="showHelp()"/>
         </div>
       </div>
     </div>
@@ -60,10 +85,11 @@ import { calcPoints } from '../App.vue';
 import ToggleSwitch from 'primevue/toggleswitch';
 import AutoComplete from 'primevue/autocomplete';
 import InputNumber from 'primevue/inputnumber';
+import Drawer from 'primevue/drawer';
 
 export default{
   components: {
-    Menubar,CodeMirror, Splitter, SplitterPanel, Slider, SelectButton, Message, ToggleSwitch, AutoComplete, InputNumber
+    Menubar,CodeMirror, Splitter, SplitterPanel, Slider, SelectButton, Message, ToggleSwitch, AutoComplete, InputNumber, Drawer
   },
   props: {
     machine: Object,
@@ -83,6 +109,7 @@ export default{
       code: "",
       checking: false,
       maxSpeed: false,
+      helpVisible: false,
       sprungmarken: {},
       zeilen: [],
       runtime: {
@@ -109,6 +136,9 @@ export default{
     this.resetMachine();
   },
   methods: {
+    showHelp(){
+      this.helpVisible=true;
+    },
     updateTree(tree){
       this.tree=tree;
       this.compiled=false;
@@ -435,5 +465,16 @@ export default{
   }
   .register>div:nth-child(2){
     flex: 1;
+  }
+  table{
+    border-collapse: collapse;
+  }
+  table td, table th{
+    border: 1pt solid white;
+    padding: 0.2rem;
+    text-align: left;
+  }
+  h1{
+    font-size: large;
   }
 </style>
