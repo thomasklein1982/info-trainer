@@ -14,10 +14,11 @@
 
 Zeile { (Marke? Anweisung)|() }
 Ziel { Word }
-Anweisung { (CMD_VALUE VALUE | CMD_ZIEL Ziel | CMD_ZIEL Ziel | CMD_ZIEL Ziel | CMD_END) }
-CMD_VALUE { "LOAD"|"STORE"|"ADD"|"SUB"|"MUL"|"DIV"|"load"|"store"|"add"|"sub"|"mul"|"div" }
+Anweisung { (CMD_STORE (DIREKT|INDIREKT) | CMD_VALUE VALUE | CMD_ZIEL Ziel | CMD_END) }
+CMD_VALUE { "LOAD"|"ADD"|"SUB"|"MUL"|"DIV"|"load"|"add"|"sub"|"mul"|"div" }
 CMD_ZIEL {"GOTO"|"JZERO"|"JNZERO"|"goto"|"jzero"|"jnzero"}
-CMD_END {"END"}
+CMD_STORE {"STORE"|"store"}
+CMD_END {"END"|"end"}
 VALUE { (KONSTANTE | DIREKT | INDIREKT) }
 KONSTANTE { "#" Number }
 DIREKT { Number }

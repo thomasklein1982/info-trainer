@@ -26,7 +26,7 @@
       <template v-else-if="registerMachine">
         <RmLauncher
           :exercise-data="exerciseData"
-          :machine="machine"
+          :machine="registerMachine"
           @show-feedback="$refs.dialogFeedback.open()"
         />
       </template>

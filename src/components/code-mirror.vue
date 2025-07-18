@@ -48,6 +48,7 @@ const registerLanguage = LRLanguage.define({
         Ziel: tags.heading,
         CMD_VALUE: tags.keyword,
         CMD_ZIEL: tags.keyword,
+        CMD_STORE: tags.keyword,
         CMD_END: tags.keyword,
         Marke: tags.heading,
         Number: tags.number,
@@ -70,6 +71,67 @@ const registerLanguage = LRLanguage.define({
 function registerLanguageSupport() {
   return new LanguageSupport(registerLanguage);
 }
+
+import {syntaxTree} from "@codemirror/language"
+import {linter,lintGutter} from "@codemirror/lint"
+
+function walkTree(node, enter, isFirstChild){
+  if(!node) return;
+  let goOn=enter(node);
+  if(!goOn) return;
+  if(node.firstChild){
+    walkTree(node.firstChild,enter,true);
+  }
+  if(isFirstChild){
+    while(node.nextSibling){
+      node=node.nextSibling;
+      walkTree(node,enter,false);
+    }
+  }
+}
+
+const registerLinter = linter(view => {
+  let diagnostics=[];
+  let tree=syntaxTree(view.state);
+  let node=tree.topNode;
+  walkTree(node, (node)=>{
+    if (node.type.isError){
+      let from=node.from;
+      let to=node.to;
+      let msg="Syntax-Fehler";
+      let p=node.parent;
+      if(p.name==="Programm"){
+        msg="Anweisung erwartet";
+      }else if(p.name.startsWith("CMD")){
+        msg="Anweisung erwartet";
+        p=node.parent.parent;
+        from=p.from;
+        to=p.to;
+      }else if(p.name==="Anweisung"){
+        let cmd=p.firstChild;
+        if(cmd.name==="CMD_VALUE"){
+          msg="Konstante, Register oder Pointer erwartet";
+        }else if(cmd.name==="CMD_ZIEL"){
+          msg="Sprungmarke erwartet";
+        }else if(cmd.name==="CMD_STORE"){
+          msg="Register oder Pointer erwartet";
+        }
+      }else if(node.prevSibling?.name==="Marke"){
+        msg="Anweisung erwartet";
+      }
+      diagnostics.push({
+        from: from,
+        to: to,
+        severity: "warning",
+        message: msg
+      });
+      return false;
+    }
+    return true;
+  },true);
+  return diagnostics
+})
+
 //import {javascript} from "@codemirror/lang-javascript"
 
 const insertTabFunc = ({ state, dispatch }) => {
@@ -119,18 +181,20 @@ export default{
       EditorView.updateListener.of((v) => {
         if(!v.docChanged) return;
         //console.log(v.state.tree.toString());
-        this.$emit('update-tree',v.state.tree);
         this.$emit('update:modelValue', this.getValue());
+        this.$emit('update-tree',v.state.tree);
       }),
     ];
     if(this.language==="register"){
       extensions.push(registerLanguageSupport());
+      extensions.push(registerLinter);
+      extensions.push(lintGutter());
     }
     editor = new EditorView({
       state: EditorState.create(
         {
           doc: this.modelValue,
-          extensions: extensions,
+          extensions: extensions
         },
       ),
       

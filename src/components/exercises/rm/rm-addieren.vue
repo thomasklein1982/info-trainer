@@ -13,24 +13,18 @@ export const data={
   title: "Die Additionsmaschine",
   check: {
     input: ()=>{
-      let array=["0+0",random(5,20)+"+0","0+"+random(5,20)];
+      let array=[[0,0],[random(5,20),0],[0,random(5,20)]];
       for(let i=0;i<3;i++){
         let a=random(5,30);
         let b=random(5,30);
-        array.push(a+"+"+b);
+        array.push([a,b]);
       }
-      array.push(random(70,99)+"+"+random(70,99));
       return array;
     },
     testcases: [
       {
         check: (input, output)=>{
-          let s=input.split("+");
-          let a=s[0]*1;
-          let b=s[1]*1;
-          let c=a+b;
-          output=output.trim();
-          return output===c+"";
+          return output[2]===input[0]+input[1];
         },
         info: 'R3 erhält den korrekten Wert'
       }

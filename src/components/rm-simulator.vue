@@ -7,7 +7,7 @@
         <Button size="small" :disabled="error || state==='running' || state==='halted'" icon="pi pi-play" rounded text label="Run" @click="run()"/>
         <Button size="small" :disabled="error || state==='running' || state==='halted'" icon="pi pi-arrow-right" rounded label="Step" text @click="step()"/>
         <Button size="small" :disabled="error || state==='blank'" icon="pi pi-stop" rounded text @click="stop()" label="Stop"/>
-        <Button v-if="exerciseData" icon="pi pi-list-check" label="Überpüfen" :loading="checking" @click="check()" text/>
+        <Button v-if="exerciseData" icon="pi pi-list-check" label="Überpüfen" :loading="checking" @click="check()" text />
       </template>
       <template #end>
         <label style="vertical-align: middle; display: inline-flex; align-items: center"><ToggleSwitch v-model="maxSpeed"/> Max. Speed</label>
@@ -23,7 +23,6 @@
         </div>
       </div>
       <div class="sidebar">
-        
         <div class="register">
           <div style="font-weight: bold">Akku:</div>
           <div><InputNumber fluid v-model="runtime.akkumulator"/></div>
@@ -115,7 +114,44 @@ export default{
       this.compiled=false;
     },
     async check(){
-      
+      this.checking=true;
+      await sleep(10);
+      let check=this.exerciseData.data.check;
+      let testcases=check.testcases;
+      if(!this.compile()){
+        setArrayToValue(this.exerciseData.correct,false);
+        this.finishChecking();
+        return;
+      }
+      let input=check.input;
+      setArrayToValue(this.exerciseData.correct,true);
+      let inputs=input();
+      if(!Array.isArray(inputs)) inputs=[inputs];
+      for(let j=0;j<inputs.length;j++){
+        await sleep(10);
+        let input=inputs[j];
+        this.resetRuntime(input);
+        let ok=this.runAtMaxSpeed();
+        if(!ok){
+          setArrayToValue(this.exerciseData.correct,false);
+          this.finishChecking();
+          return;
+        }
+        let output=this.runtime.registers;
+        for(let k=0;k<testcases.length;k++){
+          if(this.exerciseData.correct[k]!==true) continue;
+          let tc=testcases[k];
+          let ok=tc.check(input,output);
+          if(!ok){
+            if(input.length>0){
+              this.exerciseData.correct[k]="Fehler trat auf bei Input <code>"+input+"</code>";
+            }else{
+              this.exerciseData.correct[k]="Fehler trat auf bei leerem Input";
+            }
+            
+          }
+        }
+      }
       this.finishChecking();
     },
     finishChecking(){
@@ -142,27 +178,42 @@ export default{
         this.step();
         await sleep(100);
       }
+      return false;
     },
     runAtMaxSpeed(){
+      let steps=0;
       if(this.state!=="running"){
         this.state="running";
       }
       while(this.state==="running"){
         this.step();
+        steps++;
+        if(steps>=this.machine.maxSteps) return false;
       }
+      return true;
     },
     halt(){
       this.state="halted";
       this.setHighlightedLineNumber(0);
     },
-    resetMachine(){
+    resetRuntime(registers){
+      this.reset();
+      this.resetMachine(registers);
+    },
+    resetMachine(registers){
       this.runtime.akkumulator=0;
-      this.runtime.registers=[0,0,0,0,0,0,0,0,0,0];
+      if(registers){
+        this.runtime.registers=[];
+        for(let i=0;i<registers.length;i++){
+          this.runtime.registers.push(registers[i]);
+        }
+      }else{
+        this.runtime.registers=[0,0,0,0,0,0,0,0,0,0];
+      }
     },
     reset(){
       this.state="blank";
       this.runtime.zeileIndex=0;
-      this.setHighlightedLineNumber(1);
     },
     setHighlightedLineNumber(lineNo){
       this.$refs.editor.highlightLine(lineNo);
@@ -206,8 +257,10 @@ export default{
           zeile.command=this.code.substring(cmdType.from,cmdType.to).toUpperCase();
           let arg=cmdType.nextSibling;
           if(arg){
-            if(arg.name==="VALUE"){
-              arg=arg.firstChild;
+            if(cmdType.name==="CMD_VALUE" || cmdType.name==="CMD_STORE"){
+              if(cmdType.name==="CMD_VALUE"){
+                arg=arg.firstChild;
+              }
               let offset=arg.name==="DIREKT"? 0:1;
               zeile.argument={
                 type: arg.name,
@@ -222,14 +275,18 @@ export default{
         }
         
       }
-
+      return true;
     },
     step(){
       if(!this.compiled){
         this.compile();
       }
       if(this.state==="blank"){
+        if(this.zeilen.length===0) return;
         this.state="stepping";
+        this.runtime.zeileIndex=0;
+        this.setHighlightedLineNumber(this.zeilen[0].line);
+        return;
       }
       let zeile=this.zeilen[this.runtime.zeileIndex];
       this.runtime.zeileIndex++;
@@ -292,7 +349,7 @@ export default{
           naechsteZeile=m.zeile;
         }
       }
-      if(naechsteZeile && !this.maxSpeed){
+      if(naechsteZeile && (!this.maxSpeed || this.state==="stepping")){
         this.setHighlightedLineNumber(naechsteZeile.line);
       }else{
         this.setHighlightedLineNumber(0);
@@ -321,7 +378,7 @@ export default{
       if(arg.type==="DIREKT"){
         reg=arg.value;
       }else if(arg.type==="INDIREKT"){
-        reg=arg.value>=regs.length? 0: regs[arg.value];
+        reg=arg.value-1>=regs.length? 0: regs[arg.value-1];
       }
       while(reg-1>=regs.length){
         regs.push(0);
@@ -334,26 +391,20 @@ export default{
     },
     setUserData(data){
       if(!data){
-        data=this.machine;
+        data={
+          code: this.code
+        };
       }
-      if(data){
-        this.registers=[];
-        let regs=JSON.parse(data.registers);
-        for(let i=0;i<regs.length;i++){
-          this.registers.push(regs[i]);
-        }
-        this.code=data.code;
-      }
+      this.code=data.code;
       this.$refs.editor.setValue(this.code);
     },
     getUserData(){
-      let machine={
-        registers: JSON.stringify(this.registers),
-        code: this.$refs.editor.getValue()
+      let data={
+        code: this.code
       };
       return {
-        machine
-      }
+        machine: data
+      };
     }
   }
 }
