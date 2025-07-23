@@ -43,18 +43,24 @@
     <div style="display: flex; flex: 1; overflow: hidden">
       <div style="flex: 1; display: flex; flex-direction: column; height: 100%; overflow: auto">
         <div style="flex: 1">
-          <CodeMirror language="register" ref="editor" v-model="code" @update-tree="updateTree"/>
+          <CodeMirror 
+            language="register" 
+            ref="editor" 
+            v-model="code" 
+            :linter="linter"
+            @update-tree="updateTree"
+          />
         </div>
       </div>
       <div class="sidebar">
         <div class="register">
           <div style="font-weight: bold">Akku:</div>
-          <div><InputNumber fluid v-model="runtime.akkumulator"/></div>
+          <div><InputNumber placeholder="0" fluid v-model="runtime.akkumulator"/></div>
         </div>
         <div class="registers">
           <div class="register" v-for="(r,i) in runtime.registers">
             <div>R{{ i+1 }}:</div>
-            <div><InputNumber fluid v-model="runtime.registers[i]"/></div>
+            <div><InputNumber placeholder="0" fluid v-model="runtime.registers[i]"/></div>
           </div>
           <div>
             <Button icon="pi pi-plus" text @click="runtime.registers.push(0)"/>
@@ -87,6 +93,26 @@ import AutoComplete from 'primevue/autocomplete';
 import InputNumber from 'primevue/inputnumber';
 import Drawer from 'primevue/drawer';
 
+import {syntaxTree} from "@codemirror/language"
+import {linter} from "@codemirror/lint"
+
+function walkTree(node, enter, isFirstChild){
+  if(!node) return;
+  let goOn=enter(node);
+  if(!goOn) return;
+  if(node.firstChild){
+    walkTree(node.firstChild,enter,true);
+  }
+  if(isFirstChild){
+    while(node.nextSibling){
+      node=node.nextSibling;
+      walkTree(node,enter,false);
+    }
+  }
+}
+
+
+
 export default{
   components: {
     Menubar,CodeMirror, Splitter, SplitterPanel, Slider, SelectButton, Message, ToggleSwitch, AutoComplete, InputNumber, Drawer
@@ -98,7 +124,7 @@ export default{
   },
   computed: {
     error(){
-      return false;
+      return this.errors.length>0;
     }
   },
   data(){
@@ -112,11 +138,65 @@ export default{
       helpVisible: false,
       sprungmarken: {},
       zeilen: [],
+      errors: [],
+      preventLinting: true,
       runtime: {
         zeileIndex: 0,
         akkumulator: 0,
         registers: [0]
-      }
+      },
+      linter: linter(view => {
+        if(this.preventLinting) return [];
+        let diagnostics=[];
+        console.log("errors:",this.errors);
+        for(let i=0;i<this.errors.length;i++){
+          let e=this.errors[i];
+          diagnostics.push({
+            from: e.from,
+            to: e.to,
+            severity: "warning",
+            message: e.message
+          });
+        }
+        // let tree=syntaxTree(view.state);
+        // let node=tree.topNode;
+        // walkTree(node, (node)=>{
+        //   if (node.type.isError){
+        //     let from=node.from;
+        //     let to=node.to;
+        //     let msg="Syntax-Fehler";
+        //     let p=node.parent;
+        //     if(p.name==="Programm"){
+        //       msg="Anweisung erwartet";
+        //     }else if(p.name.startsWith("CMD")){
+        //       msg="Anweisung erwartet";
+        //       p=node.parent.parent;
+        //       from=p.from;
+        //       to=p.to;
+        //     }else if(p.name==="Anweisung"){
+        //       let cmd=p.firstChild;
+        //       if(cmd.name==="CMD_VALUE"){
+        //         msg="Konstante, Register oder Pointer erwartet";
+        //       }else if(cmd.name==="CMD_ZIEL"){
+        //         msg="Sprungmarke erwartet";
+        //       }else if(cmd.name==="CMD_STORE"){
+        //         msg="Register oder Pointer erwartet";
+        //       }
+        //     }else if(node.prevSibling?.name==="Marke"){
+        //       msg="Anweisung erwartet";
+        //     }
+        //     diagnostics.push({
+        //       from: from,
+        //       to: to,
+        //       severity: "warning",
+        //       message: msg
+        //     });
+        //     return false;
+        //   }
+        //   return true;
+        // },true);
+        return diagnostics
+      })
     }
   },
   mounted(){
@@ -142,6 +222,7 @@ export default{
     updateTree(tree){
       this.tree=tree;
       this.compiled=false;
+      this.compile();
     },
     async check(){
       this.checking=true;
@@ -247,19 +328,30 @@ export default{
     reset(){
       this.state="blank";
       this.runtime.zeileIndex=0;
+      this.setHighlightedLineNumber(0);
     },
     setHighlightedLineNumber(lineNo){
       this.$refs.editor.highlightLine(lineNo);
     },
     compile(){
       this.sprungmarken={};
+      let ziele=[];
       this.zeilen=[];
+      while(this.errors.length>0) this.errors.pop();
       this.compiled=true;
       if(!this.tree || !this.tree.topNode || !this.tree.topNode.firstChild) return;
       let nodeZeile=this.tree.topNode.firstChild;
       let line=1;
       while(nodeZeile){
-        console.log("Zeile "+line+":",nodeZeile.toString())
+        console.log("Zeile "+line+":",nodeZeile.toString());
+        if(nodeZeile.type.isError){
+          this.errors.push({
+            from: nodeZeile.from,
+            to: nodeZeile.to,
+            severity: "warning",
+            message: "Anweisung oder Sprungmarke erwartet"
+          });
+        }
         let node=nodeZeile.firstChild;
         let zeile={
           marke: null,
@@ -270,12 +362,31 @@ export default{
           node: nodeZeile
         };
         nodeZeile=nodeZeile.nextSibling;
-        if(nodeZeile) nodeZeile=nodeZeile.nextSibling;
-        if(nodeZeile && nodeZeile.name!=="Zeile") nodeZeile=nodeZeile.nextSibling;
+        if(nodeZeile){
+          if(nodeZeile.type.isError){
+            this.errors.push({
+              from: nodeZeile.from,
+              to: nodeZeile.to,
+              message: "Unerwartetes Zeichen '"+this.code.substring(nodeZeile.from,nodeZeile.to)+"'"
+            });
+          }
+          nodeZeile=nodeZeile.nextSibling;
+        }
+        if(nodeZeile){
+          if(nodeZeile.type.isError){
+            this.errors.push({
+              from: nodeZeile.from,
+              to: nodeZeile.to,
+              message: "Unerwartetes Zeichen '"+this.code.substring(nodeZeile.from,nodeZeile.to)+"'"
+            });
+          }else if(nodeZeile.name!=="Zeile"){
+            nodeZeile=nodeZeile.nextSibling;
+          }
+        }
         line++;
 
         if(!node) continue;
-
+        let unknownAnweisung=false;
         if(node.name==="Marke"){
           let m={
             label: this.code.substring(node.from,node.to-1),
@@ -284,23 +395,67 @@ export default{
           this.sprungmarken[m.label]=m;
           zeile.marke=m;
           node=node.nextSibling;
+          if(node.name!=="Anweisung" || node.type.isError){
+            this.errors.push({
+              from: node.from,
+              to: node.to,
+              message: "Anweisung erwartet"
+            });
+          }
         }
         if(node.name==="Anweisung"){
           let cmdType=node.firstChild;
           zeile.command=this.code.substring(cmdType.from,cmdType.to).toUpperCase();
+          let anweisungen=["LOAD","STORE","ADD","MUL","DIV","SUB","GOTO","JZERO","JNZERO","END"];
+          if(anweisungen.indexOf(zeile.command)<0){
+            this.errors.push({
+              from: zeile.node.from,
+              to: zeile.node.to,
+              message: "Unbekannte Anweisung '"+this.code.substring(zeile.node.from,zeile.node.to)+"'"
+            });
+            unknownAnweisung=true;
+          }
           let arg=cmdType.nextSibling;
           if(arg){
             if(cmdType.name==="CMD_VALUE" || cmdType.name==="CMD_STORE"){
               if(cmdType.name==="CMD_VALUE"){
                 arg=arg.firstChild;
               }
-              let offset=arg.name==="DIREKT"? 0:1;
-              zeile.argument={
-                type: arg.name,
-                value: this.code.substring(arg.from+offset,arg.to)*1
-              };
-            }else{
+              if(!arg || arg.type.isError){
+                if(cmdType.name==="CMD_STORE"){
+                  this.errors.push({
+                    from: cmdType.nextSibling.from,
+                    to: cmdType.nextSibling.to,
+                    message: "Index oder Zeiger erwartet"
+                  });
+                }else{
+                  this.errors.push({
+                    from: cmdType.nextSibling.from,
+                    to: cmdType.nextSibling.to,
+                    message: "Konstante, Index oder Zeiger erwartet"
+                  });
+                }
+              }else{
+                let offset=arg.name==="DIREKT"? 0:1;
+                if(arg.firstChild.type.isError || arg.firstChild.name!=="Number"){
+                  this.errors.push({
+                    from: arg.firstChild.from,
+                    to: arg.firstChild.to,
+                    message: "Zahl erwartet"
+                  });
+                }else{
+                  zeile.argument={
+                    type: arg.name,
+                    value: this.code.substring(arg.from+offset,arg.to)*1
+                  };
+                }
+              }
+            }else if(!unknownAnweisung){
               zeile.ziel=this.code.substring(arg.from,arg.to);
+              ziele.push({
+                node: arg,
+                marke: zeile.ziel
+              });
             }
           }
           zeile.index=this.zeilen.length;
@@ -308,6 +463,19 @@ export default{
         }
         
       }
+      for(let i=0;i<ziele.length;i++){
+        let z=ziele[i];
+        if(!this.sprungmarken[z.marke]){
+          this.errors.push({
+            from: z.node.from,
+            to: z.node.to,
+            message: "Unbekannte Sprungmarke"
+          });
+        }
+      }
+      this.preventLinting=false;
+      this.$refs.editor.updateLinter();
+      this.preventLinting=true;
       return true;
     },
     step(){
@@ -357,29 +525,29 @@ export default{
         let m=this.sprungmarken[zeile.ziel];
         if(!m){
           alert("Es gibt keine Sprungmarke "+zeile.ziel);
-          return;
+        }else{
+          this.runtime.zeileIndex=m.zeile.index;
+          naechsteZeile=m.zeile;
         }
-        this.runtime.zeileIndex=m.zeile.index;
-        naechsteZeile=m.zeile;
       }else if(zeile.command==="JZERO"){
         if(this.runtime.akkumulator===0){
           let m=this.sprungmarken[zeile.ziel];
           if(!m){
             alert("Es gibt keine Sprungmarke "+zeile.ziel);
-            return;
+          }else{
+            this.runtime.zeileIndex=m.zeile.index;
+            naechsteZeile=m.zeile;
           }
-          this.runtime.zeileIndex=m.zeile.index;
-          naechsteZeile=m.zeile;
         }
       }else if(zeile.command==="JNZERO"){
         if(this.runtime.akkumulator!==0){
           let m=this.sprungmarken[zeile.ziel];
           if(!m){
             alert("Es gibt keine Sprungmarke "+zeile.ziel);
-            return;
+          }else{
+            this.runtime.zeileIndex=m.zeile.index;
+            naechsteZeile=m.zeile;
           }
-          this.runtime.zeileIndex=m.zeile.index;
-          naechsteZeile=m.zeile;
         }
       }
       if(naechsteZeile && (!this.maxSpeed || this.state==="stepping")){
@@ -387,7 +555,7 @@ export default{
       }else{
         this.setHighlightedLineNumber(0);
       }
-      if(!naechsteZeile) this.halt();
+      if(!naechsteZeile) this.reset();
     },
     getValue(arg){
       if(arg.type==="KONSTANTE"){
@@ -395,14 +563,15 @@ export default{
       }
       let regs=this.runtime.registers;
       if(arg.type==="DIREKT"){
-        return arg.value-1>=regs.length? 0: regs[arg.value-1];
+        return arg.value-1>=regs.length? 0: regs[arg.value-1]||0;
       }else if(arg.type==="INDIREKT"){
-        let reg=arg.value-1>=regs.length? 0: regs[arg.value-1];
+        let reg=arg.value-1>=regs.length? 0: regs[arg.value-1]||0;
         if(reg-1>=regs.length || reg===0) return 0;
         return regs[reg-1];
       }
     },
     setValue(arg,value){
+      if(!value) value=0;
       if(arg.type==="KONSTANTE"){
         return false;
       }

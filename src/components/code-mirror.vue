@@ -71,66 +71,9 @@ const registerLanguage = LRLanguage.define({
 function registerLanguageSupport() {
   return new LanguageSupport(registerLanguage);
 }
+import {lintGutter} from "@codemirror/lint"
 
-import {syntaxTree} from "@codemirror/language"
-import {linter,lintGutter} from "@codemirror/lint"
 
-function walkTree(node, enter, isFirstChild){
-  if(!node) return;
-  let goOn=enter(node);
-  if(!goOn) return;
-  if(node.firstChild){
-    walkTree(node.firstChild,enter,true);
-  }
-  if(isFirstChild){
-    while(node.nextSibling){
-      node=node.nextSibling;
-      walkTree(node,enter,false);
-    }
-  }
-}
-
-const registerLinter = linter(view => {
-  let diagnostics=[];
-  let tree=syntaxTree(view.state);
-  let node=tree.topNode;
-  walkTree(node, (node)=>{
-    if (node.type.isError){
-      let from=node.from;
-      let to=node.to;
-      let msg="Syntax-Fehler";
-      let p=node.parent;
-      if(p.name==="Programm"){
-        msg="Anweisung erwartet";
-      }else if(p.name.startsWith("CMD")){
-        msg="Anweisung erwartet";
-        p=node.parent.parent;
-        from=p.from;
-        to=p.to;
-      }else if(p.name==="Anweisung"){
-        let cmd=p.firstChild;
-        if(cmd.name==="CMD_VALUE"){
-          msg="Konstante, Register oder Pointer erwartet";
-        }else if(cmd.name==="CMD_ZIEL"){
-          msg="Sprungmarke erwartet";
-        }else if(cmd.name==="CMD_STORE"){
-          msg="Register oder Pointer erwartet";
-        }
-      }else if(node.prevSibling?.name==="Marke"){
-        msg="Anweisung erwartet";
-      }
-      diagnostics.push({
-        from: from,
-        to: to,
-        severity: "warning",
-        message: msg
-      });
-      return false;
-    }
-    return true;
-  },true);
-  return diagnostics
-})
 
 //import {javascript} from "@codemirror/lang-javascript"
 
@@ -149,6 +92,8 @@ const insertTabFunc = ({ state, dispatch }) => {
 };
 const insertTab={ key: "Tab", run: insertTabFunc };
 
+let updateTreeDebounceTimer=null;
+
 export default{
   components: {
 
@@ -157,6 +102,7 @@ export default{
     modelValue: String,
     language: String,
     highlightedLineNumber: Number,
+    linter: Object,
     insertTab: {
       type: Boolean,
       default: false
@@ -180,14 +126,18 @@ export default{
       lineHighlightField,
       EditorView.updateListener.of((v) => {
         if(!v.docChanged) return;
-        //console.log(v.state.tree.toString());
         this.$emit('update:modelValue', this.getValue());
-        this.$emit('update-tree',v.state.tree);
+        clearTimeout(updateTreeDebounceTimer);
+        updateTreeDebounceTimer=setTimeout(()=>{
+          this.$emit('update-tree',v.state.tree);
+        },300);
       }),
     ];
     if(this.language==="register"){
       extensions.push(registerLanguageSupport());
-      extensions.push(registerLinter);
+    }
+    if(this.linter){
+      extensions.push(this.linter);
       extensions.push(lintGutter());
     }
     editor = new EditorView({
@@ -203,6 +153,15 @@ export default{
     })
   },
   methods: {
+    updateLinter(){
+      if(this.linter){
+        let lintPlugin=editor.plugin(this.linter[1]);
+        if(lintPlugin){
+          lintPlugin.set=true;
+          lintPlugin.force();
+        }
+      }
+    },
     highlightLine(lineNo) {
       try{
         if (lineNo <= 0) throw "";
