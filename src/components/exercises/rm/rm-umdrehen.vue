@@ -37,6 +37,7 @@ export const data={
     testcases: [
       {
         check: (input, output)=>{
+        //
           for(let i=0;i<10;i++){
             if(input[i]!==output[9-i]) return false;
           }
