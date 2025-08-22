@@ -1,0 +1,243 @@
+html,body{
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  position: fixed;
+  overscroll-behavior: none;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+}
+
+.flex{
+  display: flex;
+}
+
+.justify-between{
+  justify-content: space-between;
+}
+
+.justify-end{
+  justify-content: end;
+}
+
+.justify-start{
+  justify-content: start;
+}
+
+.justify-center{
+  justify-content: center;
+}
+
+.padding{
+  padding: 0.5rem;
+}
+
+.padding-2x{
+  padding: 1rem;
+}
+
+.padding-3x{
+  padding: 1.5rem;
+}
+
+strong{
+  color: orange;
+}
+
+body{
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+code{
+  font-family: monospace, monospace;
+}
+
+.code{
+  background-color: white;
+  color: blue;
+  padding: 0.2rem;
+  font-family: monospace, monospace;
+  border-radius: 0.1rem;
+  white-space: nowrap;
+}
+
+#app{
+  height: 100%;
+  width: 100%;
+}
+
+.nopointer{
+  pointer-events: none;
+}
+
+
+@counter-style alpha-bracket {
+  system: alphabetic;
+  symbols: a b c d e f g h i j k l m n o p q r s t u v w x y z;
+  suffix: ") ";
+}
+
+.center .p-steppanel{
+  
+}
+
+.background-black{
+  background-color: black !important;
+}
+
+
+.teilaufgaben{
+  list-style-type: alpha-bracket;
+  counter-reset: item;
+  list-style-position: outside;
+  padding-left: 20px;
+}
+
+.teilaufgaben>li::marker{
+  color: orange;
+}
+
+.teilaufgaben>li{
+  margin-bottom: 0.5rem;
+}
+
+
+.cm-editor{
+  font-size: 150%;
+}
+
+.top-batch.p-overlaybatch{
+  background-color: white;
+}
+
+.top-batch{
+  margin-top: 1rem;
+}
+
+.top-batch>span.p-badge{
+  transform: translate(50%, -80%); 
+  right: 50%;
+}
+
+.transition-table{
+  text-align: center;
+  border-collapse: collapse;
+}
+
+.transition-table td{
+  border: 1pt solid white;
+}
+
+.screen{
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+}
+
+em{
+  font-style: normal;
+  font-weight: bold;
+  color: orange;
+}
+
+.p-dialog{
+  max-width: min(100%,800px);
+}
+
+.p-dialog.p-dialog-maximized{
+  max-width: 100%;
+}
+
+.error-hint{
+  font-size: small;
+  color: red;
+}
+
+.shaking{
+  animation: shaking 0.8s infinite;
+}
+
+.wobbling{
+  animation: wobbling 0.8s infinite;
+}
+
+@keyframes shaking{
+  0% {transform: translate(0,0) rotate(0deg);}
+  20% {transform: translate(5px,5px) rotate(5deg);}
+  40% {transform: translate(0,0) rotate(0deg);}
+  60% {transform: translate(-5px,5px) rotate(-5deg);}
+  80% {transform: translate(0,0) rotate(0deg);}
+}
+
+@keyframes wobbling{
+  0% {transform: scale(1);}
+  50% {transform: scale(0.8);}
+}
+
+.float-right{
+  position: relative;
+  z-index: 10;
+}
+
+.wertetabelle{
+  text-align: center;
+  border-collapse: collapse;
+}
+
+.wertetabelle>tr>td, .wertetabelle>tr>th{
+  border: 1pt solid white;
+  padding: 0.2rem;
+}
+
+.responsive-grid-2-1{
+  grid-template-columns: auto auto;
+}
+
+@media screen and (min-width: 550px) {
+  .float-right{
+    float: right;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .float-right{
+    display: grid;
+    place-content: center;
+    width: 100%;
+  }
+  .responsive-grid-2-1{
+    grid-template-columns: auto;
+  }
+}
+
+.database-relation{
+  text-align: center;
+  border-collapse: collapse;
+}
+.database-relation tr:hover{
+  background-color: #555;
+}
+.database-relation th{
+  text-transform: uppercase;
+  padding: 0.2rem;
+}
+.database-relation td, .database-relation th{
+  border: 1pt solid white;
+  padding: 0.2rem;
+}
+.primary{
+  text-decoration: underline;
+}
+.foreign::before{
+  content: "↑";
+}
+
+.overflow-x{
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}

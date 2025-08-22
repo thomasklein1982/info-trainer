@@ -1,0 +1,25 @@
+@top Programm { Zeile (NewLine Zeile)* }
+
+@skip { space | Comment }
+
+@tokens {
+  space { (" "|"	")+ }
+  Comment { "//" ![\n]* }
+  Word { $[A-Za-z_ÄäÜüÖöß] $[A-Za-z0-9_ÄäÜüÖöß]* }
+  Number { std.digit+ }
+  NewLine { "\n" }
+  Marke { $[A-Za-z_ÄäÜüÖöß] $[A-Za-z0-9_ÄäÜüÖöß]* ":" }
+  @precedence{Word,Number}
+}
+
+Zeile { (Marke? Anweisung)|() }
+Ziel { Word }
+Anweisung { (CMD_STORE (DIREKT|INDIREKT) | CMD_VALUE VALUE | CMD_ZIEL Ziel | CMD_END) }
+CMD_VALUE { "LOAD"|"ADD"|"SUB"|"MUL"|"DIV"|"load"|"add"|"sub"|"mul"|"div" }
+CMD_ZIEL {"GOTO"|"JZERO"|"JNZERO"|"goto"|"jzero"|"jnzero"}
+CMD_STORE {"STORE"|"store"}
+CMD_END {"END"|"end"}
+VALUE { (KONSTANTE | DIREKT | INDIREKT) }
+KONSTANTE { "#" Number }
+DIREKT { Number }
+INDIREKT { "*" Number }

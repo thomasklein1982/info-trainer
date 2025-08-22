@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 512 512"
+   style="height: 512px; width: 512px;"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="database-ra.svg"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.5761719"
+     inkscape:cx="250.28996"
+     inkscape:cy="257.2689"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g1" />
+  <g
+     class=""
+     transform="translate(0,0)"
+     style=""
+     id="g1">
+    <text
+       xml:space="preserve"
+       style="font-size:289.142px;font-family:Consolas;-inkscape-font-specification:Consolas;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffcc00;stroke-width:1.50595"
+       x="71.412605"
+       y="215.21289"
+       id="text1"
+       transform="scale(1.0100444,0.99005549)"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         x="71.412605"
+         y="215.21289"
+         style="font-size:289.142px;stroke-width:1.50595;fill:#ffcc00">π</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:259.682px;font-family:Consolas;-inkscape-font-specification:Consolas;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffcc00;stroke-width:1.35251"
+       x="283.50067"
+       y="185.82782"
+       id="text2"
+       transform="scale(1.0309508,0.96997839)"><tspan
+         sodipodi:role="line"
+         id="tspan2"
+         x="283.50067"
+         y="185.82782"
+         style="font-size:259.682px;stroke-width:1.35251;fill:#ffcc00">ρ</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:264.622px;font-family:Consolas;-inkscape-font-specification:Consolas;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffcc00;stroke-width:1.37824"
+       x="60.47699"
+       y="442.49353"
+       id="text3"
+       transform="scale(1.0660704,0.93802433)"><tspan
+         sodipodi:role="line"
+         id="tspan3"
+         x="60.47699"
+         y="442.49353"
+         style="font-size:264.622px;stroke-width:1.37824;fill:#ffcc00">σ</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:223.578px;font-family:Consolas;-inkscape-font-specification:Consolas;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffcc00;stroke-width:1.16447"
+       x="265.2717"
+       y="406.54056"
+       id="text4"
+       transform="scale(0.96184779,1.0396655)"><tspan
+         sodipodi:role="line"
+         id="tspan4"
+         x="265.2717"
+         y="406.54056"
+         style="font-size:223.578px;stroke-width:1.16447;fill:#ffcc00">⨝</tspan></text>
+  </g>
+</svg>
