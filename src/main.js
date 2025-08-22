@@ -105,6 +105,8 @@ new ClipboardJS(".clipboard");
 
 app.mount('#app');
 
+//
+
 // console.log(parseTerm("C n (A n B)"));
 // console.log(parseTerm("(A n B)"));
 // console.log(parseTerm("A n B"));
