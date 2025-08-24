@@ -133,7 +133,7 @@ for(let s=1; s<=2; s++){
   for(let i=0;i<rows.length;i++){
     let row=rows[i];
     for(let j=0;j<row.length;j++){
-      let array=[0,0,0, 0,0,0, 0,0,0, 0, s, row[j]];
+      let array=[0,0,0, 0,0,0, 0,0,0, 0, s, row[j]+1];
       for(let k=0;k<row.length;k++){
         array[row[k]]=s;
       }
@@ -141,6 +141,7 @@ for(let s=1; s<=2; s++){
       testStates[s].push(array);
     }
   }
+  console.log("teststates",testStates,rows);
 }
 //unentschieden:
 testStates[3]=[

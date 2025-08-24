@@ -9,7 +9,9 @@
       <p>Um zu prüfen, ob deine Programmierung stimmt, werden verschiedene Testfälle durchgespielt. <template v-if="completed">Alle Testfälle waren erfolgreich:</template><template v-else>Hier siehst du, welche Testfälle erfolgreich waren und welche nicht:</template></p>
       <Message :icon="'pi pi-'+(completed || exerciseData.correct[i]===true?'check':'times')" :severity="(completed || exerciseData.correct[i]===true?'success':'error')" v-for="(t,i) in exerciseData.data.check.testcases">
         <span v-html="t.info"/>
-        <span v-if="exerciseData.correct[i].substring" v-html="'('+exerciseData.correct[i]+')'"/>
+        <div v-if="exerciseData.correct[i].substring">
+          Fehler trat auf bei Input {{ exerciseData.correct[i] }} <Button class="clipboard" size="small" text :data-clipboard-text="exerciseData.correct[i]" icon="pi pi-copy"/>
+        </div>
       </Message>
     </template>
     <template v-else-if="exerciseData.data.features">

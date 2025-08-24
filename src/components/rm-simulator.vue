@@ -1,5 +1,11 @@
 <template>
   <div class="screen" style="display: flex; flex-direction: column; overflow: hidden">
+    <Dialog header="Register belegen" v-model:visible="dialogPaste.show">
+      <InputText v-model="dialogPaste.input"/>
+      <template #footer>
+        <Button icon="pi pi-check" label="Register belegen" @click="pasteIntoRegisters()"/>
+      </template>
+    </Dialog>
     <Drawer v-model:visible="helpVisible" position="right" header="Hilfe zu Registermaschinen">
         <h1>Operanden</h1>
           <table>
@@ -66,6 +72,8 @@
           <div>
             <Button icon="pi pi-plus" text @click="runtime.registers.push(0)"/>
             <Button icon="pi pi-minus" text @click="runtime.registers.pop()"/>
+            <Button class="clipboard" size="small" text :data-clipboard-text="runtime.registers.join(',')" icon="pi pi-copy"/>
+            <Button size="small" @click="dialogPaste.show=true" text icon="pi pi-file-import"/>
           </div>
         </div>
         <div>
@@ -124,6 +132,16 @@ export default{
     type: String
   },
   computed: {
+    pasteRegisters(){
+      let regs=[];
+      let s=this.dialogPaste.input.trim().split(",");
+      for(let i=0;i<s.length;i++){
+        let r=s[i]*1;
+        if(isNaN(r)) return null;
+        regs.push(r);
+      }
+      return regs;
+    },
     error(){
       return this.errors.length>0;
     },
@@ -152,6 +170,10 @@ export default{
       zeilen: [],
       errors: [],
       preventLinting: true,
+      dialogPaste: {
+        input: "",
+        show: false
+      },
       runtime: {
         zeileIndex: 0,
         akkumulator: 0,
@@ -228,6 +250,12 @@ export default{
     this.resetMachine();
   },
   methods: {
+    pasteIntoRegisters(){
+      let regs=this.pasteRegisters;
+      if(!regs) return;
+      this.resetMachine(regs);
+      this.dialogPaste.show=false;
+    },
     showHelp(){
       this.helpVisible=true;
     },
@@ -281,9 +309,9 @@ export default{
           let ok=tc.check(input,output);
           if(!ok){
             if(input.length>0){
-              this.exerciseData.correct[k]="Fehler trat auf bei Input <code>"+input+"</code>";
+              this.exerciseData.correct[k]=input+"";
             }else{
-              this.exerciseData.correct[k]="Fehler trat auf bei leerem Input";
+              this.exerciseData.correct[k]="";
             } 
           }
         }
@@ -310,9 +338,9 @@ export default{
           ok=tc.check(input,output);
           if(!ok){
             if(input.length>0){
-              this.exerciseData.correct[k]="Fehler trat auf bei Input <code>"+input+"</code>";
+              this.exerciseData.correct[k]=input+"";
             }else{
-              this.exerciseData.correct[k]="Fehler trat auf bei leerem Input";
+              this.exerciseData.correct[k]="";
             } 
           }
         }
