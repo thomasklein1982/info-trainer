@@ -12,9 +12,9 @@ let Java={
     //   exercises: ["eva-tr"]
     // },
     {
-      label: "Konsole",
+      label: "EVA",
       icon: "console",
-      exercises: ["console-ausgabe","console-verdoppeln"]
+      exercises: ["console-ausgabe", "console-ascii", "console-verdoppeln", "console-bestellung"]
     },
     {
       label: "Bee",

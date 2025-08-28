@@ -1,11 +1,10 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
     Schreibe ein Konsolenprogramm, das den folgenden Text in der Konsole ausgibt:
-    <pre><code>Die erfolgreichsten Filme:
+<ConsoleOutput>Die erfolgreichsten Filme:
 1. Avatar
 2. Avengers
-3. Titanic
-    </code></pre>
+3. Titanic</ConsoleOutput>
   </ExerciseBody>
 </template>
 

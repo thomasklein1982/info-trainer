@@ -1,5 +1,6 @@
 
-
+export * as ConsoleBestellung from './console/console-bestellung.vue';
+export * as ConsoleAscii from './console/console-ascii.vue';
 export * as ConsoleVerdoppeln from './console/console-verdoppeln.vue';
 export * as ConsoleAusgabe from './console/console-ausgabe.vue';
 export * as BeeTest from './bee/bee-test.vue';
