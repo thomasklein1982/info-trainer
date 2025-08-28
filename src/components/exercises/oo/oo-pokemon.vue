@@ -7,7 +7,7 @@
         <ul>
           <li><code>name</code>: Der Name des Pokemon, z. B. <code>"Pikachu"</code>.</li>
           <li><code>maxLeben</code> (ganze Zahl): Gibt an, mit wie vielen Lebenspunkten das Pokemon startet. Die <code>leben</code> (siehe unten) dürfen nie größer sein als <code>maxLeben</code>.</li>
-          <li><code>leben</code> (ganze Zahl): Gibt an, wie viele Lebenspunkte das Pokemon noch übrig hat. Wenn die Punkte auf 0 fallen, ist das Pokemon KO.</li>
+          <li><code>leben</code> (ganze Zahl): Gibt an, wie viele Lebenspunkte das Pokemon noch übrig hat. Wenn die Punkte auf 0 fallen, ist das Pokemon KO. Ein neues Pokemon startet immer mit vollen Leben.</li>
           <li><code>schaden</code> (ganze Zahl): Gibt an, wie viel Schaden das Pokemon bei einem Angriff verursacht. Der Schaden wird von den Lebenspunkten des angegriffenen Pokemon abgezogen.</li>
         </ul>
       </li>

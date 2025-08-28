@@ -9,27 +9,27 @@
     </p>
     
     Schreibe ein Konsolenprogramm, bei dem der User angeben kann, wie viele Buntstifte, wie viele Kugelschreiber und wie viele Collegeblöcke er*sie bestellen möchte und das daraufhin eine Übersicht der Bestellung erstellt. Das Ganze soll folgendermaßen aussehen:
-<ConsoleOutput>1Willkommen bei Office-Ware.
-2
-3Geben Sie an, wie viele Artikel Sie bestellen wollen:
-4Buntstifte: <span style="color: yellow">8</span>
-5Kugelschreiber: <span style="color: yellow">2</span>
-6Collegeblöcke: <span style="color: yellow">0</span>
-7
-8*****
-9
-10Sehr geehrter Kunde,
-11
-12wir bestätigen die folgende Bestellung:
-13
-14ARTIKEL ANZAHL EINZELPREIS PREIS
-15Buntstifte 8 0,3€ 2,4€
-16Kugelschreiber 2 0,8€ 1,6€
-17Collegeblöcke 0 2,49€ 0€ 
-18
-19Gesamtbetrag: 4€
-20
-21*****
+<ConsoleOutput>Willkommen bei Office-Ware.
+
+Geben Sie an, wie viele Artikel Sie bestellen wollen:
+Buntstifte: <span style="color: yellow">8</span>
+Kugelschreiber: <span style="color: yellow">2</span>
+Collegeblöcke: <span style="color: yellow">0</span>
+
+*****
+
+Sehr geehrter Kunde,
+
+wir bestätigen die folgende Bestellung:
+
+ARTIKEL ANZAHL EINZELPREIS PREIS
+Buntstifte 8 0.3€ 2,4€
+Kugelschreiber 2 0.8€ 1,6€
+Collegeblöcke 0 2.49€ 0€ 
+
+Gesamtbetrag: 4€
+
+*****
 </ConsoleOutput>
   <p>Die gelb hervorgehobenen Zahlen soll der User selbst eingeben können.</p>
   </ExerciseBody>
@@ -180,7 +180,7 @@ export const data={
         {
           data: ()=>{
             return {
-              type: "Buntstifte $3 0.3€ $4€",
+              text: "Buntstifte $0 0.3€ $3€",
               line: 15,
               replace: true
             }
@@ -190,8 +190,8 @@ export const data={
         {
           data: ()=>{
             return {
-              type: "Kugelschreiber",
-              preis: 0.8,
+              text: "Kugelschreiber $1 0.8€ $4€",
+              replace: true,
               line: 16
             }
           },
@@ -200,8 +200,8 @@ export const data={
         {
           data: ()=>{
             return {
-              type: "Collegeblöcke",
-              preis: 2.49,
+              text: "Collegeblöcke $2 2.49€ $5€",
+              replace: true,
               line: 17
             }
           },
@@ -219,12 +219,12 @@ export const data={
         {
           data: ()=>{
             return {
-              type: "Gesamt",
-              preise: [0.3, 0.8, 2.49],
+              text: "Gesamtbetrag: $6€",
+              replace: true,
               line: 19
             }
           },
-          info: "Zeile 19 wird mit den korrekten Werten ausgegeben: 'Gesamtpreis: ...€'"
+          info: "Zeile 19 wird mit den korrekten Werten ausgegeben: 'Gesamtbetrag: ...€'"
         },
         {
           data: ()=>{
@@ -255,7 +255,7 @@ export const data={
       }
       //Gesamtpreise:
       for(let i=0;i<3;i++){
-        vars.push(vars[0]*preise[0]);
+        vars.push(vars[i]*preise[i]);
       }
       //gesamt-gesamt :)
       let g=0;
@@ -268,10 +268,10 @@ export const data={
       await System.console().clear();
       await init.a.main();
       let output=$Exercise.getConsoleContent();
-      console.log("output",output);
+      //console.log("output",output);
       if(tc.text!==undefined){
         let i=tc.line-1;
-        console.log(i);
+        //console.log(i);
         if(i>=output.length) return false;
         let out=output[i].trim();
         let line=tc.text.trim();
@@ -280,7 +280,7 @@ export const data={
             line = line.replace(new RegExp("\\$"+i,"g"), vars[i]);
           }
         }
-        console.log(out,line, tc.text);
+        //console.log(out,line, tc.text);
         return line===out;
       }
       // for(let i=0;i<20;i++){
@@ -312,7 +312,32 @@ export const data={
         ],
         src: `$void main(){
   Console.printLine("Willkommen bei Office-Ware.");
-}`
+
+}
+
+/*
+Willkommen bei Office-Ware.
+
+Geben Sie an, wie viele Artikel Sie bestellen wollen:
+Buntstifte: 8
+Kugelschreiber: 2
+Collegeblöcke: 0
+
+*****
+
+Sehr geehrter Kunde,
+
+wir bestätigen die folgende Bestellung:
+
+ARTIKEL ANZAHL EINZELPREIS PREIS
+Buntstifte 8 0,3€ 2,4€
+Kugelschreiber 2 0,8€ 1,6€
+Collegeblöcke 0 2,49€ 0€ 
+
+Gesamtbetrag: 4€
+
+*****
+*/`
       }
     ]
   }
