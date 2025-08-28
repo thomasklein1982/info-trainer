@@ -13,7 +13,7 @@ let Java={
     // },
     {
       label: "EVA",
-      icon: "console",
+      icon: "eva",
       exercises: ["console-ausgabe", "console-ascii", "console-verdoppeln", "console-bestellung"]
     },
     {
