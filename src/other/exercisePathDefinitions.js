@@ -49,7 +49,7 @@ let Java={
     {
       label: "Objektorientierung",
       icon: "oo",
-      exercises: ["oo-basics","oo-pokemon","oo-beziehungen","oo-person", "oo-pat"]
+      exercises: ["oo-basics","oo-pokemon","oo-person", "oo-space", "oo-beziehungen", "oo-pat"]
     },
     {
       label: "Rekursion",

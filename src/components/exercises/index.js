@@ -1,4 +1,5 @@
 
+
 export * as ConsoleBestellung from './console/console-bestellung.vue';
 export * as ConsoleAscii from './console/console-ascii.vue';
 export * as ConsoleVerdoppeln from './console/console-verdoppeln.vue';
@@ -139,6 +140,7 @@ export * as TmInkrement from './tm/tm-inkrement.vue';
 export * as TmAddieren from './tm/tm-addieren.vue';
 export * as OoBasics from './oo/oo-basics.vue';
 export * as OoBeziehungen from './oo/oo-beziehungen.vue';
+export * as OoSpace from './oo/oo-space.vue';
 export * as OoPokemon from './oo/oo-pokemon.vue';
 export * as OoPerson from './oo/oo-person.vue';
 export * as OoFunktion from './oo/oo-funktion.vue';
