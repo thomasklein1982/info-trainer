@@ -1,5 +1,5 @@
 
-
+export * as OoInherit from './oo/oo-inherit.vue';
 export * as ConsoleBestellung from './console/console-bestellung.vue';
 export * as ConsoleAscii from './console/console-ascii.vue';
 export * as ConsoleVerdoppeln from './console/console-verdoppeln.vue';
