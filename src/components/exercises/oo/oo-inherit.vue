@@ -102,15 +102,128 @@ export const data={
           count: 1,
         },
         {
-          info: "Diese Aufgabe ist leider noch nicht fertig implementiert :(",
+          info: "Die Vererbung wurde richtig umgesetzt.",
           data: ()=>{
             return {
               check: async (init)=>{
+                if(!init.classKundeExists || !init.classAngestellterExists || !init.classMenschExists) return false;
+                if(Angestellter.prototype instanceof Mensch && Kunde.prototype instanceof Mensch) return true;
                 return false;
               },
             };
           },
           count: 1,
+        },
+        {
+          info: "Der Konstruktor von Angestellter funktioniert.",
+          data: ()=>{
+            return {
+              check: async (init)=>{
+                if(!init.classKundeExists || !init.classAngestellterExists || !init.classMenschExists) return false;
+                let data={
+                  personalnummer: 563738,
+                  gehalt: 3657.78
+                };
+                let nachname="Turing";
+                let vorname="Alan";
+                let a = await $Exercise.createInstance(Angestellter,nachname,vorname, data.personalnummer, data.gehalt);
+                if(!a) return false;
+                if(a.nachname!==nachname || a.vorname!==vorname) return false;
+                let found;
+                for(let dat in data){
+                  found=false;
+                  for(let at in a){
+                    if(a[at]===data[dat]){
+                      found=true;
+                      break;
+                    }
+                  }
+                  if(!found) return false;
+                }
+                return true;
+              },
+            };
+          },
+          count: 1,
+        },
+        {
+          info: "Der Konstruktor von Kunde funktioniert.",
+          data: ()=>{
+            return {
+              check: async (init)=>{
+                if(!init.classKundeExists || !init.classAngestellterExists || !init.classMenschExists) return false;
+                let data={
+                  kundennummer: 57383
+                };
+                let nachname="Hopper";
+                let vorname="Grace";
+                let a = await $Exercise.createInstance(Kunde,nachname,vorname, data.kundennummer);
+                if(!a) return false;
+                if(a.nachname!==nachname || a.vorname!==vorname) return false;
+                let found;
+                for(let dat in data){
+                  found=false;
+                  for(let at in a){
+                    if(a[at]===data[dat]){
+                      found=true;
+                      break;
+                    }
+                  }
+                  if(!found) return false;
+                }
+                return true;
+              },
+            };
+          },
+          count: 1,
+        },
+        {
+          info: "Die Methode printInfos von Angestellter funktioniert.",
+          data: ()=>{
+            return {
+              check: async (init)=>{
+                if(!init.classKundeExists || !init.classAngestellterExists || !init.classMenschExists) return false;
+                let gehalt=$Exercise.random(10000,100000)*0.1;
+                let pnr=$Exercise.random(100000,999999);
+                let nachname=$Exercise.getRandomString(6);
+                let vorname=$Exercise.getRandomString(6);
+                let a = await $Exercise.createInstance(Angestellter,nachname,vorname, pnr, gehalt);
+                if(!a) return false;
+                $Exercise.clearConsole();
+                await a.printInfos();
+                let text=$Exercise.getConsoleContent();
+                console.log("Text",text);
+                if(text.length!==2) return false;
+                if(text[0]!=="Name: "+nachname+", "+vorname) return false;
+                if(text[1]!=="Personalnummer: "+pnr+", Gehalt: "+gehalt) return false;
+                return true;
+              },
+            };
+          },
+          count: 5,
+        },
+        {
+          info: "Die Methode printInfos von Kunde funktioniert.",
+          data: ()=>{
+            return {
+              check: async (init)=>{
+                if(!init.classKundeExists || !init.classAngestellterExists || !init.classMenschExists) return false;
+                let knr=$Exercise.random(100000,999999);
+                let nachname=$Exercise.getRandomString(6);
+                let vorname=$Exercise.getRandomString(6);
+                let k = await $Exercise.createInstance(Kunde,nachname,vorname, knr);
+                if(!k) return false;
+                $Exercise.clearConsole();
+                await k.printInfos();
+                let text=$Exercise.getConsoleContent();
+                if(text.length!==2) return false;
+                if(text[0]!=="Name: "+nachname+", "+vorname) return false;
+                if(text[1]!=="Kundennummer: "+knr) return false;
+                return true;
+              },
+            };
+          },
+          count: 5,
         },
       ]
   },

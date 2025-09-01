@@ -154,6 +154,30 @@ export const data={
           },
           count: 1,
         },
+        {
+          info: "Die Methode <code>getErlittenerSchaden</code> funktioniert.",
+          data: ()=>{
+            return {
+              check: async ()=>{
+                let maxLeben=$Exercise.random(100,200);
+                let leben=maxLeben;
+                let p1=await $Exercise.createInstance(Pokemon,"name",leben,10);
+                let schaden=0;
+                let es=await p1.getErlittenerSchaden();
+                if(schaden!==es) return false;
+                schaden=$Exercise.random(10,60);
+                p1.leben-=schaden;
+                es=await p1.getErlittenerSchaden();
+                if(schaden!==es) return false;
+                p1.leben=0;
+                es=await p1.getErlittenerSchaden();
+                if(maxLeben!==es) return false;
+                return true;
+              },
+            };
+          },
+          count: 1,
+        },
       ]
   },
 
@@ -163,7 +187,13 @@ export const data={
       {
         name: "Aufgabe",
         src: `$void main(){
-  
+  // Test-Programm:
+  // Pokemon p1,p2;
+  // p1=new Pokemon("Schiggy", 30, 10);
+  // p2=new Pokemon("Pikachu", 40, 5);
+  // p1.angreifen(p2);
+  // p2.ausruhen(2, false);
+  // System.out.println( p2 );
 }`
       }
     ]
