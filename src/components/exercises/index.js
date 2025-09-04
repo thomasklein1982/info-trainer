@@ -1,4 +1,6 @@
 
+export * as ConsoleWiderstand from './console/console-widerstand.vue';
+export * as Sum2 from './loops/sum-2.vue';
 export * as OoInherit from './oo/oo-inherit.vue';
 export * as ConsoleBestellung from './console/console-bestellung.vue';
 export * as ConsoleAscii from './console/console-ascii.vue';

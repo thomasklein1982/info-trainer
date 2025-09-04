@@ -14,13 +14,13 @@ let Java={
     {
       label: "EVA",
       icon: "eva",
-      exercises: ["console-ausgabe", "console-ascii", "console-verdoppeln", "console-bestellung"]
+      exercises: ["console-ausgabe", "console-ascii", "console-verdoppeln", "console-widerstand", "console-bestellung"]
     },
-    {
-      label: "Bee",
-      icon: "bee",
-      exercises: ["bee-test"]
-    },
+    // {
+    //   label: "Bee",
+    //   icon: "bee",
+    //   exercises: ["bee-test"]
+    // },
     {
       label: "Methoden",
       icon: "methods",
@@ -34,7 +34,7 @@ let Java={
     {
       label: "Schleifen",
       icon: "loop",
-      exercises: ["out-loop-1", "mehrfach-ausgabe","strichliste","prim","letters","sum-1", "teiler", "prim-2"]
+      exercises: ["out-loop-1", "mehrfach-ausgabe","strichliste","prim","letters","sum-1", "teiler", "sum-2", "prim-2"]
     },
     {
       label: "Arrays",

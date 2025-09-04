@@ -57,7 +57,7 @@ export const data={
           }
         ],
         src: `$void main(){
-  Console.printLine("Die erfolgreichsten ...");
+  
 }`
       }
     ]

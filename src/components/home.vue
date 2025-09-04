@@ -7,7 +7,7 @@
         <template #content>
           <p>Jede Aufgabe, die du machst, wird gespeichert. Schließe Aufgabenpfade ab, um Achievements zu erhalten.</p>
           <h3>Achievements</h3>
-          <div><template v-for="(a,i) in achievements"><span  :style="{border: '2pt solid '+(a.achieved? 'orange':'black')}" style="overflow: hidden; position: relative; border-radius: 1rem; display: inline-block"><img v-tooltip="a.name" :src="a.icon+'.svg'" style="height: 3em; width: 3em;"><div v-if="!a.achieved" style="position: absolute; left: 0; top: 0;bottom: 0; right: 0; background-color: black; opacity: 0.9"/></span></template></div>
+          <div><template v-for="(a,i) in achievements"><span  :style="{border: '2pt solid '+(a.solved===a.count? 'orange':'black')}" style="overflow: hidden; position: relative; border-radius: 1rem; display: inline-block"><img v-tooltip="a.name" :src="a.icon+'.svg'" style="height: 3em; width: 3em;"><div style="position: absolute; left: 0; top: 0; right: 0; background-color: black; opacity: 0.9" :style="{height: ((a.count-a.solved)*100/a.count)+'%'}"/></span></template></div>
         </template>
       </Card>
       <Card>
@@ -167,15 +167,17 @@ export default{
           let p={
             name: path.label,
             icon: path.icon,
-            achieved: true
+            solved: 0,
+            count: 0
           };
           achievements.push(p);
           for(let k=0;k<path.exercises.length;k++){
             let id=path.exercises[k];
             let ed=this.$root.getExerciseData(id);
-            if(!ed || !isCompletelyTrue(ed.correct)){
-              p.achieved=false;
-              break;
+            if(!ed) continue;
+            p.count++;
+            if(isCompletelyTrue(ed.correct)){
+              p.solved++;
             }
           }
         }
