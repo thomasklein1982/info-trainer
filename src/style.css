@@ -3,11 +3,9 @@ html,body{
   height: 100%;
   padding: 0;
   margin: 0;
-  position: fixed;
   overscroll-behavior: none;
   left: 0;
   top: 0;
-  overflow: hidden;
 }
 
 .flex{
@@ -42,9 +40,7 @@ html,body{
   padding: 1.5rem;
 }
 
-strong{
-  color: orange;
-}
+
 
 body{
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -95,10 +91,6 @@ code{
   padding-left: 20px;
 }
 
-.teilaufgaben>li::marker{
-  color: orange;
-}
-
 .teilaufgaben>li{
   margin-bottom: 0.5rem;
 }
@@ -132,16 +124,13 @@ code{
 
 .screen{
   width: 100%;
-  height: 100%;
   padding: 0;
   margin: 0;
-  overflow-y: auto;
 }
 
 em{
   font-style: normal;
   font-weight: bold;
-  color: orange;
 }
 
 .p-dialog{
@@ -209,8 +198,55 @@ em{
     place-content: center;
     width: 100%;
   }
+  
   .responsive-grid-2-1{
     grid-template-columns: auto;
+  }
+}
+
+@media screen{
+  .teilaufgaben>li::marker{
+    color: orange;
+  }
+  em{
+    color: orange;
+  }
+  strong{
+    color: orange;
+  }
+  html,body{
+    position: fixed;
+    overflow: hidden;
+  }
+  #main-screen{
+    overflow: auto;
+  }
+  .screen{
+    height: 100%;
+    overflow-y: auto;
+  }
+}
+
+@media print{
+  .p-button, .p-inputtext{
+    display: none !important;
+  }
+  .no-print{
+    display: none !important;
+  }
+  :root {
+    --p-content-background: white !important;
+    --p-content-color: black !important;
+    color-scheme: light !important;
+  }
+  html,body{
+    background-color: white !important;
+    color: black !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .p-card{
+    break-inside: avoid-page;
   }
 }
 

@@ -26,7 +26,7 @@
         @submit="$emit('settings-changed')"
         @home="clickHome()"
       />
-      <div style="flex: 1; overflow: auto" ref="content">
+      <div id="main-screen" style="flex: 1" ref="content">
         <ExerciseDrawer 
           ref="exerciseDrawer"
           @open-exercise-path="openExercisePath"

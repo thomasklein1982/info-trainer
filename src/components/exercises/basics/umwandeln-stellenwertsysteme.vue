@@ -1,5 +1,5 @@
 <template>
-  <ExerciseBody :exercise="$data">
+  <ExerciseBody :exercise="$data" inline>
     Berechne die Darstellung der Zahl in dem angegebenen Stellenwertsystem.
     <template #exercise>
       <ol class="teilaufgaben">

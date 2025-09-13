@@ -7,7 +7,7 @@
     </template>
     <template #content>
       <ConfirmPopup></ConfirmPopup>
-      <div v-if="!disabled" style="display: flex; align-items: center"><span>Fortschritt:</span><ExerciseProgress style="flex: 1" :exercise-data="exerciseData"/><Button :disabled="!hasUserData" @click="confirmReset" size="small" text rounded icon="pi pi-trash"/></div>
+      <div class="no-print" v-if="!disabled" style="display: flex; align-items: center"><span>Fortschritt:</span><ExerciseProgress style="flex: 1" :exercise-data="exerciseData"/><Button :disabled="!hasUserData" @click="confirmReset" size="small" text rounded icon="pi pi-trash"/></div>
       <slot></slot>
       <Button v-if="!disabled && $root.addExercisesToAB && !$root.isExerciseInAB(id)" icon="pi pi-plus" label="Zu AB hinzufügen" @click="$root.addExerciseToAB(id)"/>
       <div v-if="disabled && $root.addExercisesToAB && $root.isExerciseInAB(id)">

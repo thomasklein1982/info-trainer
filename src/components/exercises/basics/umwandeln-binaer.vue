@@ -1,5 +1,5 @@
 <template>
-  <ExerciseBody :exercise="$data">
+  <ExerciseBody :exercise="$data" inline>
     Überführe die Dezimalzahlen in das Binärsystem.
     <template #exercise>
       <ol class="teilaufgaben">

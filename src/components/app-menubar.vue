@@ -1,6 +1,7 @@
 <template>
   <Menubar
     :model="[]"
+    class="no-print"
   >
   <template #start>
     <img alt="logo" :src="$root.mode.icon" style="height: 2rem" ><Button icon="pi pi-bars" text @click="$emit('show-exercises')"/>

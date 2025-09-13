@@ -3,8 +3,48 @@
     <slot name="preview"></slot>
     <slot></slot>
     <slot name="outerintro"></slot>
-    <div style="display: grid; place-content: end;">
-      
+    <template v-if="isRandomStandardExercise">
+      <template v-if="inline">
+        <template v-if="showExerciseDialog">
+          <div style="height: 100%; width: 100%; display: flex; flex-direction: column">
+            <div style="position: relative; width: 100%; flex: 1; height: 100%; display: flex; flex-direction: column">
+              <slot name="exercise"></slot>
+            </div>
+          </div>
+          <slot name="footer">
+            <template v-if="!noRandom && !noFooter">
+              <Button v-if="!exerciseChecked" icon="pi pi-list-check" label="Überprüfen" @click="checkExercise()"/>
+              <Button v-else icon="pi pi-refresh" label="Neue Aufgabe" @click="refreshExercise()"/>
+            </template>
+          </slot>
+        </template>
+      </template>
+      <template v-else>
+        <div style="display: grid; place-content: end;">
+          <Button label="Aufgabe bearbeiten" @click="showExercise()"/>
+          <Dialog modal v-model:visible="showExerciseDialog" :header="title" :class="maximized? 'p-dialog-maximized':''" :maximizable="maximized?false:true" :closable="closable" pt:mask:class="background-black">
+            <template #header>
+              {{ title }} <ExerciseProgress style="flex: 1" :exercise-data="exerciseData"/>
+            </template>
+            <div style="height: 100%; width: 100%; display: flex; flex-direction: column">
+              <slot></slot>
+              <div style="position: relative; width: 100%; flex: 1; height: 100%; display: flex; flex-direction: column">
+                <slot name="exercise"></slot>
+              </div>
+            </div>
+            <template #footer>
+              <slot name="footer">
+                <template v-if="!noRandom && !noFooter">
+                  <Button v-if="!exerciseChecked" icon="pi pi-list-check" label="Überprüfen" @click="checkExercise()"/>
+                  <Button v-else icon="pi pi-refresh" label="Neue Aufgabe" @click="refreshExercise()"/>
+                </template>
+              </slot>
+            </template>
+          </Dialog>
+        </div>
+      </template>
+    </template>
+    <div v-else style="display: grid; place-content: end;">
       <template v-if="java">
         <JavaAppLauncher
           :project="project"
@@ -48,28 +88,6 @@
           <slot></slot>
         </DatabaseLauncher>
       </template>
-      <template v-else>
-        <Button label="Aufgabe bearbeiten" @click="showExercise()"/>
-        <Dialog modal v-model:visible="showExerciseDialog" :header="title" :class="maximized? 'p-dialog-maximized':''" :maximizable="maximized?false:true" :closable="closable" pt:mask:class="background-black">
-          <template #header>
-            {{ title }} <ExerciseProgress style="flex: 1" :exercise-data="exerciseData"/>
-          </template>
-          <div style="height: 100%; width: 100%; display: flex; flex-direction: column">
-            <slot></slot>
-            <div style="position: relative; width: 100%; flex: 1; height: 100%; display: flex; flex-direction: column">
-              <slot name="exercise"></slot>
-            </div>
-          </div>
-          <template #footer>
-            <slot name="footer">
-              <template v-if="!noRandom && !noFooter">
-                <Button v-if="!exerciseChecked" icon="pi pi-list-check" label="Überprüfen" @click="checkExercise()"/>
-                <Button v-else icon="pi pi-refresh" label="Neue Aufgabe" @click="refreshExercise()"/>
-              </template>
-            </slot>
-          </template>
-        </Dialog>
-      </template>
     </div>
     <DialogFeedback ref="dialogFeedback" :exercise-data="exerciseData">
       <slot></slot>  
@@ -97,6 +115,10 @@ export default {
     JavaApp, DialogFeedback,ExerciseProgress, TuringMachineLauncher, Message, RegexpLauncher, DatabaseLauncher, RmLauncher
   },
   props: {
+    inline: {
+      type: Boolean,
+      default: false
+    },
     exercise: Object,
     showOnlyExercise: {
       type: Boolean,
@@ -127,6 +149,10 @@ export default {
     }
   },
   computed: {
+    isRandomStandardExercise(){
+      if(this.java || this.turingMachine || this.finiteStateMachine || this.registerMachine || this.regexp || this.database) return false;
+      return true;
+    },
     machine(){
       if(this.finiteStateMachine) return this.finiteStateMachine;
       if(this.turingMachine) return this.turingMachine;
@@ -185,8 +211,14 @@ export default {
       closable: true
     };
   },
+  async mounted(){
+    if(this.isRandomStandardExercise && this.inline){
+      await this.showExercise();
+    }
+  },
   methods: {
     async showExercise(){
+      console.log("show exercise",this.id);
       if(this.noRandom){
         this.showExerciseDialog=true;
         return;

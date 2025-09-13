@@ -1,5 +1,5 @@
 <template>
-  <ExerciseBody :exercise="$data">
+  <ExerciseBody :exercise="$data" inline>
     Entscheide jeweils, welche Aussagen korrekt sind.
     <template #exercise>
       <ol class="teilaufgaben">
