@@ -178,7 +178,6 @@ em{
 }
 
 .wertetabelle>tr>td, .wertetabelle>tr>th{
-  border: 1pt solid white;
   padding: 0.2rem;
 }
 
@@ -205,6 +204,14 @@ em{
 }
 
 @media screen{
+  .console-output{
+    background-color: #121212; 
+    color: white; 
+    font-family: monospace monospace;
+  }
+  .wertetabelle>tr>td, .wertetabelle>tr>th{
+    border: 1pt solid white;
+  }
   .teilaufgaben>li::marker{
     color: orange;
   }
@@ -228,7 +235,16 @@ em{
 }
 
 @media print{
-  .p-button, .p-inputtext{
+  .console-output{
+    background-color: white; 
+    color: black; 
+    font-family: monospace monospace;
+    border: 1pt solid black;
+  }
+  .wertetabelle>tr>td, .wertetabelle>tr>th{
+    border: 1pt solid black;
+  }
+  .p-button, .p-inputtext, .p-panel-toggleable{
     display: none !important;
   }
   .no-print{
@@ -247,6 +263,7 @@ em{
   }
   .p-card{
     break-inside: avoid-page;
+    box-shadow: none !important;
   }
 }
 
