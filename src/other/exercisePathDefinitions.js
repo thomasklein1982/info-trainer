@@ -14,7 +14,7 @@ let Java={
     {
       label: "EVA",
       icon: "eva",
-      exercises: ["console-ausgabe", "console-ascii", "console-verdoppeln", "console-widerstand", "console-bestellung"]
+      exercises: ["console-ausgabe", "one-1", "console-ascii", "console-verdoppeln", "console-widerstand", "console-bestellung"]
     },
     // {
     //   label: "Bee",

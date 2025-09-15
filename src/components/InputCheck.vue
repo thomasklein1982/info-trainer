@@ -1,5 +1,5 @@
 <template>
-  <span><template v-if="isChecked"><template v-if="!isCorrect"><span style="text-decoration: line-through;" v-html="displayValueWrong"/></template><span v-else>{{ value }}</span></template><InputText v-else :style="{'width': width}" v-model="task.input"/>&nbsp;<Check :status="status"/><span v-if="isChecked && !isCorrect" style="font-size: small"> [{{ solution }}]</span></span> 
+  <span :style="{display: fullwidth?'block':'', fontFamily: code? 'monospace, monospace':''}"><template v-if="isChecked"><template v-if="!isCorrect"><span style="color: red;" v-html="displayValueWrong"/></template><span v-else>{{ value }}</span></template><InputText v-else :style="{'width': width}" v-model="task.input"/>&nbsp;<Check :status="status"/><span v-if="isChecked && !isCorrect" style="font-size: small"> [{{ solution }}]</span></span> 
 </template>
 
 <script>
@@ -24,7 +24,11 @@ export default{
         ist=ist.toLowerCase();
         soll=soll.toLowerCase();
       }
-      this.task.correct=ist===soll;
+      if(this.task.regexp){
+        this.task.correct=this.task.regexp.test(ist);
+      }else{
+        this.task.correct=ist===soll;
+      }
     }
   },
   props: {
@@ -40,9 +44,16 @@ export default{
     dontTrim: {
       type: Boolean,
       default: false
+    },
+    code: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
+    fullwidth(){
+      return this.width==="100%";
+    },
     value(){
       return this.task.input;
     },
