@@ -76,6 +76,9 @@ export default{
       ];
       let N=this.tasks.length;
       let chosenTasks=Random.drawFrom(tasks,N);
+      let letters=["a","b","c","d","e","f","g","h","i","k"];
+      letters=Random.drawFrom(letters,letters.length);
+      let letterCount=0;
       for(let i=0;i<N;i++){
         let t=this.tasks[i];
         let src=chosenTasks[i];
@@ -86,8 +89,9 @@ export default{
           let type=src.replace[j];
           let valCheck,valAufgabe;
           if(type==="letter-small") {
-            valCheck=Random.string("a","h",1);
+            valCheck=letters[letterCount%letters.length];
             valAufgabe=valCheck;
+            letterCount++;
           }
           else if(type==="int"){
             valCheck=Random.int(0,20);
