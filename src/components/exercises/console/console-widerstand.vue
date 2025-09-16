@@ -5,12 +5,12 @@
 <ConsoleOutput>**************
 * Widerstand *
 **************
-Gib die Stromstärke ein: <span style="color: yellow">2.5</span>
-Gib die Spannung ein: <span style="color: yellow">12.5</span>
+Gib die Stromstärke ein: <span style="color: red">2.5</span>
+Gib die Spannung ein: <span style="color: red">12.5</span>
 
 Widerstand: 5
 </ConsoleOutput>
-    <p>Die gelb hervorgehobenen Zahlen soll der User selbst eingeben können.</p>
+    <p>Die rot hervorgehobenen Zahlen soll der User selbst eingeben können.</p>
   </ExerciseBody>
 </template>
 

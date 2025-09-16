@@ -12,9 +12,9 @@
 <ConsoleOutput>Willkommen bei Office-Ware.
 
 Geben Sie an, wie viele Artikel Sie bestellen wollen:
-Buntstifte: <span style="color: yellow">8</span>
-Kugelschreiber: <span style="color: yellow">2</span>
-Collegeblöcke: <span style="color: yellow">0</span>
+Buntstifte: <span style="color: red">8</span>
+Kugelschreiber: <span style="color: red">2</span>
+Collegeblöcke: <span style="color: red">0</span>
 
 *****
 
@@ -23,15 +23,15 @@ Sehr geehrter Kunde,
 wir bestätigen die folgende Bestellung:
 
 ARTIKEL ANZAHL EINZELPREIS PREIS
-Buntstifte 8 0.3€ 2,4€
-Kugelschreiber 2 0.8€ 1,6€
+Buntstifte 8 0.3€ 2.4€
+Kugelschreiber 2 0.8€ 1.6€
 Collegeblöcke 0 2.49€ 0€ 
 
 Gesamtbetrag: 4€
 
 *****
 </ConsoleOutput>
-  <p>Die gelb hervorgehobenen Zahlen soll der User selbst eingeben können.</p>
+  <p>Die rot hervorgehobenen Zahlen soll der User selbst eingeben können.</p>
   </ExerciseBody>
 </template>
 
@@ -330,9 +330,9 @@ Sehr geehrter Kunde,
 wir bestätigen die folgende Bestellung:
 
 ARTIKEL ANZAHL EINZELPREIS PREIS
-Buntstifte 8 0,3€ 2,4€
-Kugelschreiber 2 0,8€ 1,6€
-Collegeblöcke 0 2,49€ 0€ 
+Buntstifte 8 0.3€ 2.4€
+Kugelschreiber 2 0.8€ 1.6€
+Collegeblöcke 0 2.49€ 0€ 
 
 Gesamtbetrag: 4€
 

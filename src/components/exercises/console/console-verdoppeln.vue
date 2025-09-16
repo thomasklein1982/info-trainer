@@ -5,7 +5,11 @@
       <li>Der User soll eine beliebige ganze Zahl eingeben können.</li>
       <li>Das Programm soll die Zahl verdoppeln und das Ergebnis in der Konsole ausgeben.</li>
     </ol>
-    <Hint>Die Ergebniszahl muss die letzte Ausgabe sein, die das Programm macht und sie muss in einer eigenen Zeile stehen.</Hint>
+    <p>Das Ganze soll folgendermaßen aussehen:</p>
+<ConsoleOutput>Gib eine ganze Zahl ein: <span style="color: red">17</span>
+Das Doppelte der Zahl ist: 34
+</ConsoleOutput>
+    <p>Die rot hervorgehobene Zahl soll der User selbst eingeben können.</p>
   </ExerciseBody>
 </template>
 
@@ -38,7 +42,7 @@ export const data={
         let content=$Exercise.getConsoleContent();
         let ist=content[content.length-1].trimEnd();
         let soll=a*2+"";
-        if(soll!==ist) return false;
+        if(!ist.endsWith(soll)) return false;
       }
       return true;
     }
