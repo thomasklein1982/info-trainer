@@ -4,7 +4,7 @@
     <template #exercise>
       <ol class="teilaufgaben">
         <li v-for="(t,i) in tasks"><span v-html="t.aufgabe"/>
-          <p><InputCheck code width="100%" ref="input" :task="t"/></p>
+          <p class="no-print"><InputCheck code width="100%" ref="input" :task="t"/></p>
         </li>
       </ol>
     </template>
@@ -69,12 +69,11 @@ export default{
           ]
         },
         {
-          aufgabe: "Die Variable §0§ wird um §1§ erhöht.",
-          check: "^§0§\\s*(=\\s*(§1§\\s*\\+\\s*§2§|§2§\\s*\\+\\s*§1§)|\\+=\\s*§1§)\\s*;$",
-          solution: "§0§ = §0§ + §1§;",
+          aufgabe: "Die Variable §0§ erhält den Wert, den der User in die Konsole eintippt.",
+          check: "^§0§\\s*=\\s*console\\.read[(]\\s*[)]\\s*;$",
+          solution: "§0§ = Console.read( );",
           replace: [
-            "letter-small",
-            "int"
+            "letter-small"
           ]
         },
       ];
@@ -98,7 +97,7 @@ export default{
             letterCount++;
           }
           else if(type==="int"){
-            valCheck=Random.int(0,20);
+            valCheck=Random.int(1,20);
             valAufgabe=valCheck;
           }
           else if(Array.isArray(type)){

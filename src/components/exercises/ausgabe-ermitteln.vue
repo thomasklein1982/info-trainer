@@ -1,5 +1,5 @@
 <template>
-  <ExerciseBody :exercise="$data">
+  <ExerciseBody :exercise="$data" inline>
     Ermittle die Ausgabe, die das Programm machen wird, wenn es gestartet wird.
     <template #exercise>
       <Code v-if="showCode">{{ code }}</Code>
