@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex">
+  <div style="display: flex" class="no-print">
     <div style="flex: 1; display: flex" v-if="isChecked">
       <template v-if="!isCorrect">
         <div style="font-size: 130%; flex: 1; font-family: monospace; white-space: pre; color: red;" v-html="displayValueWrong"/>

@@ -12,7 +12,7 @@ export function chooseExercises(ids, paths, random){
       if(j>=letters.length){
         letters.push("");
       }
-      if(letters[j].indexOf(c)<0){
+      if(c!=="*" && letters[j].indexOf(c)<0){
         letters[j]+=c;
       }
     }
@@ -26,11 +26,26 @@ export function chooseExercises(ids, paths, random){
     path+=l;
   }
   path=path.toLowerCase();
+  console.log("path",path);
   let exercises=[];
   for(let i=0;i<ids.length;i++){
     let id=ids[i];
     let p=paths[id];
-    if(!p || path.startsWith(p.toLowerCase())){
+    if(!p){
+      exercises.push(id);
+      continue;
+    }
+    p=p.toLowerCase();
+    let ok=true;
+    for(let j=0;j<p.length;j++){
+      let c1=p.charAt(j);
+      let c2=path.charAt(j);
+      if(c1!=="*" && c1!==c2){
+        ok=false;
+        break;
+      }
+    }
+    if(ok){
       exercises.push(id);
     }
   }

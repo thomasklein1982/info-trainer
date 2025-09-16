@@ -1,10 +1,12 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
-    Die Methode <Code inline>boolean schaltjahr(int jahr)</Code> erhält eine Jahreszahl <Code inline>jahr</Code> und soll zurückgeben, ob es sich dabei um ein Schaltjahr handelt oder nicht (laut dem gregorianischen Kalender, der bei uns gebräuchlich ist).  Implementiere diese Methode.
+    Die Methode <Code inline>boolean schaltjahr(int jahr)</Code> erhält eine Jahreszahl <Code inline>jahr</Code> und soll zurückgeben, ob es sich dabei um ein Schaltjahr handelt oder nicht. Implementiere diese Methode.
+    <Hint>Eine Jahreszahl ist ein Schaltjahr, wenn sie glatt durch 4 teilbar ist. Dies gilt aber nicht für Jahre, die glatt durch 100 teilbar sind, außer sie sind glatt durch 400 teilbar.</Hint>
     <Example>
       <ul>
-        <li>istSchaltjahr(2000) &rarr; <code>false</code></li>
+        <li>istSchaltjahr(2000) &rarr; <code>true</code></li>
         <li>istSchaltjahr(2024) &rarr; <code>true</code></li>
+        <li>istSchaltjahr(2100) &rarr; <code>false</code></li>
       </ul>
     </Example>
   </ExerciseBody>

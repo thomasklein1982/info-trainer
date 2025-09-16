@@ -235,6 +235,11 @@ em{
 }
 
 @media print{
+  .p-message-info{
+    background-color: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
   .console-output{
     background-color: white; 
     color: black; 
