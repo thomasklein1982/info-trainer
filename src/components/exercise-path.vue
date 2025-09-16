@@ -1,5 +1,5 @@
 <template>
-  <h2>{{path.category}}: {{ path.label }}</h2>
+  <h2 style="text-align: center"><span v-if="path.category">{{path.category}}: </span>{{ path.label }}</h2>
   <template v-for="(e,i) in path.exercises">
     <ExerciseWrapper :number="i+1" :id="e" :disabled="disabled">
       <component :is="e"/>

@@ -49,7 +49,10 @@
       <template #content>
         Du kannst beliebige Aufgaben zu einem <strong>Aufgabenblatt (AB)</strong> zusammenfassen. Dieses AB kannst du dann per Link teilen.
         <div style="text-align: right">
-          <Button v-if="ab===null" label="AB erstellen" @click="createAB()"/>
+          <template v-if="ab===null">
+            <Button label="AB importieren" @click="importAB.show=true"/>
+            <Button label="AB erstellen" @click="createAB()"/>
+          </template>
           <Button v-else label="AB entfernen" @click="removeAB()"/>
         </div>
         <div v-if="ab">
@@ -77,57 +80,16 @@
         </div>
       </template>
     </Card>
-    <!-- <h2>Aufgabenpfade</h2>
-    <p>Klicke auf den Button <Button class="nopointer" text rounded icon="pi pi-bars"/> oben links, um die Aufgabenpfade anzuzeigen und auszuwählen.</p>
-    <h2>Zum freien Üben</h2>
-    <p>Falls du die Programmierumgebungen unabhängig von den Aufgaben verwenden willst, klicke einfach die jeweilige Software an.</p>
-    <Card>
-      <template #title>JavaApp</template>
-      <template #content>
-        Mit JavaApp kannst du Web-Apps mit der Programmiersprache Java entwickeln.
-      </template>
+    <Dialog ref="importABDialog" header="AB importieren" v-model:visible="importAB.show" :closable="true" maximizable>
+      Geben Sie einen Link zu einem Arbeitsblatt ein, um das Arbeitsblatt zu importieren:
+      <p>
+        <InputText v-model="importAB.link" placeholder="Link zum Arbeitsblatt"/>
+        
+      </p>
       <template #footer>
-        <div style="text-align: right">
-          <a href="https://thomaskl.uber.space/Apps/java-app/" target="_blank"><Button label="Zu JavaApp"/></a>
-        </div>
+        <Button icon="pi pi-check" label="Importieren" @click="importABFromLink(importAB.link)"/>
       </template>
-    </Card>
-    <Card>
-      <template #title>Web-Editor</template>
-      <template #content>
-        Ein Editor für HTML, CSS und JavaScript.
-      </template>
-      <template #footer>
-        <div style="text-align: right">
-          <WebEditorLauncher/>
-        </div>
-      </template>
-    </Card>
-    <Card>
-      <template #title>Simulator für endliche Automaten</template>
-      <template #content>
-        Der Simulator erlaubt es dir, endliche Automaten zu programmieren und zu testen.
-      </template>
-      <template #footer>
-        <div style="text-align: right">
-          <TuringMachineLauncher
-            type="fsm"
-          />
-        </div>
-      </template>
-    </Card>
-    <Card>
-      <template #title>Turing-Maschinen-Simulator</template>
-      <template #content>
-        Der Simulator erlaubt es dir, Turingmaschinen zu programmieren und zu testen.
-      </template>
-      <template #footer>
-        <div style="text-align: right">
-          <TuringMachineLauncher/>
-        </div>
-      </template>
-    </Card> -->
-    
+    </Dialog>
   </div>
 </template>
 
@@ -143,10 +105,12 @@ import Select from 'primevue/select';
 import DatabaseLauncher from './database-launcher.vue';
 import empty from './exercises/databases/databases/empty';
 import RmLauncher from './rm-launcher.vue';
+import Dialog from 'primevue/dialog';
+import { parseABLink } from '../other/parseABLink';
 
 export default{
   components: {
-    TuringMachineLauncher, ClassDiagram, WebEditorLauncher, ExercisePath, SpeedDial, Select, DatabaseLauncher, RmLauncher
+    TuringMachineLauncher, ClassDiagram, WebEditorLauncher, ExercisePath, SpeedDial, Select, DatabaseLauncher, RmLauncher, Dialog
   },
   props: {
     ab: Object
@@ -154,7 +118,18 @@ export default{
   computed: {
     linkToAB(){
       if(!this.ab || this.ab.exercises.length===0) return null;
-      let hash=this.ab.label+"["+this.ab.exercises.toString()+"]"+this.ab.diff;
+      let hash=this.ab.label+"[";
+      for(let i=0;i<this.ab.exercises.length;i++){
+        if(i>0) hash+=",";
+        let ex=this.ab.exercises[i];
+        let path=this.ab.paths[ex]?.trim();
+        let t=ex;
+        if(path){
+          t+="{"+path+"}";
+        }
+        hash+=t;
+      }
+      hash+="]"+this.ab.diff;
       hash=encodeURI(hash);
       return location.origin+location.pathname+"#ab="+hash;
     },
@@ -186,6 +161,13 @@ export default{
     }
   },
   methods: {
+    importABFromLink(link){
+      let ok=this.$root.importABFromLink(link);
+      if(!ok){
+        alert("Ungültiger Link");
+      }
+      this.importAB.show=false;
+    },
     removeSavedData(){
       let a=confirm("Bist du wirklich sicher, dass du alle Lösungen und deinen gesamten Fortschritt löschen willst?\n\nDies kann nicht rückgängig gemacht werden!");
       if(!a) return;
@@ -215,6 +197,10 @@ export default{
   data(){
     return {
       database: empty,
+      importAB: {
+        show: false,
+        link: ""
+      },
       difficultyOptions: [
         {
           label: "keine Festlegung",

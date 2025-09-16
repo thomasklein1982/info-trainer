@@ -22,6 +22,10 @@ export const data={
   ]
 }
 
+export function createOneliner(tasks,srcTasks){
+
+}
+
 export default{
   data() {
     return data;

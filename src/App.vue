@@ -17,6 +17,9 @@ import { boolArrayToInt, createBoolArray, intToBoolArray, isCompletelyTrue } fro
 import { toRaw } from 'vue';
 import packageJson from '../package.json';
 import { download, upload } from './other/helper';
+import { random, RandomClazz } from './other/random';
+import { chooseExercises } from './other/chooseExercises';
+import { parseABLink } from './other/parseABLink';
 const STORAGE_DATA="INFO-TRAINER-USER-DATA";
 const STORAGE_SETTINGS="INFO-TRAINER-SETTINGS";
 let mode={
@@ -39,33 +42,21 @@ export function isEasyMode(){
 }
 
 let hash=location.hash;
-if(hash.toLowerCase().startsWith("#ab=")){
-  hash=hash.substring(4);
-  try{
-    hash=decodeURI(hash);
-  }catch(e){
-    
-  }
-  let pos1=hash.indexOf("[");
-  let pos2=hash.indexOf("]");
-  if(pos1>=0 && pos2>pos1){
-    let title=hash.substring(0,pos1);
-    let ids=hash.substring(pos1+1,pos2);
-    console.log(title,ids);
-    ids=ids.split(",");
-    let diff=hash.substring(pos2+1);
-    if(!["Hard","Normal","Easy"].indexOf(diff)>=0){
-      diff=null;
-    }
-    mode={
-      type: "ab",
-      title,ids,difficulty: diff,
-      useStorage: false,
-      reloadOnHome: true,
-      unloadWarning: true,
-      icon: "icon-ab.svg",
-    };
-  }
+let parsedAB=parseABLink(hash);
+if(parsedAB){
+  let r=new RandomClazz(random(1,9999999));
+  let ids=chooseExercises(parsedAB.ids,parsedAB.paths, r);
+  mode={
+    type: "ab",
+    title: parsedAB.title,
+    ids: ids,
+    paths: parsedAB.paths,
+    difficulty: parsedAB.difficulty,
+    useStorage: false,
+    reloadOnHome: true,
+    unloadWarning: true,
+    icon: "icon-ab.svg",
+  };
 }else if(hash.toLowerCase()==="#practise"){
   mode={
     type: "practise",
@@ -269,10 +260,23 @@ export default{
       this.ab.exercises.splice(index,1);
       this.ab.exercises.splice(index+1,0,id);
     },
+    importABFromLink(link){
+      let parsed=parseABLink(link);
+      if(!parsed) return false;
+      this.createAB();
+      this.ab.category=null;
+      this.ab.label=parsed.title;
+      this.ab.exercises=parsed.ids;
+      this.ab.paths=parsed.paths;
+      let diff=parsed.difficulty;
+      this.ab.diff=diff;
+      return true;
+    },
     createAB(){
       this.ab={
         label: "",
         diff: "n",
+        paths: {},
         exercises: [],
         category: "Arbeitsblatt"
       };

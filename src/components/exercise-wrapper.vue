@@ -14,6 +14,7 @@
         <Button icon="pi pi-caret-up" @click="$root.moveExerciseUpOnAB(id)"/>
         <Button icon="pi pi-caret-down" @click="$root.moveExerciseDownOnAB(id)"/>
         <Button icon="pi pi-trash" @click="$root.removeExerciseFromAB(id)"/>
+        <InputText v-model="$root.ab.paths[id]"/>
       </div>
       
     </template>
@@ -36,6 +37,7 @@ export default {
   props: {
     id: String,
     number: Number,
+    ab: Object,
     disabled: {
       type: Boolean,
       default: false

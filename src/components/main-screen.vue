@@ -64,6 +64,8 @@ import Drawer from 'primevue/drawer';
 import RmSimulator from './rm-simulator.vue';
 import TmSimulator from './tm-simulator.vue';
 import DatabaseLauncher from './database-launcher.vue';
+import { chooseExercises } from '../other/chooseExercises';
+import { Random } from '../other/random';
 
 export default{
   components: {
@@ -84,8 +86,9 @@ export default{
   },
   mounted(){
     if(this.mode && this.mode.ids){
+
       this.currentPath={
-        category: "Arbeitsblatt",
+        category: null,
         exercises: this.mode.ids,
         label: this.mode.title
       };
