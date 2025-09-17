@@ -14,7 +14,7 @@ let Java={
     {
       label: "EVA",
       icon: "eva",
-      exercises: ["console-ausgabe", "one-1", "console-ascii", "console-verdoppeln", "console-widerstand", "console-bestellung"]
+      exercises: ["ausgabe-ermitteln-main","console-ausgabe", "one-1", "console-ascii", "console-verdoppeln", "console-widerstand", "console-bestellung"]
     },
     // {
     //   label: "Bee",
@@ -24,7 +24,7 @@ let Java={
     {
       label: "Methoden",
       icon: "methods",
-      exercises: ["ausgabe-ermitteln-main","hallo-welt","ascii-art","ausgabe-ermitteln", "rechnen", "ausgabe-ermitteln-params", "durchschnitt", "nullstelle", "ausgabe-ermitteln-return", "preis"]
+      exercises: ["hallo-welt","ascii-art","ausgabe-ermitteln", "rechnen", "ausgabe-ermitteln-params", "durchschnitt", "nullstelle", "ausgabe-ermitteln-return", "preis"]
     },
     {
       label: "if-else",

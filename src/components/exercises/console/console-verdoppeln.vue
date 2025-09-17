@@ -36,7 +36,7 @@ export const data={
               replace: true
             }
           },
-          info: "Zeile 1 wird ausgegeben: 'Gib eine ganze Zahl ein: ...'"
+          info: "Zeile 1 wird ausgegeben: 'Gib eine ganze Zahl ein: ...'",
         },
         {
           data: ()=>{

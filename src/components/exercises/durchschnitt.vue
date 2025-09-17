@@ -28,7 +28,8 @@ export const data={
             
           };
         },
-        info: "Der Durchschnitt wird berechnet und ausgegeben."
+        info: "Der Durchschnitt wird berechnet und ausgegeben.",
+        points: 4
       },
     ],
     test: async (tc,init)=>{

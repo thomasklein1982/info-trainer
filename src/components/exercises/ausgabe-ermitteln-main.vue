@@ -19,11 +19,12 @@ import { createMethodOutputExerciseCode } from '../../other/createMethodOutputEx
 
 export const data={
   id: "ausgabe-ermitteln-main",
+  cheats: ["sysout"],
   title: "Was wird ausgegeben?",
   showCode: true,
   tasks: [
     {
-      
+      points: 2
     }
   ],
   code: ""
@@ -38,7 +39,7 @@ export default{
     create(Random, resArray){
       let methods=[
         {
-          code: `$void main(){
+          code: `void main(){
   System.out.println("$out");
   System.out.println("$out$out$out");
   System.out.println("$out$out");

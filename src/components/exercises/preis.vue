@@ -32,7 +32,8 @@ export const data={
           };
         },
         count: 50,
-        info: "Funktioniert für beliebige Anzahlen von Erwachsenen und Kindern."
+        info: "Funktioniert für beliebige Anzahlen von Erwachsenen und Kindern.",
+        points: 3
       }
     ],
     test: async (tc,init)=>{

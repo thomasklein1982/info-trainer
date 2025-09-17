@@ -1,6 +1,6 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
-    Die Methode <Code inline>rechnen(int a, int b)</Code> soll nacheinander (in dieser Reihenfolge!) die folgenden Dinge in der Konsole ausgeben (jeweils in einer eigenen Zeile):
+    Implementiere die Methode <Code inline>rechnen(int a, int b)</Code>. Diese soll nacheinander (in dieser Reihenfolge!) die folgenden Dinge in der Konsole ausgeben (jeweils in einer eigenen Zeile):
     <ol>
       <li>Die Summe von <Code inline>a</Code> und <Code inline>b</Code>.</li>
       <li>Das Dreifache von <Code inline>a</Code>.</li>

@@ -36,7 +36,8 @@ export const data={
           };
         },
         count: 40,
-        info: "Funktioniert für beliebiges m &ne; 0 und beliebiges b."
+        info: "Funktioniert für beliebiges m &ne; 0 und beliebiges b.",
+        points: 3
       }
     ],
     test: async (tc,init)=>{

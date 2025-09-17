@@ -34,7 +34,8 @@ export const data={
               line: 1
             }
           },
-          info: "Zeile 1 wird ausgegeben: '**************' (14 Sternchen)"
+          info: "Zeile 1 wird ausgegeben: '**************' (14 Sternchen)",
+          points: 0.5
         },
         {
           data: ()=>{
@@ -43,7 +44,8 @@ export const data={
               line: 2
             }
           },
-          info: "Zeile 2 wird ausgegeben: '* Widerstand *'"
+          info: "Zeile 2 wird ausgegeben: '* Widerstand *'",
+          points: 0.5
         },
         {
           data: ()=>{
@@ -52,7 +54,8 @@ export const data={
               line: 3
             }
           },
-          info: "Zeile 3 wird ausgegeben: '**************' (14 Sternchen)"
+          info: "Zeile 3 wird ausgegeben: '**************' (14 Sternchen)",
+          points: 0.5
         },
         {
           data: ()=>{
@@ -81,7 +84,8 @@ export const data={
               line: 6
             }
           },
-          info: "Zeile 6 ist leer"
+          info: "Zeile 6 ist leer",
+          points: 0.5
         },
         {
           data: ()=>{

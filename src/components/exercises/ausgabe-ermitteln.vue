@@ -20,7 +20,7 @@ export const data={
   showCode: true,
   tasks: [
     {
-      
+      points: 2
     }
   ],
   code: ""
