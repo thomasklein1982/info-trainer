@@ -112,15 +112,25 @@ for(let a in exercises){
   }else if(data.tasks){
     ed={
       correct: createBoolArray(data.tasks.length),
-      data: data,
-      total: data.tasks.length
+      data: data
     };
+    let p=0;
+    for(let i=0;i<data.tasks.length;i++){
+      let t=data.tasks[i];
+      p+=t.points? t.points: 1;
+    }
+    ed.total=p;
   }else if(data.features){
     ed={
       correct: createBoolArray(data.features.length),
-      data: data,
-      total: data.features.length
+      data: data
     }
+    let p=0;
+    for(let i=0;i<data.features.length;i++){
+      let t=data.features[i];
+      p+=t.points? t.points: 1;
+    }
+    ed.total=p;
   }
   exerciseDataCollection[data.id]=ed;
 }

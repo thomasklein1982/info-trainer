@@ -12,6 +12,7 @@
 
 export const data={
   id: "console-ascii",
+  cheats: ["console"],
   title: "ASCII-Art",
   check: {
     init: async ()=>{

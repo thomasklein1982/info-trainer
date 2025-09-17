@@ -18,6 +18,7 @@ Das Doppelte der Zahl ist: 34
 
 export const data={
   id: "console-verdoppeln",
+  cheats: ["console"],
   title: "Das Verdopplungsprogramm",
   check: {
     init: async ()=>{

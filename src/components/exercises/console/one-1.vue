@@ -16,6 +16,7 @@
 
 export const data={
   id: "one-1",
+  cheats: ["console"],
   title: "Java-Oneliners 1",
   tasks: [
     {},{},{},{}

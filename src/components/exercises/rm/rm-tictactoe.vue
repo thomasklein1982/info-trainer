@@ -141,7 +141,6 @@ for(let s=1; s<=2; s++){
       testStates[s].push(array);
     }
   }
-  console.log("teststates",testStates,rows);
 }
 //unentschieden:
 testStates[3]=[

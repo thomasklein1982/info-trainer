@@ -39,6 +39,7 @@ Gesamtbetrag: 4€
 
 export const data={
   id: "console-bestellung",
+  cheats: ["console"],
   title: "Bestellbestätigung",
   check: {
     init: async ()=>{

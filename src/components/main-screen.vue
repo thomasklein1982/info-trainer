@@ -41,7 +41,7 @@
           <Home :ab="ab"/>
         </template>
         <ExercisePath v-else :path="currentPath"/>
-        
+        <CheatSheet :path="currentPath"/>
       </div>
       <DialogSettings
         ref="dialogSettings"
@@ -66,10 +66,11 @@ import TmSimulator from './tm-simulator.vue';
 import DatabaseLauncher from './database-launcher.vue';
 import { chooseExercises } from '../other/chooseExercises';
 import { Random } from '../other/random';
+import CheatSheet from './cheat-sheet.vue';
 
 export default{
   components: {
-    AppMenubar, Home, ExerciseDrawer, ExercisePath, DialogSettings, Drawer, RmSimulator, TmSimulator, DatabaseLauncher
+    AppMenubar, Home, ExerciseDrawer, ExercisePath, DialogSettings, Drawer, RmSimulator, TmSimulator, DatabaseLauncher, CheatSheet
   },
   props: {
     settings: Object,

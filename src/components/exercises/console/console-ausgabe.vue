@@ -12,6 +12,7 @@
 
 export const data={
   id: "console-ausgabe",
+  cheats: ["console"],
   title: "Die erfolgreichsten Filme",
   check: {
     init: async ()=>{

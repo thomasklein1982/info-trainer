@@ -2,7 +2,7 @@
   <Card :title="title">
     
     <template #title>
-      <div >Aufgabe {{number}}: {{ title }} </div>
+      <div class="flex"><span style="flex: 1">Aufgabe {{number}}: {{ title }}</span> <span v-if="$root.mode.type==='ab' || $root.addExercisesToAB">({{ exerciseData.total }} P)</span></div>
       
     </template>
     <template #content>
