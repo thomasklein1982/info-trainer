@@ -16,6 +16,7 @@ import { createMethodOutputExerciseCode } from '../../../other/createMethodOutpu
 
 export const data={
   id: "out-if-1",
+  cheats: ["sysout"],
   title: "Was wird ausgegeben? (if-else)",
   showCode: true,
   tasks: [

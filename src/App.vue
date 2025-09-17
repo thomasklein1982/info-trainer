@@ -25,7 +25,8 @@ const STORAGE_SETTINGS="INFO-TRAINER-SETTINGS";
 let mode={
   type: "normal",
   useStorage: true,
-  icon: "favicon.svg"
+  icon: "favicon.svg",
+  startPath: null
 };
 
 export let difficulty="Hard";
@@ -81,6 +82,10 @@ if(parsedAB){
     useStorage: false,
     icon: "favicon.svg"
   };
+}else if(hash.toLowerCase().startsWith("#start=")){
+  let path=hash.toLowerCase().substring(7);
+  let s=path.split("/");
+  mode.startPath=s;
 }
 
 window.onbeforeunload=function(ev){

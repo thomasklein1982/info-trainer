@@ -16,6 +16,7 @@ import { createMethodOutputExerciseCode } from '../../../other/createMethodOutpu
 
 export const data={
   id: "out-loop-1",
+  cheats: ["sysout"],
   title: "Was wird ausgegeben? (While-Schleife)",
   showCode: true,
   tasks: [

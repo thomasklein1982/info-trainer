@@ -19,6 +19,7 @@ import ConsoleOutput from '../../console-output.vue';
 
 export const data={
   id: "letters",
+  cheats: ["string"],
   title: "Zeile für Zeile",
   check: {
     init: async ()=>{

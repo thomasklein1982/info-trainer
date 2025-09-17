@@ -13,6 +13,7 @@
 <script>
 export const data={
   id: "uppercase",
+  cheats: ["string"],
   title: "Beginnt mit Großbuchstabe?",
   check: {
     init: async ()=>{

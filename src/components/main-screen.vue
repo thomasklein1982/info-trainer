@@ -40,8 +40,10 @@
         <template v-if="showHome">
           <Home :ab="ab"/>
         </template>
-        <ExercisePath v-else :path="currentPath"/>
-        <CheatSheet :path="currentPath"/>
+        <template v-else>
+          <ExercisePath :path="currentPath"/>
+          <CheatSheet :path="currentPath"/>
+        </template>
       </div>
       <DialogSettings
         ref="dialogSettings"
@@ -86,14 +88,29 @@ export default{
     };
   },
   mounted(){
-    if(this.mode && this.mode.ids){
+    if(this.mode){
+      if(this.mode.ids){
+        this.currentPath={
+          category: null,
+          exercises: this.mode.ids,
+          label: this.mode.title
+        };
+        this.showHome=false;
+      }else if(this.mode.startPath){
+        for(let i=0;i<ExercisePathData.length;i++){
+          let cat=ExercisePathData[i];
+          if(cat.name.toLowerCase()===this.mode.startPath[0]){
+            for(let j=0;j<cat.paths.length;j++){
+              let p=cat.paths[j];
+              if(p.id===this.mode.startPath[1]){
+                this.openExercisePath(p);
+                return;
+              }
+            }
+          }
+        }
 
-      this.currentPath={
-        category: null,
-        exercises: this.mode.ids,
-        label: this.mode.title
-      };
-      this.showHome=false;
+      }
     }
   },
   methods: {
@@ -114,6 +131,7 @@ export default{
       }
     },
     openExercisePath(path){
+      console.log("open",path)
       this.showHome=false;
       this.currentPath=path;
       //this.navigate(pathInfos.name);
