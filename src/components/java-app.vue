@@ -9,6 +9,16 @@ import { js_beautify } from 'js-beautify';
 import stringifyTestcases from '../other/stringifyTestcases';
 import { prettify } from '../other/prettify';
 
+export function javaAppUrl(){
+  let src;
+  if(location.origin.startsWith("http://localhost:")){
+    let port=+location.origin.substring(17);
+    src="http://localhost:"+(port+1)+"/";
+  }else{
+    src="https://thomaskl.uber.space/Apps/java-app/";
+  }
+  return src;
+}
 
 export default{
   props: {
@@ -19,18 +29,10 @@ export default{
   },
   computed: {
     src(){
-      let src;
-      if(location.origin.startsWith("http://localhost:")){
-        let port=+location.origin.substring(17);
-        src="http://localhost:"+(port+1)+"/";
-      }else{
-        src="https://thomaskl.uber.space/Apps/java-app/";
-      }
+      let src=javaAppUrl();
       src+="#exercise-mode";
       let diff=this.$root.settings.javaAppDifficulty.toLowerCase();
       src+=";"+diff;
-      console.log(src);
-      return src;
     },
     extraSourceCode(){
       if(!this.check) return "";
