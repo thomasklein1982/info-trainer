@@ -8,7 +8,6 @@
         Modus: <Select v-model="settings.javaAppDifficulty" :options="['Easy','Normal','Hard']"/>
       </template>
     </Card>
-    <JavaInterpreter/>
     <template #footer>
       <Button label="OK" icon="pi pi-check" @click="submit()"/>
     </template>
@@ -17,13 +16,12 @@
 
 <script>
 import Message from 'primevue/message';
-import JavaInterpreter from './java-interpreter.vue';
 
 const STORAGE="info-trainer-settings";
 
 export default{
   components: {
-    Message, JavaInterpreter
+    Message
   },
   props: {
     settings: Object

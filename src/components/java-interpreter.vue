@@ -1,5 +1,5 @@
 <template>
-  <div ref="wrapper"><iframe :src="src"></iframe></div>
+  <div style="display: none" ref="wrapper"><iframe ref="iframe" :src="src"></iframe></div>
 </template>
 
 <script>
@@ -9,6 +9,18 @@ export default{
   computed: {
     src(){
       return javaAppUrl();
+    }
+  },
+  methods: {
+    runJavaProject(project){
+      this.postMessage("open-project-and-run", project);
+    },
+    postMessage(type, data){
+      let frame=this.$refs.iframe;
+      frame.contentWindow.postMessage({
+        type,
+        data
+      },"*");
     }
   }
 }

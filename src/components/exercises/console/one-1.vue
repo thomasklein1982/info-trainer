@@ -56,17 +56,17 @@ export default{
           solution: "§0§ = §1§ * §2§;",
           replace: [
             "letter-small",
-            "int",
+            "int2",
             "letter-small"
           ]
         },
         {
           aufgabe: "Die Variable §0§ wird um §1§ erhöht.",
-          check: "^§0§\\s*(=\\s*(§1§\\s*\\+\\s*§2§|§2§\\s*\\+\\s*§1§)|\\+=\\s*§1§)\\s*;$",
+          check: "^§0§\\s*(=\\s*(§0§\\s*\\+\\s*§1§|§1§\\s*\\+\\s*§0§)|\\+=\\s*§1§)\\s*;$",
           solution: "§0§ = §0§ + §1§;",
           replace: [
             "letter-small",
-            "int"
+            "int2"
           ]
         },
         {
@@ -101,6 +101,10 @@ export default{
             valCheck=Random.int(1,20);
             valAufgabe=valCheck;
           }
+          else if(type==="int2"){
+            valCheck=Random.int(2,20);
+            valAufgabe=valCheck;
+          }
           else if(Array.isArray(type)){
             let index=Random.int(0,type.length-1);
             valAufgabe=type[index][0];
@@ -113,7 +117,7 @@ export default{
         }
         t.regexp=new RegExp(check);
         if(solution) t.solution=solution;
-        else t.solution=check.substring(1,check.length-1).replace(/\\s[+*]/g," ");
+        else t.solution=check.substring(1,check.length-1).replace(/\\s[+*]/g," ").replace(/ ;$/,";");
         t.checked=resArray? true: false;
         t.correct=resArray? resArray[i]: false;
         t.input=resArray && resArray[i]? t.solution: "";

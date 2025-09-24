@@ -6,6 +6,7 @@
     :ab="ab"
     @create-ab="createAB()"
   />
+  <JavaInterpreter ref="javaInterpreter"/>
 </template>
 
 <script>
@@ -20,6 +21,7 @@ import { download, upload } from './other/helper';
 import { random, RandomClazz } from './other/random';
 import { chooseExercises } from './other/chooseExercises';
 import { parseABLink } from './other/parseABLink';
+import JavaInterpreter from './components/java-interpreter.vue';
 const STORAGE_DATA="INFO-TRAINER-USER-DATA";
 const STORAGE_SETTINGS="INFO-TRAINER-SETTINGS";
 let mode={
@@ -175,7 +177,7 @@ let userData=null;
 
 export default{
   components: {
-    MainScreen,
+    MainScreen, JavaInterpreter
     //PWABadge,
   },
   watch: {

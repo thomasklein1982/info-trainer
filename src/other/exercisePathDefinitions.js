@@ -33,13 +33,19 @@ let Java={
       label: "if-else",
       id: "if",
       icon: "if",
-      exercises: ["out-if-1","minimum-2", "even", "roman", "monat-tage","vokal","uppercase","minimum-3","dreieck","schaltjahr","strom"]
+      exercises: ["out-if-1","minimum-2", "even", "roman", "monat-tage","minimum-3","dreieck","schaltjahr","strom"]
     },
     {
       label: "Schleifen",
       id: "loops",
       icon: "loop",
-      exercises: ["out-loop-1", "mehrfach-ausgabe","strichliste","prim","letters","sum-1", "teiler", "sum-2", "prim-2"]
+      exercises: ["out-loop-1", "mehrfach-ausgabe","strichliste","prim","sum-1", "teiler", "sum-2", "prim-2"]
+    },
+    {
+      label: "Strings",
+      id: "strings",
+      icon: "strings",
+      exercises: ["vokal","uppercase","letters"]
     },
     {
       label: "Arrays",
