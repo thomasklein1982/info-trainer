@@ -34,16 +34,17 @@ export const data={
               }
             };
           },
-          count: 10,
+          count: 3,
         },
         {
           info: 'Die übrigen Zeilen der Form "... hoch 3 = ..." werden richtig ausgegeben.',
+          points: 3,
           data: ()=>{
             return {
               check: async (out,n)=>{
                 if(out.length!==n+1) return "Falsche Zeilenanzahl in der Ausgabe";
                 for(let i=1;i<=n;i++){
-                  let ist=out[i];
+                  let ist=out[i].trim().toLowerCase();
                   let soll=i+" hoch 3 = "+(i*i*i);
                   if(ist!==soll) return false;
                 }
@@ -55,7 +56,7 @@ export const data={
         }
       ],
     test: async (tc,init)=>{
-      let n=ns[tc.$run.index];
+      let n=init.ns[tc.$run.index];
       await System.console().clear();
       await init.a.printKubikzahlen(n);
       let output=$Exercise.getConsoleContent();
