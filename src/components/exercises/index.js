@@ -1,4 +1,5 @@
 
+export * as Cube from './loops/cube.vue';
 export * as One1 from './console/one-1.vue';
 export * as ConsoleWiderstand from './console/console-widerstand.vue';
 export * as Sum2 from './loops/sum-2.vue';

@@ -33,6 +33,7 @@ export default{
       src+="#exercise-mode";
       let diff=this.$root.settings.javaAppDifficulty.toLowerCase();
       src+=";"+diff;
+      return src;
     },
     extraSourceCode(){
       if(!this.check) return "";

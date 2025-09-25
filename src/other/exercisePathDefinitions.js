@@ -39,7 +39,7 @@ let Java={
       label: "Schleifen",
       id: "loops",
       icon: "loop",
-      exercises: ["out-loop-1", "mehrfach-ausgabe","strichliste","prim","sum-1", "teiler", "sum-2", "prim-2"]
+      exercises: ["out-loop-1", "mehrfach-ausgabe","strichliste","prim","cube", "sum-1", "teiler", "sum-2", "prim-2"]
     },
     {
       label: "Strings",

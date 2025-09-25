@@ -6,7 +6,6 @@
     :ab="ab"
     @create-ab="createAB()"
   />
-  <JavaInterpreter ref="javaInterpreter"/>
 </template>
 
 <script>
