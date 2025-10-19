@@ -1,7 +1,7 @@
 {
   "name": "info-trainer",
   "private": false,
-  "version": "1.17.7",
+  "version": "1.17.8",
   "type": "module",
   "scripts": {
     "dev": "vite",
