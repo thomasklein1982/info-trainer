@@ -81,7 +81,7 @@ let Java={
       label: "Algorithmen",
       id: "algorithmns",
       icon: "algorithms",
-      exercises: ["iterative-suche","binary-search","bubble","merge"]
+      exercises: ["laufzeit-1","laufzeit-2","laufzeit-3", "iterative-suche","binary-search","bubble","merge"]
     },
     {
       label: "Apps",
