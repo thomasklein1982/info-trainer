@@ -137,7 +137,7 @@ export default{
       if(type==='submit-exercise'){
         console.log("submitted",data);
         this.$emit("exercise-submit",data);
-      }else if(type==='LOADING-COMPLETE'){
+      }else if(type==='loading-complete'){
         this.sendMessage("setup-exercise",{project: this.realProject, checker: this.checkerCode});
         console.log("send setup exercise",this.realProject);
       }else if(type==="send-exercise-data"){
