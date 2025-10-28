@@ -141,7 +141,7 @@ let TheoretischeInformatik={
       label: "Registermaschinen",
       id: "rm",
       icon: "rm",
-      exercises: ["rm-addieren","rm-vertauschen","rm-schreiben","rm-shift","rm-modulo","rm-umdrehen","rm-primzahl","rm-ggt", "rm-summe", "rm-tictactoe"]
+      exercises: ["rm-addieren","rm-vertauschen","rm-schreiben","rm-shift","rm-modulo","rm-umdrehen","rm-primzahl","rm-ggt", "rm-summe", "rm-max", "rm-sort", "rm-tictactoe"]
     }
   ]
 }

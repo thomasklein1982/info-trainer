@@ -19,6 +19,7 @@ Widerstand: 5
 export const data={
   id: "console-widerstand",
   title: "Elektrischer Widerstand",
+  cheats: ["console"],
   check: {
     init: async ()=>{
       $Exercise.deleteMain();
