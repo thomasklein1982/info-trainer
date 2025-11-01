@@ -377,13 +377,14 @@ export default{
     },
     runAtMaxSpeed(){
       let steps=0;
+      let maxSteps=this.machine?.maxSteps || 1000000;
       if(this.state!=="running"){
         this.state="running";
       }
       while(this.state==="running"){
         this.step();
         steps++;
-        if(steps>=this.machine.maxSteps) return false;
+        if(steps>=maxSteps) return false;
       }
       return true;
     },

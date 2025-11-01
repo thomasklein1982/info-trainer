@@ -64,7 +64,7 @@ export const data={
         data: ()=>{
           return {
             n: $Exercise.random(4,10),
-            padlindrom: true
+            palindrom: true
           }
         },
         count: 10,
@@ -74,7 +74,7 @@ export const data={
         data: ()=>{
           return {
             n: $Exercise.random(4,10),
-            padlindrom: false
+            palindrom: false
           }
         },
         count: 5,
