@@ -24,9 +24,34 @@ export const data={
   check: {
     init: async ()=>{
       $Exercise.deleteMain();
-      return {a: await $new(Aufgabe), n: 4000};
+      return {a: await $new(Aufgabe), n: 400};
     },
     test: async (tc,init)=>{
+      if(tc.laufzeit){
+        alert("Die Laufzeit wird überprüft. Das kann einige Sekunden dauern.")
+        let n=500;
+        let array;
+        let lastTime,start=0,stop=0,time=-1;
+        let gesucht;
+        let msg="Laufzeit-Überprüfung abgeschlossen.";
+        do{
+          n*=2;
+          if(n>10000000){
+            alert(msg)
+            return true;
+          }
+          array=$Exercise.getRandomIntArray(n,{sorted: true, forbidMultiple: true});
+          gesucht=array[0]-1;
+          lastTime=time;
+          start=Date.now();
+          await init.a.schnelleSuche(array,gesucht,0,array.length-1);
+          stop=Date.now();
+          time=stop-start;
+        }while(stop-start<2000 || lastTime===-1);
+        console.log(lastTime,time,n);
+        alert(msg);
+        return (time<lastTime*1.2);
+      }
       let array=$Exercise.getRandomIntArray(init.n,{sorted: true, forbidMultiple: true});
       let index=tc.index;
       if(tc.index===2) index=array.length-1;
@@ -41,12 +66,8 @@ export const data={
       }else{
         soll=index;
       }
-      let start=new Date();
       let ist=await init.a.schnelleSuche(array,gesucht,0,array.length-1);
-      let stop=new Date();
       if(soll!==ist) return false;
-      let time1=stop-start;
-      if(time1<100) return true;
 
       array=$Exercise.getRandomIntArray(init.n*2,{sorted: true, forbidMultiple: true});
       index=tc.index;
@@ -62,15 +83,8 @@ export const data={
       }else{
         soll=index;
       }
-      start=new Date();
       ist=await init.a.schnelleSuche(array,gesucht,0,array.length-1);
-      stop=new Date();
       if(soll!==ist) return false;
-      
-      let time2=stop-start;
-      if(time2>time1*1.6){
-        throw "Klappt, aber dein Algorithmus ist zu langsam.";
-      }
       return true;
     },
     testcases: [
@@ -109,6 +123,15 @@ export const data={
         },
         count: 1,
         info: "Funktioniert, wenn die gesuchte Zahl gar nicht im Array vorkommt.",
+      },
+      {
+        data: ()=>{
+          return {
+            laufzeit: true
+          }
+        },
+        count: 1,
+        info: "Die Laufzeit ist schneller as linear",
       }
     ]
   },
