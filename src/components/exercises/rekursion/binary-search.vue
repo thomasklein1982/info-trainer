@@ -37,14 +37,15 @@ export const data={
         do{
           n*=2;
           if(n>10000000){
-            alert(msg)
+            alert(msg+"n zu groß");
             return true;
           }
           array=$Exercise.getRandomIntArray(n,{sorted: true, forbidMultiple: true});
           gesucht=array[0]-1;
           lastTime=time;
           start=Date.now();
-          await init.a.schnelleSuche(array,gesucht,0,array.length-1);
+          let ist=await init.a.schnelleSuche(array,gesucht,0,array.length-1);
+          console.log("ist",ist);
           stop=Date.now();
           time=stop-start;
         }while(stop-start<2000 || lastTime===-1);

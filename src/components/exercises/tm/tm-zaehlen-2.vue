@@ -39,7 +39,7 @@ export const data={
       {
         check: (input, output)=>{
           let n=input.length;
-          if(n>=10) return true;
+          if(n===0 || n>=10) return true;
           return output.trim()===n+"";
         },
         info: 'Funktioniert für einstellige Zahlen.'
@@ -47,7 +47,7 @@ export const data={
       {
         check: (input, output)=>{
           let n=input.length;
-          if(n>=100) return true;
+          if(n<10 || n>=100) return true;
           return output.trim()===n+"";
         },
         info: 'Funktioniert für zweistellige Zahlen.'
@@ -55,9 +55,10 @@ export const data={
       {
         check: (input, output)=>{
           let n=input.length;
+          if(n<100) return true;
           return output.trim()===n+"";
         },
-        info: 'Funktioniert für beliebige Zahlen.'
+        info: 'Funktioniert für mehr als zweistellige Zahlen.'
       }
     ]
   },

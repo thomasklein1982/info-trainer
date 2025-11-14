@@ -9,63 +9,15 @@
       <template #end>
         <Button size="small"  icon="pi pi-undo" rounded text @click="undo()"/>
         <Button size="small"  icon="pi pi-refresh" rounded text @click="redo()"/>
-        <Button size="small" :disabled="error" v-if="mode==='edit'" icon="pi pi-play" rounded text @click="toRunView()"/>
-        <Button size="small" v-if="mode==='run'" icon="pi pi-pencil" rounded text @click="mode='edit'"/>
       </template>
     </Menubar>
-    <div v-if="mode==='run'" style="overflow: hidden; display: flex; flex-direction: column;">
-      <div style="display: flex">
-        <OverlayBatch value="Zustand" class="top-batch" style="font-family: monospace; margin-right: 0.5rem;padding-top: 0.5ex; min-height: 3ex;height: fit-content; width: 4em; display: grid; place-content: center; font-size: 150%; border: 1pt solid white;">
-          {{ runtime.state }}
-        </OverlayBatch>
-        <OverlayBatch value="Band" class="top-batch" style="flex: 1">
-          <div id="band+pointer" style="width: 100%; font-size: 180%;font-family: monospace;height: 6ex;overflow-x: hidden;overflow-y: hidden;position: relative;">
-            <div style="position: absolute; overflow-x: auto; overflow-y: hidden; left: 0; right: 0; top: 0; height: 6ex;">
-              <div ref="band" style="height: 100%; white-space: pre; min-width: fit-content;" v-html="band.contentString">
-              </div>
-            </div>
-            <div style="position: absolute; left: 0; right: 0; top: 0;  height: 3ex; border: 1pt solid white; width: 100%;"/>
-          </div>
-        </OverlayBatch>
-      </div>
-      <div style="margin-top: 0.5rem; margin-bottom: 0.5rem; text-align: center">
-        <Button :disabled="running||runState!=='init'" icon="pi pi-play" @click="clickRun()"/>
-        <Button :disabled="halted||runState!=='init'" icon="pi pi-arrow-right" @click="step()"/>
-        <Button :disabled="!running || halted || runState!=='init'" icon="pi pi-stop" @click="halt()"/>
-        <Button :disabled="running" icon="pi pi-refresh" @click="resetRuntime()"/>
-        <template v-if="isTuringMachine">Schritte: <span style="">{{ runtime.steps }}<template v-if="maxSteps>=0">/{{ maxSteps }}</template></span></template>
-        <template v-if="accepting && runState!=='init'">
-          <span v-if="runState==='accepted'" style="color: green">
-            Akzeptiert
-          </span>
-          <span v-else style="color: red">
-            Nicht akzeptiert
-          </span>
-        </template>
-      </div>
-      <div v-if="accepting">
-        Akzeptierende Zustände: <code style="border-width: 3pt;border-color: white; border-style: double;border-radius: 100%; padding: 0.2rem; margin: 0.2rem;" v-for="(z,i) in acceptingStatesArray">{{z}}</code>
-      </div>
-      <div style="flex: 1; overflow: auto">
-        <table class="transition-table" style="text-align: center; margin: auto">
-          <tr>
-            <th></th>
-            <th v-for="p in parts">{{p.label}}</th>
-          </tr>
-          <tr v-for="(c,i) in commands" style="font-family: monospace; font-size: 150%;" :class="c===runtime.command? 'active-line':''">
-            <td style="width: 2rem; border: none;"><span v-if="c===runtime.command">&#8680;</span></td>
-            <template v-for="(p,a) in c">
-              <td v-if="a!=='line'">{{ p.raw? p.raw:p }}</td>
-            </template>
-          </tr>
-        </table>
-      </div>
-    </div>
-    <Splitter v-show="mode==='edit'" style="flex: 1;overflow: hidden">
+    
+    <Splitter style="flex: 1;overflow: hidden">
       <SplitterPanel>
-        <div style="display: flex; flex-direction: column; height: 100%; overflow: auto">
-          <div style="flex: 1">
+        <div v-show="mode==='edit'" style="display: flex; flex-direction: column; height: 100%; overflow: auto">
+          <div style="position: relative; flex: 1">
             <CodeMirror ref="editor"/>
+            <Button style="position: absolute; right: 0.4rem; bottom: 0.4rem;" :disabled="error" icon="pi pi-play" rounded @click="toRunView()"/>
           </div>
           <Message v-if="errors.length>0" severity="error" >
             <div v-for="(e,i) in errors">
@@ -73,15 +25,67 @@
             </div>
           </Message>
         </div>
+        <div v-if="mode==='run'" style="flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column;">
+          <div style="display: flex">
+            <OverlayBatch value="Zustand" class="top-batch" style="font-family: monospace; margin-right: 0.5rem;padding-top: 0.5ex; min-height: 3ex;height: fit-content; width: 4em; display: grid; place-content: center; font-size: 150%; border: 1pt solid white;">
+              {{ runtime.state }}
+            </OverlayBatch>
+            <OverlayBatch value="Band" class="top-batch" style="flex: 1">
+              <div id="band+pointer" style="width: 100%; font-size: 180%;font-family: monospace;height: 6ex;overflow-x: hidden;overflow-y: hidden;position: relative;">
+                <div style="position: absolute; overflow-x: auto; overflow-y: hidden; left: 0; right: 0; top: 0; height: 6ex;">
+                  <div ref="band" style="height: 100%; white-space: pre; min-width: fit-content;" v-html="band.contentString">
+                  </div>
+                </div>
+                <div style="position: absolute; left: 0; right: 0; top: 0;  height: 3ex; border: 1pt solid white; width: 100%;"/>
+              </div>
+            </OverlayBatch>
+          </div>
+          <div style="margin-top: 0.5rem; margin-bottom: 0.5rem; text-align: center">
+            <Button :disabled="running||runState!=='init'" icon="pi pi-play" @click="clickRun()"/>
+            <Button :disabled="halted||runState!=='init'" icon="pi pi-arrow-right" @click="step()"/>
+            <Button :disabled="!running || halted || runState!=='init'" icon="pi pi-stop" @click="halt()"/>
+            <Button :disabled="running" icon="pi pi-refresh" @click="resetRuntime()"/>
+            <template v-if="isTuringMachine">Schritte: <span style="">{{ runtime.steps }}<template v-if="maxSteps>=0">/{{ maxSteps }}</template></span></template>
+            <template v-if="accepting && runState!=='init'">
+              <span v-if="runState==='accepted'" style="color: green">
+                Akzeptiert
+              </span>
+              <span v-else style="color: red">
+                Nicht akzeptiert
+              </span>
+            </template>
+          </div>
+          <div v-if="accepting">
+            Akzeptierende Zustände: <code style="border-width: 3pt;border-color: white; border-style: double;border-radius: 100%; padding: 0.2rem; margin: 0.2rem;" v-for="(z,i) in acceptingStatesArray">{{z}}</code>
+          </div>
+          <div style="flex: 1; overflow: auto; position: relative;">
+            <table class="transition-table" style="text-align: center; margin: auto">
+              <tr>
+                <th></th>
+                <th v-for="p in parts">{{p.label}}</th>
+              </tr>
+              <tr v-for="(c,i) in commands" style="font-family: monospace; font-size: 150%;" :class="c===runtime.command? 'active-line':''">
+                <td style="width: 2rem; border: none;"><span v-if="c===runtime.command">&#8680;</span></td>
+                <template v-for="(p,a) in c">
+                  <td v-if="a!=='line'">{{ p.raw? p.raw:p }}</td>
+                </template>
+              </tr>
+            </table>
+            
+          </div>
+        </div>
+        
       </SplitterPanel>
       <SplitterPanel style="overflow-y: auto">
-        <Card v-if="exerciseData">
+        <Card>
           <template #title>
-            Überprüfen
+            Ausführen{{ exerciseData? ' und Überprüfen':'' }}
           </template>
           <template #content>
             <p v-if="isTuringMachine">Deine Turing-Maschine darf höchstens {{ maxSteps }} Schritte benötigen.</p>
-            <Button icon="pi pi-list-check" label="Überpüfen" :loading="checking" @click="check()"/>
+            <Button :disabled="error" v-if="mode==='edit'" icon="pi pi-play" label="Ausführen" @click="toRunView()"/>
+            <Button v-if="mode==='run'" icon="pi pi-pencil" label="Bearbeiten" @click="mode='edit'"/>
+            <Button v-if="exerciseData" icon="pi pi-list-check" label="Überprüfen" :loading="checking" @click="check()"/>
           </template>
         </Card>
         <Card>
@@ -99,7 +103,7 @@
               <span>Eingabe:</span><InputText :invalid="inputError!==null" v-model="input"/>
               <Message v-if="inputError" style="grid-column: 1/3;" severity="error">{{ inputError }}</Message>
               <span>Geschwindigkeit:</span><Slider :disabled="maxSpeed" v-model="speed"/>
-              <span style="display: flex; align-items: center; grid-column: 1/3;">Nutze Maximale Geschwindigkeit:&nbsp;<ToggleSwitch v-model="maxSpeed"/></span>
+              <span style="display: flex; align-items: center; grid-column: 1/3;">Nutze Maximale Geschwindigkeit:&nbsp;<ToggleSwitch :disabled="running" v-model="maxSpeed"/></span>
             </div>
           </template>
         </Card>
@@ -211,7 +215,7 @@ export default{
       return this.type==="fsm";
     },
     maxSteps(){
-      if(!this.machine) return -1;
+      if(!this.machine) return 1000000;
       return (this.machine.maxSteps? this.machine.maxSteps:10000);
     },
     halted(){
