@@ -132,7 +132,8 @@ export default{
         currentStatement: null,
         variables: {},
         maxVariableNumber: 0,
-        scope: []
+        scope: [],
+        lastLineNumber: 0
       },
       linter: linter(view => {
         if(this.preventLinting) return [];
@@ -302,6 +303,8 @@ export default{
     },
     halt(){
       this.state="halted";
+      this.runtime.lastLineNumber=0;
+      this.runtime.scope=[];
       this.setHighlightedLineNumber(0);
     },
     resetRuntime(variables){
@@ -331,6 +334,7 @@ export default{
     reset(){
       this.runtime.scope=[];
       this.runtime.currentStatement=null;
+      this.runtime.lastLineNumber=0;
       this.setHighlightedLineNumber(0);
       this.state="blank";
     },
@@ -370,24 +374,42 @@ export default{
         value=s.op==="+"? value + s.c: value - s.c;
         this.setVariable(s.v1,value);
         if(s.next) this.runtime.currentStatement=s.next;
-        else this.runtime.currentStatement=s.parent;
-      }else if(s.type="While"){
+        else {
+          this.runtime.currentStatement=s.parent;
+          if(s.parent){
+            this.runtime.currentStatement=s.parent;
+          }
+        }
+      }else if(s.type==="While"){
         let value=this.getVariable(s.v);
         if(value===0){
           if(s.next) this.runtime.currentStatement=s.next;
           else{
             this.runtime.currentStatement=s.parent;
-            let v=this.runtime.scope.pop();
+            if(s.parent){
+              this.runtime.currentStatement=s.parent;
+            }
           } 
         }else{
           this.runtime.currentStatement=s.program;
           this.runtime.scope.push(-1);
         }
-      }else if(s.type="Loop"){
-        let value=this.getVariable(s.v);
+      }else if(s.type==="Loop"){
+        let value;
+        if(s.line<this.runtime.lastLineNumber){
+          //ruecksprung zum schleifenanfang
+          value=this.runtime.scope.pop();
+        }else{
+          value=this.getVariable(s.v);
+        }
         if(value===0){
           if(s.next) this.runtime.currentStatement=s.next;
-          else this.runtime.currentStatement=s.parent;
+          else {
+            this.runtime.currentStatement=s.parent;
+            if(s.parent){
+              this.runtime.currentStatement=s.parent;
+            }
+          }
         }else{
           this.runtime.currentStatement=s.program;
           this.runtime.scope.push(value-1);
@@ -398,6 +420,7 @@ export default{
       }else{
         this.setHighlightedLineNumber(0);
       }
+      this.runtime.lastLineNumber=s.line;
     },
     getVariable(number){
       let v=this.runtime.variables[number];
@@ -405,6 +428,7 @@ export default{
     },
     setVariable(number,value){
       if(!value) value=0;
+      if(value<0) value=0;
       this.runtime.variables[number]=value;
       if(this.runtime.maxVariableNumber<number) this.runtime.maxVariableNumber=number;
     },
