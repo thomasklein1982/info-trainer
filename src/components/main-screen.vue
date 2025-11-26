@@ -5,6 +5,11 @@
         :machine="{}"
       />
     </template>
+    <template v-else-if="mode.type==='while'">
+      <WhileSimulator
+        :machine="{}"
+      />
+    </template>
     <template v-else-if="mode.type==='tm'">
       <TmSimulator
         :machine="{}"
@@ -69,10 +74,11 @@ import DatabaseLauncher from './database-launcher.vue';
 import { chooseExercises } from '../other/chooseExercises';
 import { Random } from '../other/random';
 import CheatSheet from './cheat-sheet.vue';
+import WhileSimulator from './while-simulator.vue';
 
 export default{
   components: {
-    AppMenubar, Home, ExerciseDrawer, ExercisePath, DialogSettings, Drawer, RmSimulator, TmSimulator, DatabaseLauncher, CheatSheet
+    AppMenubar, Home, ExerciseDrawer, ExercisePath, DialogSettings, Drawer, RmSimulator, TmSimulator, DatabaseLauncher, CheatSheet, WhileSimulator
   },
   props: {
     settings: Object,

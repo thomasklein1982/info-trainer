@@ -27,73 +27,85 @@ export const data={
           data: ()=>{
             return {month: "Januar", t: 31};
           },  
-          info: 'Funktioniert für Januar.'
+          info: 'Funktioniert für Januar.',
+          points: 0.25
         },
         {
           data: ()=>{
             return {month: "Februar", t: 28};
           },  
-          info: 'Funktioniert für Februar.'
+          info: 'Funktioniert für Februar.',
+          points: 0.25
         },
         {
           data: ()=>{
             return {month: "März", t: 31};
           },  
-          info: 'Funktioniert für März.'
+          info: 'Funktioniert für März.',
+          points: 0.25
         },
         {
           data: ()=>{
             return {month: "April", t: 30};
           },  
-          info: 'Funktioniert für April.'
+          info: 'Funktioniert für April.',
+          points: 0.25
         },
         {
           data: ()=>{
             return {month: "Mai", t: 31};
           },  
-          info: 'Funktioniert für Mai.'
+          info: 'Funktioniert für Mai.',
+          points: 0.25
         },
         {
           data: ()=>{
             return {month: "Juni", t: 30};
           },  
-          info: 'Funktioniert für Juni.'
+          info: 'Funktioniert für Juni.',
+          points: 0.25
         },
         {
           data: ()=>{
             return {month: "Juli", t: 31};
           },  
-          info: 'Funktioniert für Juli.'
+          info: 'Funktioniert für Juli.',
+          points: 0.25
         },
         {
           data: ()=>{
             return {month: "August", t: 31};
           },  
-          info: 'Funktioniert für August.'
+          info: 'Funktioniert für August.',
+          points: 0.25
         },
         {
           data: ()=>{
             return {month: "September", t: 30};
           },  
-          info: 'Funktioniert für September.'
+          info: 'Funktioniert für September.',
+          points: 0.25
         },
         {
           data: ()=>{
             return {month: "Oktober", t: 31};
           },  
-          info: 'Funktioniert für Oktober.'
+          info: 'Funktioniert für Oktober.',
+          points: 0.25
         },
         {
           data: ()=>{
             return {month: "November", t: 30};
           },  
-          info: 'Funktioniert für November.'
+          info: 'Funktioniert für November.',
+          points: 0.25
         },
         {
           data: ()=>{
             return {month: "Dezember", t: 31};
           },  
-          info: 'Funktioniert für Dezember.'
+          info: 'Funktioniert für Dezember.',
+          points: 0.25
         },
       ],
     test: async (tc,init)=>{

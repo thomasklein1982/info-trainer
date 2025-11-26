@@ -5,6 +5,7 @@
     <Example>
       Für e = 3 und k = 5 ergeben sich 176 €.
     </Example>
+    <p>Implemntiere diese Methode.</p>
   </ExerciseBody>
 </template>
 

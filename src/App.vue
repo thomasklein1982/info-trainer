@@ -71,6 +71,12 @@ if(parsedAB){
     useStorage: false,
     icon: "favicon.svg"
   };
+}else if(hash.toLowerCase()==="#while"){
+  mode={
+    type: "while",
+    useStorage: false,
+    icon: "favicon.svg"
+  };
 }else if(hash.toLowerCase()==="#tm"){
   mode={
     type: "tm",

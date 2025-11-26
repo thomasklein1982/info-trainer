@@ -1,0 +1,24 @@
+@top WHILE { Program }
+
+@skip { space | Comment }
+
+@tokens {
+  space { (" "|"	"|"\n")+ }
+  Comment { "//" ![\n]* }
+  Number { std.digit+ }
+}
+
+Program { Statement (";" Statement)*| ()}
+Statement { Assignment|WhileStatement|LoopStatement }
+Assignment { Variable AssignOperator Variable Operator Constant}
+AssignOperator { ":="}
+Operator { "+"|"-" }
+NotEqual { "!=" }
+WhileStatement { While Variable NotEqual "0" Do Program End  }
+LoopStatement { Loop Variable Do Program End  }
+While { "WHILE"|"while"|"While" }
+Loop { "LOOP"|"loop"|"Loop" }
+End { "END"|"end"|"End" }
+Do { "DO"|"do"|"Do" }
+Variable { "x" Number }
+Constant { Number }

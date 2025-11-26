@@ -9,6 +9,7 @@ import {keymap, Decoration} from '@codemirror/view';
 import {indentWithTab, undo, redo} from '@codemirror/commands';
 import {LRLanguage,LanguageSupport,foldNodeProp, foldInside, indentNodeProp} from "@codemirror/language";
 import {parser as registerParser} from "../parsers/register-parser/register-parser";
+import {parser as whileParser } from "../parsers/while-parser/while-parser";
 import { oneDark } from '@codemirror/theme-one-dark';
 
 const addLineHighlight = StateEffect.define();
@@ -73,7 +74,32 @@ function registerLanguageSupport() {
 }
 import {lintGutter} from "@codemirror/lint"
 
+const whileLanguage = LRLanguage.define({
+  parser: whileParser.configure({ 
+    props: [
+      styleTags({
+        While: tags.keyword,
+        Loop: tags.keyword,
+        Do: tags.keyword,
+        End: tags.keyword,
+        Variable: tags.variableName,
+        Constant: tags.number,
+        Comment: tags.lineComment,
+      }),
+      // indentNodeProp.add({
+      //   Application: context => context.column(context.node.from) + context.unit
+      // }),
+      foldNodeProp.add({
+        Application: foldInside
+      })
+    ]
+  })
+});
 
+
+function whileLanguageSupport() {
+  return new LanguageSupport(whileLanguage);
+}
 
 //import {javascript} from "@codemirror/lang-javascript"
 
@@ -135,6 +161,8 @@ export default{
     ];
     if(this.language==="register"){
       extensions.push(registerLanguageSupport());
+    }else if(this.language==="while"){
+      extensions.push(whileLanguageSupport());
     }
     if(this.linter){
       extensions.push(this.linter);
@@ -189,7 +217,7 @@ export default{
       return editor.state.doc.lines;
     },
     getLine(n){
-      return editor.state.doc.line(n+1);
+      return editor.state.doc.lineAt(n);
     }
   }
 }

@@ -76,6 +76,7 @@
           />
           <TuringMachineLauncher/>
           <RmLauncher/>
+          <WhileLauncher/>
           <DatabaseLauncher :database="database" allow-choose-database allow-choose-mode/>
         </div>
       </template>
@@ -107,10 +108,11 @@ import empty from './exercises/databases/databases/empty';
 import RmLauncher from './rm-launcher.vue';
 import Dialog from 'primevue/dialog';
 import { parseABLink } from '../other/parseABLink';
+import WhileLauncher from './while-launcher.vue';
 
 export default{
   components: {
-    TuringMachineLauncher, ClassDiagram, WebEditorLauncher, ExercisePath, SpeedDial, Select, DatabaseLauncher, RmLauncher, Dialog
+    TuringMachineLauncher, ClassDiagram, WebEditorLauncher, ExercisePath, SpeedDial, Select, DatabaseLauncher, RmLauncher, Dialog, WhileLauncher
   },
   props: {
     ab: Object

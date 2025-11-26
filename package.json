@@ -1,13 +1,14 @@
 {
   "name": "info-trainer",
   "private": false,
-  "version": "1.17.14",
+  "version": "1.17.15",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "build-register-parser": "lezer-generator src/parsers/register-parser/my.grammar -o src/parsers/register-parser/register-parser.js"
+    "build-register-parser": "lezer-generator src/parsers/register-parser/my.grammar -o src/parsers/register-parser/register-parser.js",
+    "build-while-parser": "lezer-generator src/parsers/while-parser/my.grammar -o src/parsers/while-parser/while-parser.js"
   },
   "dependencies": {
     "@codemirror/theme-one-dark": "^6.1.3",
