@@ -24,11 +24,16 @@ export const data={
         }
       ],
     test: async (tc,init)=>{
-      // console.log("test");
-      await init.a.$realMainMethod();
-      console.log("after realMain");
+      console.log("test",init.a);
+      
+      await init.a.$appPreviewMethod();
+      console.log(init.a.bee.bee);
+      let speed=init.a.bee.bee.speed;
+      init.a.bee.bee.speed=100;
+      await init.a.main();
       let s=await init.a.bee.onFlower();
-      console.log("on flower",s);
+      if(!s) alert("Die Biene hat die Blume nicht erreicht.");
+      init.a.bee.bee.speed=speed;
       return s;
     }
   },
@@ -49,9 +54,15 @@ export const data={
           {
             name: "$realMainMethod",
             jsCode: `async $realMainMethod(){
+              await this.$appPreviewMethod();
+              await this.main();
+            }`
+          },
+          {
+            name: "$appPreviewMethod",
+            jsCode: `async $appPreviewMethod(){
               let g=await $App.asyncFunctionCall(new GameWorld(),'$constructor',[]);
               this.bee=await $App.asyncFunctionCall(new Bee(),'$constructor',[null,g]);
-              await this.main();
             }`
           }
         ],
@@ -87,6 +98,11 @@ export const data={
   String scan( ) {
     return bee.scan();
   }
+  
+  void setSpeed(int s){
+    bee.speed=s;
+  }
+
   
 `
       },

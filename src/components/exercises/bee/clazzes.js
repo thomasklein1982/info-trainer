@@ -15,14 +15,13 @@ export const BeeClazz={
   }
   /*Bewegt die Biene um 1 Feld*/
   void move( ) {
-    sleep( );
     String fieldAhead = getFieldTypeAhead( );
     if ( fieldAhead == "tree" || fieldAhead == "border" ) {
       System.toast( "Bumm", "center" );
       return;
     }
     ui.move( 1 );
-    
+    sleep( );
   }
   
   private void sleep( ) {
@@ -30,15 +29,15 @@ export const BeeClazz={
   }
   
   void turnLeft( ) {
-    sleep( );
     ui.setDirection( ( ui.getDirection( ) + 90 ) % 360 );
     ui.setRotation( ui.getDirection( ) );
+    sleep( );
   }
   
   void turnRight( ) {
-    sleep( );
     ui.setDirection( ( ui.getDirection( ) + 270 ) % 360 );
     ui.setRotation( ui.getDirection( ) );
+    sleep( );
   }
 
   String scan( ) {
