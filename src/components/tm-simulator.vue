@@ -13,7 +13,7 @@
     </Menubar>
     
     <Splitter style="flex: 1;overflow: hidden">
-      <SplitterPanel>
+      <SplitterPanel style="display: flex">
         <div v-show="mode==='edit'" style="display: flex; flex-direction: column; height: 100%; overflow: auto">
           <div style="position: relative; flex: 1">
             <CodeMirror ref="editor"/>
