@@ -232,6 +232,9 @@ em{
     height: 100%;
     overflow-y: auto;
   }
+  .only-print{
+    display: none !important;
+  }
 }
 
 @media print{

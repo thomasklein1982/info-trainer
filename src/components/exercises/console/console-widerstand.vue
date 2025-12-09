@@ -10,7 +10,8 @@ Gib die Spannung ein: <span style="color: red">12.5</span>
 
 Widerstand: 5
 </ConsoleOutput>
-    <p>Die rot hervorgehobenen Zahlen soll der User selbst eingeben können.</p>
+    <p>Die Stromstärke und die Spannung (die rot hervorgehobenen Zahlen) soll der User selbst eingeben können.</p>
+    <Hint class="only-print">Es gilt Spannung = Widerstand &sdot; Stromstärke (U = R &sdot; I)</Hint> 
   </ExerciseBody>
 </template>
 

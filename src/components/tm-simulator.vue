@@ -474,7 +474,7 @@ export default{
       }else{
         write=this.band.at;
       }
-      if(cmd.move.toLowerCase()==="l"){
+      if(cmd.move?.toLowerCase()==="l"){
         this.band.after=write+this.band.after;
         this.band.at=this.band.before.length>0? this.band.before.charAt(this.band.before.length-1) : " ";
         this.band.before=this.band.before.substring(0,this.band.before.length-1);
