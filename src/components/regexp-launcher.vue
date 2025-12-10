@@ -162,7 +162,7 @@ export default{
         }
         r++;
       }
-      this.exerciseData.correct=true;
+      this.exerciseData.correct=[true];
       calcPoints(this.exerciseData);
       this.checking=false;
       this.save();
