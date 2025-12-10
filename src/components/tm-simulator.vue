@@ -14,7 +14,7 @@
     
     <Splitter style="flex: 1;overflow: hidden">
       <SplitterPanel style="display: flex">
-        <div v-show="mode==='edit'" style="display: flex; flex-direction: column; height: 100%; overflow: auto">
+        <div v-show="mode==='edit'" style="display: flex; flex-direction: column; height: 100%; overflow: auto; width: 100%;">
           <div style="position: relative; flex: 1">
             <CodeMirror ref="editor"/>
             <Button style="position: absolute; right: 0.4rem; bottom: 0.4rem;" :disabled="error" icon="pi pi-play" rounded @click="toRunView()"/>
