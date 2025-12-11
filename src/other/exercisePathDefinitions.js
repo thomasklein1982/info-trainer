@@ -18,11 +18,11 @@ let Java={
       icon: "eva",
       exercises: ["ausgabe-ermitteln-main","console-ausgabe", "one-1", "console-ascii", "console-verdoppeln", "console-widerstand", "console-bestellung"]
     },
-    // {
-    //   label: "Bee",
-    //   icon: "bee",
-    //   exercises: ["bee-test"]
-    // },
+    {
+      label: "Bee",
+      icon: "bee",
+      exercises: ["bee-test"]
+    },
     {
       label: "Methoden",
       id: "methods",

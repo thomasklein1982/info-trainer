@@ -70,9 +70,11 @@ export default{
           }else{
             rp.clazzes[i].hiddenAttributes=c.hiddenAttributes;
             rp.clazzes[i].hiddenMethods=c.hiddenMethods;
+            rp.clazzes[i].constraints=c.constraints;
             continue;
           }
         }
+        rp.clazzes[i].constraints=c.constraints;
         if(c.type==="UI"){
           project.clazzes[i]=c.code;
           continue;

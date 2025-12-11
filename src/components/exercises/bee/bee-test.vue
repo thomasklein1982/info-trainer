@@ -38,6 +38,10 @@ export const data={
     }
   },
   project: {
+    name: "Bee",
+    constraints: {
+      
+    },
     clazzes: [
       {
         name: "Main",
@@ -66,6 +70,9 @@ export const data={
             }`
           }
         ],
+        constraints: {
+          maxStatementCount: 6
+        },
         src: `$void main(){
   bee.move();
 }`
