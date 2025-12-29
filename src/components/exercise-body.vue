@@ -255,8 +255,8 @@ export default {
       }
       this.$root.save(this.exerciseData);
     },
-    checkExercise(){
-      let resArray=this.$parent.check();
+    async checkExercise(){
+      let resArray=await this.$parent.check();
       this.exerciseData.correct=resArray;
       this.exerciseData.userProject=this.seed;
       calcPoints(this.exerciseData);

@@ -6,6 +6,7 @@
     :ab="ab"
     @create-ab="createAB()"
   />
+  <JavaInterpreter ref="javaInterpreter"/>
 </template>
 
 <script>
@@ -222,6 +223,16 @@ export default{
     await this.load();
   },
   methods: {
+    async runJavaProject(project){
+      let interpreter=this.$refs.javaInterpreter;
+      let res=await interpreter.runJavaProject(project);
+      return res;
+    },
+    async runJavaSnippet(code){
+      let interpreter=this.$refs.javaInterpreter;
+      let res=await interpreter.runJavaSnippet(code);
+      return res;
+    },
     removeSavedUserData(){
       storage.removeItem(STORAGE_DATA);
       storage.removeItem(STORAGE_SETTINGS);

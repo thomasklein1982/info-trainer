@@ -11,8 +11,8 @@ export default{
   },
   watch: {
     'task.input'(nv,ov){
-      if(this.task.correct && this.task.checked){
-        return true;
+      if(!this.autoCheck || this.task.correct && this.task.checked){
+        return;
       }
       let ist=this.task.input;
       let soll=this.solution+"";
@@ -33,6 +33,10 @@ export default{
   },
   props: {
     task: Object,
+    autoCheck: {
+      type: Boolean,
+      default: true
+    },
     width: {
       type: String,
       default: "6em"

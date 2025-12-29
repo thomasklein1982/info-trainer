@@ -5,6 +5,7 @@ export * as Laufzeit3 from './algorithms/laufzeit-3.vue';
 export * as Laufzeit2 from './algorithms/laufzeit-2.vue';
 export * as Laufzeit1 from './algorithms/laufzeit-1.vue';
 export * as Cube from './loops/cube.vue';
+export * as One2 from './console/one-2.vue';
 export * as One1 from './console/one-1.vue';
 export * as ConsoleWiderstand from './console/console-widerstand.vue';
 export * as Sum2 from './loops/sum-2.vue';
