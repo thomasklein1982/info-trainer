@@ -118,8 +118,8 @@ export const data={
         "....",
         ".WWF",
         ".WWW",
-        "B..."
-      ])  
+        "B...",
+      ], {width: 3, height: 2})  
     ]
   }
 };

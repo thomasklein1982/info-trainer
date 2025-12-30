@@ -75,14 +75,23 @@ export const BeeClazz={
 `
 }
 
-export function createGameWorldClazz(def){
+export function createGameWorldClazz(def,viewBox){
   let defString=JSON.stringify(def);
+  if(!viewBox){
+    viewBox={
+      left: 0,
+      top: 0,
+      width: def[0].length,
+      height: def.length
+    };
+  }
   defString=defString.substring(1,defString.length-1);
   return {
     name: "GameWorld",
     visibility: "",
-    isHidden: true,
+    isHidden: false,
     src: `private Canvas canvas;
+    private JPanel window;
   int maxX, maxY;
   int[ ] beeStart = {
     0,
@@ -90,6 +99,8 @@ export function createGameWorldClazz(def){
   };
   JComponent[ ][ ] fields;
   private String[ ] def = {`+defString+`};
+  private int viewWidth = ${viewBox.width};
+  private int viewHeight = ${viewBox.height};
 
   GameWorld( ) {
     JFrame frame = new JFrame( "1" );
@@ -97,7 +108,13 @@ export function createGameWorldClazz(def){
     maxX = def[ 0 ].length( ) - 1;
     maxY = def.length - 1;
     fields = new JComponent[ maxX + 1 ][ maxY + 1 ];
+    window = new JPanel( null );
     canvas = new Canvas( -0.5, maxX + 0.5, -0.5, maxY + 0.5 );
+    canvas.setSizePolicy("stretch");
+    HTMLElement wrapper=canvas.getWrapperElement();
+    wrapper.setAttribute("style", "width: ${100*def[0].length/viewBox.width}%; height: ${100*def.length/viewBox.height}%;");
+    window.setStyle("overflow", "auto");
+    window.add(canvas);
     for ( int y = 0; y <= maxY; y++ ) {
       for ( int x = 0; x <= maxX; x++ ) {
         String d = def[ y ].charAt( x ) + "";
@@ -124,7 +141,7 @@ export function createGameWorldClazz(def){
         fields[ x ][ maxY - y ] = c;
       }
     }
-    frame.add( canvas );
+    frame.add( window );
   }
   
   void addBee( JComponent c ) {
