@@ -1,4 +1,6 @@
 
+export * as BeeCopy from './bee/bee-copy.vue';
+export * as BeeTarget from './bee/bee-target.vue';
 export * as BeeMax from './bee/bee-max.vue';
 export * as RmSort from './rm/rm-sort.vue';
 export * as RmMax from './rm/rm-max.vue';

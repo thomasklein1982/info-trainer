@@ -1,17 +1,18 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
-    Die Biene soll alle <Code inline>n</Code> ganzen Zahlen addieren und das Ergebnis hinter die letzte Zahl schreiben.
+    Die Biene Lisa muss den Text, der auf dem gelben Feld steht, auf das rote Feld übertragen.
   </ExerciseBody>
 </template>
 
 <script>
 import { Random } from '../../../other/random';
 import { BeeClazz, GameWorldClazz } from './clazzes';
+import FlowerJSON from "./graphics/flower.json";
 
 
 export const data={
-  id: "bee-max",
-  title: "Die Biene addiert alle Zahlen",
+  id: "bee-copy",
+  title: "Die Kopier-Biene",
   check: {
     init: async ()=>{
       $Exercise.deleteMain();
@@ -20,18 +21,19 @@ export const data={
       }
     },
     testcases: [
-        {
-          info: "Das richtige Ergebnis steht auf dem Feld rechts von der letzten Zahl."
-        }
-      ],
+      {
+        info: "Auf dem roten Feld steht am Programmende derselbe Text wie auf dem gelben Feld.",
+        count: 5
+      }
+    ],
     test: async (tc,init)=>{
-      let n = $Exercise.random(10,50);
-      let infos=await init.a.$appPreviewMethod({seed: $Exercise.random(1000,100000)},n);
+      let index = tc.$run.index;
+      let infos=await init.a.$appPreviewMethod({seed: 1},index);
       infos.bee.bee.maxSpeed=true;
       await infos.bee.bee.ui.setStyle("transition","");
-      await init.a.program(infos.bee,n);
-      let lastField=await infos.gameworld.getField(n+1,0);
-      return (lastField.getValue()===infos.sum+"");
+      await init.a.program(infos.bee);
+      let res=await infos.rot.getValue();
+      return (infos.word===res);
     }
   },
   project: {
@@ -49,47 +51,43 @@ export const data={
             name: "$realMainMethod",
             jsCode: `async $realMainMethod(exerciseData){
               let infos=await this.$appPreviewMethod(exerciseData);
-              await this.program(infos.bee, infos.n);
+              await this.program(infos.bee);
             }`
           },
           {
             name: "$appPreviewMethod",
-            jsCode: `async $appPreviewMethod(exerciseData, n){
+            jsCode: `async $appPreviewMethod(exerciseData, index){
               let random=new Random();
               await random.$constructor(exerciseData.seed);
-              if(n===undefined){
-                n=await random.nextInt(10)+10;
+              let words=["Honig","Maja","Willy","Wabe","Flug"];
+              if(index===undefined){
+                index=await random.nextInt(words.length);
               }
-              let defString="B";
-              for(let i=0;i<n;i++){
-                defString+=".";
-              }
-              defString+=".";
-              let g=await GameWorld.createFromDefString([defString], 4, 1);
-              
-              let numbers=[];
-              let sum=0;
-              for(let i=0;i<n;i++){
-                let z=await random.nextInt(100)+1;
-                numbers.push(z);
-                let c=await g.getField(i+1,0);
-                c.setValue(z+"");
-                sum+=z;
-              }
+              let word=words[index];
+              let defString=[
+                "WWWW",
+                "B.GW",
+                "W..W",
+                "W.RW",
+                "WWWW"
+              ];
+              let g=await GameWorld.createFromDefString(defString, 4, 5);
               let bee=await $App.asyncFunctionCall(new Bee(),'$constructor',[null,g]);
               await g.addAt(bee.bee.ui,"B");
+              let gelb=await g.getNamedField("G");
+              let rot=await g.getNamedField("R");
+              await gelb.setStyle("background-color","yellow");
+              await gelb.setValue(word);
+              await rot.setStyle("background-color","red");
               return {
-                bee, gameworld: g, n, sum
+                bee, gameworld: g, word, rot
               };
             }`
           }
         ],
-        constraints: {
-          maxStatementCount: 6
-        },
-        src: `$void program( Bee bee, int n ){
+        src: `$void program( Bee lisa ){
   //hierhin kommt der Code
-
+  
 }`
       },
       {
@@ -97,11 +95,8 @@ export const data={
         isHidden: true,
         uml: true,
         src: `private Bee2 bee;
-  private boolean onFlower(){
-    return bee.getFieldType()=="flower";
-  }
   private Bee( GameWorld world ) {
-    this.bee=new Bee2("konrad", world);
+    this.bee=new Bee2("lisa", world);
   }
   /*Bewegt die Biene um 1 Feld*/
   void move( ) {

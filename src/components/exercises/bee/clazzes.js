@@ -1,31 +1,45 @@
+import * as BeeJSON from './graphics/bee.json';
+import * as TreeJSON from './graphics/tree.json';
+
 export const BeeClazz={
   name: "Bee2",
   isHidden: true,
-  uml: true,
+  uml: false,
   src: `
   private GameWorld world;
-  private JImage ui;
+  private String name;
+  private Canvas ui;
+  private JLabel label;
+  private JImage image;
   int speed = 50;
   boolean maxSpeed=false;
-  Bee2( GameWorld w ) {
+  Bee2( String name, GameWorld w ) {
+    this.name=name;
     world = w;
-    ui = new JImage( "https://thomaskl.uber.space/Webapps/Assets/graphics/animal/bee.svg" );
+    ui = new Canvas( 0,1,0,1 );
+    image=new JImage("${BeeJSON.dataurl}");
+    image.setPosition(0.5,0.5);
+    ui.add(image);
+    label=new JLabel(name);
+    label.setStyle("font-size","25cqw");
+    label.setPosition(0.5,0.5);
+    label.setAlignment("top");
+    ui.add(label);
     ui.setSize( 0.7, 0.7 );
     ui.setDirection( 0 );
-    world.addBee( ui );
     ui.setStyle("transition","all 0.2s");
+    image.setStyle("transition","all 0.2s");
   }
   /*Bewegt die Biene um 1 Feld*/
   void move( ) {
+    sleep( );
     String fieldAhead = getFieldTypeAhead( );
     if ( fieldAhead == "tree" || fieldAhead == "border" ) {
-      System.toast( "Bumm", "center" );
-      return;
+      throw new Exception("Autsch! "+name+" ist gegen ein Hindernis geflogen.");
     }
     ui.move( 1 );
     JComponent f=getFieldAhead();
     if(f!=null) f.scrollIntoView();
-    sleep( );
   }
   
   private void sleep( ) {
@@ -34,29 +48,15 @@ export const BeeClazz={
   }
   
   void turnLeft( ) {
-    ui.setDirection( ( ui.getDirection( ) + 90 ) % 360 );
-    ui.setRotation( ui.getDirection( ) );
     sleep( );
+    ui.setRotation( ui.getRotation( ) + 90 );
+    ui.setDirection( ( ui.getDirection( ) + 90 ) % 360 );
   }
   
   void turnRight( ) {
+    sleep( );
+    ui.setRotation( ui.getRotation( )-90 );
     ui.setDirection( ( ui.getDirection( ) + 270 ) % 360 );
-    ui.setRotation( ui.getDirection( ) );
-    sleep( );
-  }
-
-  String scan( ) {
-    JComponent field = getFieldAhead( );
-    if ( field == null ) {
-      return "border";
-    }
-    field.scrollIntoView();
-    field.setStyle( "background-color", "white" );
-    field.setStyle( "opacity", "0.5" );
-    sleep( );
-    field.setStyle( "background-color", "" );
-    field.setStyle( "opacity", "1" );
-    return field.actionCommand;
   }
 
   JComponent scanEffect(){
@@ -64,10 +64,11 @@ export const BeeClazz={
     if ( field == null ) {
       throw new Exception("Vor dir ist kein Feld mehr!");
     }
+    String bg=field.getStyle("background-color");
     field.setStyle( "background-color", "white" );
     field.setStyle( "opacity", "0.5" );
     sleep( );
-    field.setStyle( "background-color", "" );
+    field.setStyle( "background-color", bg );
     field.setStyle( "opacity", "1" );
     return field;
   }
@@ -98,6 +99,10 @@ export const BeeClazz={
     return c.actionCommand;
   }
 
+  JLabel getField(){
+    return world.getField( Math.round( ui.getX( ) ), Math.round( ui.getY( ) ) );
+  }
+
   JComponent getFieldAhead( ) {
     ui.move( 1 );
     JComponent field = world.getField( Math.round( ui.getX( ) ), Math.round( ui.getY( ) ) );
@@ -123,11 +128,8 @@ export const GameWorldClazz={
   private Canvas canvas;
   private JPanel window;
   int maxX, maxY, windowWidth, windowHeight;
-  int[ ] beeStart = {
-    0,
-    0
-  };
-  JComponent[ ][ ] fields;
+  HashMap<String,JLabel> namedFields=new HashMap<>();
+  JLabel[ ][ ] fields;
 
   GameWorld( int windowWidth, int windowHeight ) {
     this.windowWidth=windowWidth;
@@ -140,7 +142,7 @@ export const GameWorldClazz={
     GameWorld gw=new GameWorld( windowWidth, windowHeight );
     gw.maxX = def[ 0 ].length( ) - 1;
     gw.maxY = def.length - 1;
-    gw.fields = new JComponent[ gw.maxX + 1 ][ gw.maxY + 1 ];
+    gw.fields = new JLabel[ gw.maxX + 1 ][ gw.maxY + 1 ];
     gw.window = new JPanel( null );
     gw.canvas = new Canvas( -0.5, gw.maxX + 0.5, -0.5, gw.maxY + 0.5 );
     //gw.canvas.setSizePolicy("stretch");
@@ -151,23 +153,17 @@ export const GameWorldClazz={
     for ( int y = 0; y <= gw.maxY; y++ ) {
       for ( int x = 0; x <= gw.maxX; x++ ) {
         String d = def[ y ].charAt( x ) + "";
-        JComponent c;
-        if ( d == "B" ) {
-          gw.beeStart[ 0 ] = x;
-          gw.beeStart[ 1 ] = y;
-          d = ".";
-        }
-        
-        if ( d == "F" ) {
-          c = new JImage( "https://opengameart.org/sites/default/files/styles/medium/public/3_hot.png" );
-          c.actionCommand = "flower";
-        } else if ( d == "." ) {
-          c = new JLabel( "" );
-          c.actionCommand = "empty";
-        } else if ( d == "W" ) {
-          c = new JImage( "https://thomaskl.uber.space/Webapps/Assets/graphics/overworld/tree-1.png" );
+        JLabel c = new JLabel( "" );
+        c.actionCommand="";
+        if ( d == "W" ) {
+          c.setStyle("background-image","url(${TreeJSON.dataurl})");
+          c.setStyle("background-repeat","no-repeat");
+          c.setStyle("background-size","cover");
           c.actionCommand = "tree";
+        }else if(d!="."){
+          gw.namedFields.put(d,c);
         }
+        c.setStyle("font-size",(25.0/gw.windowWidth)+"cqw");
         c.setPosition( x, gw.maxY - y );
         c.setStyle( "border", "1pt dotted darkgreen" );
         gw.canvas.add( c );
@@ -178,12 +174,21 @@ export const GameWorldClazz={
     return gw;
   }
   
-  void addBee( JComponent c ) {
-    c.setPosition( beeStart[ 0 ], maxY - beeStart[ 1 ] );
+  void add( JComponent c, int x, int y ) {
+    c.setPosition(x,y);
     canvas.add( c );
   }
+
+  JLabel getNamedField(String name){
+    return namedFields.get(name);
+  }
+
+  void addAt(JComponent c, String locationName){
+    JComponent l=namedFields.get(locationName);
+    add(c, l.getX(), l.getY());
+  }
   
-  JComponent getField( int x, int y ) {
+  JLabel getField( int x, int y ) {
     if ( x < 0 || x > maxX || y < 0 || y > maxY ) return null;
     return fields[ x ][ y ];
   }
