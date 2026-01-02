@@ -1,4 +1,5 @@
 
+export * as BeeMax from './bee/bee-max.vue';
 export * as RmSort from './rm/rm-sort.vue';
 export * as RmMax from './rm/rm-max.vue';
 export * as Laufzeit3 from './algorithms/laufzeit-3.vue';

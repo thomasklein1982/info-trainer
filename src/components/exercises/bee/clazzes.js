@@ -1,17 +1,19 @@
 export const BeeClazz={
   name: "Bee2",
   isHidden: true,
-  visibility: "",
+  uml: true,
   src: `
   private GameWorld world;
   private JImage ui;
-  int speed = 75;
+  int speed = 50;
+  boolean maxSpeed=false;
   Bee2( GameWorld w ) {
     world = w;
     ui = new JImage( "https://thomaskl.uber.space/Webapps/Assets/graphics/animal/bee.svg" );
     ui.setSize( 0.7, 0.7 );
     ui.setDirection( 0 );
     world.addBee( ui );
+    ui.setStyle("transition","all 0.2s");
   }
   /*Bewegt die Biene um 1 Feld*/
   void move( ) {
@@ -21,11 +23,14 @@ export const BeeClazz={
       return;
     }
     ui.move( 1 );
+    JComponent f=getFieldAhead();
+    if(f!=null) f.scrollIntoView();
     sleep( );
   }
   
   private void sleep( ) {
-    Thread.sleep( 2000 - speed * 20 );
+    if(maxSpeed) return;
+    Thread.sleep( 1000 - speed * 10 );
   }
   
   void turnLeft( ) {
@@ -45,12 +50,46 @@ export const BeeClazz={
     if ( field == null ) {
       return "border";
     }
+    field.scrollIntoView();
     field.setStyle( "background-color", "white" );
     field.setStyle( "opacity", "0.5" );
     sleep( );
     field.setStyle( "background-color", "" );
     field.setStyle( "opacity", "1" );
     return field.actionCommand;
+  }
+
+  JComponent scanEffect(){
+    JComponent field = getFieldAhead( );
+    if ( field == null ) {
+      throw new Exception("Vor dir ist kein Feld mehr!");
+    }
+    field.setStyle( "background-color", "white" );
+    field.setStyle( "opacity", "0.5" );
+    sleep( );
+    field.setStyle( "background-color", "" );
+    field.setStyle( "opacity", "1" );
+    return field;
+  }
+
+  void scrollIntoView(){
+    this.ui.scrollIntoView();
+  }
+
+  String read(){
+    JComponent field = scanEffect();
+    return field.getValue();
+  }
+
+  void print(Object text){
+    JComponent field = scanEffect();
+    String t="";
+    if(text==null) t="null";
+    else if(text instanceof Integer) t=((Integer) text).intValue()+"";
+    else if(text instanceof Double) t=((Double) text).doubleValue()+"";
+    else if(text instanceof Character) t=((Character) text).charValue()+"";
+    else if(text instanceof String) t=(String)text;
+    field.setValue(t);
   }
   
   String getFieldType(){
@@ -59,20 +98,102 @@ export const BeeClazz={
     return c.actionCommand;
   }
 
-  private JComponent getFieldAhead( ) {
+  JComponent getFieldAhead( ) {
     ui.move( 1 );
     JComponent field = world.getField( Math.round( ui.getX( ) ), Math.round( ui.getY( ) ) );
     ui.move( -1 );
     return field;
   }
   
-  private String getFieldTypeAhead( ) {
+  String getFieldTypeAhead( ) {
     JComponent c = getFieldAhead( );
     if ( c == null ) return "border";
     return c.actionCommand;
   }
   
 `
+}
+
+export const GameWorldClazz={
+  name: "GameWorld",
+  uml: false,
+  isHidden: true,
+  src: `
+  private JFrame frame;
+  private Canvas canvas;
+  private JPanel window;
+  int maxX, maxY, windowWidth, windowHeight;
+  int[ ] beeStart = {
+    0,
+    0
+  };
+  JComponent[ ][ ] fields;
+
+  GameWorld( int windowWidth, int windowHeight ) {
+    this.windowWidth=windowWidth;
+    this.windowHeight=windowHeight;
+    frame = new JFrame( "1" );
+    frame.setStyle( "background", "lightgreen" );
+  }
+
+  static GameWorld createFromDefString( String[] def, int windowWidth, int windowHeight ){
+    GameWorld gw=new GameWorld( windowWidth, windowHeight );
+    gw.maxX = def[ 0 ].length( ) - 1;
+    gw.maxY = def.length - 1;
+    gw.fields = new JComponent[ gw.maxX + 1 ][ gw.maxY + 1 ];
+    gw.window = new JPanel( null );
+    gw.canvas = new Canvas( -0.5, gw.maxX + 0.5, -0.5, gw.maxY + 0.5 );
+    //gw.canvas.setSizePolicy("stretch");
+    HTMLElement wrapper=gw.canvas.getWrapperElement();
+    wrapper.setAttribute("style", "width: "+(100*def[0].length()/gw.windowWidth)+"%; height: "+(100*def.length/gw.windowHeight)+"%;");
+    gw.window.setStyle("overflow", "auto");
+    gw.window.add(gw.canvas);
+    for ( int y = 0; y <= gw.maxY; y++ ) {
+      for ( int x = 0; x <= gw.maxX; x++ ) {
+        String d = def[ y ].charAt( x ) + "";
+        JComponent c;
+        if ( d == "B" ) {
+          gw.beeStart[ 0 ] = x;
+          gw.beeStart[ 1 ] = y;
+          d = ".";
+        }
+        
+        if ( d == "F" ) {
+          c = new JImage( "https://opengameart.org/sites/default/files/styles/medium/public/3_hot.png" );
+          c.actionCommand = "flower";
+        } else if ( d == "." ) {
+          c = new JLabel( "" );
+          c.actionCommand = "empty";
+        } else if ( d == "W" ) {
+          c = new JImage( "https://thomaskl.uber.space/Webapps/Assets/graphics/overworld/tree-1.png" );
+          c.actionCommand = "tree";
+        }
+        c.setPosition( x, gw.maxY - y );
+        c.setStyle( "border", "1pt dotted darkgreen" );
+        gw.canvas.add( c );
+        gw.fields[ x ][ gw.maxY - y ] = c;
+      }
+    }
+    gw.frame.add( gw.window );
+    return gw;
+  }
+  
+  void addBee( JComponent c ) {
+    c.setPosition( beeStart[ 0 ], maxY - beeStart[ 1 ] );
+    canvas.add( c );
+  }
+  
+  JComponent getField( int x, int y ) {
+    if ( x < 0 || x > maxX || y < 0 || y > maxY ) return null;
+    return fields[ x ][ y ];
+  }
+  
+  String getFieldType( int x, int y ) {
+    JComponent c = getField( x, y );
+    if ( c == null ) return null;
+    return c.actionCommand;
+  }
+  `
 }
 
 export function createGameWorldClazz(def,viewBox){
