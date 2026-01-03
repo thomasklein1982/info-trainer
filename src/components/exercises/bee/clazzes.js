@@ -174,7 +174,7 @@ export const GameWorldClazz={
     return gw;
   }
   
-  void add( JComponent c, int x, int y ) {
+  void add( JComponent c, double x, double y ) {
     c.setPosition(x,y);
     canvas.add( c );
   }
