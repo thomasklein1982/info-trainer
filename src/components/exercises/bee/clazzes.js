@@ -27,8 +27,9 @@ export const BeeClazz={
     ui.add(label);
     ui.setSize( 0.7, 0.7 );
     ui.setDirection( 0 );
-    ui.setStyle("transition","all 0.2s");
-    image.setStyle("transition","all 0.2s");
+    HTMLElement wrapper=ui.getWrapperElement();
+    wrapper.setStyle("transition","0.2s all");
+    image.setStyle("transition","0.2s all");
   }
   /*Bewegt die Biene um 1 Feld*/
   void move( ) {
