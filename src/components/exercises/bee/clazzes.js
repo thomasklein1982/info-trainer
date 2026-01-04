@@ -1,23 +1,84 @@
 import * as BeeJSON from './graphics/bee.json';
 import * as TreeJSON from './graphics/tree.json';
 
-export const BeeClazz={
-  name: "Bee2",
+export function createBeeClazz(methods){
+  let data={
+    name: "Bee",
+    isHidden: true,
+    uml: true,
+    src: null
+  }
+  let src=`private GameObject obj;
+  private Bee( String name, GameWorld world ) {
+    obj=new GameObject(name, world, "${BeeJSON.dataurl}");
+    obj.setImageSize(0.7,0.7);
+  }
+  void setSpeed(int s){
+    obj.setSpeed(s);
+  }
+  private void toMaxSpeed(){
+    obj.toMaxSpeed();
+  }
+  private JLabel getField(){
+    return obj.getField();
+  }
+  private void insertAt( String namedPosition ){
+    obj.insertAt(namedPosition);
+  }
+  `;
+  if(!methods || methods.indexOf("move")>=0){
+    src+=`/*Bewegt die Biene um 1 Feld*/
+    void move( ) {
+      obj.move();
+    }
+    `;
+  }
+  if(!methods || methods.indexOf("read")>=0){
+    src+=`/*Liest den Text auf dem Feld vor der Biene.*/
+    String read(){
+      return obj.read();
+    }
+    `;
+  }
+  if(!methods || methods.indexOf("turn")>=0){
+    src+=`/*Dreht die Biene nach links.*/
+    void turnLeft( ) {
+      obj.turnLeft();
+    }
+    /*Dreht die Biene nach rechts.*/
+    void turnRight( ) {
+      obj.turnRight();
+    }
+    `;
+  }
+  if(!methods || methods.indexOf("print")>=0){
+    src+=`/*Schreibt auf das Feld vor der Biene.*/
+    void print( Object text ) {
+      obj.print(text);
+    }
+    `;
+  }
+  data.src=src;
+  return data;
+}
+
+export const GameObjectClazz={
+  name: "GameObject",
   isHidden: true,
   uml: false,
   src: `
   private GameWorld world;
   private String name;
-  private Canvas ui;
+  public Canvas ui;
   private JLabel label;
   private JImage image;
   int speed = 50;
   boolean maxSpeed=false;
-  Bee2( String name, GameWorld w ) {
+  GameObject( String name, GameWorld w, String dataurl ) {
     this.name=name;
     world = w;
     ui = new Canvas( 0,1,0,1 );
-    image=new JImage("${BeeJSON.dataurl}");
+    image=new JImage(dataurl);
     image.setPosition(0.5,0.5);
     ui.add(image);
     label=new JLabel(name);
@@ -25,11 +86,34 @@ export const BeeClazz={
     label.setPosition(0.5,0.5);
     label.setAlignment("top");
     ui.add(label);
-    ui.setSize( 0.7, 0.7 );
+    ui.setSize( 1, 1 );
     ui.setDirection( 0 );
-    HTMLElement wrapper=ui.getWrapperElement();
-    wrapper.setStyle("transition","0.2s all");
-    image.setStyle("transition","0.2s all");
+  }
+  void insertAt(String namedPosition){
+    world.addAt(this,namedPosition);
+    Thread.sleep(10);
+    setTransition(true);
+  }
+  void setImageSize(double w, double h){
+    image.setSize(w,h);
+  }
+  void toMaxSpeed(){
+    maxSpeed=true;
+    setTransition(false);
+  }
+  void setTransition(boolean e){
+    HtmlElement wrapper=ui.getWrapperElement();
+    if(e){
+      
+      wrapper.setStyle("transition",(getDelay()/1000.0)+"s all");
+    }else{
+      wrapper.setStyle("transition","");
+    }
+  }
+  void setSpeed( int s){
+    if(maxSpeed) return;
+    speed=s;
+    setTransition(true);
   }
   /*Bewegt die Biene um 1 Feld*/
   void move( ) {
@@ -43,9 +127,13 @@ export const BeeClazz={
     if(f!=null) f.scrollIntoView();
   }
   
+  private int getDelay(){
+    return 1000 - speed * 10;
+  }
+
   private void sleep( ) {
     if(maxSpeed) return;
-    Thread.sleep( 1000 - speed * 10 );
+    Thread.sleep( getDelay() );
   }
   
   void turnLeft( ) {
@@ -61,6 +149,7 @@ export const BeeClazz={
   }
 
   JComponent scanEffect(){
+    sleep();
     JComponent field = getFieldAhead( );
     if ( field == null ) {
       throw new Exception("Vor dir ist kein Feld mehr!");
@@ -147,7 +236,7 @@ export const GameWorldClazz={
     gw.window = new JPanel( null );
     gw.canvas = new Canvas( -0.5, gw.maxX + 0.5, -0.5, gw.maxY + 0.5 );
     //gw.canvas.setSizePolicy("stretch");
-    HTMLElement wrapper=gw.canvas.getWrapperElement();
+    HtmlElement wrapper=gw.canvas.getWrapperElement();
     wrapper.setAttribute("style", "width: "+(100*def[0].length()/gw.windowWidth)+"%; height: "+(100*def.length/gw.windowHeight)+"%;");
     gw.window.setStyle("overflow", "auto");
     gw.window.add(gw.canvas);
@@ -164,7 +253,7 @@ export const GameWorldClazz={
         }else if(d!="."){
           gw.namedFields.put(d,c);
         }
-        c.setStyle("font-size",(25.0/gw.windowWidth)+"cqw");
+        c.setStyle("font-size",(25.0/gw.maxX)+"cqw");
         c.setPosition( x, gw.maxY - y );
         c.setStyle( "border", "1pt dotted darkgreen" );
         gw.canvas.add( c );
@@ -175,16 +264,16 @@ export const GameWorldClazz={
     return gw;
   }
   
-  void add( JComponent c, double x, double y ) {
-    c.setPosition(x,y);
-    canvas.add( c );
+  void add( GameObject c, double x, double y ) {
+    c.ui.setPosition(x,y);
+    canvas.add( c.ui );
   }
 
   JLabel getNamedField(String name){
     return namedFields.get(name);
   }
 
-  void addAt(JComponent c, String locationName){
+  void addAt(GameObject c, String locationName){
     JComponent l=namedFields.get(locationName);
     add(c, l.getX(), l.getY());
   }
@@ -238,7 +327,7 @@ export function createGameWorldClazz(def,viewBox){
     window = new JPanel( null );
     canvas = new Canvas( -0.5, maxX + 0.5, -0.5, maxY + 0.5 );
     canvas.setSizePolicy("stretch");
-    HTMLElement wrapper=canvas.getWrapperElement();
+    HtmlElement wrapper=canvas.getWrapperElement();
     wrapper.setAttribute("style", "width: ${100*def[0].length/viewBox.width}%; height: ${100*def.length/viewBox.height}%;");
     window.setStyle("overflow", "auto");
     window.add(canvas);

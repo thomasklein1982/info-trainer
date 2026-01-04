@@ -6,8 +6,9 @@
 
 <script>
 import { Random } from '../../../other/random';
-import { BeeClazz, GameWorldClazz } from './clazzes';
+import { createBeeClazz, GameObjectClazz, GameWorldClazz } from './clazzes';
 import FlowerJSON from "./graphics/flower.json";
+import BeeJSON from "./graphics/bee.json";
 
 
 export const data={
@@ -29,8 +30,7 @@ export const data={
     test: async (tc,init)=>{
       let index = tc.$run.index;
       let infos=await init.a.$appPreviewMethod({seed: 1},index);
-      infos.bee.bee.maxSpeed=true;
-      await infos.bee.bee.ui.setStyle("transition","");
+      infos.bee.toMaxSpeed();
       await init.a.program(infos.bee);
       let res=await infos.rot.getValue();
       return (infos.word===res);
@@ -63,7 +63,7 @@ export const data={
               if(index===undefined){
                 index=await random.nextInt(words.length);
               }
-              let word=words[index];
+              let word=words[index%words.length];
               let defString=[
                 "WWWW",
                 "B.GW",
@@ -72,8 +72,8 @@ export const data={
                 "WWWW"
               ];
               let g=await GameWorld.createFromDefString(defString, 4, 5);
-              let bee=await $App.asyncFunctionCall(new Bee(),'$constructor',[null,g]);
-              await g.addAt(bee.bee.ui,"B");
+              let bee=await $App.asyncFunctionCall(new Bee(),'$constructor',[null,"lisa",g]);
+              await bee.insertAt("B");
               let gelb=await g.getNamedField("G");
               let rot=await g.getNamedField("R");
               await gelb.setStyle("background-color","yellow");
@@ -90,44 +90,8 @@ export const data={
   
 }`
       },
-      {
-        name: "Bee",
-        isHidden: true,
-        uml: true,
-        src: `private Bee2 bee;
-  private Bee( GameWorld world ) {
-    this.bee=new Bee2("lisa", world);
-  }
-  /*Bewegt die Biene um 1 Feld*/
-  void move( ) {
-    bee.move();
-    
-  }
-
-  String read(){
-    return bee.read();
-  }
-  
-  void turnLeft( ) {
-    bee.turnLeft();
-  }
-  
-  void turnRight( ) {
-    bee.turnRight();
-  }
-  
-  void print( Object text ) {
-    bee.print(text);
-  }
-  
-  void setSpeed(int s){
-    bee.speed=s;
-  }
-
-  
-`
-      },
-      BeeClazz,
+      createBeeClazz(),
+      GameObjectClazz,
       GameWorldClazz  
     ]
   }

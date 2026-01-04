@@ -6,14 +6,13 @@
 
 <script>
 import { Random } from '../../../other/random';
-import { createBeeClazz, GameObjectClazz, GameWorldClazz } from './clazzes';
+import { GameObjectClazz, GameWorldClazz } from './clazzes';
 import FlowerJSON from "./graphics/flower.json";
 
-let beeClazz=createBeeClazz();
 
 export const data={
-  id: "bee-target",
-  title: "Biene Lisa muss zur Blume",
+  id: "bee-target-2",
+  title: "Biene Lisa fliegt zu mehreren Blumen",
   check: {
     init: async ()=>{
       $Exercise.deleteMain();
@@ -22,16 +21,19 @@ export const data={
       }
     },
     testcases: [
-        {
-          info: "Biene Lisa befindet sich am Programmende auf der Blume."
-        }
-      ],
+      {
+        info: "Biene Lisa erreicht die Blume links."
+      },
+      {
+        info: "Biene Lisa erreicht die Blume rechts oben."
+      },
+    ],
     test: async (tc,init)=>{
       let infos=await init.a.$appPreviewMethod();
-      infos.bee.toMaxSpeed();
+      infos.bee.bee.toMaxSpeed();
       await init.a.program(infos.bee);
       let flower=await infos.gameworld.getNamedField("F");
-      let pos=await infos.bee.getField();
+      let pos=await infos.bee.bee.getField();
       return (pos===flower);
     }
   },
@@ -39,6 +41,9 @@ export const data={
     name: "Bee",
     exerciseData: {
       showAppPreviewWhenNotRunning: true
+    },
+    constraints: {
+      maxStatementCount: 6
     },
     clazzes: [
       {
@@ -63,22 +68,57 @@ export const data={
                 "B...",
               ];
               let g=await GameWorld.createFromDefString(defString, 4, 4);
-              let flower=await $App.asyncFunctionCall(new GameObject(),'$constructor',[null,"",g,"${FlowerJSON.dataurl}"]);
-              await flower.insertAt("F");
-              let bee=await $App.asyncFunctionCall(new Bee(),'$constructor',[null,"lisa",g]);
-              await bee.insertAt("B");
+              let flower=await $App.asyncFunctionCall(new JImage(),'$constructor',["${FlowerJSON.dataurl}"]);
+              await g.addAt(flower,"F");
+              let bee=await $App.asyncFunctionCall(new Bee(),'$constructor',[null,g]);
+              await g.addAt(bee.bee.ui,"B");
+              await bee.bee.setTransition(true);
               return {
                 bee, gameworld: g, flower
               };
             }`
           }
         ],
-        src: `$void program( Bee lisa ){
+        src: `$void program( Bee lisa, int n ){
   //hierhin kommt der Code
   
 }`
       },
-      beeClazz,
+      {
+        name: "Bee",
+        isHidden: true,
+        uml: true,
+        src: `private GameObject bee;
+  private Bee( GameWorld world ) {
+    this.bee=new GameObject("lisa", world, "${BeeJSON.dataurl}");
+    bee.setImageSize(0.7,0.7);
+  }
+  /*Bewegt die Biene um 1 Feld*/
+  void move( ) {
+    bee.move();
+  }
+
+  String read(){
+    return bee.read();
+  }
+  
+  void turnLeft( ) {
+    bee.turnLeft();
+  }
+  
+  void turnRight( ) {
+    bee.turnRight();
+  }
+  
+  void print( Object text ) {
+    bee.print(text);
+  }
+  
+  void setSpeed(int s){
+    bee.setSpeed(s);
+  }
+`
+      },
       GameObjectClazz,
       GameWorldClazz  
     ]

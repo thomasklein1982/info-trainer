@@ -1,7 +1,7 @@
 
 export * as BeeCopy from './bee/bee-copy.vue';
 export * as BeeTarget from './bee/bee-target.vue';
-export * as BeeMax from './bee/bee-max.vue';
+export * as BeeSum from './bee/bee-sum.vue';
 export * as RmSort from './rm/rm-sort.vue';
 export * as RmMax from './rm/rm-max.vue';
 export * as Laufzeit3 from './algorithms/laufzeit-3.vue';

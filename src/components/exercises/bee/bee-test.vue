@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { BeeClazz, createGameWorldClazz } from './clazzes';
+import { GameObjectClazz, createGameWorldClazz } from './clazzes';
 
 
 export const data={
@@ -113,7 +113,7 @@ export const data={
   
 `
       },
-      BeeClazz,
+      GameObjectClazz,
       createGameWorldClazz([
         "....",
         ".WWF",

@@ -1,16 +1,16 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
-    Die Biene soll alle <Code inline>n</Code> ganzen Zahlen addieren und das Ergebnis hinter die letzte Zahl schreiben.
+    Die Biene Konrad soll alle <Code inline>n</Code> ganzen Zahlen addieren und das Ergebnis hinter die letzte Zahl schreiben.
   </ExerciseBody>
 </template>
 
 <script>
 import { Random } from '../../../other/random';
-import { BeeClazz, GameWorldClazz } from './clazzes';
+import { createBeeClazz, GameObjectClazz, GameWorldClazz } from './clazzes';
 
 
 export const data={
-  id: "bee-max",
+  id: "bee-sum",
   title: "Die Biene addiert alle Zahlen",
   check: {
     init: async ()=>{
@@ -27,8 +27,7 @@ export const data={
     test: async (tc,init)=>{
       let n = $Exercise.random(10,50);
       let infos=await init.a.$appPreviewMethod({seed: $Exercise.random(1000,100000)},n);
-      infos.bee.bee.maxSpeed=true;
-      await infos.bee.bee.ui.setStyle("transition","");
+      infos.bee.toMaxSpeed();
       await init.a.program(infos.bee,n);
       let lastField=await infos.gameworld.getField(n+1,0);
       return (lastField.getValue()===infos.sum+"");
@@ -76,8 +75,8 @@ export const data={
                 c.setValue(z+"");
                 sum+=z;
               }
-              let bee=await $App.asyncFunctionCall(new Bee(),'$constructor',[null,g]);
-              await g.addAt(bee.bee.ui,"B");
+              let bee=await $App.asyncFunctionCall(new Bee(),'$constructor',[null,"konrad",g]);
+              await bee.insertAt("B");
               return {
                 bee, gameworld: g, n, sum
               };
@@ -87,52 +86,13 @@ export const data={
         constraints: {
           maxStatementCount: 6
         },
-        src: `$void program( Bee bee, int n ){
+        src: `$void program( Bee konrad, int n ){
   //hierhin kommt der Code
-
+  
 }`
       },
-      {
-        name: "Bee",
-        isHidden: true,
-        uml: true,
-        src: `private Bee2 bee;
-  private boolean onFlower(){
-    return bee.getFieldType()=="flower";
-  }
-  private Bee( GameWorld world ) {
-    this.bee=new Bee2("konrad", world);
-  }
-  /*Bewegt die Biene um 1 Feld*/
-  void move( ) {
-    bee.move();
-    
-  }
-
-  String read(){
-    return bee.read();
-  }
-  
-  void turnLeft( ) {
-    bee.turnLeft();
-  }
-  
-  void turnRight( ) {
-    bee.turnRight();
-  }
-  
-  void print( Object text ) {
-    bee.print(text);
-  }
-  
-  void setSpeed(int s){
-    bee.speed=s;
-  }
-
-  
-`
-      },
-      BeeClazz,
+      createBeeClazz(),
+      GameObjectClazz,
       GameWorldClazz  
     ]
   }
