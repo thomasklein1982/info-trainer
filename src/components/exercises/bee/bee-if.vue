@@ -5,15 +5,13 @@
 </template>
 
 <script>
-import { Random } from '../../../other/random';
 import { createBeeClazz, GameObjectClazz, GameWorldClazz } from './clazzes';
 import FlowerJSON from "./graphics/flower.json";
-import BeeJSON from "./graphics/bee.json";
 
 
 export const data={
-  id: "bee-copy",
-  title: "Die Kopier-Biene",
+  id: "bee-if",
+  title: "Wo geht's zur Blume?",
   check: {
     init: async ()=>{
       $Exercise.deleteMain();
@@ -23,17 +21,24 @@ export const data={
     },
     testcases: [
       {
-        info: "Auf dem roten Feld steht am Programmende derselbe Text wie auf dem gelben Feld.",
-        count: 5
-      }
+        info: "Biene Lisa befindet sich am Programmende auf der Blume, wenn die Blume oben ist.",
+        data: {
+          index: 0
+        }
+      },
+      {
+        info: "Biene Lisa befindet sich am Programmende auf der Blume, wenn die Blume unten ist.",
+        data: {
+          index: 1
+        }
+      },
     ],
     test: async (tc,init)=>{
-      let index = tc.$run.index;
+      let index = tc.index;
       let infos=await init.a.$appPreviewMethod({seed: 1},index);
       infos.bee.toMaxSpeed();
       await init.a.program(infos.bee);
-      let res=await infos.rot.getValue();
-      return (infos.word===res);
+      return (await infos.bee.getField()===await infos.flower.getField());
     }
   },
   project: {
@@ -58,28 +63,34 @@ export const data={
           {
             name: "$appPreviewMethod",
             jsCode: `async $appPreviewMethod(exerciseData, index){
-              let words=["Honig","Maja","Willy","Wabe","Flug"];
+              let dirs=["L","R"];
               if(index===undefined){
                 index=exerciseData.seed;
               }
-              let word=words[index%words.length];
+              let dir=dirs[index%dirs.length];
               let defString=[
-                "WWWW",
-                "B.GW",
-                "W..W",
-                "W.RW",
-                "WWWW"
+                "WWWWWW",
+                "WWWWWW",
+                "B..DWW",
+                "WWWWWW",
+                "WWWWWW"
               ];
-              let g=await GameWorld.createFromDefString(defString, 4, 5);
+              if(dir==="L"){
+                defString[0]=$Exercise.replaceInString(defString[0],3,"F");
+                defString[1]=$Exercise.replaceInString(defString[0],3,".");
+              }else{
+                defString[4]=$Exercise.replaceInString(defString[0],3,"F");
+                defString[3]=$Exercise.replaceInString(defString[0],3,".");
+              }
+              let g=await GameWorld.createFromDefString(defString, 6, 5);
+              let flower=await $App.asyncFunctionCall(new GameObject(),'$constructor',[null,"",g,"${FlowerJSON.dataurl}"]);
+              await flower.insertAt("F");
               let bee=await $App.asyncFunctionCall(new Bee(),'$constructor',[null,"lisa",g]);
               await bee.insertAt("B");
-              let gelb=await g.getNamedField("G");
-              let rot=await g.getNamedField("R");
-              await gelb.setStyle("background-color","yellow");
-              await gelb.setValue(word);
-              await rot.setStyle("background-color","red");
+              let f=await g.getNamedField("D");
+              await f.setValue(dir);
               return {
-                bee, gameworld: g, word, rot
+                bee, gameworld: g, dir, flower
               };
             }`
           }
