@@ -21,7 +21,7 @@ let Java={
     {
       label: "Bee",
       icon: "bee",
-      exercises: ["bee-target", "bee-copy", "bee-sum"]
+      exercises: ["bee-target", "bee-target-2", "bee-copy", "bee-sum"]
     },
     {
       label: "Methoden",

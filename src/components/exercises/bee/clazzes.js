@@ -9,6 +9,7 @@ export function createBeeClazz(methods){
     src: null
   }
   let src=`private GameObject obj;
+  private HashMap<JLabel,int> fieldCounts=new HashMap<>();
   private Bee( String name, GameWorld world ) {
     obj=new GameObject(name, world, "${BeeJSON.dataurl}");
     obj.setImageSize(0.7,0.7);
@@ -24,12 +25,28 @@ export function createBeeClazz(methods){
   }
   private void insertAt( String namedPosition ){
     obj.insertAt(namedPosition);
+    incFieldCount();
+  }
+  private void incFieldCount(){
+    JLabel f=getField();
+    int c=getFieldCount(f);
+    fieldCounts.put(f,c+1);
+  }
+  private int getFieldCount(JLabel f){
+    int c;
+    if(fieldCounts.containsKey(f)){
+      c=fieldCounts.get(f);
+    }else{
+      c=0;
+    }
+    return c;
   }
   `;
   if(!methods || methods.indexOf("move")>=0){
     src+=`/*Bewegt die Biene um 1 Feld*/
     void move( ) {
       obj.move();
+      incFieldCount();
     }
     `;
   }

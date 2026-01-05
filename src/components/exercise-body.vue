@@ -239,6 +239,12 @@ export default {
     exerciseSubmitted(data){
       //this.exerciseData.count=data.testCaseCount;
       if(data.resArray){
+        if(data.resArray.length===0 && this.exerciseData.data.check.testcases.length>0){
+          data.resArray=[];
+          for(let i=0;i<this.exerciseData.data.check.testcases.length;i++){
+            data.resArray.push(false);
+          }
+        }
         this.exerciseData.correct=data.resArray;
         calcPoints(this.exerciseData);
       }
