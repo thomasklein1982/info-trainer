@@ -14,7 +14,7 @@ export default{
     }
   },
   computed: {
-    alignContent(){
+    justifyContent(){
       if(this.align==="center"){
         return "safe center";
       }
@@ -27,7 +27,7 @@ export default{
       }
       return a;
     },
-    justifyContent(){
+    alignContent(){
       if(this.align==="center"){
         return "safe center";
       }

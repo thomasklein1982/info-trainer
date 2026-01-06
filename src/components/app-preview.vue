@@ -30,6 +30,6 @@ export default{
 <style scoped>
 .wrapper{
   overflow: hidden;
-
+  margin: auto;
 }
 </style>

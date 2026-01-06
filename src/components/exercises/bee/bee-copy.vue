@@ -1,5 +1,10 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
+    <BeePreview :world="world" width="10rem" style="float: right">
+      <GameObject image="bee" text="lisa" pos="B"/>
+      <GameObject image="" text="6" pos="G" align="center" style="background-color: yellow"/>
+      <GameObject image="" text="" pos="R" style="background-color: red"/>
+    </BeePreview>
     Die Biene Lisa muss den Text, der auf dem gelben Feld steht, auf das rote Feld übertragen.
   </ExerciseBody>
 </template>
@@ -9,11 +14,20 @@ import { Random } from '../../../other/random';
 import { createBeeClazz, GameObjectClazz, GameWorldClazz } from './clazzes';
 import FlowerJSON from "./graphics/flower.json";
 import BeeJSON from "./graphics/bee.json";
+import GameObject from '../../game-object.vue';
+import BeePreview from '../../bee-preview.vue';
 
 
 export const data={
   id: "bee-copy",
   title: "Die Kopier-Biene",
+  world: [
+    "WWWW",
+    "B.GW",
+    "W..W",
+    "W.RW",
+    "WWWW"
+  ],
   check: {
     init: async ()=>{
       $Exercise.deleteMain();
@@ -98,7 +112,7 @@ export const data={
 
 export default{
   components: {
-    
+    GameObject, BeePreview
   },
   data() {
       return data;

@@ -1,19 +1,30 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
+    <BeePreview :world="world" width="10rem" style="float: right">
+      <GameObject image="bee" text="lisa" pos="B"/>
+      <GameObject image="flower" text="" pos="F"/>
+    </BeePreview>
     Die Biene Lisa muss zur Blume fliegen.
   </ExerciseBody>
 </template>
 
 <script>
-import { Random } from '../../../other/random';
+import BeePreview from '../../bee-preview.vue';
+import GameObject from '../../game-object.vue';
 import { createBeeClazz, GameObjectClazz, GameWorldClazz } from './clazzes';
-import FlowerJSON from "./graphics/flower.json";
+import FlowerJSON from './graphics/flower.json';
 
 let beeClazz=createBeeClazz();
 
 export const data={
   id: "bee-target",
   title: "Biene Lisa muss zur Blume",
+  world: [
+    "....",
+    ".WWF",
+    ".WWW",
+    "B...",
+  ],
   check: {
     init: async ()=>{
       $Exercise.deleteMain();
@@ -87,7 +98,7 @@ export const data={
 
 export default{
   components: {
-    
+    BeePreview, GameObject
   },
   data() {
       return data;

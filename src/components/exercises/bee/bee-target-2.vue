@@ -1,11 +1,17 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
-    Die Biene Lisa muss nacheinander zu beiden Blumen fliegen.
+    <BeePreview :world="world" width="16rem" style="float: right">
+      <GameObject image="bee" text="lisa" pos="B"/>
+      <GameObject image="flower" text="" pos="1"/>
+      <GameObject image="flower" text="" pos="2" style="filter: hue-rotate(125deg)"/>
+    </BeePreview>Die Biene Lisa muss nacheinander zu beiden Blumen fliegen.
   </ExerciseBody>
 </template>
 
 <script>
 import { Random } from '../../../other/random';
+import BeePreview from '../../bee-preview.vue';
+import GameObject from '../../game-object.vue';
 import { createBeeClazz, GameObjectClazz, GameWorldClazz } from './clazzes';
 import FlowerJSON from "./graphics/flower.json";
 
@@ -15,6 +21,12 @@ let beeClazz=createBeeClazz();
 export const data={
   id: "bee-target-2",
   title: "Biene Lisa fliegt zu mehreren Blumen",
+  world: [
+    "B..1...",
+    "..WWW..",
+    "..WWWW.",
+    "..2....",
+  ],
   check: {
     init: async ()=>{
       $Exercise.deleteMain();
@@ -110,7 +122,7 @@ export const data={
 
 export default{
   components: {
-    
+    GameObject, BeePreview
   },
   data() {
       return data;

@@ -1,10 +1,32 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
-    Die Biene Lisa muss den Text, der auf dem gelben Feld steht, auf das rote Feld übertragen.
+    <p>Die Biene Lisa muss sich am Programmende auf dem Feld mit der Blume befinden.</p>
+    <div style="display: flex; gap: 1rem;">
+      <div>
+        <BeePreview :world="world1" width="14rem">
+          <GameObject image="bee" text="lisa" pos="B"/>
+          <GameObject image="flower" text="" pos="F"/>
+          <GameObject text="U" pos="D"/>
+        </BeePreview>
+        Möglichkeit 1: Die Blume befindet sich unten.
+      </div>
+      <div>
+        <BeePreview :world="world2" width="14rem">
+          <GameObject image="bee" text="lisa" pos="B"/>
+          <GameObject image="flower" text="" pos="F"/>
+          <GameObject text="O" pos="D"/>
+        </BeePreview>
+        Möglichkeit 2: Die Blume befindet sich oben.
+      </div>
+    </div>
+
+    <Hint>Lisa kann nachschauen, ob die Blume oben (O) oder unten (U) ist.</Hint>
   </ExerciseBody>
 </template>
 
 <script>
+import BeePreview from '../../bee-preview.vue';
+import GameObject from '../../game-object.vue';
 import { createBeeClazz, GameObjectClazz, GameWorldClazz } from './clazzes';
 import FlowerJSON from "./graphics/flower.json";
 
@@ -12,6 +34,20 @@ import FlowerJSON from "./graphics/flower.json";
 export const data={
   id: "bee-if",
   title: "Wo geht's zur Blume?",
+  world1: [
+    "WWWWWW",
+    "WWWWWW",
+    "B..DWW",
+    "WWW.WW",
+    "WWWFWW"
+  ],
+  world2: [
+    "WWWFWW",
+    "WWW.WW",
+    "B..DWW",
+    "WWWWWW",
+    "WWWWWW"
+  ],
   check: {
     init: async ()=>{
       $Exercise.deleteMain();
@@ -63,7 +99,7 @@ export const data={
           {
             name: "$appPreviewMethod",
             jsCode: `async $appPreviewMethod(exerciseData, index){
-              let dirs=["L","R"];
+              let dirs=["O","U"];
               if(index===undefined){
                 index=exerciseData.seed;
               }
@@ -75,7 +111,7 @@ export const data={
                 "WWWWWW",
                 "WWWWWW"
               ];
-              if(dir==="L"){
+              if(dir==="O"){
                 defString[0]=$Exercise.replaceInString(defString[0],3,"F");
                 defString[1]=$Exercise.replaceInString(defString[0],3,".");
               }else{
@@ -109,7 +145,7 @@ export const data={
 
 export default{
   components: {
-    
+    GameObject, BeePreview
   },
   data() {
       return data;

@@ -1,17 +1,32 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
     Die Biene Konrad soll alle <Code inline>n</Code> ganzen Zahlen addieren und das Ergebnis hinter die letzte Zahl schreiben.
+    <p>
+    <BeePreview :world="world" width="30rem">
+      <GameObject image="bee" text="konrad" pos="B"/>
+      <GameObject text="4" pos="1" align="center"/>
+      <GameObject text="11" pos="2" align="center"/>
+      <GameObject text="3" pos="3" align="center"/>
+      <GameObject text="..." pos="4" align="center"/>
+      <GameObject text="9" pos="5" align="center"/>
+    </BeePreview>
+    </p>
+    <Hint>Die Anzahl der Zahlen <Code inline>n</Code> ist vorgegeben. Das Programm soll für jeden Wert von <Code inline>n</Code> &ge; 1 funktionieren.</Hint>
   </ExerciseBody>
 </template>
 
 <script>
 import { Random } from '../../../other/random';
 import { createBeeClazz, GameObjectClazz, GameWorldClazz } from './clazzes';
-
+import BeePreview from '../../bee-preview.vue';
+import GameObject from '../../game-object.vue';
 
 export const data={
   id: "bee-sum",
   title: "Die Biene addiert alle Zahlen",
+  world: [
+    "B12345."
+  ],
   check: {
     init: async ()=>{
       $Exercise.deleteMain();
@@ -100,7 +115,7 @@ export const data={
 
 export default{
   components: {
-    
+    BeePreview, GameObject
   },
   data() {
       return data;
