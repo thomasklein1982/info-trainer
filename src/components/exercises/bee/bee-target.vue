@@ -41,9 +41,7 @@ export const data={
       let infos=await init.a.$appPreviewMethod();
       infos.bee.toMaxSpeed();
       await init.a.program(infos.bee);
-      let flower=await infos.gameworld.getNamedField("F");
-      let pos=await infos.bee.getField();
-      return (pos===flower);
+      return (await infos.bee.isOnSameField(infos.flower));
     }
   },
   project: {

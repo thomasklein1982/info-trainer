@@ -12,6 +12,7 @@ export function createBeeClazz(methods){
   private HashMap<JLabel,int> fieldCounts=new HashMap<>();
   private Bee( String name, GameWorld world ) {
     obj=new GameObject(name, world, "${BeeJSON.dataurl}");
+    obj.setBlocking(true);
     obj.setImageSize(0.7,0.7);
   }
   void setSpeed(int s){
@@ -22,6 +23,9 @@ export function createBeeClazz(methods){
   }
   private JLabel getField(){
     return obj.getField();
+  }
+  private boolean isOnSameField(GameObject o){
+    return obj.isOnSameField(o);
   }
   private void insertAt( String namedPosition ){
     obj.insertAt(namedPosition);
@@ -40,6 +44,9 @@ export function createBeeClazz(methods){
       c=0;
     }
     return c;
+  }
+  private void turnLeftInstantly(int n){
+    for(int i=0;i<n;i++) {obj.turnLeft(false);}
   }
   `;
   if(!methods || methods.indexOf("move")>=0){
@@ -60,11 +67,11 @@ export function createBeeClazz(methods){
   if(!methods || methods.indexOf("turn")>=0){
     src+=`/*Dreht die Biene nach links.*/
     void turnLeft( ) {
-      obj.turnLeft();
+      obj.turnLeft(true);
     }
     /*Dreht die Biene nach rechts.*/
     void turnRight( ) {
-      obj.turnRight();
+      obj.turnRight(true);
     }
     `;
   }
@@ -91,6 +98,7 @@ export const GameObjectClazz={
   private JImage image;
   int speed = 50;
   boolean maxSpeed=false;
+  boolean blocking=false;
   GameObject( String name, GameWorld w, String dataurl ) {
     this.name=name;
     world = w;
@@ -100,11 +108,18 @@ export const GameObjectClazz={
     ui.add(image);
     label=new JLabel(name);
     label.setStyle("font-size","25cqw");
+    label.setStyle("text-shadow", "-1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white");
     label.setPosition(0.5,0.5);
     label.setAlignment("top");
     ui.add(label);
     ui.setSize( 1, 1 );
     ui.setDirection( 0 );
+  }
+  void setBlocking(boolean v){
+    blocking=v;
+  }
+  boolean isBlocking(){
+    return blocking;
   }
   void insertAt(String namedPosition){
     world.addAt(this,namedPosition);
@@ -135,12 +150,24 @@ export const GameObjectClazz={
   /*Bewegt die Biene um 1 Feld*/
   void move( ) {
     sleep( );
+    JLabel f=getFieldAhead();
     String fieldAhead = getFieldTypeAhead( );
-    if ( fieldAhead == "tree" || fieldAhead == "border" ) {
-      throw new Exception("Autsch! "+name+" ist gegen ein Hindernis geflogen.");
+    if ( fieldAhead == "border" ) {
+      ui.move( 1 );
+      throw new Exception("O nein! "+name+" hat die Spielwelt verlassen.");
+    }else if(fieldAhead=="tree"){
+      throw new Exception("Autsch! "+name+" ist mit einem Baum zusammengestoßen.");
+    }else{
+      GameObject co=world.getBlockingGameObject(f);
+      if(co!=null){
+        String name="einem Hindernis";
+        if(co.name.length()>0){
+          name=co.name;
+        }
+        throw new Exception("Autsch! "+this.name+" ist mit "+name+" zusammengestoßen.");
+      }
     }
     ui.move( 1 );
-    JComponent f=getFieldAhead();
     if(f!=null) f.scrollIntoView();
   }
   
@@ -153,14 +180,14 @@ export const GameObjectClazz={
     Thread.sleep( getDelay() );
   }
   
-  void turnLeft( ) {
-    sleep( );
+  void turnLeft( boolean w ) {
+    if(w) sleep( );
     ui.setRotation( ui.getRotation( ) + 90 );
     ui.setDirection( ( ui.getDirection( ) + 90 ) % 360 );
   }
   
-  void turnRight( ) {
-    sleep( );
+  void turnRight( boolean w ) {
+    if(w) sleep( );
     ui.setRotation( ui.getRotation( )-90 );
     ui.setDirection( ( ui.getDirection( ) + 270 ) % 360 );
   }
@@ -210,9 +237,19 @@ export const GameObjectClazz={
     return world.getField( Math.round( ui.getX( ) ), Math.round( ui.getY( ) ) );
   }
 
-  JComponent getFieldAhead( ) {
+  boolean isOnSameField(GameObject o){
+    System.out.println(getField());
+    System.out.println(o.getField());
+    return getField()==o.getField();
+  }
+
+  boolean isAt(JLabel field){
+    return getField()==field;
+  }
+
+  JLabel getFieldAhead( ) {
     ui.move( 1 );
-    JComponent field = world.getField( Math.round( ui.getX( ) ), Math.round( ui.getY( ) ) );
+    JLabel field = world.getField( Math.round( ui.getX( ) ), Math.round( ui.getY( ) ) );
     ui.move( -1 );
     return field;
   }
@@ -237,6 +274,7 @@ export const GameWorldClazz={
   int maxX, maxY, windowWidth, windowHeight;
   HashMap<String,JLabel> namedFields=new HashMap<>();
   JLabel[ ][ ] fields;
+  ArrayList<GameObject> gameObjects=new ArrayList<>();
 
   GameWorld( int windowWidth, int windowHeight ) {
     this.windowWidth=windowWidth;
@@ -281,9 +319,18 @@ export const GameWorldClazz={
     return gw;
   }
   
+  GameObject getBlockingGameObject(JLabel field){
+    for(int i=0;i<gameObjects.size();i++){
+      GameObject g=gameObjects.get(i);
+      if(g.isBlocking() && g.isAt(field)) return g;
+    }
+    return null;
+  }
+
   void add( GameObject c, double x, double y ) {
     c.ui.setPosition(x,y);
     canvas.add( c.ui );
+    gameObjects.add(c);
   }
 
   JLabel getNamedField(String name){

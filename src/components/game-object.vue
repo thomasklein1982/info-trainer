@@ -1,7 +1,7 @@
 <template>
   <div style="position: relative" :style="{'grid-row': field.y, 'grid-column': field.x, transform: 'rotate('+angle+'deg)'}">
     <JImage v-if="image" :src="realSrc" style="width:100%; height: 100%;"/>
-    <JLabel :align="align" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0;">
+    <JLabel class="game-object-text" :align="align" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0;">
       {{ text }}
     </JLabel>
   </div>
@@ -55,5 +55,12 @@ export default{
 </script>
 
 <style scoped>
-
+.game-object-text{
+  color: black;
+  text-shadow: 
+    -1px -1px 0 white,  /* Oben links */
+     1px -1px 0 white,  /* Oben rechts */
+    -1px  1px 0 white,  /* Unten links */
+     1px  1px 0 white;  /* Unten rechts */
+}
 </style>

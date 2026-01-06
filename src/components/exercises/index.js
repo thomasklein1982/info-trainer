@@ -1,4 +1,5 @@
 
+export * as BeeTarget3 from './bee/bee-target-3.vue';
 export * as BeeIf from './bee/bee-if.vue';
 export * as BeeTarget2 from './bee/bee-target-2.vue';
 export * as BeeCopy from './bee/bee-copy.vue';
