@@ -6,7 +6,8 @@
       <GameObject image="bee" text="lisa" pos="1"/>
       <GameObject image="bee" text="fee" pos="2" :rotation="180"/>
     </BeePreview>
-    Biene Lisa muss zur rechten Blume und Biene Fee muss zur linken Blume.
+    Implementiere die Methode <Code inline>void program( Bee lisa, Bee fee )</Code>, die das folgende Problem löst:
+    <p>Biene Lisa muss zur rechten Blume und Biene Fee muss zur linken Blume.</p>
   </ExerciseBody>
 </template>
 

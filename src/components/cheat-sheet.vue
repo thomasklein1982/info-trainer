@@ -15,6 +15,16 @@
           <li><span class="cmd">substring( int from, int to ): String</span>: Gibt den Teil-String zurück, der bei <code>from</code> beginnt und vor <code>to</code> endet (die Nummerierung beginnt bei 0).</li>
         </ul>
       </li>
+      <li v-if="items.bee">Methoden der Klasse <code>Bee</code>:
+        <ul>
+          <li><span class="cmd">move( )</span>: Bewegt die Biene um 1 Feld in Blickrichtung.</li>
+          <li><span class="cmd">turnLeft( )</span>: Dreht die Biene um 90° gegen den Uhrzeigersinn ↺.</li>
+          <li><span class="cmd">turnRight( )</span>: Dreht die Biene um 90° im Uhrzeigersinn ↻.</li>
+          <li><span class="cmd">read( ): String</span>: Liest den Text auf dem Feld vor der Biene (in Blickrichtung) und gibt den gelesenen Text zurück.</li>
+          <li><span class="cmd">print( Object text )</span>: Schreibt den Wert des Parameters <code>text</code> auf das Feld vor der Biene (in Blickrichtung).</li>
+          <li><span class="cmd">setSpeed( int s )</span>: Legt fest, wie schnell sich die Biene bewegt  von <code>s</code> = 0 (sehr langsam) bis <code>s</code> = 100 (sehr schnell).</li>
+        </ul>
+      </li>
     </ul>
   </div>
 </template>
@@ -31,7 +41,8 @@ export default {
         sysout: false,
         console: false,
         string: false,
-        show: false
+        show: false,
+        bee: false
       };
       let exercises=this.path.exercises;
       for(let i=0;i<exercises.length;i++){

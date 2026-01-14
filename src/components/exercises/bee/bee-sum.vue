@@ -1,6 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
-    Die Biene Konrad soll alle <Code inline>n</Code> ganzen Zahlen addieren und das Ergebnis hinter die letzte Zahl schreiben.
+    Implementiere die Methode <Code inline>void program( Bee konrad, int n )</Code>, die das folgende Problem löst:
+    <p>Die Biene Konrad soll alle <Code inline>n</Code> ganzen Zahlen addieren und das Ergebnis hinter die letzte Zahl schreiben.</p>
     <p>
     <BeePreview :world="world" width="30rem">
       <GameObject image="bee" text="konrad" pos="B"/>

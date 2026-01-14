@@ -5,15 +5,17 @@
       <component :is="e"/>
     </ExerciseWrapper>
   </template>
+  <CheatSheet :path="path"/>
 </template>
 
 <script>
+import CheatSheet from './cheat-sheet.vue';
 import ExerciseWrapper from './exercise-wrapper.vue';
 
 
 export default{
   components: {
-    ExerciseWrapper
+    ExerciseWrapper, CheatSheet
   },
   props: {
     path: Object,

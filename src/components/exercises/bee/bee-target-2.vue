@@ -4,7 +4,9 @@
       <GameObject image="bee" text="lisa" pos="B"/>
       <GameObject image="flower" text="" pos="1"/>
       <GameObject image="flower" text="" pos="2" style="filter: hue-rotate(125deg)"/>
-    </BeePreview>Die Biene Lisa muss nacheinander zu beiden Blumen fliegen.
+    </BeePreview>
+    Implementiere die Methode <Code inline>void program( Bee lisa )</Code>, die das folgende Problem löst:
+    <p>Die Biene Lisa muss nacheinander zu beiden Blumen fliegen.</p>
   </ExerciseBody>
 </template>
 

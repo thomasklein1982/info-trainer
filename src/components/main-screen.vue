@@ -43,11 +43,10 @@
           <p>Klicke auf <Button icon="pi pi-home" text rounded @click="clickHome()"/>, um das Arbeitsblatt zu verlassen und zum "normalen" Info-Trainer zurückzukehren.</p>
         </Drawer>
         <template v-if="showHome">
-          <Home :ab="ab"/>
+          <Home :ab="ab" @open-exercise-path="openExercisePath"/>
         </template>
         <template v-else>
           <ExercisePath :path="currentPath"/>
-          <CheatSheet :path="currentPath"/>
         </template>
       </div>
       <DialogSettings

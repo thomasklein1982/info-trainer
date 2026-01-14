@@ -5,6 +5,7 @@
         <slot></slot>
       </template>
     </Card>
+    <CheatSheet v-if="exerciseData.data.cheats" :path="cheatsPath"/>
     <template v-if="exerciseData.data.check?.testcases">
       <p>Um zu prüfen, ob deine Programmierung stimmt, werden verschiedene Testfälle durchgespielt. <template v-if="completed">Alle Testfälle waren erfolgreich:</template><template v-else>Hier siehst du, welche Testfälle erfolgreich waren und welche nicht:</template></p>
       <Message :icon="'pi pi-'+(completed || exerciseData.correct[i]===true?'check':'times')" :severity="(completed || exerciseData.correct[i]===true?'success':'error')" v-for="(t,i) in exerciseData.data.check.testcases">
@@ -35,16 +36,21 @@ import Message from 'primevue/message';
 import ToggleSwitch from 'primevue/toggleswitch';
 import { isCompletelyTrue } from '../other/bool-array';
 import { calcPoints } from '../App.vue';
+import CheatSheet from './cheat-sheet.vue';
 
 
 export default{
   components: {
-    Message, ToggleSwitch
+    Message, ToggleSwitch, CheatSheet
   },
   props: {
     exerciseData: Object
   },
   computed: {
+    cheatsPath(){
+      if(!this.exerciseData.data.cheats) return;
+      return {exercises: [ this.exerciseData.data.id ]};
+    },
     completed(){
       return this.exerciseData?.correct===true||isCompletelyTrue(this.exerciseData?.correct);
     },

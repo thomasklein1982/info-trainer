@@ -4,7 +4,8 @@
       <GameObject image="bee" text="lisa" pos="B"/>
       <GameObject image="flower" text="" pos="F"/>
     </BeePreview>
-    Die Biene Lisa muss zur Blume fliegen.
+    Implementiere die Methode <Code inline>void program( Bee lisa )</Code>, die das folgende Problem löst:
+    <p>Die Biene Lisa muss zur Blume fliegen und dort stehen bleiben.</p>
   </ExerciseBody>
 </template>
 
@@ -18,6 +19,7 @@ let beeClazz=createBeeClazz();
 
 export const data={
   id: "bee-target",
+  cheats: ["bee"],
   title: "Biene Lisa muss zur Blume",
   world: [
     "....",

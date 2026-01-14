@@ -7,7 +7,7 @@
         <template #content>
           <p>Jede Aufgabe, die du machst, wird gespeichert. Schließe Aufgabenpfade ab, um Achievements zu erhalten.</p>
           <h3>Achievements</h3>
-          <div><template v-for="(a,i) in achievements"><span  :style="{border: '2pt solid '+(a.solved===a.count? 'orange':'black')}" style="overflow: hidden; position: relative; border-radius: 1rem; display: inline-block"><img v-tooltip="a.name" :src="a.icon+'.svg'" style="height: 3em; width: 3em;"><div style="position: absolute; left: 0; top: 0; right: 0; background-color: black; opacity: 0.9" :style="{height: ((a.count-a.solved)*100/a.count)+'%'}"/></span></template></div>
+          <div><template v-for="(a,i) in achievements"><span class="achievement" v-tooltip="a.name" @click="openPath(a)" :style="{border: '2pt solid '+(a.solved===a.count? 'orange':'black')}" style="overflow: hidden; position: relative; border-radius: 1rem; display: inline-block"><img :src="a.icon+'.svg'" style="height: 3em; width: 3em;"><div style="position: absolute; left: 0; top: 0; right: 0; background-color: black; opacity: 0.9" :style="{height: ((a.count-a.solved)*100/a.count)+'%'}"/></span></template></div>
         </template>
       </Card>
       <Card>
@@ -145,7 +145,8 @@ export default{
             name: path.label,
             icon: path.icon,
             solved: 0,
-            count: 0
+            count: 0,
+            path
           };
           achievements.push(p);
           for(let k=0;k<path.exercises.length;k++){
@@ -163,6 +164,9 @@ export default{
     }
   },
   methods: {
+    openPath(achievement){
+      this.$emit("open-exercise-path", achievement.path);
+    },
     importABFromLink(link){
       let ok=this.$root.importABFromLink(link);
       if(!ok){
@@ -248,3 +252,13 @@ export default{
   }
 }
 </script>
+
+<style scoped>
+  .achievement:hover{
+    transform: scale(1.2);
+  }
+  .achievement{
+    cursor: pointer;
+    transition: transform 0.4s;
+  }
+</style>

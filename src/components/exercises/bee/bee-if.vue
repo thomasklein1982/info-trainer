@@ -1,5 +1,6 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
+    Implementiere die Methode <Code inline>void program( Bee lisa )</Code>, die das folgende Problem löst:
     <p>Die Biene Lisa muss sich am Programmende auf dem Feld mit der Blume befinden.</p>
     <div style="display: flex; gap: 1rem;">
       <div>

@@ -2,10 +2,11 @@
   <ExerciseBody :exercise="$data" :java="project">
     <BeePreview :world="world" width="10rem" style="float: right">
       <GameObject image="bee" text="lisa" pos="B"/>
-      <GameObject image="" text="6" pos="G" align="center" style="background-color: yellow"/>
+      <GameObject image="" text="Wabe" pos="G" align="center" style="background-color: yellow"/>
       <GameObject image="" text="" pos="R" style="background-color: red"/>
     </BeePreview>
-    Die Biene Lisa muss den Text, der auf dem gelben Feld steht, auf das rote Feld übertragen.
+    Implementiere die Methode <Code inline>void program( Bee lisa )</Code>, die das folgende Problem löst:
+    <p>Die Biene Lisa muss den Text, der auf dem gelben Feld steht, auf das rote Feld übertragen.</p>
   </ExerciseBody>
 </template>
 
