@@ -7,6 +7,7 @@
     </BeePreview>
     Implementiere die Methode <Code inline>void program( Bee lisa )</Code>, die das folgende Problem löst:
     <p>Die Biene Lisa muss nacheinander zu beiden Blumen fliegen.</p>
+    <Hint>Dein Programm darf höchstens {{ maxStatementCount }} Befehle (Methodenaufrufe) enthalten.</Hint>
   </ExerciseBody>
 </template>
 
@@ -20,9 +21,12 @@ import FlowerJSON from "./graphics/flower.json";
 let beeClazz=createBeeClazz();
 // beeClazz.isHidden=false;
 
+let maxStatementCount=14;
+
 export const data={
   id: "bee-target-2",
   title: "Biene Lisa fliegt zu mehreren Blumen",
+  maxStatementCount,
   world: [
     "B..1...",
     "..WWW..",
@@ -108,7 +112,7 @@ export const data={
           }
         ],
         constraints: {
-          maxStatementCount: 14
+          maxStatementCount: maxStatementCount
         },
         src: `$void program( Bee lisa ){
   //hierhin kommt der Code
