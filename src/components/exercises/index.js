@@ -1,4 +1,7 @@
 
+export * as BeeAdd from './bee/bee-add.vue';
+export * as BeePrint from './bee/bee-print.vue';
+export * as BeeTarget1 from './bee/bee-target-1.vue';
 export * as BeeTarget3 from './bee/bee-target-3.vue';
 export * as BeeIf from './bee/bee-if.vue';
 export * as BeeTarget2 from './bee/bee-target-2.vue';

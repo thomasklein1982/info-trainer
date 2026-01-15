@@ -1,5 +1,5 @@
 <template>
-  <AppPreview :width="width" height="auto">
+  <AppPreview :width="width" height="auto" style="position: relative; z-index: 1;">
     <JFrame :layout="infos.w+''" class="world">
       <template v-for="(f,i) in infos.fields">
         <template v-if="f.isImage">
