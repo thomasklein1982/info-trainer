@@ -1,8 +1,8 @@
 <template>
-  <div style="position: relative" :style="{'grid-row': field.y, 'grid-column': field.x, transform: 'rotate('+angle+'deg)'}">
-    <JImage v-if="image" :src="realSrc" style="width:100%; height: 100%;"/>
-    <JLabel class="game-object-text" :align="align" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0;">
-      {{ text }}
+  <div :style="style">
+    <JImage v-if="gameObject && gameObject.image || image" :src="realSrc" style="width:100%; height: 100%;"/>
+    <JLabel class="game-object-text" :align="align" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; ">
+      {{ realText }}{{ gameObject?.x }}{{gameObject?.y}}
     </JLabel>
   </div>
 </template>
@@ -17,6 +17,19 @@ export default{
   components: {
     JLabel, JImage
   },
+  watch: {
+    "gameObject.x": function(){
+      console.log("test");
+    },
+    gameObject: {
+      handler(){
+        console.log("test");
+      },
+      deep: true
+    }
+  },
+  mounted(){
+  },
   props: {
     image: String,
     text: String,
@@ -30,14 +43,61 @@ export default{
     align: {
       type: String,
       default: "top"
+    },
+    gameObject: Object,
+    gameWorld: Object
+  },
+  data(){
+    return {
+      
     }
   },
   computed: {
+    realText(){
+      return this.gameObject? this.gameObject.name: this.text;
+    },
+    realX(){
+      return (this.gameObject.x-1)*this.widthUnit;
+    },
+    realY(){
+      return (this.gameObject.y-1)*this.heightUnit;
+    },
+    widthUnit(){
+      return 100/this.gameWorld.width;
+    },
+    heightUnit(){
+      return 100/this.gameWorld.height;
+    },
+    style(){
+      let style={
+        transform: 'rotate('+this.angle+'deg)'
+      }
+      if(this.gameObject){
+        let unit=100/this.gameWorld.width;
+        style.position="absolute";
+        // style.left=this.realX+"%";
+        // style.bottom=this.realY+"%";
+        style.transition="all 0.3s";
+        style.left=this.realX+"%";
+        style.bottom=this.realY+"%";
+        style.width=this.widthUnit+"%";
+        style.height=this.heightUnit+"%";
+        //:style="{left: calcX(g.x), bottom: calcY(g.y), width: widthUnit+'%', height: heightUnit+'%'}"
+      }else{
+        style.position="relative";
+        style["grid-row"]=this.field.y;
+        style["grid-column"]=this.field.x;
+      }
+      return style;
+    },
     angle(){
-      return -this.rotation;
+      if(this.gameObject) return this.gameObject.rotation;
+      else return -this.rotation;
     },
     realSrc(){
-      let src=this.image;
+      let image;
+      if(this.gameObject) image=this.gameObject.image; else image=this.image;
+      let src=image;
       if(src==="bee"){
         return BeeJSON.dataurl;
       }else if(src==="flower"){

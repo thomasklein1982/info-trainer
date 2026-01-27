@@ -176,13 +176,19 @@ let Grundlagen={
 }
 
 let IKG={
-  name: "IKG",
+  name: "DiBi",
   paths: [
     {
       label: "Das Internet",
       icon: "internet",
       id: "internet",
       exercises: ["iggrace","igeliz","igtim","igada","igalan"]
+    },
+    {
+      label: "Algorithmen",
+      icon: "",
+      id: "algo",
+      exercises: ["beep-target-1"]
     },
     // {
     //   label: "Textverarbeitung",

@@ -88,6 +88,12 @@
           <slot></slot>
         </DatabaseLauncher>
       </template>
+      <template v-else-if="beep">
+        <BeepLauncher
+          :exercise-data="exerciseData"
+          :beep="beep"
+        />
+      </template>
     </div>
     <DialogFeedback ref="dialogFeedback" :exercise-data="exerciseData">
       <slot></slot>  
@@ -108,11 +114,12 @@ import TuringMachineLauncher from "./turing-machine-launcher.vue";
 import DatabaseLauncher from "./database-launcher.vue";
 import Message from "primevue/message";
 import RmLauncher from "./rm-launcher.vue";
+import BeepLauncher from "./beep-launcher.vue";
 
 
 export default {
   components: {
-    JavaApp, DialogFeedback,ExerciseProgress, TuringMachineLauncher, Message, RegexpLauncher, DatabaseLauncher, RmLauncher
+    JavaApp, DialogFeedback,ExerciseProgress, TuringMachineLauncher, Message, RegexpLauncher, DatabaseLauncher, RmLauncher, BeepLauncher
   },
   props: {
     inline: {
@@ -130,6 +137,7 @@ export default {
     java: Object,
     regexp: Object,
     database: Object,
+    beep: Object,
     dbMode: {
       type: String,
       default: "sql"
