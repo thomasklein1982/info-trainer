@@ -21,6 +21,7 @@ import BeePreview from '../../bee-preview.vue';
 
 export const data={
   id: "bee-copy",
+  cheats: ["bee"],
   title: "Die Kopier-Biene",
   world: [
     "WWWW",

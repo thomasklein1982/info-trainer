@@ -27,7 +27,6 @@ export const data={
       console.log("test",init.a);
       
       await init.a.$appPreviewMethod();
-      console.log(init.a.bee.bee);
       let speed=init.a.bee.bee.speed;
       init.a.bee.bee.speed=100;
       await init.a.main();

@@ -24,6 +24,7 @@ import GameObject from '../../game-object.vue';
 
 export const data={
   id: "bee-sum",
+  cheats: ["bee"],
   title: "Die Biene addiert alle Zahlen",
   world: [
     "B12345."

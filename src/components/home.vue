@@ -1,6 +1,7 @@
 <template>
   <div style="padding: 0.5rem; width: 100%; height: 100%; overflow: auto">
     <h1>Willkommen beim Info-Trainer</h1>
+    
     <template v-if="$root.mode.type==='normal'">
       <Card>
         <template #title>Du bist im <strong>Fortschritts-Modus</strong></template>

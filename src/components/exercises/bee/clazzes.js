@@ -310,7 +310,7 @@ export const GameWorldClazz={
         }
         c.setStyle("font-size",(25.0/gw.maxX)+"cqw");
         c.setPosition( x, gw.maxY - y );
-        c.setStyle( "border", "1pt dotted darkgreen" );
+        c.setStyle( "outline", "1pt dotted darkgreen" );
         gw.canvas.add( c );
         gw.fields[ x ][ gw.maxY - y ] = c;
       }

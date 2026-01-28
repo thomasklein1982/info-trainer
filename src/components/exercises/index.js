@@ -1,4 +1,7 @@
 
+export * as BeeTr from './bee/bee-tr.vue';
+export * as BeePrint2 from './bee/bee-print-2.vue';
+export * as BeeDouble from './bee/bee-double.vue';
 export * as BeepTarget1 from './bee-python/beep-target-1.vue';
 export * as BeeAdd from './bee/bee-add.vue';
 export * as BeePrint from './bee/bee-print.vue';

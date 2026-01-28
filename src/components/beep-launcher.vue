@@ -12,9 +12,9 @@
     <template #header>
       <div v-if="exerciseData" style="display: flex; width: 100%; align-items: center;"><ExerciseProgress :exercise-data="exerciseData"/></div>
     </template>
-    <RmSimulator
-      ref="rmSimulator"
-      :machine="machine"
+    <BeepEditor
+      ref="beepEditor"
+      :beep="beep"
       :exercise-data="exerciseData"
       @save="save()"
       @exercise-submit="newInfos=true"
@@ -25,13 +25,13 @@
 <script>
 import ProgressBar from 'primevue/progressbar';
 import ExerciseProgress from './exercise-progress.vue';
-import RmSimulator from './rm-simulator.vue';
 import { calcPoints } from "../App.vue";
 import { nextTick } from 'vue';
+import BeepEditor from './beep-editor.vue';
 
 export default{
   components: {
-    ProgressBar,ExerciseProgress,RmSimulator
+    ProgressBar,ExerciseProgress,BeepEditor
   },
   emits: [
     "show-feedback"
@@ -47,7 +47,7 @@ export default{
   },
   props: {
     exerciseData: Object,
-    machine: Object,
+    beep: Object,
   },
   data(){
     return {
@@ -69,7 +69,7 @@ export default{
     },
     save(){
       if(!this.exerciseData) return;
-      let data=this.$refs.rmSimulator.getUserData();
+      let data=this.$refs.beepEditor.getUserData();
       if(data.resArray){
         this.exerciseData.correct=data.resArray;
         calcPoints(this.exerciseData);
@@ -90,7 +90,7 @@ export default{
       this.show=true;
       if(!this.exerciseData) return;
       nextTick(()=>{
-        this.$refs.rmSimulator.setUserData(this.exerciseData.userProject);
+        this.$refs.beepEditor.setUserData(this.exerciseData.userProject);
         
       });
       

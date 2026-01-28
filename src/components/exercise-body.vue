@@ -158,7 +158,7 @@ export default {
   },
   computed: {
     isRandomStandardExercise(){
-      if(this.java || this.turingMachine || this.finiteStateMachine || this.registerMachine || this.regexp || this.database) return false;
+      if(this.java || this.turingMachine || this.finiteStateMachine || this.registerMachine || this.regexp || this.database || this.beep) return false;
       return true;
     },
     machine(){

@@ -26,18 +26,20 @@
 import JFrame from './j-frame.vue';
 import JImage from './j-image.vue';
 import JLabel from './j-label.vue';
-import GameObject from './game-object.vue';
+import GameObject from './game-object-component.vue';
+import { GameWorld } from './exercises/bee-python/GameWorld';
 
 export default{
   components: {
     AppPreview, JFrame, JLabel, JImage, GameObject
   },
   props: {
-    gameworld: Object,
+    beep: Object,
     width: String
   },
   data(){
     return {
+      gameworld: new GameWorld(this.beep.worlds[0],5,3,this.beep.setupFunc)
     };
   },
   computed: {

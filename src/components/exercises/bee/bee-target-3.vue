@@ -21,6 +21,7 @@ let beeClazz=createBeeClazz();
 
 export const data={
   id: "bee-target-3",
+  cheats: ["bee"],
   title: "Gegenverkehr",
   world: [
     "WWWWWW",

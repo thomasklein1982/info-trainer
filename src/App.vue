@@ -10,7 +10,6 @@
 </template>
 
 <script>
-
 import MainScreen from './components/main-screen.vue';
 import { storage } from './other/storage';
 import * as exercises from './components/exercises/index';
@@ -22,6 +21,7 @@ import { random, RandomClazz } from './other/random';
 import { chooseExercises } from './other/chooseExercises';
 import { parseABLink } from './other/parseABLink';
 import JavaInterpreter from './components/java-interpreter.vue';
+import { GameObject } from './components/exercises/bee-python/GameObject';
 const STORAGE_DATA="INFO-TRAINER-USER-DATA";
 const STORAGE_SETTINGS="INFO-TRAINER-SETTINGS";
 let mode={
@@ -181,6 +181,9 @@ export function calcPoints(exerciseData){
 
 let userData=null;
 
+let testObject=new GameObject("B","Bee");
+
+
 export default{
   components: {
     MainScreen, JavaInterpreter
@@ -221,6 +224,7 @@ export default{
   },
   async mounted(){
     await this.load();
+    window.testObject=this.testObject;
   },
   methods: {
     async runJavaProject(project){

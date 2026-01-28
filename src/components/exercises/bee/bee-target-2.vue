@@ -25,6 +25,7 @@ let maxStatementCount=14;
 
 export const data={
   id: "bee-target-2",
+  cheats: ["bee"],
   title: "Biene Lisa fliegt zu mehreren Blumen",
   maxStatementCount,
   world: [

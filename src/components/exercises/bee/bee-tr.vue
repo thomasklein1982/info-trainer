@@ -2,14 +2,14 @@
   <ExerciseBody :exercise="$data" :java="project">
     <BeePreview :world="world" width="14rem" style="float: right">
       <GameObject image="bee" text="lisa" pos="B"/>
-      <GameObject image="" text="7" pos="1"/>
-      <GameObject image="" text="+" pos="+"/>
-      <GameObject image="" text="5" pos="2"/>
+      <GameObject image="" text="11" pos="1"/>
+      <GameObject image="" text="*" pos="-"/>
+      <GameObject image="" text="3" pos="2"/>
       <GameObject image="" text="=" pos="="/>
       <GameObject image="" text="" pos="R" style="background-color: red"/>
     </BeePreview>
     Implementiere die Methode <Code inline>void program( Bee lisa )</Code>, die das folgende Problem löst:
-    <p>Die Biene Lisa soll die beiden Zahl addieren und das Ergebnis auf das rote Feld schreiben.</p>
+    <p>Zwischen den beiden Zahlen steht ein <strong>beliebiges Rechenzeichen</strong>: <strong>+</strong>, <strong>-</strong>, <strong>*</strong> oder <strong>/</strong>.Die Biene Lisa soll die beiden Zahl gemäß des Rechenzeichens verrechnen und das Ergebnis auf das rote Feld schreiben.</p>
   </ExerciseBody>
 </template>
 
@@ -23,12 +23,12 @@ import BeePreview from '../../bee-preview.vue';
 
 
 export const data={
-  id: "bee-add",
+  id: "bee-tr",
   cheats: ["bee"],
-  title: "Biene Lisa kann rechnen!",
+  title: "Biene Lisa wird zum Taschenrechner!",
   world: [
     "......",
-    "B1+2=R",
+    "B1-2=R",
     "......"
   ],
   check: {
@@ -40,26 +40,63 @@ export const data={
     },
     testcases: [
       {
-        info: "Roten Feld steht die Summe der beiden Zahlen.",
+        info: "Das richtige Ergebnis steht auf dem roten Feld, wenn es eine Additionsaufgabe (+) ist.",
+        data: {
+          op: "+"
+        },
         count: 5
       },
+      {
+        info: "Das richtige Ergebnis steht auf dem roten Feld, wenn es eine Subtraktionsaufgabe (-) ist.",
+        data: {
+          op: "-"
+        },
+        count: 5
+      },
+      {
+        info: "Das richtige Ergebnis steht auf dem roten Feld, wenn es eine Multiplikationsaufgabe (*) ist.",
+        data: {
+          op: "*"
+        },
+        count: 5
+      },
+      {
+        info: "Das richtige Ergebnis steht auf dem roten Feld, wenn es eine Divisionsaufgabe (/) ist.",
+        data: {
+          op: "/"
+        },
+        count: 5
+      }
     ],
     test: async (tc,init)=>{
       let z1=$Exercise.random(10,100);
       let z2=$Exercise.random(10,100);
-      let infos=await init.a.$appPreviewMethod({seed: 1}, z1, z2);
+      let op=tc.op;
+      let soll;
+      if(op==="+") soll=z1+z2;
+      else if(op==="-") soll=z1-z2;
+      else if(op==="*") soll=z1*z2;
+      else{ 
+        let a=z1*z2;
+        soll=z2;
+        z2=z1;
+        z1=a;
+      }
+      console.log("taschenrechner",z1,z2,op);
+      let infos=await init.a.$appPreviewMethod({seed: 1}, z1, z2, op);
       infos.bee.toMaxSpeed();
       await init.a.program(infos.bee);
 
       let res=await infos.rot.getValue();
-      return (res===(z1+z2)+"");
+      return (res===soll+"");
     }
   },
   project: {
     name: "Bee",
     exerciseData: {
       showAppPreviewWhenNotRunning: true,
-      seed: 100
+      seed: 100,
+      changeSeed: 1
     },
     clazzes: [
       {
@@ -75,25 +112,26 @@ export const data={
           },
           {
             name: "$appPreviewMethod",
-            jsCode: `async $appPreviewMethod(exerciseData, z1, z2){
+            jsCode: `async $appPreviewMethod(exerciseData, z1, z2, op){
               let defString=[
-                "......",
-    "B1+2=R",
+    "......",
+    "B1-2=R",
     "......"
-              ];
+  ];
               let g=await GameWorld.createFromDefString(defString, 6, 4);
               let bee=await $App.asyncFunctionCall(new Bee(),'$constructor',[null,"lisa",g]);
               await bee.insertAt("B");
               let random=new Random();
               await random.$constructor(exerciseData.seed);
-
               if(z1===undefined){
+                let ops=["+","-","*","/"];
                 z1=await random.nextInt(9)+1;
                 z2=await random.nextInt(9)+1;
+                op=ops[exerciseData.seed%ops.length];
               }
               let f1=await g.getNamedField("1");
               await f1.setValue(z1+"");
-              let f=await g.getNamedField("+");
+              let f=await g.getNamedField("-");
               await f.setValue("+");
               f=await g.getNamedField("=");
               await f.setValue("=");
@@ -102,14 +140,13 @@ export const data={
               let rot=await g.getNamedField("R");
               await rot.setStyle("background-color","red");
               return {
-                bee, gameworld: g, rot, f1, f2, z1, z2
+                bee, gameworld: g, rot, f1, f2, z1, z2, op
               };
             }`
           }
         ],
         src: `$void program( Bee lisa ){
-  int a = lisa.read(); //klappt nur im Easy-Modus!
-  //int a = Integer.parseInt( lisa.read() ); //bei "Normal" oder "Hard"
+  
 
 }`
       },

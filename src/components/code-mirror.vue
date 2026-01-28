@@ -11,6 +11,7 @@ import {LRLanguage,LanguageSupport,foldNodeProp, foldInside, indentNodeProp} fro
 import {parser as registerParser} from "../parsers/register-parser/register-parser";
 import {parser as whileParser } from "../parsers/while-parser/while-parser";
 import { oneDark } from '@codemirror/theme-one-dark';
+import {python} from '@codemirror/lang-python';
 
 const addLineHighlight = StateEffect.define();
 
@@ -143,6 +144,9 @@ export default{
     //   this.setValue(nv);
     // }
   },
+  emits: [
+    "update-tree", "update:modelValue"
+  ],
   mounted(){
     let editorTheme=new Compartment();
     let extensions=[
@@ -163,6 +167,8 @@ export default{
       extensions.push(registerLanguageSupport());
     }else if(this.language==="while"){
       extensions.push(whileLanguageSupport());
+    }else if(this.language==="python"){
+      extensions.push(python());
     }
     if(this.linter){
       extensions.push(this.linter);

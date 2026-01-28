@@ -103,7 +103,7 @@ import InputNumber from 'primevue/inputnumber';
 import Drawer from 'primevue/drawer';
 
 import {syntaxTree} from "@codemirror/language"
-import {linter} from "@codemirror/lint"
+import {linter} from "@codemirror/lint";
 
 function walkTree(node, enter, isFirstChild){
   if(!node) return;

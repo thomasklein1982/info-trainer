@@ -34,6 +34,7 @@ import FlowerJSON from "./graphics/flower.json";
 
 export const data={
   id: "bee-if",
+  cheats: ["bee"],
   title: "Wo geht's zur Blume?",
   world1: [
     "WWWWWW",
