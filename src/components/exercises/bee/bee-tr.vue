@@ -82,7 +82,6 @@ export const data={
         z2=z1;
         z1=a;
       }
-      console.log("taschenrechner",z1,z2,op);
       let infos=await init.a.$appPreviewMethod({seed: 1}, z1, z2, op);
       infos.bee.toMaxSpeed();
       await init.a.program(infos.bee);
@@ -96,7 +95,7 @@ export const data={
     exerciseData: {
       showAppPreviewWhenNotRunning: true,
       seed: 100,
-      changeSeed: 1
+      seedChange: 1
     },
     clazzes: [
       {
@@ -128,6 +127,11 @@ export const data={
                 z1=await random.nextInt(9)+1;
                 z2=await random.nextInt(9)+1;
                 op=ops[exerciseData.seed%ops.length];
+                
+                console.log("taschenrechner",z1,z2,op);
+                if(op==="/"){
+                  z1*=z2;
+                }
               }
               let f1=await g.getNamedField("1");
               await f1.setValue(z1+"");
@@ -139,8 +143,10 @@ export const data={
               await f2.setValue(z2+"");
               let rot=await g.getNamedField("R");
               await rot.setStyle("background-color","red");
+              let opFeld=await g.getNamedField("-");
+              await opFeld.setValue(op);
               return {
-                bee, gameworld: g, rot, f1, f2, z1, z2, op
+                bee, gameworld: g, rot, f1, f2, z1, z2, op, opFeld
               };
             }`
           }
