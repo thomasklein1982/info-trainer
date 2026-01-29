@@ -109,7 +109,7 @@ for(let a in exercises){
   //   console.log(a);
   // }
   let data=exercises[a].data;
-  let ed;
+  let ed={data: data};
   if(data.check){
     let testcases=data.check.testcases;
     ed={

@@ -84,15 +84,8 @@ export const data={
           }
         ],
         src: `$void program( Bee lisa ){
-  //ein Befehl sieht immer folgendermaßen aus:
-  //"Objekt" "." "Methode" "();"
-  //also z. B. 
-  //  lisa.move();
-  //  ^^^^ ^^^^
-  //Objekt.Methode();
   //hierhin kommt der Code
-  lisa.move();
-
+  
 }`
       },
       beeClazz,

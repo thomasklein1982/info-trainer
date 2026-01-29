@@ -1,4 +1,6 @@
 
+export * as BeeInfoPrint from './bee/bee-info-print.vue';
+export * as BeeInfoStart from './bee/bee-info-start.vue';
 export * as BeeHeaviest from './bee/bee-heaviest.vue';
 export * as BeeTr2 from './bee/bee-tr-2.vue';
 export * as BeeTr from './bee/bee-tr.vue';
