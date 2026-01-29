@@ -1,4 +1,5 @@
 
+export * as BeeTr2 from './bee/bee-tr-2.vue';
 export * as BeeTr from './bee/bee-tr.vue';
 export * as BeePrint2 from './bee/bee-print-2.vue';
 export * as BeeDouble from './bee/bee-double.vue';

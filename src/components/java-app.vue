@@ -62,6 +62,7 @@ export default{
       else rp=project;
       rp.constraints=this.project.constraints;
       rp.exerciseData=this.project.exerciseData;
+      rp.slowMode=this.project.slowMode? true:false;
       let diff=this.$root.settings.javaAppDifficulty.toLowerCase();
       for(let i=0;i<project.clazzes.length;i++){
         let c=project.clazzes[i];

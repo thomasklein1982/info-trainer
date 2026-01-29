@@ -78,6 +78,7 @@ export const data={
   },
   project: {
     name: "Bee",
+    slowMode: true,
     exerciseData: {
       showAppPreviewWhenNotRunning: true,
       seed: 100,
@@ -103,7 +104,7 @@ export const data={
     "B1234W",
     "W.WW.W",
   ];
-              let g=await GameWorld.createFromDefString(defString, 5, 4);
+              let g=await GameWorld.createFromDefString(defString,0,0);
               let bee=await $App.asyncFunctionCall(new Bee(),'$constructor',[null,"lisa",g]);
               await bee.insertAt("B");
               let f1=await g.getNamedField("1");

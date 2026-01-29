@@ -3,13 +3,13 @@
     <BeePreview :world="world" width="14rem" style="float: right">
       <GameObject image="bee" text="lisa" pos="B"/>
       <GameObject image="" text="11" pos="1"/>
-      <GameObject image="" text="*" pos="-"/>
+      <GameObject image="" text="-" pos="-"/>
       <GameObject image="" text="3" pos="2"/>
       <GameObject image="" text="=" pos="="/>
       <GameObject image="" text="" pos="R" style="background-color: red"/>
     </BeePreview>
     Implementiere die Methode <Code inline>void program( Bee lisa )</Code>, die das folgende Problem löst:
-    <p>Zwischen den beiden Zahlen steht ein <strong>beliebiges Rechenzeichen</strong>: <strong>+</strong>, <strong>-</strong>, <strong>*</strong> oder <strong>/</strong>.Die Biene Lisa soll die beiden Zahl gemäß des Rechenzeichens verrechnen und das Ergebnis auf das rote Feld schreiben.</p>
+    <p>Zwischen den beiden Zahlen steht ein <strong>+</strong> oder ein <strong>-</strong>, <strong>*</strong>. Die Biene Lisa soll die beiden Zahl gemäß des Rechenzeichens addieren bzw. subtrahieren und das Ergebnis auf das rote Feld schreiben.</p>
   </ExerciseBody>
 </template>
 
@@ -25,7 +25,7 @@ import BeePreview from '../../bee-preview.vue';
 export const data={
   id: "bee-tr",
   cheats: ["bee"],
-  title: "Biene Lisa wird zum Taschenrechner!",
+  title: "Plus oder Minus",
   world: [
     "......",
     "B1-2=R",
@@ -50,20 +50,6 @@ export const data={
         info: "Das richtige Ergebnis steht auf dem roten Feld, wenn es eine Subtraktionsaufgabe (-) ist.",
         data: {
           op: "-"
-        },
-        count: 5
-      },
-      {
-        info: "Das richtige Ergebnis steht auf dem roten Feld, wenn es eine Multiplikationsaufgabe (*) ist.",
-        data: {
-          op: "*"
-        },
-        count: 5
-      },
-      {
-        info: "Das richtige Ergebnis steht auf dem roten Feld, wenn es eine Divisionsaufgabe (/) ist.",
-        data: {
-          op: "/"
         },
         count: 5
       }
@@ -92,6 +78,7 @@ export const data={
   },
   project: {
     name: "Bee",
+    slowMode: true,
     exerciseData: {
       showAppPreviewWhenNotRunning: true,
       seed: 100,
@@ -117,13 +104,13 @@ export const data={
     "B1-2=R",
     "......"
   ];
-              let g=await GameWorld.createFromDefString(defString, 6, 4);
+              let g=await GameWorld.createFromDefString(defString,0,0);
               let bee=await $App.asyncFunctionCall(new Bee(),'$constructor',[null,"lisa",g]);
               await bee.insertAt("B");
               let random=new Random();
               await random.$constructor(exerciseData.seed);
               if(z1===undefined){
-                let ops=["+","-","*","/"];
+                let ops=["+","-"];
                 z1=await random.nextInt(9)+1;
                 z2=await random.nextInt(9)+1;
                 op=ops[exerciseData.seed%ops.length];

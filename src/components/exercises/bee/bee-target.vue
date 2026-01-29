@@ -48,6 +48,7 @@ export const data={
   },
   project: {
     name: "Bee",
+    slowMode: true,
     exerciseData: {
       showAppPreviewWhenNotRunning: true
     },
@@ -73,7 +74,7 @@ export const data={
                 ".WWW",
                 "B...",
               ];
-              let g=await GameWorld.createFromDefString(defString, 4, 4);
+              let g=await GameWorld.createFromDefString(defString,0,0);
               let flower=await $App.asyncFunctionCall(new GameObject(),'$constructor',[null,"",g,"${FlowerJSON.dataurl}"]);
               await flower.insertAt("F");
               let bee=await $App.asyncFunctionCall(new Bee(),'$constructor',[null,"lisa",g]);

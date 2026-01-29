@@ -22,7 +22,7 @@ import FlowerJSON from "./graphics/flower.json";
 export const data={
   id: "bee-double",
   cheats: ["bee"],
-  title: "Die doppelte Biene",
+  title: "Die Verdopplungs-Biene",
   world: [
     "WWWW",
     "B.GW",
@@ -57,6 +57,7 @@ export const data={
   },
   project: {
     name: "Bee",
+    slowMode: true,
     exerciseData: {
       showAppPreviewWhenNotRunning: true,
       seed: 100
@@ -88,7 +89,7 @@ export const data={
                 await random.$constructor(exerciseData.seed);
                 number=await random.nextInt(20);
               }
-              let g=await GameWorld.createFromDefString(defString, 4, 5);
+              let g=await GameWorld.createFromDefString(defString,0,0);
               let bee=await $App.asyncFunctionCall(new Bee(),'$constructor',[null,"lisa",g]);
               await bee.insertAt("B");
               let gelb=await g.getNamedField("G");

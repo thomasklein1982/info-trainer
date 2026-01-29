@@ -111,6 +111,8 @@ export const GameObjectClazz={
     label.setStyle("text-shadow", "-1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white");
     label.setPosition(0.5,0.5);
     label.setAlignment("top");
+    // ui.setStyle("scroll-margin-right","100px");
+    // ui.setStyle("scroll-margin-left","100px");
     ui.add(label);
     ui.setSize( 1, 1 );
     ui.setDirection( 0 );
@@ -284,6 +286,10 @@ export const GameWorldClazz={
   }
 
   static GameWorld createFromDefString( String[] def, int windowWidth, int windowHeight ){
+    if(windowWidth==0){
+      windowWidth=def[0].length();
+      windowHeight=def.length;
+    }
     GameWorld gw=new GameWorld( windowWidth, windowHeight );
     gw.maxX = def[ 0 ].length( ) - 1;
     gw.maxY = def.length - 1;
@@ -392,6 +398,7 @@ export function createGameWorldClazz(def,viewBox){
     canvas = new Canvas( -0.5, maxX + 0.5, -0.5, maxY + 0.5 );
     canvas.setSizePolicy("stretch");
     HtmlElement wrapper=canvas.getWrapperElement();
+    wrapper.setStyle("outline","1pt solid black");
     wrapper.setAttribute("style", "width: ${100*def[0].length/viewBox.width}%; height: ${100*def.length/viewBox.height}%;");
     window.setStyle("overflow", "auto");
     window.add(canvas);
