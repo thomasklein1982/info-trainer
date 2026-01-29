@@ -15,16 +15,18 @@
     </BeePreview>
     <Hint>Diese Aufgabe entspricht der Aufgabe "Container" aus der <a href="https://bwinf.de/fileadmin/wettbewerbe/bundeswettbewerb/41/1_runde/Bundeswettbewerb_41_Aufgabenblatt_WEB.pdf" target="_blank">ersten Runde des 41. Bundeswettbewerbs Informatik</a>.</Hint>
     <p>Implementiere die Methode <Code inline>void program( Bee lisa )</Code>, die das folgende Problem löst:</p>
-    <p>Unsere Biene Lisa soll herausfinden, welche Blume am meisten Nektar liefert. Dazu haben andere fleißige Bienen alle Blumen durchnummeriert mit 1, 2, 3, .... und jeweils zwei Blumen miteinander verglichen. Die Ergebnisse ihrer Vergleiche haben sie auf die Wiese geschrieben.</p>
+    <p>Unsere Biene Lisa soll herausfinden, welche Blume am meisten Nektar liefert. Diese Blume bezeichnen wir als die <strong>beste Blume</strong>.</p>
+    <p>Dazu haben andere fleißige Bienen alle Blumen durchnummeriert mit 1, 2, 3, .... und mehrere Male jeweils zwei Blumen miteinander verglichen. Die Ergebnisse ihrer Vergleiche haben sie auf die Wiese geschrieben.</p>
     <p>Das Beispiel im Bild rechts bedeutet:
       <ul>
         <li>Blume Nr. 3 liefert mehr Nektar als Blume Nr. 2</li>
         <li>Blume Nr. 1 liefert mehr Nektar als Blume Nr. 4</li>
         <li>Blume Nr. 2 liefert mehr Nektar als Blume Nr. 4</li>
       </ul>
-      Die linke Blume liefert also immer mehr Nektar als die rechte Blume.
+      (Die linke Blume liefert also immer mehr Nektar als die rechte Blume.)
     </p>
     <p>Die Biene Lisa soll nun herausfinden, welche Blume den meisten Nektar liefert und die Zahl der Blume auf das rote Feld schreiben. Falls Lisa nicht eindeutig bestimmen kann, welche Blume die beste ist, soll sie "?" auf das rote Feld schreiben.</p>
+    <p>Im Beispiel könnten die Blumen Nr. 3 und Nr. 1 die besten sein. Die beste Blume lässt sich hier also nicht bestimmen und Lisa müsste ein '?' schreiben.</p>
     <Hint>Deine Programmierung muss für alle unterschiedlichen Anzahlen von Vergleichen funktionieren, nicht nur für drei Vergleiche wie im Beispiel. Auch die Anzahl der Blumen kann jedes Mal unterschiedlich sein.</Hint>
   </ExerciseBody>
 </template>
