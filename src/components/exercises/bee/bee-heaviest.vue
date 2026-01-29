@@ -135,7 +135,8 @@ export const data={
               for(let i=0;i<n-anzahlGroesste;i++){
                 let bk=blumen[i];
                 if(bk.kommtVor) continue;
-                let l=$Exercise.random(i+1,n-1,random);
+                let l=$Exercise.random(i+1,n-anzahlGroesste-1,random);
+                l=i+1;
                 let bl=blumen[l];
                 vergleiche.push({l: bl, r: bk});
                 bk.kommtVor=true;
@@ -150,6 +151,8 @@ export const data={
                 vergleiche.push({l: bk, r: bl});
                 bk.kommtVor=true;
               }
+
+              $Exercise.randomize(vergleiche,random);
               console.log("vergleiche",vergleiche,solution);
 
               let defString=["B..."];
