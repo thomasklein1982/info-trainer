@@ -101,9 +101,6 @@ export const data={
             }`
           }
         ],
-        constraints: {
-          maxStatementCount: 6
-        },
         src: `$void program( Bee konrad, int n ){
   //hierhin kommt der Code
   
