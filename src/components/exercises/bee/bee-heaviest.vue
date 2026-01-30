@@ -72,9 +72,9 @@ export const data={
     test: async (tc,init)=>{
       let infos=await init.a.$appPreviewMethod({seed: $Exercise.random(1000,100000)},tc.possible);
       infos.bee.toMaxSpeed();
-      await init.a.program(infos.bee,n);
+      await init.a.program(infos.bee);
       let ist=await infos.rot.getValue();
-      return (ist===infos.solution);
+      return (ist===infos.solution+"");
     }
   },
   project: {
@@ -122,7 +122,7 @@ export const data={
                 anzahlGroesste=1;
                 solution=blumen[0].nr;
               }else{
-                anzahlGroesste=random.nextInt(3)+1;
+                anzahlGroesste=random.nextInt(3)+2;
               }
               for(let i=0;i<anzahlGroesste;i++){
                 blumen[i].nektar=n+1;
@@ -175,7 +175,7 @@ export const data={
               let rot=await g.getField(1,0);
               await rot.setStyle("background-color","red");
               
-              let bee=await $App.asyncFunctionCall(new Bee(),'$constructor',[null,"konrad",g]);
+              let bee=await $App.asyncFunctionCall(new Bee(),'$constructor',[null,"lisa",g]);
               await bee.insertAt("B");
               return {
                 bee, gameworld: g, n, solution, rot
