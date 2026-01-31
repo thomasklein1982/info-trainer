@@ -153,7 +153,7 @@ export default{
           for(let k=0;k<path.exercises.length;k++){
             let id=path.exercises[k];
             let ed=this.$root.getExerciseData(id);
-            if(!ed) continue;
+            if(!ed || ed.correct===undefined) continue;
             p.count++;
             if(isCompletelyTrue(ed.correct)){
               p.solved++;

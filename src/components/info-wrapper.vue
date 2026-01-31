@@ -2,7 +2,7 @@
   <Card :title="title" class="info-wrapper">
     
     <template #title>
-      <div class="flex"><span style="flex: 1">{{ title }}</span></div>
+      <div class="flex" style="align-items: center;"><span class="pi pi-info-circle" style="margin-right: 1ex"/> <span style="flex: 1">{{ title }}</span></div>
     </template>
     <template #content>
       <slot></slot>
@@ -61,6 +61,8 @@ export default {
 
 <style scoped>
   .info-wrapper{
-    border: 1pt solid slateblue;
+    border: 2pt solid slateblue;
+    background-color: rgba(100,100,200,0.5);
   }
+  
 </style>

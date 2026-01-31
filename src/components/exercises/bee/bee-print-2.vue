@@ -8,7 +8,7 @@
       <GameObject image="" text="D" pos="4" align="center"/>
     </BeePreview>
     Implementiere die Methode <Code inline>void program( Bee lisa )</Code>, die das folgende Problem löst:
-    <p>Auf vier Feldern stehen zu Beginn die Buchstaben 'A', 'B', 'C' und 'D'. Die Biene Lisa auf diese Felder die Texte <strong>'Info'</strong>, <strong>'ist'</strong>, <strong>'cool'</strong> und <strong>'!'</strong> schreiben.</p>
+    <p>Auf vier Feldern stehen zu Beginn die Buchstaben 'A', 'B', 'C' und 'D'. Die Biene Lisa soll auf diese Felder die Texte <strong>'Info'</strong>, <strong>'ist'</strong>, <strong>'cool'</strong> und <strong>'!'</strong> schreiben.</p>
   </ExerciseBody>
 </template>
 
@@ -87,6 +87,7 @@ export const data={
     clazzes: [
       {
         name: "Main",
+        readOnlyLines: [1,-1],
         uml: false,
         hiddenMethods: [
           {
@@ -122,9 +123,7 @@ export const data={
           }
         ],
         src: `$void program( Bee lisa ){
-  //hierhin kommt der Code
   
-
 }`
       },
       createBeeClazz(),

@@ -103,7 +103,7 @@ window.onbeforeunload=function(ev){
   return true;
 }
 
-let exerciseDataCollection={};
+export const exerciseDataCollection={};
 for(let a in exercises){
   // if(a==="TvNum1"){
   //   console.log(a);

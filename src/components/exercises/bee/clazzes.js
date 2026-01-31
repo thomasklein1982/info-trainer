@@ -145,13 +145,13 @@ export const GameObjectClazz={
     }
   }
   void setSpeed( int s){
-    if(maxSpeed) return;
     speed=s;
+    if(maxSpeed) return;
     setTransition(true);
   }
   /*Bewegt die Biene um 1 Feld*/
   void move( ) {
-    sleep( );
+    //sleep( );
     JLabel f=getFieldAhead();
     String fieldAhead = getFieldTypeAhead( );
     if ( fieldAhead == "border" ) {
@@ -183,19 +183,19 @@ export const GameObjectClazz={
   }
   
   void turnLeft( boolean w ) {
-    if(w) sleep( );
+    //if(w) sleep( );
     ui.setRotation( ui.getRotation( ) + 90 );
     ui.setDirection( ( ui.getDirection( ) + 90 ) % 360 );
   }
   
   void turnRight( boolean w ) {
-    if(w) sleep( );
+    //if(w) sleep( );
     ui.setRotation( ui.getRotation( )-90 );
     ui.setDirection( ( ui.getDirection( ) + 270 ) % 360 );
   }
 
   JComponent scanEffect(){
-    sleep();
+    //sleep();
     JComponent field = getFieldAhead( );
     if ( field == null ) {
       throw new Exception("Vor dir ist kein Feld mehr!");

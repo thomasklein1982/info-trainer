@@ -204,6 +204,10 @@ em{
 }
 
 @media screen{
+  #app{
+    max-width: 20cm;
+    margin: auto;
+  }
   .console-output{
     background-color: #121212; 
     color: white; 

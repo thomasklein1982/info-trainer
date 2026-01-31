@@ -65,6 +65,7 @@ export const data={
     clazzes: [
       {
         name: "Main",
+        readOnlyLines: [1,-1],
         uml: false,
         hiddenMethods: [
           {
@@ -109,9 +110,7 @@ export const data={
           }
         ],
         src: `$void program( Bee lisa ){
-  int a = lisa.read(); //klappt nur im Easy-Modus!
-  //int a = Integer.parseInt( lisa.read() ); //bei "Normal" oder "Hard"
-
+  
 }`
       },
       createBeeClazz(),

@@ -72,6 +72,7 @@ export const data={
     clazzes: [
       {
         name: "Main",
+        readOnlyLines: [1,-1],
         uml: false,
         hiddenMethods: [
           {
@@ -104,9 +105,8 @@ export const data={
           }
         ],
         src: `$void program( Bee lisa ){
-  //hierhin kommt der Code
   lisa.print("Hey?");
-
+  
 }`
       },
       createBeeClazz(),

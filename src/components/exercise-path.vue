@@ -15,7 +15,7 @@
 import CheatSheet from './cheat-sheet.vue';
 import ExerciseWrapper from './exercise-wrapper.vue';
 import InfoWrapper from './info-wrapper.vue';
-
+import { exerciseDataCollection } from '../App.vue';
 
 export default{
   components: {
@@ -34,10 +34,8 @@ export default{
       let nr=1;
       for(let i=0;i<this.path.exercises.length;i++){
         let p=this.path.exercises[i];
-        let isExercise=!Array.isArray(p);
-        if(!isExercise){
-          p=p[0];
-        }
+        let ex=exerciseDataCollection[p];
+        let isExercise="correct" in ex;
         items.push({
           id: p,
           isExercise,
