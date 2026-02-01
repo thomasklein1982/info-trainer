@@ -107,7 +107,7 @@ export default{
           let val=evaluate(this.scope,st.value);
           let v=getVariable(this.scope,st.variable.name);
           if(!v){
-            addVariable(this.scope,st.variable.name,st.value);
+            addVariable(this.scope,st.variable.name,val);
           }else{
             v.value=val;
           }
@@ -119,13 +119,13 @@ export default{
           }else{
             let old=evaluate(this.scope,st.variable);
             if(st.op==="+="){
-              v.value.value=old+val;
+              v.value=old+val;
             }else if(st.op==="-="){
-              v.value.value=old-val;
+              v.value=old-val;
             }else if(st.op==="*="){
-              v.value.value=old*val;
+              v.value=old*val;
             }else if(st.op==="/="){
-              v.value.value=old/val;
+              v.value=old/val;
             }
           }
         }
@@ -191,7 +191,8 @@ function evaluate(scope, p){
   if(p.type==="variable-name"){
     let v=getVariable(scope,p.name);
     if(!v) throw "Unbekannte Variable";
-    return evaluate(scope,v.value);
+    return v.value;
+    //return evaluate(scope,v.value);
   }
   if(p.type==="arg-list"){
     let args=[];
