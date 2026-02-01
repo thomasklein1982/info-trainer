@@ -44,6 +44,12 @@
         </div>
       </template>
     </template>
+    <template v-else-if="beep">
+      <BeepEditor
+        :beep="beep"
+        :exercise-data="exerciseData"
+      />
+    </template>
     <div v-else style="display: grid; place-content: end;">
       <template v-if="java">
         <JavaAppLauncher
@@ -88,12 +94,6 @@
           <slot></slot>
         </DatabaseLauncher>
       </template>
-      <template v-else-if="beep">
-        <BeepLauncher
-          :exercise-data="exerciseData"
-          :beep="beep"
-        />
-      </template>
     </div>
     <DialogFeedback ref="dialogFeedback" :exercise-data="exerciseData">
       <slot></slot>  
@@ -115,11 +115,11 @@ import DatabaseLauncher from "./database-launcher.vue";
 import Message from "primevue/message";
 import RmLauncher from "./rm-launcher.vue";
 import BeepLauncher from "./beep-launcher.vue";
-
+import BeepEditor from "./beep-editor.vue";
 
 export default {
   components: {
-    JavaApp, DialogFeedback,ExerciseProgress, TuringMachineLauncher, Message, RegexpLauncher, DatabaseLauncher, RmLauncher, BeepLauncher
+    JavaApp, DialogFeedback,ExerciseProgress, TuringMachineLauncher, Message, RegexpLauncher, DatabaseLauncher, RmLauncher, BeepLauncher, BeepEditor
   },
   props: {
     inline: {

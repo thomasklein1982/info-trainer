@@ -342,6 +342,9 @@ export default{
     },
     restoreUserDataObject(userData){
       for(let id in userData){
+        if(id==="beep-target-1"){
+          console.log("beep");
+        }
         let o=userData[id];
         let ed=this.getExerciseData(id);
         if(ed){

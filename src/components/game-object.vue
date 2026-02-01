@@ -117,6 +117,7 @@ export default{
 <style scoped>
 .game-object-text{
   color: black;
+  font-size: 5cqw;
   text-shadow: 
     -1px -1px 0 white,  /* Oben links */
      1px -1px 0 white,  /* Oben rechts */

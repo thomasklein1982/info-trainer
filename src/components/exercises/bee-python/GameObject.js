@@ -11,32 +11,50 @@ export class GameObject{
     this.x=0;
     this.y=0;
   }
-  setX(x){
+  reset(){
+    this.setPosition(0,0);
+    this.rotation=0;
+  }
+  setPosition(x,y){
     this.x=x;
-    console.log("set x",this.x)
+    this.y=y;
+  }
+  print(text){
+    let f=this.getFieldAhead();
+    if ( !f ) {
+      throw "Da ist kein Feld mehr, auf das du schreiben kannst.";
+    }
+    f.text=text;
   }
   move(  ) {
-    let f=getFieldAhead();
-    let fieldAhead = getFieldTypeAhead( );
-    if ( fieldAhead == "border" ) {
-      ui.move( 1 );
-      throw new Exception("O nein! "+name+" hat die Spielwelt verlassen.");
-    }else if(fieldAhead=="tree"){
-      throw new Exception("Autsch! "+name+" ist mit einem Baum zusammengestoßen.");
-    }else{
-      let co=world.getBlockingGameObject(f);
-      if(co!=null){
-        let name="einem Hindernis";
-        if(co.name.length()>0){
-          name=co.name;
-        }
-        throw new Exception("Autsch! "+this.name+" ist mit "+name+" zusammengestoßen.");
-      }
+    let f=this.getFieldAhead();
+    if ( !f ) {
+      this.setPosition(f.x,f.y);
+      throw "O nein! "+this.name+" hat die Spielwelt verlassen.";
+    }else if(this.world.isFieldBlocked(f)){
+      throw "Autsch! "+this.name+" ist mit einem Hindernis zusammengestoßen.";
     }
-    ui.move( 1 );
-    if(f!=null) f.scrollIntoView();
+    this.setPosition(f.x,f.y);
   }
   
+  getFieldAhead(){
+    let x=this.x;
+    let y=this.y;
+    let dir=(this.rotation%360);
+    dir=(dir+360)%360;
+    if(dir===0){
+      x++;
+    }else if(dir===90){
+      y++;
+    }else if(dir===180){
+      x--;
+    }else{
+      y--;
+    }
+    let f=this.world.getField(x,y);
+    return f;
+  }
+
   turnLeft( ) {
     this.rotation+=90;
   }

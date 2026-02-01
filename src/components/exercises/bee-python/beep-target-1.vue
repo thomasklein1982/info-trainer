@@ -1,14 +1,5 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
-    <GameObject
-      :game-object="testObject"
-    />
-    <Test :object="testObject"></Test>
-    <GameWorldComp
-      :beep="beep"
-      style="width: 15em"
-    />
-    Implementiere ein Programm, das das folgende Problem löst:
     <p>Die Biene Lisa muss zur Blume fliegen und dort stehen bleiben.</p>
   </ExerciseBody>
 </template>
@@ -22,8 +13,7 @@ import BeeJSON from '../bee/graphics/bee.json';
 import { GameWorld } from './GameWorld';
 import GameObject from '../../game-object-component.vue';
 import Test from '../../test.vue';
-
-
+import BeepEditor from '../../beep-editor.vue';
 
 
 export const data={
@@ -35,25 +25,23 @@ export const data={
     worlds: [
       [
         "WWWWW",
-        "B...F",
+        "B..1F",
         "WWWWW",
       ]
     ],
+    worldWidth: "15em",
     window: [5,3],
     setupFunc: function(gameworld){
       let flower=new GameObjectClazz("F","",gameworld,FlowerJSON.dataurl);
       let bee=new GameObjectClazz("B","Biene",gameworld,BeeJSON.dataurl);
-      bee.rotation=90;
-      if(!window.gameObjects) window.gameObjects=[];
-      window.gameObjects.push(bee);
-      // setTimeout(()=>{
-      //   console.log("move");
-      //   bee.setX(3);
-      //   bee.rotation+=90;
-      // },5000);
       return {
-        bee, flower
+        flower, bee
       };
+    },
+    resetFunc: function(gameworld){
+      let f=gameworld.getNamedField("1");
+      f.style["background-color"]="red";
+      f.text="bla";
     },
     src: ``
   },
@@ -71,7 +59,7 @@ export const data={
 
 export default{
   components: {
-    BeePreview, GameObject, GameWorldComp, GameObject, Test
+    BeePreview, GameObject, GameWorldComp, GameObject, Test, BeepEditor
   },
   data() {
       return data;

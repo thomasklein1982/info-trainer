@@ -5,6 +5,7 @@
 <script>
 import {EditorView, basicSetup} from "codemirror";
 import {Compartment,EditorState,StateEffect,StateField} from '@codemirror/state';
+import {autocompletion} from '@codemirror/autocomplete';
 import {keymap, Decoration} from '@codemirror/view';
 import {indentWithTab, undo, redo} from '@codemirror/commands';
 import {LRLanguage,LanguageSupport,foldNodeProp, foldInside, indentNodeProp} from "@codemirror/language";
@@ -130,6 +131,7 @@ export default{
     language: String,
     highlightedLineNumber: Number,
     linter: Object,
+    autocompleteProvider: Function,
     insertTab: {
       type: Boolean,
       default: false
@@ -145,7 +147,7 @@ export default{
     // }
   },
   emits: [
-    "update-tree", "update:modelValue"
+    "update-tree", "update:modelValue", "blur"
   ],
   mounted(){
     let editorTheme=new Compartment();
@@ -154,6 +156,11 @@ export default{
       keymap.of(this.insertTab? insertTab:indentWithTab),
       editorTheme.of(oneDark),
       lineHighlightField,
+      EditorView.domEventHandlers({
+        "blur": ()=>{
+          this.$emit("blur");
+        }
+      }),
       EditorView.updateListener.of((v) => {
         if(!v.docChanged) return;
         this.$emit('update:modelValue', this.getValue());
@@ -170,6 +177,9 @@ export default{
     }else if(this.language==="python"){
       extensions.push(python());
     }
+    if(this.autocompleteProvider){
+      extensions.push(autocompletion({override: [this.autocompleteProvider()]}));
+    }
     if(this.linter){
       extensions.push(this.linter);
       extensions.push(lintGutter());
@@ -184,7 +194,13 @@ export default{
       
       parent: this.$refs.wrapper,
       
-    })
+    });
+    // editor.value.contentDOM.addEventListener("blur",()=>{
+    //   console.log("test blur");
+    // });
+    // this.$refs.wrapper.onblur=(event)=>{
+    //   console.log("test blur");
+    // };
   },
   methods: {
     updateLinter(){
