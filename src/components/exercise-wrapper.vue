@@ -1,5 +1,5 @@
 <template>
-  <Card :title="title">
+  <Card>
     
     <template #title>
       <div class="flex"><span style="flex: 1">Aufgabe {{number}}: {{ title }}</span> <span v-if="$root.mode.type==='ab' || $root.addExercisesToAB">({{ exerciseData.total }} P)</span></div>

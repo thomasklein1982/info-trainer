@@ -95,6 +95,24 @@ code{
   margin-bottom: 0.5rem;
 }
 
+.cm-completionInfo-right,
+.cm-completionInfo-left {
+  left: 0 !important;
+  
+  top: 100% !important;
+  width: 79vw !important;
+  min-width: 250px;
+}
+.cm-tooltip.cm-tooltip-autocomplete{
+  border: 1pt solid red;
+  font-family: monospace;
+  position: absolute;
+  z-index: 10000;
+}
+.cm-tooltip.cm-tooltip-autocomplete > ul {
+  max-width: 85vw !important;
+  
+}
 
 .cm-editor{
   font-size: 150%;

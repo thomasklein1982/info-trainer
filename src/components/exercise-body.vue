@@ -114,12 +114,11 @@ import TuringMachineLauncher from "./turing-machine-launcher.vue";
 import DatabaseLauncher from "./database-launcher.vue";
 import Message from "primevue/message";
 import RmLauncher from "./rm-launcher.vue";
-import BeepLauncher from "./beep-launcher.vue";
-import BeepEditor from "./beep-editor.vue";
+import BeepEditor from "./beep-editor/beep-editor.vue";
 
 export default {
   components: {
-    JavaApp, DialogFeedback,ExerciseProgress, TuringMachineLauncher, Message, RegexpLauncher, DatabaseLauncher, RmLauncher, BeepLauncher, BeepEditor
+    JavaApp, DialogFeedback,ExerciseProgress, TuringMachineLauncher, Message, RegexpLauncher, DatabaseLauncher, RmLauncher, BeepEditor
   },
   props: {
     inline: {

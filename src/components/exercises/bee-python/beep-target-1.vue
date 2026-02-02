@@ -13,7 +13,7 @@ import BeeJSON from '../bee/graphics/bee.json';
 import { GameWorld } from './GameWorld';
 import GameObject from '../../game-object-component.vue';
 import Test from '../../test.vue';
-import BeepEditor from '../../beep-editor.vue';
+import BeepEditor from '../../beep-editor/beep-editor.vue';
 
 
 export const data={
