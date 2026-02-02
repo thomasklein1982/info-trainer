@@ -4,7 +4,7 @@
 
 <script>
 import {EditorView, basicSetup} from "codemirror";
-import {Compartment,EditorState,StateEffect,StateField} from '@codemirror/state';
+import {Compartment,EditorState,StateEffect,StateField,EditorSelection} from '@codemirror/state';
 import {autocompletion} from '@codemirror/autocomplete';
 import {keymap, Decoration} from '@codemirror/view';
 import {indentWithTab, undo, redo} from '@codemirror/commands';
@@ -216,7 +216,11 @@ export default{
       try{
         if (lineNo <= 0) throw "";
         const docPosition = editor.state.doc.line(lineNo).from;
-        editor.dispatch({effects: addLineHighlight.of(docPosition)});
+        editor.dispatch({
+          effects: addLineHighlight.of(docPosition),
+          selection: new EditorSelection([EditorSelection.cursor(docPosition)], 0),
+          scrollIntoView: true
+        });
       }catch(e){
         editor.dispatch({effects: addLineHighlight.of(-1)});
       }
@@ -240,6 +244,33 @@ export default{
     },
     getLine(n){
       return editor.state.doc.lineAt(n);
+    },
+    setCursorToEnd(){
+      this.setCursor(this.size-1);
+    },
+    setSelection(anchor,head){
+      this.setCursorToEnd();
+      nextTick(()=>{
+        editor.dispatch({
+          selection: {anchor, head},
+          scrollIntoView: true
+        });
+      });
+    },
+    setCursor: function(position){
+      //editor.focus();
+      editor.dispatch({
+        selection: new EditorSelection([EditorSelection.cursor(position)], 0),
+        scrollIntoView: true
+      });
+    },
+    setCursorToLine: function(linenumber){
+      if(linenumber<1) return;
+      let line=this.getLine(linenumber);
+      this.setCursor(line.from);
+    },
+    focus(){
+      editor.focus();
     }
   }
 }

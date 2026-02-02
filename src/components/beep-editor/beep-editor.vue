@@ -1,25 +1,46 @@
 <template>
-  <div id="wrapper">
-    
-    <CodeMirror 
-      class="no-print"
-      id="editor"
-      language="python" 
-      ref="editor" 
-      v-model="code"
-      :linter="linter"
-      :autocomplete-provider="autocompleteProvider"
-      @update-tree="updateTree"
-      @blur="save()"
-    />
+  <div id="wrapper" :style="{maxHeight: editorMaxHeight}">
+    <div class="no-print" id="left-side">
+      <div id="editor">
+        <CodeMirror 
+          language="python"
+          ref="editor" 
+          v-model="code"
+          :linter="linter"
+          :autocomplete-provider="autocompleteProvider"
+          @update-tree="updateTree"
+          @blur="save()"
+        />
+      </div>
+    </div>
     <div id="preview">
-      <GameWorld
-        ref="gameworld"
-        :beep="beep"
-        :width="worldWidth"
-      />
-      <Button @click="run()" label="Ausführen"/>
-      <Button @click="stop()" label="Stopp"/>
+      <div id="controls">
+        <Button icon="pi pi-play" @click="run()" :disabled="running"/>
+        <Button icon="pi pi-stop" @click="stop()" :disabled="!running"/>
+        <Button icon="pi pi-list-check" @click="check()" :disabled="running"/>
+        <ToggleButton on-label="Schnell" off-label="Langsam" v-model="maxSpeed"/>
+        <Button icon="pi pi-refresh" @click="changeTestcase()" :disabled="running"/>
+      </div>
+      <div>
+        <GameWorld
+          ref="gameworld"
+          :beep="beep"
+          :width="worldWidth"
+        />
+      </div>
+      <div id="variables" v-if="running">
+        <table>
+          <tr>
+            <th>Variable</th>
+            <th>Wert</th>
+          </tr>
+          <tr v-for="(v,i) in variables">
+            <td>{{v.name}} </td>
+            <td>{{v.value}}</td>
+          </tr>
+        </table>
+      </div>
+      
     </div>
     
   </div>
@@ -36,21 +57,29 @@ import { sleep } from '../../other/sleep';
 import { Methods } from './methods';
 import { CompileFunctions, getRunFunction } from './compile-functions';
 import { parsePython } from './parsePython';
+import ToggleButton from 'primevue/togglebutton';
 
 export default{
   components: {
-    CodeMirror, GameWorld
+    CodeMirror, GameWorld, ToggleButton
   },
   emits: [
   "save", "exercise-submit"
   ],
   props: {
     exerciseData: Object,
-    beep: Object
+    beep: Object,
   },
   computed: {
     worldWidth(){
-      if(this.beep.worldWidth) return this.beep.worldWidth; else return "10em";
+      if(this.beep.worldWidth) return this.beep.worldWidth; else return "10rem";
+    },
+    editorMaxHeight(){
+      if(this.beep.editorMaxHeight) return this.beep.editorMaxHeight; else return "20rem";
+    },
+    speed(){
+      if(this.maxSpeed) return 10;
+      else return 500;
     }
   },
   mounted(){
@@ -66,9 +95,10 @@ export default{
       program: null,
       errors: [],
       scope: {},
-      speed: 500,
+      maxSpeed: false,
       nextStatement: 0,
       running: false,
+      variables: [],
       compiled: false,
       code: "",
       autocompleteProvider: autocomplete,
@@ -90,10 +120,14 @@ export default{
     }
   },
   methods: {
+    changeTestcase(){
+      
+    },
     updateLinter(){
       this.$refs.editor.updateLinter();
     },
     async run(){
+      if(this.running) return;
       await this.stop();
       this.running=true;
       this.scope={
@@ -112,7 +146,7 @@ export default{
       this.updateHighlightedLine();
       while(proceed && this.running){
         await sleep(this.speed);
-        proceed=this.step();
+        proceed=await this.step();
         this.updateHighlightedLine();
       }
     },
@@ -131,30 +165,62 @@ export default{
     },
     getNextStatement(){
       let block=this.scope.blocks[this.scope.blocks.length-1];
+      if(!block) return null;
       let st=block.program[block.nextStatement];
+      if(st && st.ignoreOnRun){
+        block.nextStatement++;
+        st=null;
+      }
       let i=1;
       while(!st){
         block=this.scope.blocks[this.scope.blocks.length-i];
         if(!block) return null;
         st=block.program[block.nextStatement];
-        i++;
+        if(st && st.ignoreOnRun){
+          block.nextStatement++;
+          st=null;
+        }else{
+          i++;
+        }
       }
       return st;
     },
+    updateVariables(){
+      this.variables=[];
+      for(let i=0;i<this.scope.layers.length;i++){
+        let l=this.scope.layers[this.scope.layers.length-i-1];
+        for(let a in l){
+          this.variables.push({
+            name: a,
+            value: JSON.stringify(l[a].value)
+          });
+        }
+      }
+    },
     async step(){
       let block=this.scope.blocks[this.scope.blocks.length-1];
+      if(!block) return false;
       let st=block.program[block.nextStatement];
+      if(st && st.ignoreOnRun){
+        block.nextStatement++;
+        st=null;
+      }
       while(!st){
         this.scope.blocks.pop();
+        this.scope.layers.pop();
         block=this.scope.blocks[this.scope.blocks.length-1];
         if(!block) return false;
         st=block.program[block.nextStatement];
+        if(st && st.ignoreOnRun){
+          block.nextStatement++;
+          st=null;
+        }
       }
-      console.log(st.type);
       let run=getRunFunction(st.type);
       let stay=run(this.scope, st);
       //block=this.scope.blocks[this.scope.blocks.length-1];
-      if(!stay) block.nextStatement++;
+      if(stay!==true) block.nextStatement++;
+      this.updateVariables();
       return true;
     },
     async stop(){
@@ -243,6 +309,16 @@ function autocomplete(){
 <style scoped>
   #wrapper{
     width: 100%;
-    display: flex;
+    display: grid;
+    height: 100%;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr auto;
   }
+  #left-side{
+    overflow: hidden;
+  }
+  #editor{
+    height: 100%;
+  }
+  
 </style>

@@ -17,17 +17,6 @@ export default{
   components: {
     JLabel, JImage
   },
-  watch: {
-    "gameObject.x": function(){
-      console.log("test");
-    },
-    gameObject: {
-      handler(){
-        console.log("test");
-      },
-      deep: true
-    }
-  },
   mounted(){
   },
   props: {

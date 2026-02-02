@@ -26,6 +26,13 @@ export class GameObject{
     }
     f.text=text;
   }
+  read(){
+    let f=this.getFieldAhead();
+    if ( !f ) {
+      throw "Hier kannst du nicht lesen.";
+    }
+    return f.text;
+  }
   move(  ) {
     let f=this.getFieldAhead();
     if ( !f ) {

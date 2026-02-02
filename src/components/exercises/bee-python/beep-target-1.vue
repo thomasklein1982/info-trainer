@@ -29,7 +29,7 @@ export const data={
         "WWWWW",
       ]
     ],
-    worldWidth: "15em",
+    worldWidth: "15rem",
     window: [5,3],
     setupFunc: function(gameworld){
       let flower=new GameObjectClazz("F","",gameworld,FlowerJSON.dataurl);

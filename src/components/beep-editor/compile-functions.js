@@ -7,6 +7,11 @@ export function evaluate(scope, p){
 }
 
 export function getParseFunction(node){
+  if(node.type.isError){
+    return {
+      error: {node: node, message: "Syntax-Fehler"}
+    };
+  }
   let cf=CompileFunctions[node.name];
   if(!cf){
     return {
@@ -27,6 +32,16 @@ function createError(node,message){
 }
 
 export const CompileFunctions={
+  Comment: {
+    parse: (node,src,scope)=>{
+      let text=src.substring(node.from,node.to);
+      return {
+        type: node.name,
+        text,
+        ignoreOnRun: true
+      };
+    }
+  },
   ParenthesizedExpression: {
     parse: (node,src,scope)=>{
       let n=node.firstChild;
@@ -174,6 +189,7 @@ export const CompileFunctions={
             program: b.program,
             nextStatement: 0
           });
+          scope.layers.push({});
           return;
         }
       }
@@ -224,6 +240,7 @@ export const CompileFunctions={
           program: statement.program,
           nextStatement: 0
         });
+        scope.layers.push({});
         return true;
       }else{
         return false;
@@ -417,7 +434,8 @@ export const CompileFunctions={
     run: (scope, statement)=>{
       let m=statement.method;
       let args=evaluate(scope,statement.args);
-      m.run(scope.gameworld,args);
+      let value=m.run(scope.gameworld,args);
+      return value;
     }
   }
 }
