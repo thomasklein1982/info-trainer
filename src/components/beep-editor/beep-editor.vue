@@ -98,6 +98,7 @@ export default{
       maxSpeed: false,
       nextStatement: 0,
       running: false,
+      checking: false,
       variables: [],
       compiled: false,
       code: "",
@@ -120,11 +121,21 @@ export default{
     }
   },
   methods: {
-    changeTestcase(){
-      
+    changeTestcase(index){
+      this.$refs.gameworld.gameworld.reset(index);
     },
     updateLinter(){
       this.$refs.editor.updateLinter();
+    },
+    async check(){
+      this.checking=true;
+      let count=this.beep.testdata.count;
+      for(let i=0;i<count;i++){
+        this.$refs.gameworld.gameworld.reset(i);
+        await this.run();
+        this.stop();
+      }
+      this.checking=false;
     },
     async run(){
       if(this.running) return;
@@ -218,7 +229,6 @@ export default{
       }
       let run=getRunFunction(st.type);
       let stay=run(this.scope, st);
-      //block=this.scope.blocks[this.scope.blocks.length-1];
       if(stay!==true) block.nextStatement++;
       this.updateVariables();
       return true;

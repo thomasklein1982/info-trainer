@@ -41,7 +41,7 @@ export default{
   },
   data(){
     return {
-      gameworld: new GameWorld(this.beep.worlds[0],5,3,this.beep.setupFunc, this.beep.resetFunc)
+      gameworld: new GameWorld(this.beep.worlds[0],5,3,this.beep.setupFunc, this.beep.resetFunc, this.beep.testdata)
     };
   },
   mounted(){

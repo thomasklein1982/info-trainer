@@ -62,6 +62,10 @@ export class GameObject{
     return f;
   }
 
+  isOnSameField(go){
+    return this.x===go.x && this.y===go.y;
+  }
+
   turnLeft( ) {
     this.rotation+=90;
   }

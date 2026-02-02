@@ -1,5 +1,5 @@
 <template>
-  <ExerciseBody :exercise="$data" :beep="beep">
+  <ExerciseBody :exercise="$data" :beep="beep" :check="check">
     <p>Die Biene Lisa muss zur Blume fliegen und dort stehen bleiben.</p>
   </ExerciseBody>
 </template>
@@ -14,10 +14,10 @@ import { GameWorld } from './GameWorld';
 import GameObject from '../../game-object-component.vue';
 import Test from '../../test.vue';
 import BeepEditor from '../../beep-editor/beep-editor.vue';
+import { random } from '../../../other/random';
 
 
 export const data={
-  testObject: new GameObjectClazz("B","Fee"),
   id: "beep-target-1",
   cheats: ["beep"],
   title: "Erste Flügelschläge",
@@ -38,22 +38,40 @@ export const data={
         flower, bee
       };
     },
-    resetFunc: function(gameworld){
+    resetFunc: function(gameworld, data){
       let f=gameworld.getNamedField("1");
-      f.style["background-color"]="red";
-      f.text="bla";
+      f.text=data.zahl;
+    },
+    testdata: {
+      create: function(index){
+        let zahl=index===0? random(0,9): random(10,20);
+        return {
+          zahl: zahl
+        }
+      },
+      count: 2
     },
     src: ``
   },
   check: {
     testcases: [
       {
-        info: "Biene Lisa befindet sich am Programmende auf der Blume."
+        info: "Die Biene befindet sich am Programmende auf der Blume.",
+        check: function(gameworld,data,infos){
+          if(!infos.isProgramOver) return false;
+          let bee=gameworld.objects.bee;
+          let f=gameworld.objects.flower;
+          return bee.isOnSameField(f);
+        }
+      },
+      {
+        info: "Die Zahl auf dem roten Feld wurde um 1 erhöht.",
+        check: function(gameworld,data,infos){
+          let f=gameworld.getNamedField("1");
+          return (f.text===data.zahl+1);
+        }
       }
     ],
-    test: async (tc,init)=>{
-      
-    }
   },
 };
 

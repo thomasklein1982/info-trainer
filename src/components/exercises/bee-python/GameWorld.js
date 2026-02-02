@@ -1,12 +1,14 @@
+import { random } from '../../../other/random';
 import TreeJSON from '../bee/graphics/tree.json';
 
 export class GameWorld{
-  constructor(worldArray, windowWidth, windowHeight, setupFunc, resetFunc){
+  constructor(worldArray, windowWidth, windowHeight, setupFunc, resetFunc, testDataProvider){
     this.worldArray=worldArray;
     this.windowWidth=windowWidth;
     this.windowHeight=windowHeight;
     this.setupFunc=setupFunc;
     this.resetFunc=resetFunc;
+    this.testDataProvider=testDataProvider;
     this.create();
   }
   getNamedField(name){
@@ -19,7 +21,7 @@ export class GameWorld{
   getField(x,y){
     return this.fields[y-1][x-1];
   }
-  reset(){
+  reset(index){
     for(let i=0;i<this.fields.length;i++){
       let row=this.fields[i];
       for(let j=0;j<row.length;j++){
@@ -35,7 +37,14 @@ export class GameWorld{
       go.x=field.x;
       go.y=field.y;
     }
-    if(this.resetFunc) this.resetFunc(this);
+    let testData=null;
+    if(this.testDataProvider){
+      if(index===undefined || index===null){
+        index=random(0,this.testDataProvider.count-1);
+      }
+      testData=this.testDataProvider.create(index);
+    }
+    if(this.resetFunc) this.resetFunc(this, testData);
   }
   create(){
     let world=this.worldArray;
