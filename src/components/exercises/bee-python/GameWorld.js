@@ -9,6 +9,7 @@ export class GameWorld{
     this.setupFunc=setupFunc;
     this.resetFunc=resetFunc;
     this.testDataProvider=testDataProvider;
+    this.testData=null;
     this.create();
   }
   getNamedField(name){
@@ -37,14 +38,16 @@ export class GameWorld{
       go.x=field.x;
       go.y=field.y;
     }
-    let testData=null;
-    if(this.testDataProvider){
-      if(index===undefined || index===null){
+    if(index===undefined || index===null){
+      if(!this.testData && this.testDataProvider){
         index=random(0,this.testDataProvider.count-1);
+        this.testData=this.testDataProvider.create(index);
       }
-      testData=this.testDataProvider.create(index);
+    }else{
+      this.testData=this.testDataProvider.create(index);
     }
-    if(this.resetFunc) this.resetFunc(this, testData);
+    if(this.resetFunc) this.resetFunc(this, this.testData);
+    return this.testData;
   }
   create(){
     let world=this.worldArray;

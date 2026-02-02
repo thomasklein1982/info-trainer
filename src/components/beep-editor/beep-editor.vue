@@ -68,7 +68,7 @@ export default{
   ],
   props: {
     exerciseData: Object,
-    beep: Object,
+    beep: Object
   },
   computed: {
     worldWidth(){
@@ -128,16 +128,26 @@ export default{
       this.$refs.editor.updateLinter();
     },
     async check(){
+      let testcases=this.exerciseData.data.check.testcases;
+      console.log(testcases);
+      this.exerciseData.correct=[];
+      for(let i=0;i<testcases.length;i++){
+        this.exerciseData.correct.push(false);
+      }
       this.checking=true;
       let count=this.beep.testdata.count;
+      let testData;
       for(let i=0;i<count;i++){
-        this.$refs.gameworld.gameworld.reset(i);
-        await this.run();
+        testData=this.$refs.gameworld.gameworld.reset(i);
+        await this.run(testData);
+        this.checkTestCases(testData,true);
         this.stop();
       }
+      calcPoints(this.exerciseData);
+      this.save();
       this.checking=false;
     },
-    async run(){
+    async run(testData){
       if(this.running) return;
       await this.stop();
       this.running=true;
@@ -156,9 +166,21 @@ export default{
       let proceed=true;
       this.updateHighlightedLine();
       while(proceed && this.running){
-        await sleep(this.speed);
+        if(!this.checking) await sleep(this.speed);
         proceed=await this.step();
-        this.updateHighlightedLine();
+        if(this.checking) this.checkTestCases(testData,false);
+        else this.updateHighlightedLine();
+      }
+    },
+    checkTestCases(testData,isProgramOver){
+      let testcases=this.exerciseData.data.check.testcases;
+      console.log(testcases);
+      for(let i=0;i<testcases.length;i++){
+        let tc=testcases[i];
+        let ok=tc.check(this.$refs.gameworld.gameworld,testData, isProgramOver);
+        if(ok){
+          this.exerciseData.correct[i]=true;
+        }
       }
     },
     updateHighlightedLine(){

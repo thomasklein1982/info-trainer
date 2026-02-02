@@ -1,5 +1,5 @@
 <template>
-  <ExerciseBody :exercise="$data" :beep="beep" :check="check">
+  <ExerciseBody :exercise="$data" :beep="beep">
     <p>Die Biene Lisa muss zur Blume fliegen und dort stehen bleiben.</p>
   </ExerciseBody>
 </template>
@@ -57,8 +57,8 @@ export const data={
     testcases: [
       {
         info: "Die Biene befindet sich am Programmende auf der Blume.",
-        check: function(gameworld,data,infos){
-          if(!infos.isProgramOver) return false;
+        check: function(gameworld,data,isProgramOver){
+          if(!isProgramOver) return false;
           let bee=gameworld.objects.bee;
           let f=gameworld.objects.flower;
           return bee.isOnSameField(f);
@@ -66,7 +66,7 @@ export const data={
       },
       {
         info: "Die Zahl auf dem roten Feld wurde um 1 erhöht.",
-        check: function(gameworld,data,infos){
+        check: function(gameworld,data,isProgramOver){
           let f=gameworld.getNamedField("1");
           return (f.text===data.zahl+1);
         }
