@@ -13,34 +13,30 @@ import {parser as registerParser} from "../parsers/register-parser/register-pars
 import {parser as whileParser } from "../parsers/while-parser/while-parser";
 import { oneDark } from '@codemirror/theme-one-dark';
 import {python} from '@codemirror/lang-python';
+import {styleTags, tags} from "@lezer/highlight";
+import {lintGutter} from "@codemirror/lint"
 
 const addLineHighlight = StateEffect.define();
+    const lineHighlightMark = Decoration.line({
+      attributes: {style: 'background-color: rgba(0,255,0,0.2)'},
+    });
+    const lineHighlightField = StateField.define({
+      create() {
+        return Decoration.none;
+      },
+      update(lines, tr) {
+        lines = lines.map(tr.changes);
+        for (let e of tr.effects) {
+          if (e.is(addLineHighlight)) {
+            lines = Decoration.none;
+            lines = lines.update({add: [lineHighlightMark.range(e.value)]});
+          }
+        }
+        return lines;
+      },
+      provide: (f) => EditorView.decorations.from(f),
+    });
 
-const lineHighlightField = StateField.define({
-  create() {
-    return Decoration.none;
-  },
-  update(lines, tr) {
-    lines = lines.map(tr.changes);
-    for (let e of tr.effects) {
-      if (e.is(addLineHighlight)) {
-        lines = Decoration.none;
-        lines = lines.update({add: [lineHighlightMark.range(e.value)]});
-      }
-    }
-    return lines;
-  },
-  provide: (f) => EditorView.decorations.from(f),
-});
-
-const lineHighlightMark = Decoration.line({
-  attributes: {style: 'background-color: rgba(0,255,0,0.2)'},
-});
-
-//import {javascript} from "@codemirror/lang-javascript"
-let editor;
-
-import {styleTags, tags} from "@lezer/highlight";
 
 const registerLanguage = LRLanguage.define({
   parser: registerParser.configure({ 
@@ -74,7 +70,7 @@ const registerLanguage = LRLanguage.define({
 function registerLanguageSupport() {
   return new LanguageSupport(registerLanguage);
 }
-import {lintGutter} from "@codemirror/lint"
+
 
 const whileLanguage = LRLanguage.define({
   parser: whileParser.configure({ 
@@ -120,7 +116,6 @@ const insertTabFunc = ({ state, dispatch }) => {
 };
 const insertTab={ key: "Tab", run: insertTabFunc };
 
-let updateTreeDebounceTimer=null;
 
 export default{
   components: {
@@ -149,8 +144,14 @@ export default{
   emits: [
     "update-tree", "update:modelValue", "blur"
   ],
+  data(){
+    return {
+      addLineHighlight: null
+    }
+  },
   mounted(){
     let editorTheme=new Compartment();
+    let updateTreeDebounceTimer=null;
     let extensions=[
       basicSetup,
       keymap.of(this.insertTab? insertTab:indentWithTab),
@@ -184,7 +185,7 @@ export default{
       extensions.push(this.linter);
       extensions.push(lintGutter());
     }
-    editor = new EditorView({
+    this.editor = new EditorView({
       state: EditorState.create(
         {
           doc: this.modelValue,
@@ -195,17 +196,11 @@ export default{
       parent: this.$refs.wrapper,
       
     });
-    // editor.value.contentDOM.addEventListener("blur",()=>{
-    //   console.log("test blur");
-    // });
-    // this.$refs.wrapper.onblur=(event)=>{
-    //   console.log("test blur");
-    // };
   },
   methods: {
     updateLinter(){
       if(this.linter){
-        let lintPlugin=editor.plugin(this.linter[1]);
+        let lintPlugin=this.editor.plugin(this.linter[1]);
         if(lintPlugin){
           lintPlugin.set=true;
           lintPlugin.force();
@@ -215,35 +210,35 @@ export default{
     highlightLine(lineNo) {
       try{
         if (lineNo <= 0) throw "";
-        const docPosition = editor.state.doc.line(lineNo).from;
-        editor.dispatch({
+        const docPosition = this.editor.state.doc.line(lineNo).from;
+        this.editor.dispatch({
           effects: addLineHighlight.of(docPosition),
           selection: new EditorSelection([EditorSelection.cursor(docPosition)], 0),
           scrollIntoView: true
         });
       }catch(e){
-        editor.dispatch({effects: addLineHighlight.of(-1)});
+        this.editor.dispatch({effects: addLineHighlight.of(-1)});
       }
     },
     undo(){
-      undo(editor);
+      undo(this.editor);
     },
     redo(){
-      redo(editor);
+      redo(this.editor);
     },
     setValue(code){
-      editor.dispatch({
-        changes: {from: 0, to: editor.state.doc.length, insert: code}
+      this.editor.dispatch({
+        changes: {from: 0, to: this.editor.state.doc.length, insert: code}
       });
     },
     getValue(){
-      return editor.state.doc.toString();
+      return this.editor.state.doc.toString();
     },
     lineCount(){
-      return editor.state.doc.lines;
+      return this.editor.state.doc.lines;
     },
     getLine(n){
-      return editor.state.doc.lineAt(n);
+      return this.editor.state.doc.lineAt(n);
     },
     setCursorToEnd(){
       this.setCursor(this.size-1);
@@ -251,15 +246,15 @@ export default{
     setSelection(anchor,head){
       this.setCursorToEnd();
       nextTick(()=>{
-        editor.dispatch({
+        this.editor.dispatch({
           selection: {anchor, head},
           scrollIntoView: true
         });
       });
     },
     setCursor: function(position){
-      //editor.focus();
-      editor.dispatch({
+      //this.editor.focus();
+      this.editor.dispatch({
         selection: new EditorSelection([EditorSelection.cursor(position)], 0),
         scrollIntoView: true
       });
@@ -270,7 +265,7 @@ export default{
       this.setCursor(line.from);
     },
     focus(){
-      editor.focus();
+      this.editor.focus();
     }
   }
 }

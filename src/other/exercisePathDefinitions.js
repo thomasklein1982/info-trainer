@@ -188,7 +188,7 @@ let IKG={
       label: "Algorithmen",
       icon: "",
       id: "algo",
-      exercises: ["beep-target-1"]
+      exercises: ["beep-target-1","beep-target-2"]
     },
     // {
     //   label: "Textverarbeitung",

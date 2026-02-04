@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Die Biene Lisa muss zur Blume fliegen und dort stehen bleiben.</p>
+    <p>Die Biene Lisa muss zur Blume fliegen und dort stehen bleiben. Außerdem muss sie die Zahl auf dem Feld um 1 erhöhen.</p>
   </ExerciseBody>
 </template>
 
@@ -15,7 +15,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-target-1",
   cheats: ["beep"],
-  title: "Die Biene muss zur Blume, Teil 1",
+  title: "Erste Flügelschläge",
   beep: {
     worlds: [
       [
@@ -34,13 +34,17 @@ export const data={
       };
     },
     resetFunc: function(gameworld, data){
-      
+      let f=gameworld.getNamedField("1");
+      f.text=data.zahl;
     },
     testdata: {
       create: function(index){
-        return {};
+        let zahl=index===0? random(0,9): random(10,20);
+        return {
+          zahl: zahl
+        }
       },
-      count: 1
+      count: 2
     },
     src: ``
   },
@@ -53,6 +57,13 @@ export const data={
           let bee=gameworld.objects.bee;
           let f=gameworld.objects.flower;
           return bee.isOnSameField(f);
+        }
+      },
+      {
+        info: "Die Zahl auf dem roten Feld wurde um 1 erhöht.",
+        check: function(gameworld,data,isProgramOver){
+          let f=gameworld.getNamedField("1");
+          return (f.text===data.zahl+1);
         }
       }
     ]

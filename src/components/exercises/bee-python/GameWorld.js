@@ -20,7 +20,7 @@ export class GameWorld{
     return false;
   }
   getField(x,y){
-    return this.fields[y-1][x-1];
+    return this.fields[this.fields.length-y][x-1];
   }
   reset(index){
     for(let i=0;i<this.fields.length;i++){
@@ -74,7 +74,8 @@ export class GameWorld{
           dataurl: null,
           name: undefined,
           x: j+1,
-          y: i+1,
+          y: world.length-i,
+          row: i+1,
           text: "",
           style: {},
           blocked: false

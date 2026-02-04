@@ -1,6 +1,6 @@
 <template>
   <div id="wrapper" :style="{maxHeight: editorMaxHeight}">
-    <div class="no-print" id="left-side">
+    <div class="invisible-at-print" id="left-side">
       <div id="editor">
         <CodeMirror 
           language="python"
@@ -14,7 +14,7 @@
       </div>
     </div>
     <div id="preview">
-      <div id="controls">
+      <div id="controls" class="no-print">
         <Button icon="pi pi-play" @click="run()" :disabled="running"/>
         <Button icon="pi pi-stop" @click="stop()" :disabled="!running"/>
         <Button icon="pi pi-list-check" @click="check()" :disabled="running"/>
@@ -42,7 +42,7 @@
       </div>
       
     </div>
-    
+    <Message v-if="runtimeError" severity="error">{{ runtimeError }}</Message>
   </div>
 </template>
 
@@ -58,14 +58,25 @@ import { Methods } from './methods';
 import { CompileFunctions, getRunFunction } from './compile-functions';
 import { parsePython } from './parsePython';
 import ToggleButton from 'primevue/togglebutton';
+import Message from 'primevue/message';
+import { random } from '../../other/random';
 
 export default{
   components: {
-    CodeMirror, GameWorld, ToggleButton
+    CodeMirror, GameWorld, ToggleButton, Message
   },
   emits: [
-  "save", "exercise-submit"
+    "save", "exercise-submit"
   ],
+  watch: {
+    code(nv,ov){
+      console.log("code changed");
+      console.log("new:");
+      console.log(nv);
+      console.log("old:");
+      console.log(ov);
+    }
+  },
   props: {
     exerciseData: Object,
     beep: Object
@@ -92,8 +103,10 @@ export default{
   data(){
     return {
       tree: null,
+      id: random(1,10000),
       program: null,
       errors: [],
+      runtimeError: null,
       scope: {},
       maxSpeed: false,
       nextStatement: 0,
@@ -132,20 +145,27 @@ export default{
       console.log(testcases);
       this.exerciseData.correct=[];
       for(let i=0;i<testcases.length;i++){
-        this.exerciseData.correct.push(false);
+        this.exerciseData.correct.push(true);
       }
+      
       this.checking=true;
       let count=this.beep.testdata.count;
       let testData;
-      for(let i=0;i<count;i++){
-        testData=this.$refs.gameworld.gameworld.reset(i);
-        await this.run(testData);
-        this.checkTestCases(testData,true);
-        this.stop();
+      try{
+        for(let i=0;i<count;i++){
+          testData=this.$refs.gameworld.gameworld.reset(i);
+          await this.run(testData);
+          this.stop();
+        }
+      }catch(e){
+        for(let i=0;i<testcases.length;i++){
+        this.exerciseData.correct[i]=false;
+      }
       }
       calcPoints(this.exerciseData);
       this.save();
       this.checking=false;
+      this.stop();
     },
     async run(testData){
       if(this.running) return;
@@ -164,23 +184,37 @@ export default{
         ]
       }
       let proceed=true;
-      this.updateHighlightedLine();
+      let globalCorrect=this.exerciseData.correct;
+      let correct;
+      if(this.checking){
+        correct=[];
+        let testcases=this.exerciseData.data.check.testcases;
+        for(let i=0;i<testcases.length;i++){
+          correct.push(false);
+        }
+      }else this.updateHighlightedLine();
       while(proceed && this.running){
         if(!this.checking) await sleep(this.speed);
         proceed=await this.step();
-        if(this.checking) this.checkTestCases(testData,false);
+        if(this.checking) this.checkTestCases(testData,false,correct);
         else this.updateHighlightedLine();
       }
-    },
-    checkTestCases(testData,isProgramOver){
-      let testcases=this.exerciseData.data.check.testcases;
-      console.log(testcases);
-      for(let i=0;i<testcases.length;i++){
-        let tc=testcases[i];
-        let ok=tc.check(this.$refs.gameworld.gameworld,testData, isProgramOver);
-        if(ok){
-          this.exerciseData.correct[i]=true;
+      if(this.checking){
+        //letzter Check am Programmende:
+        this.checkTestCases(testData,true,correct);
+        for(let i=0;i<globalCorrect.length;i++){
+          if(!globalCorrect[i]) continue;
+          globalCorrect[i]=correct[i];
         }
+      }else this.updateHighlightedLine();
+
+    },
+    checkTestCases(testData,isProgramOver,correctArray){
+      let testcases=this.exerciseData.data.check.testcases;
+      for(let i=0;i<testcases.length;i++){
+        if(correctArray[i]) continue;
+        let tc=testcases[i];
+        correctArray[i]=tc.check(this.$refs.gameworld.gameworld,testData, isProgramOver);
       }
     },
     updateHighlightedLine(){
@@ -250,13 +284,21 @@ export default{
         }
       }
       let run=getRunFunction(st.type);
-      let stay=run(this.scope, st);
+      let stay;
+      try{
+        stay=run(this.scope, st);
+      }catch(e){
+        this.runtimeError=e;
+        if(this.checking) throw e;
+        return false;
+      }
       if(stay!==true) block.nextStatement++;
       this.updateVariables();
       return true;
     },
     async stop(){
       this.running=false;
+      this.runtimeError=null;
       this.$refs.gameworld.gameworld.reset();
       this.$refs.gameworld.$forceUpdate();
     },
@@ -269,7 +311,7 @@ export default{
       while(this.errors.length>0) this.errors.pop();
       this.compiled=true;
       this.program=[];
-      if(!this.tree || !this.tree.topNode || !this.tree.topNode.firstChild) return;
+      if(!this.tree || !this.tree.topNode || !this.tree.topNode.firstChild || this.code.trim().length===0) return;
       let nodeZeile=this.tree.topNode.firstChild;
       this.program=parsePython(this.code,nodeZeile,this.errors);
       this.updateLinter();

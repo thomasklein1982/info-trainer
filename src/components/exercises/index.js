@@ -1,4 +1,5 @@
 
+export * as BeepTarget2 from './bee-python/beep-target-2.vue';
 export * as BeeInfoRead from './bee/bee-info-read.vue';
 export * as BeeInfoPrint from './bee/bee-info-print.vue';
 export * as BeeInfoStart from './bee/bee-info-start.vue';

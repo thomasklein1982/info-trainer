@@ -48,7 +48,7 @@ export const Methods={
       let bee=gameworld.objects.bee;
       bee.print(args[0]);
     },
-    snippet: snippetCompletion("print($text)",{
+    snippet: snippetCompletion("print(${text})",{
       label: "print(text)",
       type: "function",
       info: "Schreibt den text auf das Feld vor der Biene."

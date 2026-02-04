@@ -10,6 +10,7 @@ export class GameObject{
     this.rotation=0;
     this.x=0;
     this.y=0;
+    this.style={};
   }
   reset(){
     this.setPosition(0,0);
@@ -36,6 +37,7 @@ export class GameObject{
   move(  ) {
     let f=this.getFieldAhead();
     if ( !f ) {
+      f=this.getCoordinatesAhead();
       this.setPosition(f.x,f.y);
       throw "O nein! "+this.name+" hat die Spielwelt verlassen.";
     }else if(this.world.isFieldBlocked(f)){
@@ -44,7 +46,7 @@ export class GameObject{
     this.setPosition(f.x,f.y);
   }
   
-  getFieldAhead(){
+  getCoordinatesAhead(){
     let x=this.x;
     let y=this.y;
     let dir=(this.rotation%360);
@@ -58,7 +60,12 @@ export class GameObject{
     }else{
       y--;
     }
-    let f=this.world.getField(x,y);
+    return {x,y};
+  }
+
+  getFieldAhead(){
+    let xy=this.getCoordinatesAhead();
+    let f=this.world.getField(xy.x,xy.y);
     return f;
   }
 

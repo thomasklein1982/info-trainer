@@ -13,15 +13,16 @@ import { Flower } from './Flower';
 
 
 export const data={
-  id: "beep-target-1",
+  id: "beep-target-2",
   cheats: ["beep"],
-  title: "Die Biene muss zur Blume, Teil 1",
+  title: "Die Biene muss zur Blume, Teil 2",
   beep: {
     worlds: [
       [
-        "WWWWW",
-        "B..1F",
-        "WWWWW",
+        "....",
+        ".WWF",
+        ".WWW",
+        "B...",
       ]
     ],
     worldWidth: "15rem",

@@ -281,6 +281,9 @@ em{
   .no-print{
     display: none !important;
   }
+  .invisible-at-print{
+    visibility: hidden;
+  }
   :root {
     --p-content-background: white !important;
     --p-content-color: black !important;

@@ -1,8 +1,8 @@
 <template>
   <div :style="style">
-    <JImage v-if="gameObject && gameObject.image || image" :src="realSrc" style="width:100%; height: 100%;"/>
+    <JImage v-if="gameObject && gameObject.image || image" :src="realSrc" style="position: absolute" :style="imageStyle"/>
     <JLabel class="game-object-text" :align="align" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; ">
-      {{ realText }}{{ gameObject?.x }}{{gameObject?.y}}
+      {{ realText }}
     </JLabel>
   </div>
 </template>
@@ -57,6 +57,23 @@ export default{
     heightUnit(){
       return 100/this.gameWorld.height;
     },
+    imageStyle(){
+      if(!this.gameObject){
+        return {width: "100%", height: "100%"};
+      }
+      let w=100*this.gameObject.imageSize;
+      let offset=(100-w)/2;
+      let style={
+        width: w+"%",
+        height: w+"%",
+        left: offset+"%",
+        top: offset+"%"
+      };
+      for(let a in this.gameObject.style){
+        style[a]=this.gameObject.style[a];
+      }
+      return style;
+    },
     style(){
       let style={
         transform: 'rotate('+this.angle+'deg)'
@@ -80,7 +97,7 @@ export default{
       return style;
     },
     angle(){
-      if(this.gameObject) return this.gameObject.rotation;
+      if(this.gameObject) return -this.gameObject.rotation;
       else return -this.rotation;
     },
     realSrc(){

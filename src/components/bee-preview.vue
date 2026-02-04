@@ -84,6 +84,7 @@ export default{
 }
 .world{
   background-color: lightgreen;
+  container-type: inline-size;
 }
 .world>*{
   border: 1pt dotted darkgreen;

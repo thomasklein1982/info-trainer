@@ -3,12 +3,12 @@
     <template v-if="gameworld">
       <JFrame :layout="gameworld.width+''" class="world" style="background-color: lightgreen; container-type: inline-size;">
         <template v-for="(row,i) in gameworld.fields">
-          <template v-for="(f,i) in row">
+          <template v-for="(f,j) in row">
             <template v-if="f.isImage">
-              <JImage style="outline: 1pt dotted darkgreen; aspect-ratio: 1;" :style="{'grid-row': f.y, 'grid-column': f.x}" :src="f.dataurl"/>
+              <JImage style="outline: 1pt dotted darkgreen; aspect-ratio: 1;" :style="{'grid-row': f.row, 'grid-column': f.x}" :src="f.dataurl"/>
             </template>
             <template v-else>
-              <JLabel style="outline: 1pt dotted darkgreen; aspect-ratio: 1; font-size: 5cqw;" :style="labelStyle(f)">{{ f.text }}</JLabel>
+              <JLabel style="outline: 1pt dotted darkgreen; aspect-ratio: 1; font-size: 5cqw;" :style="labelStyle(f)">{{ f.text }}{{ f.x }}{{ f.y }}</JLabel>
             </template>
           </template>
         </template>
@@ -58,7 +58,7 @@ export default{
   methods: {
     labelStyle(field){
       let style={
-        "grid-row": field.y,
+        "grid-row": field.row,
         "grid-column": field.x
       };
       for(let s in field.style){
