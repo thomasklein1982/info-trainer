@@ -76,7 +76,8 @@ export default{
     },
     style(){
       let style={
-        transform: 'rotate('+this.angle+'deg)'
+        transform: 'rotate('+this.angle+'deg)',
+        'container-type': 'inline-size'
       }
       if(this.gameObject){
         let unit=100/this.gameWorld.width;
@@ -123,7 +124,7 @@ export default{
 <style scoped>
 .game-object-text{
   color: black;
-  font-size: 5cqw;
+  font-size: 35cqw;
   text-shadow: 
     -1px -1px 0 white,  /* Oben links */
      1px -1px 0 white,  /* Oben rechts */

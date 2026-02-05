@@ -1,16 +1,8 @@
 let Java={
   name: "Java",
+  id: "java",
   paths: [
-    {
-      label: "Bee",
-      icon: "bee",
-      exercises: ["bee-info-start","bee-target-1", "bee-target", "bee-target-2", "bee-target-3", "bee-info-print", "bee-print", "bee-print-2", "bee-info-read", "bee-copy","bee-double", "bee-add", "bee-if", "bee-tr", "bee-tr-2", "bee-sum", "bee-heaviest"]
-    },
-    // {
-    //   label: "EVA",
-    //   icon: "eva",
-    //   exercises: ["eva-tr"]
-    // },
+    
     {
       label: "Grundlagen",
       id: "eva",
@@ -92,8 +84,40 @@ let Java={
   ]
 }
 
+let Bee={
+  name: "Java-Biene",
+  id: "java-bee",
+  paths: [
+    {
+      label: "Grundbefehle",
+      id: "bee-basics",
+      icon: "bee-basics",
+      exercises: ["bee-info-start","bee-target-1", "bee-target", "bee-target-2", "bee-target-3", "bee-info-print", "bee-print", "bee-print-2", "bee-info-read", "bee-copy", "bee-info-read-int", "bee-double", "bee-add"]
+    },
+    {
+      label: "If-Else",
+      id: "bee-if",
+      icon: "bee-if",
+      exercises: ["bee-info-if", "bee-if", "bee-tr", "bee-tr-2"]
+    },
+    {
+      label: "Schleifen",
+      id: "bee-loops",
+      icon: "bee-loops",
+      exercises: ["bee-sum"]
+    },
+    {
+      label: "Problemlösen",
+      id: "bee-hard",
+      icon: "bee-hard",
+      exercises: ["bee-heaviest"]
+    },
+  ]
+}
+
 let Datenbanken={
   name: "Datenbanken",
+  id: "db",
   paths: [
     {
       label: "Abfragen mit SQL",
@@ -118,6 +142,7 @@ let Datenbanken={
 
 let TheoretischeInformatik={
   name: "Theoretische Informatik",
+  id: "theory",
   paths: [
     {
       label: "Endliche Automaten",
@@ -148,6 +173,7 @@ let TheoretischeInformatik={
 
 let Internet={
   name: "Das Internet",
+  id: "internet",
   paths: [
     // {
     //   label: "HTML & CSS",
@@ -165,6 +191,7 @@ let Internet={
 
 let Grundlagen={
   name: "Grundlagen",
+  id: "basics",
   paths: [
     {
       label: "Bits & Bytes",
@@ -177,6 +204,7 @@ let Grundlagen={
 
 let IKG={
   name: "DiBi",
+  id: "dibi",
   paths: [
     {
       label: "Das Internet",
@@ -200,6 +228,7 @@ let IKG={
 
 let Datenschutz={
   name: "Datenschutz",
+  id: "privacy",
   paths: [
     {
       label: "Nichts zu verbergen?!?",
@@ -216,13 +245,14 @@ let Datenschutz={
 }
 
 let paths=[
-  IKG, Grundlagen, Internet, Java, Datenbanken, Datenschutz, TheoretischeInformatik
+  IKG, Grundlagen, Internet, Bee, Java, Datenbanken, Datenschutz, TheoretischeInformatik
 ];
 
 for(let i=0;i<paths.length;i++){
   let cat=paths[i];
   for(let j=0;j<cat.paths.length;j++){
     cat.paths[j].category=cat.name;
+    cat.paths[j].categoryID=cat.id;
   }
 }
 

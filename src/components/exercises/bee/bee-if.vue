@@ -1,13 +1,14 @@
 <template>
   <ExerciseBody :exercise="$data" :java="project">
     Implementiere die Methode <Code inline>void program( Bee lisa )</Code>, die das folgende Problem löst:
-    <p>Die Biene Lisa muss sich am Programmende auf dem Feld mit der Blume befinden.</p>
+    <p>Die Biene Lisa sucht im Wald nach einer Blume. Zum Glück hat eine Bienenkollegin auf das gelbe Feld geschrieben, ob sich die Blume <strong>unten</strong> befindet (linkes Bild, dann steht dort ein <Code inline>U</Code>) oder <strong>oben</strong> (rechtes Bild, dann steht dort ein <Code inline>O</Code>).</p>
+    <p>Lisa muss sich am Programmende auf dem Feld mit der Blume befinden. Dein Programm muss für beide Fälle funktionieren.</p>
     <div style="display: flex; gap: 1rem;">
       <div>
         <BeePreview :world="world1" width="14rem">
           <GameObject image="bee" text="lisa" pos="B"/>
           <GameObject image="flower" text="" pos="F"/>
-          <GameObject text="U" pos="D"/>
+          <GameObject text="U" pos="D" align="center" style="background-color: yellow"/>
         </BeePreview>
         Möglichkeit 1: Die Blume befindet sich unten.
       </div>
@@ -15,13 +16,11 @@
         <BeePreview :world="world2" width="14rem">
           <GameObject image="bee" text="lisa" pos="B"/>
           <GameObject image="flower" text="" pos="F"/>
-          <GameObject text="O" pos="D"/>
+          <GameObject text="O" pos="D" align="center" style="background-color: yellow"/>
         </BeePreview>
         Möglichkeit 2: Die Blume befindet sich oben.
       </div>
     </div>
-
-    <Hint>Lisa kann nachschauen, ob die Blume oben (O) oder unten (U) ist.</Hint>
   </ExerciseBody>
 </template>
 

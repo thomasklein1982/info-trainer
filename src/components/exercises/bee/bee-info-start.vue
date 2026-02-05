@@ -1,5 +1,4 @@
 <template>
-<Hint class="no-print">Wechsle in den Easy-Modus (oben rechts), wenn du Anfänger*in bist.</Hint>
 <BeePreview :world="world" width="14rem" style="float: right">
   <GameObject image="bee" text="lisa" pos="B"/>
   <GameObject image="flower" text="" pos="F"/>
@@ -7,11 +6,11 @@
 <p>Bei den folgenden Aufgaben musst du eine oder mehrere Bienen so programmieren, dass sie bestimmte Probleme lösen, das durch eine Ausgangssituation beschrieben wird wie im Beispiel rechts.</p>
 <p>Dazu musst du eine <strong>Methode</strong> "implementieren":</p>
 <Code>program( Bee lisa ){
-  lisa.move(); //Die Biene Lisa um 1 in Blickrichtung
-  lisa.turnLeft(); //Lisa dreht sich um 90° nach links
-  lisa.move(); //Lisa bewegt sich wieder um 1 Feld in Blickrichtung
+  lisa.move();
+  lisa.turnLeft();
+  lisa.move();
 }</Code>
-<p>Die erste Zeile <Code inline>program( Bee lisa ){</Code> gibt an, wie die <strong>Methode</strong> heißt (<Code inline>program</Code>) und wie unsere Biene heißt (<Code inline>lisa</Code>). Beachte die <strong>geschweifte Klammer</strong> <Code inline>{</Code>. Diese wird in der letzten Zeile wieder mit <Code inline>}</Code> geschlossen. Dazwischen stehen <strong>Anweisungen</strong>, die der Computer ausführen soll.</p>
+<p>Die erste Zeile <Code inline>program( Bee lisa ){</Code> gibt an, dass die <strong>Methode</strong> <Code inline>program</Code> heißt und dass unsere Biene (<Code inline>lisa</Code>) heißt. Beachte die <strong>geschweifte Klammer</strong> <Code inline>{</Code>. Diese wird in der letzten Zeile wieder mit <Code inline>}</Code> geschlossen. Dazwischen stehen <strong>Anweisungen</strong>, die der Computer ausführen soll.</p>
 <p>In den Zeilen 2 bis 4 stehen die Anweisungen. Diese werden immer mit einem <strong>Semikolon</strong> <Code inline>;</Code> beendet.</p>
 <p>Die Anweisungen hier sind <strong>Befehle an ein Objekt</strong>, z. B. <Code inline>lisa.move();</Code>
   <ul>

@@ -2,10 +2,10 @@
   <ExerciseBody :exercise="$data" :java="project">
     <BeePreview :world="world" width="14rem" style="float: right">
       <GameObject image="bee" text="lisa" pos="B"/>
-      <GameObject image="" text="7" pos="1"/>
-      <GameObject image="" text="+" pos="+"/>
-      <GameObject image="" text="5" pos="2"/>
-      <GameObject image="" text="=" pos="="/>
+      <GameObject image="" text="7" pos="1" align="center"/>
+      <GameObject image="" text="+" pos="+" align="center"/>
+      <GameObject image="" text="5" pos="2" align="center"/>
+      <GameObject image="" text="=" pos="=" align="center"/>
       <GameObject image="" text="" pos="R" style="background-color: red"/>
     </BeePreview>
     Implementiere die Methode <Code inline>void program( Bee lisa )</Code>, die das folgende Problem löst:

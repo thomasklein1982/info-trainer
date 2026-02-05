@@ -104,7 +104,7 @@ export default{
       }else if(this.mode.startPath){
         for(let i=0;i<ExercisePathData.length;i++){
           let cat=ExercisePathData[i];
-          if(cat.name.toLowerCase()===this.mode.startPath[0]){
+          if(cat.id.toLowerCase()===this.mode.startPath[0]){
             for(let j=0;j<cat.paths.length;j++){
               let p=cat.paths[j];
               if(p.id===this.mode.startPath[1]){

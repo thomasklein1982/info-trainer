@@ -1,5 +1,5 @@
 <template>
-  <h2 style="text-align: center"><span v-if="path.category">{{path.category}}: </span>{{ path.label }}</h2>
+  <h2 style="text-align: center"><span v-if="path.category">{{path.category}}: </span>{{ path.label }} <Button class="no-print" label="" as="a" target="_blank" style="text-decoration: none" :href="directLink" text icon="pi pi-send"/></h2>
   <template v-for="(e,i) in items">
     <ExerciseWrapper v-if="e.isExercise" :number="e.nr" :id="e.id" :disabled="disabled">
       <component :is="e.id"/>
@@ -29,6 +29,10 @@ export default{
     }
   },
   computed: {
+    directLink(){
+      console.log("loc",location)
+      return location.origin+location.pathname+"#start="+this.path.categoryID+"/"+this.path.id;
+    },
     items(){
       let items=[];
       let nr=1;

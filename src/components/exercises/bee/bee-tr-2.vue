@@ -2,14 +2,14 @@
   <ExerciseBody :exercise="$data" :java="project">
     <BeePreview :world="world" width="14rem" style="float: right">
       <GameObject image="bee" text="lisa" pos="B"/>
-      <GameObject image="" text="11" pos="1"/>
-      <GameObject image="" text="*" pos="-"/>
-      <GameObject image="" text="3" pos="2"/>
-      <GameObject image="" text="=" pos="="/>
+      <GameObject image="" text="11" pos="1" align="center"/>
+      <GameObject image="" text="*" pos="-" align="center"/>
+      <GameObject image="" text="3" pos="2" align="center"/>
+      <GameObject image="" text="=" pos="=" align="center"/>
       <GameObject image="" text="" pos="R" style="background-color: red"/>
     </BeePreview>
     Implementiere die Methode <Code inline>void program( Bee lisa )</Code>, die das folgende Problem löst:
-    <p>Zwischen den beiden Zahlen steht ein <strong>beliebiges Rechenzeichen</strong>: <strong>+</strong>, <strong>-</strong>, <strong>*</strong> oder <strong>/</strong>.Die Biene Lisa soll die beiden Zahl gemäß des Rechenzeichens verrechnen und das Ergebnis auf das rote Feld schreiben.</p>
+    <p>Zwischen den beiden Zahlen steht ein <strong>beliebiges Rechenzeichen</strong>: <strong>+</strong>, <strong>-</strong>, <strong>*</strong> oder <strong>/</strong>. Die Biene Lisa soll die beiden Zahl gemäß des Rechenzeichens verrechnen und das Ergebnis auf das rote Feld schreiben.</p>
   </ExerciseBody>
 </template>
 
