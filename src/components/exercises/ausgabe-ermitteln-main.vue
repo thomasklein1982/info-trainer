@@ -9,8 +9,6 @@
 </template>
 
 <script>
-import { difficulty } from '../../App.vue';
-import Prism from 'prismjs';
 import { nextTick } from 'vue';
 import { createMethodOutputExerciseCode } from '../../other/createMethodOutputExerciseCode';
 

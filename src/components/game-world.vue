@@ -8,7 +8,7 @@
               <JImage style="outline: 1pt dotted darkgreen; aspect-ratio: 1;" :style="{'grid-row': f.row, 'grid-column': f.x}" :src="f.dataurl"/>
             </template>
             <template v-else>
-              <JLabel style="outline: 1pt dotted darkgreen; aspect-ratio: 1; font-size: 5cqw;" :style="labelStyle(f)">{{ f.text }}{{ f.x }}{{ f.y }}</JLabel>
+              <JLabel style="outline: 1pt dotted darkgreen; aspect-ratio: 1; font-size: 5cqw;" :style="labelStyle(f)">{{ f.text }}</JLabel>
             </template>
           </template>
         </template>

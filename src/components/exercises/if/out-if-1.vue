@@ -57,6 +57,7 @@ export default{
   if ( n < $i3$ ){
     System.out.println( "$out" );
   }else{
+    System.out.println( "$out" );
     return;
   }
   System.out.println( "$out" );
@@ -72,9 +73,10 @@ export default{
             if(n<this.values.i3){
               out.push(this.output[2]);
             }else{
+              out.push(this.output[3]);
               return;
             }
-            out.push(this.output[3]);
+            out.push(this.output[4]);
           }
         }
       ];

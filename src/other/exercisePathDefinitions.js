@@ -2,10 +2,9 @@ let Java={
   name: "Java",
   paths: [
     {
-      label: "UI",
-      id: "ui",
-      icon: "ui",
-      exercises: ["steck","css1","ui-tr","ui-list","ui-tab"]
+      label: "Bee",
+      icon: "bee",
+      exercises: ["bee-info-start","bee-target-1", "bee-target", "bee-target-2", "bee-target-3", "bee-info-print", "bee-print", "bee-print-2", "bee-info-read", "bee-copy","bee-double", "bee-add", "bee-if", "bee-tr", "bee-tr-2", "bee-sum", "bee-heaviest"]
     },
     // {
     //   label: "EVA",
@@ -13,15 +12,10 @@ let Java={
     //   exercises: ["eva-tr"]
     // },
     {
-      label: "EVA",
+      label: "Grundlagen",
       id: "eva",
       icon: "eva",
-      exercises: ["ausgabe-ermitteln-main","console-ausgabe", "one-1", "console-ascii", "console-verdoppeln", "console-widerstand", "console-bestellung"]
-    },
-    {
-      label: "Bee",
-      icon: "bee",
-      exercises: ["bee-info-start","bee-target-1", "bee-target", "bee-target-2", "bee-target-3", "bee-info-print", "bee-print", "bee-print-2", "bee-info-read", "bee-copy","bee-double", "bee-add", "bee-if", "bee-tr", "bee-tr-2", "bee-sum", "bee-heaviest"]
+      exercises: ["ausgabe-ermitteln-main","console-ausgabe", "console-ascii", "one-1",  "one-2", "console-verdoppeln", "console-widerstand", "console-bestellung"]
     },
     {
       label: "Methoden",
@@ -52,6 +46,12 @@ let Java={
       id: "arrays",
       icon: "arrays",
       exercises: ["array-basics","array-erzeugen","array-swap","array-ausgabe","array-ausgabe-liste","array-summe","array-shift", "array-addieren", "array-zaehlen"]
+    },
+    {
+      label: "UI",
+      id: "ui",
+      icon: "ui",
+      exercises: ["steck","css1","ui-tr","ui-list","ui-tab"]
     },
     {
       label: "Verschlüsselung",
@@ -87,7 +87,7 @@ let Java={
       label: "Apps",
       id: "apps",
       icon: "apps",
-      exercises: ["app-zr","app-vt"]
+      exercises: ["eva-tr", "app-zr","app-vt"]
     },
   ]
 }

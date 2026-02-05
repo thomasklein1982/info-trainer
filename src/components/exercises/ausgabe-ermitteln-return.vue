@@ -9,9 +9,6 @@
 </template>
 
 <script>
-import { ThemeService } from '@primevue/themes';
-import { difficulty } from '../../App.vue';
-import Prism from 'prismjs';
 import { nextTick } from 'vue';
 import { createMethodOutputExerciseCode } from '../../other/createMethodOutputExerciseCode';
 
@@ -42,16 +39,16 @@ export default{
   System.out.println("$int");
   int x = $call:1($int);
   int y = $call:2($int,$int);
-  System.out.println(x);
   System.out.println(y);
+  System.out.println(x);
             
 }`,
           f(out,methods){
             out.push(this.ints[0]);
             let x=methods[1].f(out,methods,this.ints[1]);
             let y=methods[2].f(out,methods, this.ints[2], this.ints[3]);
-            out.push(x);
             out.push(y);
+            out.push(x);
           }
         },
         {

@@ -19,8 +19,7 @@ import { checkOneliner, createOnelinerTasks, getVariableFromScope } from '../../
 
 export const data={
   id: "one-1",
-  cheats: ["console"],
-  title: "Java-Oneliners 1",
+  title: "Java-Oneliners: Variablen und Datentypen",
   tasks: [
     {}, {}, {}, {}
   ]
@@ -45,7 +44,7 @@ export default{
           preCode: "int §l0§;"
         },
         {
-          aufgabe: 'Es wird eine Variable namens §l0§ deklariert, die eine §Aganze Zahl;Kommazahl;Zeichenkette§ speichern kann, und sie erhält den Wert §A5;3.14;"Hallo"§.',
+          aufgabe: 'Es wird eine Variable namens §l0§ deklariert, die §Aeine ganze Zahl;eine Kommazahl;eine Zeichenkette;einen Wahrheitswert§ speichern kann, und sie erhält den Wert §A5;3.14;"Hallo";false§.',
           check: (scope,vars)=>{
             let v=getVariableFromScope(vars.l[0],scope);
             if(!v) return false;
@@ -54,11 +53,11 @@ export default{
             let shouldValue=vars.Arrays.A[1];
             return (JSON.stringify(v.value)===shouldValue);
           },
-          solution: '§Aint;double;String§ §l0§ = §A5;3.14;"Hallo"§;',
+          solution: '§Aint;double;String;boolean§ §l0§ = §A5;3.14;"Hallo";false§;',
           preCode: ""
         },
         {
-          aufgabe: "Es wird eine Variable namens §w0§ deklariert, die eine §Aganze Zahl;Kommazahl;Zeichenkette§ speichern kann.",
+          aufgabe: "Es wird eine Variable namens §w0§ deklariert, die eine §Aeine ganze Zahl;eine Kommazahl;eine Zeichenkette;einen Wahrheitswert§ speichern kann.",
           check: (scope,vars)=>{
             let v=getVariableFromScope(vars.w[0],scope);
             if(!v) return false;
@@ -66,39 +65,17 @@ export default{
             if(v.type!==shouldType) return false;
             return (v.value===undefined);
           },
-          solution: '§Aint;double;String§ §w0§;',
+          solution: '§Aint;double;String;boolean§ §w0§;',
           preCode: ""
         },
         {
-          aufgabe: "Die Variable §l0§ erhält den §I0§-fachen Wert der Variablen §l1§.",
+          aufgabe: "Der Wert der String-Variable §l0§ wird in eine ganze Zahl umgewandelt und in der Integer-Variablen §l1§ gespeichert.",
           check: (scope,vars)=>{
-            let v0=getVariableFromScope(vars.l[0],scope);
-            return (v0.value===vars.I[0]*rand);
+            let v1=getVariableFromScope(vars.l[1],scope);
+            return (v1.value===rand);
           },
-          solution: '§l0§ = §I0§ * §l1§;',
-          preCode: `int §l0§; int §l1§ = ${rand};`
-        },
-        {
-          aufgabe: "Die Variable §l0§ wird um §I0§ erhöht.",
-          check: (scope,vars)=>{
-            let v=getVariableFromScope(vars.l[0],scope);
-            return (v.value===vars.I[0]+rand);
-          },
-          solution: '§l0§ = §l0§ + §I0§;',
-          preCode: `int §l0§=${rand};`
-        },
-        {
-          aufgabe: "Die Variable §l0§ erhält den Wert, den der User in die Konsole eintippt.",
-          check: (scope,vars)=>{
-            let v=getVariableFromScope(vars.l[0],scope);
-            return (v.value===rand+"");
-          },
-          solution: '§l0§ = Console.read();',
-          preCode: `String §l0§;
-          /*JAVASCRIPT-CODE
-          Console.overrideReadCommandsIndex=0;
-          Console.overrideReadCommands=["${rand}"];
-          */`
+          solution: '§l1§ = Integer.parseInt( §l0§ );',
+          preCode: `int §l1§; String §l0§ = "${rand}";`
         },
       ];
       createOnelinerTasks(Random,resArray,this.tasks,tasks);
