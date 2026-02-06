@@ -17,12 +17,10 @@ export const data={
   cheats: ["beep"],
   title: "Erste Flügelschläge",
   beep: {
-    worlds: [
-      [
-        "WWWWW",
-        "B..1F",
-        "WWWWW",
-      ]
+    world: [
+      "WWWWW",
+      "B..1F",
+      "WWWWW",
     ],
     worldWidth: "15rem",
     window: [5,3],

@@ -1,35 +1,34 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Die Biene Lisa muss zur Blume fliegen und dort stehen bleiben.</p>
+    <p>Die Biene Lisa zur Blume fliegen und dort stehen bleiben.</p>
   </ExerciseBody>
 </template>
 
 <script>
-import { random } from '../../../other/random';
 import { Bee } from './Bee';
 import { Flower } from './Flower';
 
 
 
 export const data={
-  id: "beep-target-2",
+  id: "beep-target-4",
   cheats: ["beep"],
-  title: "Die Biene muss zur Blume, Teil 2",
+  title: "Die Biene muss zur Blume, Teil 4",
   beep: {
     world: [
-      "....",
-      ".WWF",
-      ".WWW",
-      "B...",
+      "WWWWW",
+      "B...F",
+      "WWWWW",
     ],
+    maxMoveCount: 1,
     worldWidth: "15rem",
     window: [5,3],
     setupFunc: function(gameworld){
-      let flower=new Flower("F","",gameworld,"blue");
+      let f=new Flower("F","",gameworld,"blue");
       let bee=new Bee("B","Lisa",gameworld);
       return {
-        flower, bee
+        f, bee
       };
     },
     resetFunc: function(gameworld, data){
@@ -50,7 +49,7 @@ export const data={
         check: function(gameworld,data,isProgramOver){
           if(!isProgramOver) return false;
           let bee=gameworld.objects.bee;
-          let f=gameworld.objects.flower;
+          let f=gameworld.objects.f;
           return bee.isOnSameField(f);
         }
       }

@@ -216,7 +216,7 @@ let IKG={
       label: "Algorithmen",
       icon: "",
       id: "algo",
-      exercises: ["beep-target-1","beep-target-2"]
+      exercises: ["beep-target-1","beep-target-2","beep-target-3","beep-print-1", "beep-print-2", "beep-print-3", "beep-target-4"]
     },
     // {
     //   label: "Textverarbeitung",

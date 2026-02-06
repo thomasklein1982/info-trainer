@@ -1,6 +1,10 @@
 
+export * as BeepPrint3 from './bee-python/beep-print-3.vue';
+export * as BeepPrint2 from './bee-python/beep-print-2.vue';
+export * as BeepPrint1 from './bee-python/beep-print-1.vue';
+export * as BeepTarget4 from './bee-python/beep-target-4.vue';
 export * as BeeInfoIf from './bee/bee-info-if.vue';
-
+export * as BeepTarget3 from './bee-python/beep-target-3.vue';
 export * as BeeInfoReadInt from './bee/bee-info-read-int.vue';
 export * as BeepTarget2 from './bee-python/beep-target-2.vue';
 export * as BeeInfoRead from './bee/bee-info-read.vue';

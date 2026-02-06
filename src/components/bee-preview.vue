@@ -72,6 +72,13 @@ export default{
   methods: {
     getNamedField(name){
       return this.infos.namedFields[name];
+    },
+    getField(x,y){
+      for(let i=0;i<this.infos.fields.length;i++){
+        let f=this.infos.fields[i];
+        if(f.x===x && f.y===y) return f;
+      }
+      return null;
     }
   }
 }

@@ -2,36 +2,40 @@
   <ExerciseBody :exercise="$data" :java="project">
     Bei der App "Zahlenraten" denkt sich der Computer eine geheime Zahl zwischen 1 und 100 aus und der User muss diese geheime Zahl erraten. Nach jedem missglückten Rateversuch teilt der Computer mit, ob die geheime Zahl größer oder kleiner ist als die geratene Zahl, sodass der User die geheime Zahl immer weiter eingrenzen kann.
     <p>Dieses Spiel soll als App umgesetzt werden.</p>
-    <!-- <div class="float-right">
-      <AppPreview >
+    <div>
+      <AppPreview width="20em">
         <JFrame layout="1">
-          <JLabel>Taschenrechner</JLabel>
+          <JLabel>Zahlenraten</JLabel>
+          <JLabel>Ich habe mir eine Zahl zwischen 1 und 100 ausgedacht, kannst du sie erraten?</JLabel>
           <JPanel layout="2">
-            <JTextField placeholder="Zahl 1" type="number"/>
-            <JTextField placeholder="Zahl 2" type="number"/>
+            <JLabel>Dein Rateversuch:</JLabel>
+            <JTextField v-model="ratenZahl" placeholder="Zahl" type="number"/>
           </JPanel>
-          <JPanel layout="4">
-            <JButton>+</JButton>
-            <JButton>-</JButton>
-            <JButton>*</JButton>
-            <JButton>:</JButton>
-          </JPanel>
-          <JLabel>Ergebnis</JLabel>
+          <JButton @click="raten()">Raten</JButton>
+          <JLabel>{{ result }}</JLabel>
         </JFrame>
       </AppPreview>
-    </div> -->
+    </div>
   </ExerciseBody>
 </template>
 
 <script>
 import App from '../../../App.vue';
+import { random } from '../../../other/random';
 
 
 
 export const data={
   id: "app-zr",
+  ratenZahl: null,
+  geheim: random(1,100),
+  result: null,
   title: "Zahlenraten",
   features: [
+    {
+      name: "UI gebaut",
+      items: ["Du hast die UI passend nachgebaut."]
+    },
     {
       name: "Gewinnen können",
       items: ["Wenn der User die geheime Zahl errät, hat er*sie gewonnen."]
@@ -67,122 +71,8 @@ export const data={
     clazzes: [
       {
         name: "Main",
-        src: `/*Frames der App*/
-JFrame frameStart, frameGame, frameWin, frameHighscore;
-
-/*Labels für die Anzeige des Feedbacks auf einen Rateversuch und für die Anzeige des Highscore*/
-JLabel labelFeedback, labelHighscore;
-
-/*Der eingegebene Name*/
-String userName;
-
-/*Die geheime Zahl bzw. die geratene Zahl*/
-int secretNumber, guessedNumber;
-
-/*Objekt zur Erzeugung von Zufallszahlen*/
-Random random=new Random();
-
-/*Objekt für den Speicherzugriff*/
-Storage store=new Storage("Zahlenraten");
-
-void main( ){
-  createFrameStart();
-  createFrameGame();
-  createFrameHighscore();
-  frameGame.hide();
-  frameHighscore.hide();
-  frameStart.show();
-}
-
-/*Startet ein neues Spiel*/
-void startGame(){
-  secretNumber=random.nextInt(100)+1;
-}
-
-/*Handelt den Rateversuch ab*/
-void guess(){
+        src: `$void main( ){
   
-}
-
-/*Zeigt das Highscore-Frame an*/
-void showHighscore(){
-  frameStart.hide();
-  frameHighscore.show();
-}
-
-//der weitere Code muss wahrscheinlich nicht verändert werden
-
-/*Erzeugt die UI des Spiel-Frames*/
-void createFrameGame(){
-  frameGame=new JFrame("1");
-  JLabel l;
-  l=new JLabel("Ich habe mir eine geheime Zahl zwischen 1 und 100 ausgedacht. Kannst du sie erraten?");
-  frameGame.add(l);
-  JPanel p=new JPanel("3");
-  frameGame.add(p);
-  l=new JLabel("Raten:");
-  p.add(l);
-  JTextField eingabeRaten=new JTextField("Dein Rateversuch","number");
-  p.add(eingabeRaten);
-  JButton buttonRaten=new JButton("Raten");
-  p.add(buttonRaten);
-  buttonRaten.setStyle("place-self", "center");
-  labelFeedback=new JLabel("Ich warte auf deinen ersten Rateversuch...");
-  frameGame.add(labelFeedback);
-  buttonRaten.addActionListener((ev)->{
-    guessedNumber=Integer.parseInt(eingabeRaten.getValue());
-    guess();
-  });
-  JButton close=new JButton("&times;");
-  frameGame.add(close);
-  close.setCSS("position: absolute; right: 0; border-radius: 100%; width: 2em; height: 2em;");
-  close.addActionListener((ev)->{
-    frameGame.hide();
-    frameStart.show();
-  });
-}
-
-/*Erzeugt die UI des Start-Frames*/
-void createFrameStart(){
-  frameStart=new JFrame("1");
-  JLabel l =new JLabel("<h1>Zahlenraten</h1>");
-  frameStart.add(l);
-  JTextField eingabeName=new JTextField("Gib deinen Namen ein");
-  eingabeName.setStyle("width", "auto");
-  eingabeName.setStyle("place-self", "center");
-  frameStart.add(eingabeName);
-  JButton start=new JButton("Spiel starten");
-  start.setStyle("place-self", "center");
-  frameStart.add(start);
-  start.addActionListener((ev)->{
-    userName=eingabeName.getValue();
-    frameStart.hide();
-    frameGame.show();
-    startGame();
-  });
-  JButton high=new JButton("Highscore");
-  high.setStyle("place-self", "center");
-  frameStart.add(high);
-  high.addActionListener((ev)->{
-    showHighscore();
-  });
-}
-
-/*Erzeugt die UI des Highscore-Frames*/
-void createFrameHighscore(){
-  frameHighscore=new JFrame("auto 1fr/");
-  JLabel l;
-  l=new JLabel("<h1>Highscore Zahlenraten</h1>");
-  frameHighscore.add(l);
-  labelHighscore=new JLabel("hier sollte der Highscore auftauchen...");
-  frameHighscore.add(labelHighscore);
-  JButton close=new JButton("&times;");
-  frameHighscore.add(close);
-  close.setCSS("position: absolute; right: 0; border-radius: 100%; width: 2em; height: 2em;");
-  close.addActionListener((ev)->{
-    frameHighscore.hide();
-    frameStart.show();
-  });
 }`,
       }
     ]
@@ -196,5 +86,16 @@ export default{
   data() {
     return data;
   },
+  methods: {
+    raten(){
+      if(this.ratenZahl*1===this.geheim){
+        this.result="Richtig geraten!";
+      }else if(this.ratenZahl*1<this.geheim){
+        this.result="Falsch, meine Zahl ist größer!"
+      }else{
+        this.result="Falsch, meine Zahl ist kleiner!"
+      }
+    }
+  }
 }
 </script>

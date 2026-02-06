@@ -1,35 +1,36 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Die Biene Lisa muss zur Blume fliegen und dort stehen bleiben.</p>
+    <p>Die Biene Lisa muss nacheinander zu beiden Blumen fliegen.</p>
   </ExerciseBody>
 </template>
 
 <script>
-import { random } from '../../../other/random';
 import { Bee } from './Bee';
 import { Flower } from './Flower';
 
 
 
 export const data={
-  id: "beep-target-2",
+  id: "beep-target-3",
   cheats: ["beep"],
-  title: "Die Biene muss zur Blume, Teil 2",
+  title: "Die Biene muss zur Blume, Teil 3",
   beep: {
     world: [
-      "....",
-      ".WWF",
-      ".WWW",
-      "B...",
+      "B..1...",
+      "..WWW..",
+      "..WWWW.",
+      "..2....",
     ],
+    maxMoveCount: 10,
     worldWidth: "15rem",
     window: [5,3],
     setupFunc: function(gameworld){
-      let flower=new Flower("F","",gameworld,"blue");
+      let f1=new Flower("1","",gameworld,"blue");
+      let f2=new Flower("2","",gameworld,"red");
       let bee=new Bee("B","Lisa",gameworld);
       return {
-        flower, bee
+        f1, f2, bee
       };
     },
     resetFunc: function(gameworld, data){
@@ -46,14 +47,21 @@ export const data={
   check: {
     testcases: [
       {
-        info: "Die Biene befindet sich am Programmende auf der Blume.",
+        info: "Die Biene erreicht die blaue Blume.",
         check: function(gameworld,data,isProgramOver){
-          if(!isProgramOver) return false;
           let bee=gameworld.objects.bee;
-          let f=gameworld.objects.flower;
+          let f=gameworld.objects.f1;
           return bee.isOnSameField(f);
         }
-      }
+      },
+      {
+        info: "Die Biene erreicht die rote Blume.",
+        check: function(gameworld,data,isProgramOver){
+          let bee=gameworld.objects.bee;
+          let f=gameworld.objects.f2;
+          return bee.isOnSameField(f);
+        }
+      },
     ]
   },
 };

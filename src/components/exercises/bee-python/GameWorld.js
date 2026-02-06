@@ -60,8 +60,6 @@ export class GameWorld{
     };
     this.width=data.w;
     this.height=data.h;
-    let res=this.setupFunc(this);
-    data.objects=res;
     let fields=data.fields;
     for(let i=0;i<world.length;i++){
       let line=world[i];
@@ -95,7 +93,8 @@ export class GameWorld{
     }
     this.fields=data.fields;
     this.namedFields=data.namedFields;
-    this.objects=data.objects;
+    let res=this.setupFunc(this);
+    this.objects=res;
     this.reset();
   }
 

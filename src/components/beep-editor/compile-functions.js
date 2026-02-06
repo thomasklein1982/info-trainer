@@ -419,6 +419,7 @@ export const CompileFunctions={
       let funcName=src.substring(child.from,child.to).toLowerCase();
       let method=Methods[funcName];
       if(!method) return createError(child,"Unbekannter Befehl '"+funcName+"'.\nIch kenne nur 'move', 'left', 'right', 'print' und 'read'");
+      if(funcName==="move") scope.moveCount++;
       let args=child.nextSibling;
       if(args.name!=="ArgList") return createError(args, "( erwartet");
       let cf=getParseFunction(args);

@@ -5,7 +5,8 @@ export function parsePython(src,firstLineNode,errors){
     layers: [
       {}
     ],
-    errors: errors
+    errors: errors,
+    moveCount: 0
   };
   let program=[];
   let node=firstLineNode;
@@ -25,5 +26,7 @@ export function parsePython(src,firstLineNode,errors){
     program.push(p);
     node=node.nextSibling;
   }
-  return program;
+  return {
+    program, scope
+  };
 }

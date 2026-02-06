@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Die Biene Lisa muss zur Blume fliegen und dort stehen bleiben.</p>
+    <p>Die Biene Lisa soll das Wort <strong>Hallo</strong> auf das gelbe Feld schreiben.</p>
   </ExerciseBody>
 </template>
 
@@ -13,27 +13,24 @@ import { Flower } from './Flower';
 
 
 export const data={
-  id: "beep-target-2",
+  id: "beep-print-1",
   cheats: ["beep"],
-  title: "Die Biene muss zur Blume, Teil 2",
+  title: "Lisa sagt Hallo",
   beep: {
     world: [
-      "....",
-      ".WWF",
-      ".WWW",
-      "B...",
+      "WW..",
+      "B.1.",
+      "W.WW",
     ],
     worldWidth: "15rem",
     window: [5,3],
     setupFunc: function(gameworld){
-      let flower=new Flower("F","",gameworld,"blue");
-      let bee=new Bee("B","Lisa",gameworld);
       return {
-        flower, bee
+        bee: new Bee("B","Lisa",gameworld)
       };
     },
     resetFunc: function(gameworld, data){
-      
+      gameworld.getNamedField("1").style.backgroundColor="yellow";
     },
     testdata: {
       create: function(index){
@@ -46,12 +43,10 @@ export const data={
   check: {
     testcases: [
       {
-        info: "Die Biene befindet sich am Programmende auf der Blume.",
-        check: function(gameworld,data,isProgramOver){
-          if(!isProgramOver) return false;
-          let bee=gameworld.objects.bee;
-          let f=gameworld.objects.flower;
-          return bee.isOnSameField(f);
+        info: "Auf dem gelben Feld steht das Wort 'Hallo'.",
+        check: function(gameworld,data, isProgramOver){
+          let ist=gameworld.getNamedField("1").text;
+          return (ist==="Hallo");
         }
       }
     ]

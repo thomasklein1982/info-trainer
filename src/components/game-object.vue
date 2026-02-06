@@ -1,5 +1,5 @@
 <template>
-  <div :style="style">
+  <div :style="style" id="self">
     <JImage v-if="gameObject && gameObject.image || image" :src="realSrc" style="position: absolute" :style="imageStyle"/>
     <JLabel class="game-object-text" :align="align" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; ">
       {{ realText }}
@@ -27,7 +27,7 @@ export default{
       default: 0
     },
     pos: {
-      type: String
+      type: [String,Array]
     },
     align: {
       type: String,
@@ -82,18 +82,17 @@ export default{
       if(this.gameObject){
         let unit=100/this.gameWorld.width;
         style.position="absolute";
-        // style.left=this.realX+"%";
-        // style.bottom=this.realY+"%";
-        style.transition="all 0.3s";
+        //style.transition="all 0.3s";
         style.left=this.realX+"%";
         style.bottom=this.realY+"%";
         style.width=this.widthUnit+"%";
         style.height=this.heightUnit+"%";
-        //:style="{left: calcX(g.x), bottom: calcY(g.y), width: widthUnit+'%', height: heightUnit+'%'}"
       }else{
         style.position="relative";
-        style["grid-row"]=this.field.y;
-        style["grid-column"]=this.field.x;
+        if(this.field){
+          style["grid-row"]=this.field.y;
+          style["grid-column"]=this.field.x;
+        }
       }
       return style;
     },
@@ -114,7 +113,13 @@ export default{
       }
     },
     field(){
-      let f=this.$parent.$parent.$parent.getNamedField(this.pos);
+      if(!this.pos) return null;
+      let f;
+      if(Array.isArray(this.pos)){
+        f=this.$parent.$parent.$parent.getField(this.pos[0],this.pos[1]);
+      }else{
+        f=this.$parent.$parent.$parent.getNamedField(this.pos);
+      }
       return f;
     }
   }
@@ -130,5 +135,8 @@ export default{
      1px -1px 0 white,  /* Oben rechts */
     -1px  1px 0 white,  /* Unten links */
      1px  1px 0 white;  /* Unten rechts */
+}
+.slow-speed #self{
+  transition: all 0.3s;
 }
 </style>

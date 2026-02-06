@@ -1,7 +1,7 @@
 <template>
   <AppPreview :width="width" height="auto" style="position: relative; z-index: 1;">
     <template v-if="gameworld">
-      <JFrame :layout="gameworld.width+''" class="world" style="background-color: lightgreen; container-type: inline-size;">
+      <JFrame :layout="gameworld.width+''" class="world" style="background-color: lightgreen; container-type: inline-size; border: none;">
         <template v-for="(row,i) in gameworld.fields">
           <template v-for="(f,j) in row">
             <template v-if="f.isImage">
@@ -41,7 +41,7 @@ export default{
   },
   data(){
     return {
-      gameworld: new GameWorld(this.beep.worlds[0],5,3,this.beep.setupFunc, this.beep.resetFunc, this.beep.testdata)
+      gameworld: new GameWorld(this.beep.world,5,3,this.beep.setupFunc, this.beep.resetFunc, this.beep.testdata)
     };
   },
   mounted(){
@@ -81,6 +81,5 @@ export default{
 }
 </script>
 
-<style scoped>
-
+<style>
 </style>

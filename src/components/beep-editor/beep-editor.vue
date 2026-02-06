@@ -1,48 +1,66 @@
 <template>
-  <div id="wrapper" :style="{maxHeight: editorMaxHeight}">
-    <div class="invisible-at-print" id="left-side">
-      <div id="editor">
-        <CodeMirror 
-          language="python"
-          ref="editor" 
-          v-model="code"
-          :linter="linter"
-          :autocomplete-provider="autocompleteProvider"
-          @update-tree="updateTree"
-          @blur="save()"
-        />
+  <div>
+    <Hint v-if="beep.maxMoveCount">Du darfst höchstens {{ beep.maxMoveCount }} Move-Befehle verwenden.</Hint>
+    <div id="wrapper" :style="{maxHeight: editorMaxHeight}">
+      <div class="invisible-at-print" id="left-side">
+        <div id="editor">
+          <CodeMirror 
+            language="python"
+            ref="editor" 
+            v-model="code"
+            :linter="linter"
+            :autocomplete-provider="autocompleteProvider"
+            @update-tree="updateTree"
+            @blur="save()"
+          />
+          <div id="meta-infos" :style="{color: moveCount>beep.maxMoveCount? 'red':'inherit'}" v-if="beep.maxMoveCount">
+            {{ moveCount }} / {{ beep.maxMoveCount }} Move-Befehle
+          </div>
+        </div>
       </div>
-    </div>
-    <div id="preview">
-      <div id="controls" class="no-print">
-        <Button icon="pi pi-play" @click="run()" :disabled="running"/>
-        <Button icon="pi pi-stop" @click="stop()" :disabled="!running"/>
-        <Button icon="pi pi-list-check" @click="check()" :disabled="running"/>
-        <ToggleButton on-label="Schnell" off-label="Langsam" v-model="maxSpeed"/>
-        <Button icon="pi pi-refresh" @click="changeTestcase()" :disabled="running"/>
+      <div id="preview">
+        <div id="controls" class="no-print">
+          <Button icon="pi pi-play" @click="run()" :disabled="running"/>
+          <Button icon="pi pi-stop" @click="stop()" :disabled="!running"/>
+          <Button icon="pi pi-list-check" @click="check()" :disabled="running"/>
+          <ToggleButton on-label="Schnell" off-label="Langsam" v-model="maxSpeed"/>
+          <Button icon="pi pi-refresh" @click="changeTestcase()" :disabled="running"/>
+        </div>
+        <div>
+          <GameWorld
+            :class="maxSpeed? 'max-speed':'slow-speed'"
+            style="border: 2pt solid gray"
+            ref="gameworld"
+            :beep="beep"
+            :width="worldWidth"
+          />
+        </div>
+        <div id="variables" v-if="running">
+          <table>
+            <tr>
+              <th>Variable</th>
+              <th>Wert</th>
+            </tr>
+            <tr v-for="(v,i) in variables">
+              <td>{{v.name}} </td>
+              <td>{{v.value}}</td>
+            </tr>
+          </table>
+        </div>
+        
       </div>
-      <div>
-        <GameWorld
-          ref="gameworld"
-          :beep="beep"
-          :width="worldWidth"
-        />
-      </div>
-      <div id="variables" v-if="running">
-        <table>
-          <tr>
-            <th>Variable</th>
-            <th>Wert</th>
-          </tr>
-          <tr v-for="(v,i) in variables">
-            <td>{{v.name}} </td>
-            <td>{{v.value}}</td>
-          </tr>
-        </table>
-      </div>
-      
     </div>
     <Message v-if="runtimeError" severity="error">{{ runtimeError }}</Message>
+    <div class="no-print">
+      Ziele:
+      <Message :icon="'pi pi-'+(completed || exerciseData.correct[i]===true?'check':'times')" :severity="(completed || exerciseData.correct[i]===true?'success':'error')" v-for="(t,i) in exerciseData.data.check.testcases">
+        <span v-html="t.info"/>
+      </Message>
+    </div>
+    <Dialog header="Zu viele Move-Befehle" v-model:visible="showTooManyCommands" :closable="true">
+      Dein Programm verwendet {{ moveCount }} Move-Befehle, du darfst aber nur höchstens {{ beep.maxMoveCount }} Move-Befehle verwenden.
+      <p>Vielleicht musst du noch mal neu über die Aufgabe nachdenken?</p>
+    </Dialog>
   </div>
 </template>
 
@@ -60,6 +78,7 @@ import { parsePython } from './parsePython';
 import ToggleButton from 'primevue/togglebutton';
 import Message from 'primevue/message';
 import { random } from '../../other/random';
+import { isCompletelyTrue } from '../../other/bool-array';
 
 export default{
   components: {
@@ -68,20 +87,14 @@ export default{
   emits: [
     "save", "exercise-submit"
   ],
-  watch: {
-    code(nv,ov){
-      console.log("code changed");
-      console.log("new:");
-      console.log(nv);
-      console.log("old:");
-      console.log(ov);
-    }
-  },
   props: {
     exerciseData: Object,
     beep: Object
   },
   computed: {
+    completed(){
+      return this.exerciseData?.correct===true||isCompletelyTrue(this.exerciseData?.correct);
+    },
     worldWidth(){
       if(this.beep.worldWidth) return this.beep.worldWidth; else return "10rem";
     },
@@ -105,11 +118,13 @@ export default{
       tree: null,
       id: random(1,10000),
       program: null,
+      moveCount: 0,
       errors: [],
       runtimeError: null,
       scope: {},
       maxSpeed: false,
       nextStatement: 0,
+      showTooManyCommands: false,
       running: false,
       checking: false,
       variables: [],
@@ -142,7 +157,16 @@ export default{
     },
     async check(){
       let testcases=this.exerciseData.data.check.testcases;
-      console.log(testcases);
+      if(this.beep.maxMoveCount && this.moveCount>this.beep.maxMoveCount){
+        this.showTooManyCommands=true;
+        this.exerciseData.correct=[];
+        for(let i=0;i<testcases.length;i++){
+          this.exerciseData.correct.push(false);
+        }
+        calcPoints(this.exerciseData);
+        this.save();
+        return;
+      }
       this.exerciseData.correct=[];
       for(let i=0;i<testcases.length;i++){
         this.exerciseData.correct.push(true);
@@ -159,8 +183,8 @@ export default{
         }
       }catch(e){
         for(let i=0;i<testcases.length;i++){
-        this.exerciseData.correct[i]=false;
-      }
+          this.exerciseData.correct[i]=false;
+        }
       }
       calcPoints(this.exerciseData);
       this.save();
@@ -311,9 +335,12 @@ export default{
       while(this.errors.length>0) this.errors.pop();
       this.compiled=true;
       this.program=[];
+      this.moveCount=0;
       if(!this.tree || !this.tree.topNode || !this.tree.topNode.firstChild || this.code.trim().length===0) return;
       let nodeZeile=this.tree.topNode.firstChild;
-      this.program=parsePython(this.code,nodeZeile,this.errors);
+      let res=parsePython(this.code,nodeZeile,this.errors);
+      this.program=res.program;
+      this.moveCount=res.scope.moveCount;
       this.updateLinter();
     },
     save(){
@@ -393,6 +420,14 @@ function autocomplete(){
   }
   #editor{
     height: 100%;
+    position: relative;
+  }
+  #meta-infos{
+    position: absolute;
+    bottom: 0;
+    right: 16px;
+    font-size: small;
+    pointer-events: none;
   }
   
 </style>
