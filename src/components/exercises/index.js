@@ -1,4 +1,5 @@
 
+export * as BeepRes1 from './bee-python/beep-res-1.vue';
 export * as BeepPrint3 from './bee-python/beep-print-3.vue';
 export * as BeepPrint2 from './bee-python/beep-print-2.vue';
 export * as BeepPrint1 from './bee-python/beep-print-1.vue';

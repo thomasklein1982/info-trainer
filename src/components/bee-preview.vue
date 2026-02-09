@@ -10,6 +10,11 @@
         </template>
       </template>
       <slot></slot>
+      <template v-if="writable">
+        <div v-for="(f,i) in infos.fields" style="aspect-ratio: 1;position: relative;" :style="{'grid-row': f.y, 'grid-column': f.x}">
+          <input v-model="values[f.x+','+f.y]" class="input-text" />
+        </div>
+      </template>
     </JFrame>
   </AppPreview>
 </template>
@@ -32,6 +37,10 @@ export default{
     },
     world: {
       type: Array
+    },
+    writable: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -69,6 +78,11 @@ export default{
       return data;
     }
   },
+  data(){
+    return {
+      values: {}
+    }
+  },
   methods: {
     getNamedField(name){
       return this.infos.namedFields[name];
@@ -95,5 +109,21 @@ export default{
 }
 .world>*{
   border: 1pt dotted darkgreen;
+}
+.input-text{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: none;
+  text-align: center;
+  border: none;
+  color: black;
+  text-shadow: 
+    -1px -1px 0 white,  /* Oben links */
+     1px -1px 0 white,  /* Oben rechts */
+    -1px  1px 0 white,  /* Unten links */
+     1px  1px 0 white;  /* Unten rechts */
 }
 </style>
