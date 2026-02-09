@@ -16,10 +16,11 @@
           <div id="meta-infos" :style="{color: moveCount>beep.maxMoveCount? 'red':'inherit'}" v-if="beep.maxMoveCount">
             {{ moveCount }} / {{ beep.maxMoveCount }} Move-Befehle
           </div>
+          <div id="overlay" v-if="reverse"/>
         </div>
       </div>
       <div id="preview">
-        <div id="controls" class="no-print">
+        <div id="controls" class="no-print" v-if="!reverse">
           <Button icon="pi pi-play" @click="run()" :disabled="running"/>
           <Button icon="pi pi-stop" @click="stop()" :disabled="!running"/>
           <Button icon="pi pi-list-check" @click="check()" :disabled="running"/>
@@ -51,7 +52,14 @@
       </div>
     </div>
     <Message v-if="runtimeError" severity="error">{{ runtimeError }}</Message>
-    <div class="no-print">
+    <div v-if="reverse" class="no-print">
+      <Message :icon="'pi pi-'+(completed || exerciseData.correct[i]===true?'check':(t.checked? 'times': 'question'))" :severity="(completed || exerciseData.correct[i]===true?'success':(t.checked? 'error': 'secondary'))" v-for="(t,i) in exerciseData.data.tasks">
+        <span v-html="t.info"/>
+      </Message>
+      <Button :disabled="running" v-if="!exerciseChecked" icon="pi pi-list-check" label="Überprüfen" @click="checkReverseExercise()"/>
+      <Button v-else icon="pi pi-refresh" label="Neue Aufgabe" @click="refreshReverseExercise()"/>
+    </div>
+    <div v-else class="no-print">
       Ziele:
       <Message :icon="'pi pi-'+(completed || exerciseData.correct[i]===true?'check':'times')" :severity="(completed || exerciseData.correct[i]===true?'success':'error')" v-for="(t,i) in exerciseData.data.check.testcases">
         <span v-html="t.info"/>
@@ -85,13 +93,19 @@ export default{
     CodeMirror, GameWorld, ToggleButton, Message
   },
   emits: [
-    "save", "exercise-submit"
+    "save", "exercise-submit", "check-reverse", "refresh-reverse"
   ],
   props: {
     exerciseData: Object,
     beep: Object
   },
   computed: {
+    exerciseChecked(){
+      return this.exerciseData?.userProject!==undefined;
+    },
+    reverse(){
+      return this.beep.reverse? true: false;
+    },
     completed(){
       return this.exerciseData?.correct===true||isCompletelyTrue(this.exerciseData?.correct);
     },
@@ -112,6 +126,7 @@ export default{
     }else{
       this.setUserData();
     }
+    this.$refs.editor.setValue(this.code);
   },
   data(){
     return {
@@ -129,11 +144,10 @@ export default{
       checking: false,
       variables: [],
       compiled: false,
-      code: "",
+      code: this.beep.code? this.beep.code.trim(): "",
       autocompleteProvider: autocomplete,
       linter: linter(view => {
         let diagnostics=[];
-        //console.log("errors:",this.errors);
         for(let i=0;i<this.errors.length;i++){
           let e=this.errors[i];
           let node=e.node;
@@ -149,6 +163,61 @@ export default{
     }
   },
   methods: {
+    getFieldValues(){
+      let values={};
+      for(let i=0;i<this.$refs.gameworld.gameworld.fields.length;i++){
+        let row=this.$refs.gameworld.gameworld.fields[i];
+        for(let j=0;j<row.length;j++){
+          let f=row[j];
+          values[f.x+","+f.y]={
+            field: f,
+            text: f.text+""
+          };
+        }
+      }
+      return values;
+    },
+    async checkReverseExercise(){
+      let valuesBefore=this.getFieldValues();
+      await this.run();
+      this.running=false;
+      let valuesAfter=this.getFieldValues();
+      let valuesUser=this.$refs.gameworld.values;
+      let correct=true;
+      for(let a in valuesAfter){
+        let v=valuesAfter[a];
+        let before=valuesBefore[a];
+        if(before.text.length>0){
+          if(v.text!==before.text){
+            correct=false;
+            continue;
+          }
+        }
+        if(v.text.length>0){
+          if(!(a in valuesUser)){
+            correct = false;
+            continue;
+          }
+          let user=(valuesUser[a]+"").trim();
+          if(user!==v.text){
+            correct = false;
+            continue;
+          }
+        }else{
+          if(a in valuesUser){
+            let user=(valuesUser[a]+"").trim();
+            if(user!=="B" && user.length>0){
+              correct = false;
+              continue;
+            }
+          }
+        }
+      }
+      this.$emit("check-reverse",{correct,soll: valuesAfter, ist: valuesUser, gameworld: this.$refs.gameworld.gameworld});
+    },
+    refreshReverseExercise(){
+      this.$emit("refresh-reverse");
+    },
     changeTestcase(index){
       this.$refs.gameworld.gameworld.reset(index);
     },
@@ -191,10 +260,7 @@ export default{
       this.checking=false;
       this.stop();
     },
-    async run(testData){
-      if(this.running) return;
-      await this.stop();
-      this.running=true;
+    initializeScope(){
       this.scope={
         gameworld: this.$refs.gameworld.gameworld,
         layers: [
@@ -206,7 +272,24 @@ export default{
             nextStatement: 0
           }
         ]
+      };
+    },
+    runImmediately(testData){
+      if(this.running) return;
+      this.stop();
+      this.running=true;
+      this.initializeScope();
+      let proceed=true;
+      while(proceed && this.running){
+        proceed=this.step();
       }
+      this.running=false;
+    },
+    async run(testData){
+      if(this.running) return;
+      this.stop();
+      this.running=true;
+      this.initializeScope();
       let proceed=true;
       let globalCorrect=this.exerciseData.correct;
       let correct;
@@ -219,7 +302,7 @@ export default{
       }else this.updateHighlightedLine();
       while(proceed && this.running){
         if(!this.checking) await sleep(this.speed);
-        proceed=await this.step();
+        proceed=this.step();
         if(this.checking) this.checkTestCases(testData,false,correct);
         else this.updateHighlightedLine();
       }
@@ -288,7 +371,7 @@ export default{
         }
       }
     },
-    async step(){
+    step(){
       let block=this.scope.blocks[this.scope.blocks.length-1];
       if(!block) return false;
       let st=block.program[block.nextStatement];
@@ -320,7 +403,7 @@ export default{
       this.updateVariables();
       return true;
     },
-    async stop(){
+    stop(){
       this.running=false;
       this.runtimeError=null;
       this.$refs.gameworld.gameworld.reset();
@@ -330,6 +413,10 @@ export default{
       this.tree=tree;
       this.compiled=false;
       this.compile();
+      if(this.reverse && this.exerciseChecked){
+        this.runImmediately();
+        
+      }
     },
     compile(){
       while(this.errors.length>0) this.errors.pop();
@@ -360,6 +447,7 @@ export default{
       this.$refs.editor.redo();
     },
     setUserData(data){
+      if(this.reverse) return;
       if(!data){
         data={
           code: this.code
@@ -429,5 +517,11 @@ function autocomplete(){
     font-size: small;
     pointer-events: none;
   }
-  
+  #overlay{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
 </style>

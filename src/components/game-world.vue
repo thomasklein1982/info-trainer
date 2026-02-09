@@ -20,7 +20,7 @@
         </template>
         <template v-if="reverse">
           <template v-for="(row,i) in gameworld.fields" >
-            <div v-for="(f,j) in row" style="aspect-ratio: 1;position: relative;" :style="{'grid-row': f.y, 'grid-column': f.x}">
+            <div v-for="(f,j) in row" style="aspect-ratio: 1;position: relative;" :style="{'grid-row': f.row, 'grid-column': f.x}">
               <input v-model="values[f.x+','+f.y]" class="input-text" />
             </div>
           </template>

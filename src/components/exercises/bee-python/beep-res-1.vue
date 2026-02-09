@@ -1,13 +1,14 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
-    <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Die Biene Lisa muss zur Blume fliegen und dort stehen bleiben.</p>
+    <p>Wende den Algorithmus auf die Situation an.</p>
+    <p>Schreibe ein <strong>B</strong> auf das Feld, auf dem sich die Biene am Ende des Programms befindet.</p>
   </ExerciseBody>
 </template>
 
 <script>
 import { random } from '../../../other/random';
 import { Bee } from './Bee';
+import { createCode } from './createCode';
 import { Flower } from './Flower';
 
 
@@ -16,6 +17,37 @@ export const data={
   id: "beep-res-1",
   cheats: ["beep"],
   title: "Die Biene muss zur Blume, Teil 1",
+  programs: [
+    {
+      world: [
+        "WWWWW",
+        "B..1F",
+        "WWWWW",
+      ],
+      code: [
+        "move()",
+        ["move()",""],
+        'print("§s0§")'
+      ]
+    },
+    {
+      world: [
+        "B...",
+        "....",
+        "....",
+        "...."
+      ],
+      code: [
+        "move()",
+        "right()",
+        ["move()",""],
+        'print("§s0§")',
+        "left()",
+        "move()",
+        ["move()"]
+      ]
+    }
+  ],
   beep: {
     language: "python",
     reverse: true,
@@ -27,10 +59,9 @@ export const data={
     worldWidth: "15rem",
     window: [5,3],
     setupFunc: function(gameworld){
-      let flower=new Flower("F","",gameworld,"blue");
       let bee=new Bee("B","Lisa",gameworld);
       return {
-        flower, bee
+        bee
       };
     },
     resetFunc: function(gameworld, data){
@@ -42,21 +73,37 @@ export const data={
       },
       count: 1
     },
-    src: ``
+    code: `move()
+move()
+print("Test")
+move()
+print(7)`
   },
-  check: {
-    testcases: [
-      {
-        info: "Die Biene befindet sich am Programmende auf der Blume.",
-        check: function(gameworld,data,isProgramOver){
-          if(!isProgramOver) return false;
-          let bee=gameworld.objects.bee;
-          let f=gameworld.objects.flower;
-          return bee.isOnSameField(f);
+  tasks: [
+    {
+      info: "Das richtige Feld wurde mit 'B' beschriftet.",
+      check: function(result){
+        let bee=result.gameworld.objects.bee;
+        let soll=bee.x+","+bee.y;
+        for(let a in result.ist){
+          let f=result.ist[a];
+          if(soll===a){
+            if(f!=="B") return false;
+          }else{
+            if(f==="B") return false;
+          }
         }
+        if(result.ist[soll]!=="B") return false;
+        return true;
       }
-    ]
-  },
+    },
+    {
+      info: "Die anderen Beschriftungen sind korrekt.",
+      check: function(result){
+        return result.correct;
+      }
+    }
+  ]
 };
 
 export default{
@@ -65,6 +112,19 @@ export default{
   },
   data() {
       return data;
+  },
+  methods: {
+    create(Random, resArray){
+      let program=this.programs[Random.int(0,this.programs.length-1)];
+      this.beep.world=program.world;
+      let code=createCode(Random,program.code);
+      this.beep.code=code;
+      for(let i=0;i<this.tasks.length;i++){
+        let t=this.tasks[i];
+        t.correct=resArray? resArray[i]: false;
+        t.checked=resArray? true: false;
+      }
+    }
   }
 }
 </script>

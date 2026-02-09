@@ -46,8 +46,12 @@
     </template>
     <template v-else-if="beep">
       <BeepEditor
+        v-if="showBeepEditor"
         :beep="beep"
         :exercise-data="exerciseData"
+        ref="beepEditor"
+        @check-reverse="beepCheckReverse"
+        @refresh-reverse="refreshExercise"
       />
     </template>
     <div v-else style="display: grid; place-content: end;">
@@ -115,6 +119,7 @@ import DatabaseLauncher from "./database-launcher.vue";
 import Message from "primevue/message";
 import RmLauncher from "./rm-launcher.vue";
 import BeepEditor from "./beep-editor/beep-editor.vue";
+import { nextTick } from "vue";
 
 export default {
   components: {
@@ -215,11 +220,15 @@ export default {
     return {
       showExerciseDialog: false,
       seed: 0,
-      closable: true
+      closable: true,
+      showBeepEditor: true
     };
   },
   async mounted(){
-    if(this.isRandomStandardExercise && this.inline){
+    if(this.isRandomStandardExercise && this.inline ){
+      await this.showExercise();
+    }else if(this.beep && this.beep.reverse){
+
       await this.showExercise();
     }
   },
@@ -240,6 +249,10 @@ export default {
       }
       Random.setSeed(this.seed);
       await this.$parent.create(Random,resArray);
+      this.showBeepEditor=false;
+      nextTick(()=>{
+        this.showBeepEditor=true;
+      });
       this.showExerciseDialog=true;
       this.$root.save();
     },
@@ -268,6 +281,17 @@ export default {
       }
       this.$root.save(this.exerciseData);
     },
+    beepCheckReverse(result){
+      let resArray=[];
+      for(let i=0;i<this.$parent.tasks.length;i++){
+        let t=this.$parent.tasks[i];
+        resArray.push(t.check(result));
+      }
+      this.exerciseData.correct=resArray;
+      this.exerciseData.userProject=this.seed;
+      calcPoints(this.exerciseData);
+      this.$root.save(this.exerciseData);
+    },
     async checkExercise(){
       let resArray=await this.$parent.check();
       this.exerciseData.correct=resArray;
@@ -283,10 +307,16 @@ export default {
     getCorrect(index){
       return this.exerciseData.correct[index];
     },
-    refreshExercise(){
-      this.seed=random(1000,99999999);
-      Random.setSeed(this.seed);
+    refreshExercise(noNewSeed){
+      if(!noNewSeed){
+        this.seed=random(1000,99999999);
+        Random.setSeed(this.seed);
+      }
       this.$parent.create(Random);
+      this.showBeepEditor=false;
+      nextTick(()=>{
+        this.showBeepEditor=true;
+      });
       delete this.exerciseData.userProject;
       setArrayToValue(this.exerciseData.correct,false);
       calcPoints(this.exerciseData);
