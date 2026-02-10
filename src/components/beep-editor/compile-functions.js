@@ -34,16 +34,19 @@ function createError(node,message){
 export const CompileFunctions={
   Comment: {
     parse: (node,src,scope)=>{
+      let fullCode=src.substring(node.from,node.to);
       let text=src.substring(node.from,node.to);
       return {
         type: node.name,
         text,
-        ignoreOnRun: true
+        ignoreOnRun: true,
+        fullCode
       };
     }
   },
   ParenthesizedExpression: {
     parse: (node,src,scope)=>{
+      let fullCode=src.substring(node.from,node.to);
       let n=node.firstChild;
       if(n.name!=="(") return createError(n,"'(' erwartet");
       n=n.nextSibling;
@@ -55,6 +58,7 @@ export const CompileFunctions={
   },
   BinaryExpression: {
     parse: (node,src,scope)=>{
+      let fullCode=src.substring(node.from,node.to);
       let n=node.firstChild;
       let cf=getParseFunction(n);
       if(cf.error) return cf;
@@ -69,7 +73,8 @@ export const CompileFunctions={
       if(b.error) return b;
       return {
         type: node.name,
-        op, a, b, node
+        op, a, b, node,
+        fullCode
       };
     },
     run: (scope, statement)=>{
@@ -105,7 +110,7 @@ export const CompileFunctions={
   },
   Body: {
     parse: (node,src,scope)=>{
-      
+      let fullCode=src.substring(node.from,node.to);
       let n=node.firstChild;
       if(n.name!==":") return createError(n,"':' erwartet");
       let program=[];
@@ -131,7 +136,8 @@ export const CompileFunctions={
       scope.layers.pop();
       return {
         type: node.type,
-        program, node
+        program, node,
+        fullCode
       }
     },
     run: (scope,statement)=>{
@@ -140,8 +146,10 @@ export const CompileFunctions={
   },
   IfStatement: {
     parse: (node,src,scope)=>{
+      let fullCode=src.substring(node.from,node.to);
       //if binaryexpression body else body
       let st={
+        fullCode,
         type: node.name,
         node,
         branches: [],
@@ -203,12 +211,14 @@ export const CompileFunctions={
   },
   WhileStatement: {
     parse: (node,src,scope)=>{
+      let fullCode=src.substring(node.from,node.to);
       //if binaryexpression body else body
       let st={
         type: node.name,
         node,
         condition: null,
-        program: []
+        program: [],
+        fullCode
       };
       let n=node.firstChild;
       if(n.name!=="while"){
@@ -260,6 +270,7 @@ export const CompileFunctions={
   },
   VariableName: {
     parse: (node,src,scope, mustNotBeDefined)=>{
+      let fullCode=src.substring(node.from,node.to);
       let name=src.substring(node.from,node.to);
       if(!mustNotBeDefined){
         if(!getVariable(scope,name)) return createError(node,"unbekannte Variable");
@@ -267,7 +278,8 @@ export const CompileFunctions={
       return {
         type: node.name,
         name,
-        node
+        node,
+        fullCode
       }
     },
     run: (scope, statement)=>{
@@ -278,6 +290,7 @@ export const CompileFunctions={
   },
   "UpdateStatement": {
     parse: (node, src,scope)=>{
+      let fullCode=src.substring(node.from,node.to);
       let n=node.firstChild;
       if(n.name!=="VariableName") return createError(n, "Variabenname erwartet");
       let cf=getParseFunction(n);
@@ -295,7 +308,8 @@ export const CompileFunctions={
         type: node.name,
         variable: v,
         value: val,
-        op,node
+        op,node,
+        fullCode
       }
     },
     run: (scope, statement)=>{
@@ -319,6 +333,7 @@ export const CompileFunctions={
   },
   AssignStatement: {
     parse: (node,src,scope)=>{
+      let fullCode=src.substring(node.from,node.to);
       let n=node.firstChild;
       if(n.name!=="VariableName") return createError(n,"Variabenname erwartet");
       let cf=getParseFunction(n);
@@ -339,7 +354,8 @@ export const CompileFunctions={
         type: node.name,
         variable: v,
         value: val,
-        op, node
+        op, node,
+        fullCode
       }
     },
     run: (scope, statement)=>{
@@ -354,6 +370,7 @@ export const CompileFunctions={
   },
   "ArgList": {
     parse: (node,src,scope)=>{
+      let fullCode=src.substring(node.from,node.to);
       let n=node.firstChild;
       if(n.name!=="(") return createError(node,"'(' erwartet");
       n=n.nextSibling;
@@ -374,7 +391,8 @@ export const CompileFunctions={
       }
       return {
         type: node.name,
-        args, node
+        args, node,
+        fullCode
       };
     },
     run: (scope,statement)=>{
@@ -388,11 +406,13 @@ export const CompileFunctions={
   },
   "Number": {
     parse: (node,src,scope)=>{
+      let fullCode=src.substring(node.from,node.to);
       let text=src.substring(node.from,node.to);
       return {
         type: node.name,
         value: JSON.parse(text),
-        node
+        node,
+        fullCode
       };
     },
     run: (scope,statement)=>{
@@ -401,11 +421,13 @@ export const CompileFunctions={
   },
   "String": {
     parse: (node,src,scope)=>{
+      let fullCode=src.substring(node.from,node.to);
       let text=src.substring(node.from,node.to);
       return {
         type: node.name,
         value: JSON.parse(text),
-        node
+        node,
+        fullCode
       };
     },
     run: (scope,statement)=>{
@@ -414,6 +436,7 @@ export const CompileFunctions={
   },
   "CallExpression": {
     parse: (node,src,scope)=>{
+      let fullCode=src.substring(node.from,node.to);
       let child=node.firstChild;
       if(child.name!=="VariableName") return createError(child,"Befehl erwartet");
       let funcName=src.substring(child.from,child.to).toLowerCase();
@@ -429,7 +452,8 @@ export const CompileFunctions={
       return {
         type: node.name,
         method,
-        args, node
+        args, node,
+        fullCode
       };
     },
     run: (scope, statement)=>{

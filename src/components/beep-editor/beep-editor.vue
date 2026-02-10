@@ -2,21 +2,26 @@
   <div>
     <Hint v-if="beep.maxMoveCount">Du darfst höchstens {{ beep.maxMoveCount }} Move-Befehle verwenden.</Hint>
     <div id="wrapper" :style="{maxHeight: editorMaxHeight}">
-      <div class="invisible-at-print" id="left-side">
-        <div id="editor">
-          <CodeMirror 
-            language="python"
-            ref="editor" 
-            v-model="code"
-            :linter="linter"
-            :autocomplete-provider="autocompleteProvider"
-            @update-tree="updateTree"
-            @blur="save()"
-          />
-          <div id="meta-infos" :style="{color: moveCount>beep.maxMoveCount? 'red':'inherit'}" v-if="beep.maxMoveCount">
-            {{ moveCount }} / {{ beep.maxMoveCount }} Move-Befehle
+      <div :class="reverse? '':'invisible-at-print'" id="left-side">
+        <div id="editor-wrapper">
+          <div class="editor" v-show="language==='python'">
+            <CodeMirror 
+              language="python"
+              ref="editor"
+              v-model="code"
+              :linter="linter"
+              :autocomplete-provider="autocompleteProvider"
+              @update-tree="updateTree"
+              @blur="save()"
+            />
+            <div id="meta-infos" :style="{color: moveCount>beep.maxMoveCount? 'red':'inherit'}" v-if="beep.maxMoveCount">
+              {{ moveCount }} / {{ beep.maxMoveCount }} Move-Befehle
+            </div>
+            <div id="overlay" v-if="reverse"/>
           </div>
-          <div id="overlay" v-if="reverse"/>
+          <div class="editor" v-if="language==='struktogramm'">
+            <Struktogramm :python-program="program" :scope="parseScope"/>
+          </div>
         </div>
       </div>
       <div id="preview">
@@ -53,7 +58,7 @@
     </div>
     <Message v-if="runtimeError" severity="error">{{ runtimeError }}</Message>
     <div v-if="reverse" class="no-print">
-      <Message :icon="'pi pi-'+(completed || exerciseData.correct[i]===true?'check':(t.checked? 'times': 'question'))" :severity="(completed || exerciseData.correct[i]===true?'success':(t.checked? 'error': 'secondary'))" v-for="(t,i) in exerciseData.data.tasks">
+      <Message :icon="'pi pi-'+(completed || exerciseData.correct[i]===true?'check':(exerciseChecked? 'times': 'question'))" :severity="(completed || exerciseData.correct[i]===true?'success':(exerciseChecked? 'error': 'secondary'))" v-for="(t,i) in exerciseData.data.tasks">
         <span v-html="t.info"/>
       </Message>
       <Button :disabled="running" v-if="!exerciseChecked" icon="pi pi-list-check" label="Überprüfen" @click="checkReverseExercise()"/>
@@ -87,10 +92,11 @@ import ToggleButton from 'primevue/togglebutton';
 import Message from 'primevue/message';
 import { random } from '../../other/random';
 import { isCompletelyTrue } from '../../other/bool-array';
+import Struktogramm from '../struktogramm.vue';
 
 export default{
   components: {
-    CodeMirror, GameWorld, ToggleButton, Message
+    CodeMirror, GameWorld, ToggleButton, Message, Struktogramm
   },
   emits: [
     "save", "exercise-submit", "check-reverse", "refresh-reverse"
@@ -100,6 +106,9 @@ export default{
     beep: Object
   },
   computed: {
+    language(){
+      return this.beep.language? this.beep.language: "python";
+    },
     exerciseChecked(){
       return this.exerciseData?.userProject!==undefined;
     },
@@ -113,6 +122,7 @@ export default{
       if(this.beep.worldWidth) return this.beep.worldWidth; else return "10rem";
     },
     editorMaxHeight(){
+      if(this.reverse) return "1000rem";
       if(this.beep.editorMaxHeight) return this.beep.editorMaxHeight; else return "20rem";
     },
     speed(){
@@ -133,6 +143,7 @@ export default{
       tree: null,
       id: random(1,10000),
       program: null,
+      parseScope: null,
       moveCount: 0,
       errors: [],
       runtimeError: null,
@@ -427,6 +438,7 @@ export default{
       let nodeZeile=this.tree.topNode.firstChild;
       let res=parsePython(this.code,nodeZeile,this.errors);
       this.program=res.program;
+      this.parseScope=res.scope;
       this.moveCount=res.scope.moveCount;
       this.updateLinter();
     },
@@ -506,7 +518,10 @@ function autocomplete(){
   #left-side{
     overflow: hidden;
   }
-  #editor{
+  #editor-wrapper{
+    height: 100%;
+  }
+  .editor{
     height: 100%;
     position: relative;
   }

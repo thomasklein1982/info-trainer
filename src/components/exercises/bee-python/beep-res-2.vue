@@ -14,22 +14,10 @@ import { Flower } from './Flower';
 
 
 export const data={
-  id: "beep-res-1",
+  id: "beep-res-2",
   cheats: ["beep"],
-  title: "Die Biene muss zur Blume, Teil 1",
+  title: "Struktogramm, Test",
   programs: [
-    {
-      world: [
-        "WWWWW",
-        "B..1F",
-        "WWWWW",
-      ],
-      code: [
-        "move()",
-        ["move()",""],
-        'print("§s0§")'
-      ]
-    },
     {
       world: [
         "B...",
@@ -38,9 +26,16 @@ export const data={
         "...."
       ],
       code: [
-        "move()",
+        "i=1",
+        "while i<=2:",
+        "  move()",
+        "  i+=1",
         "right()",
+        "x=5",
         ["move()",""],
+        'if x == 5:',
+        '  print( "Hi")',
+        '  move()',
         'print("§s0§")',
         "left()",
         "move()",
@@ -49,7 +44,7 @@ export const data={
     }
   ],
   beep: {
-    language: "python",
+    language: "struktogramm",
     reverse: true,
     world: [
       "WWWWW",
@@ -117,6 +112,7 @@ export default{
       let program=this.programs[Random.int(0,this.programs.length-1)];
       this.beep.world=program.world;
       let code=createCode(Random,program.code);
+      console.log("code",code);
       this.beep.code=code;
       for(let i=0;i<this.tasks.length;i++){
         let t=this.tasks[i];
