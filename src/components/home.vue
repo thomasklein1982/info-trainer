@@ -79,6 +79,7 @@
           <RmLauncher/>
           <WhileLauncher/>
           <DatabaseLauncher :database="database" allow-choose-database allow-choose-mode/>
+          <BeepLauncher/>
         </div>
       </template>
     </Card>
@@ -110,10 +111,11 @@ import RmLauncher from './rm-launcher.vue';
 import Dialog from 'primevue/dialog';
 import { parseABLink } from '../other/parseABLink';
 import WhileLauncher from './while-launcher.vue';
+import BeepLauncher from './beep-launcher.vue';
 
 export default{
   components: {
-    TuringMachineLauncher, ClassDiagram, WebEditorLauncher, ExercisePath, SpeedDial, Select, DatabaseLauncher, RmLauncher, Dialog, WhileLauncher
+    TuringMachineLauncher, ClassDiagram, WebEditorLauncher, ExercisePath, SpeedDial, Select, DatabaseLauncher, RmLauncher, Dialog, WhileLauncher, BeepLauncher
   },
   props: {
     ab: Object

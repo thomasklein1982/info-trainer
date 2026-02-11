@@ -13,7 +13,7 @@ export class GameObject{
     this.style={};
   }
   reset(){
-    this.setPosition(0,0);
+    this.setPosition(1,1);
     this.rotation=0;
   }
   setPosition(x,y){

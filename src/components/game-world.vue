@@ -18,7 +18,7 @@
             :game-world="gameworld"
           />
         </template>
-        <template v-if="reverse">
+        <template v-if="writable">
           <template v-for="(row,i) in gameworld.fields" >
             <div v-for="(f,j) in row" style="aspect-ratio: 1;position: relative;" :style="{'grid-row': f.row, 'grid-column': f.x}">
               <input v-model="values[f.x+','+f.y]" class="input-text" />
@@ -44,7 +44,11 @@ export default{
   },
   props: {
     beep: Object,
-    width: String
+    width: String,
+    forceWritable: {
+      type: Boolean,
+      default: false
+    }
   },
   data(){
     return {
@@ -56,6 +60,9 @@ export default{
     
   },
   computed: {
+    writable(){
+      return this.reverse || this.forceWritable;
+    },
     reverse(){
       return this.beep.reverse===true;
     },

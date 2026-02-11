@@ -35,6 +35,7 @@ export class GameWorld{
       let go=this.objects[a];
       let field=this.namedFields[go.locationName];
       go.reset();
+      if(!field) continue;
       go.x=field.x;
       go.y=field.y;
     }

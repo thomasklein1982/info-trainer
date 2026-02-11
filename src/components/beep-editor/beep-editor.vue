@@ -39,6 +39,7 @@
             ref="gameworld"
             :beep="beep"
             :width="worldWidth"
+            :force-writable="writable"
           />
         </div>
         <div id="variables" v-if="running">
@@ -64,7 +65,7 @@
       <Button :disabled="running" v-if="!exerciseChecked" icon="pi pi-list-check" label="Überprüfen" @click="checkReverseExercise()"/>
       <Button v-else icon="pi pi-refresh" label="Neue Aufgabe" @click="refreshReverseExercise()"/>
     </div>
-    <div v-else class="no-print">
+    <div v-else-if="exerciseData" class="no-print">
       Ziele:
       <Message :icon="'pi pi-'+(completed || exerciseData.correct[i]===true?'check':'times')" :severity="(completed || exerciseData.correct[i]===true?'success':'error')" v-for="(t,i) in exerciseData.data.check.testcases">
         <span v-html="t.info"/>
@@ -103,7 +104,11 @@ export default{
   ],
   props: {
     exerciseData: Object,
-    beep: Object
+    beep: Object,
+    writable: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     language(){
@@ -304,7 +309,7 @@ export default{
       this.running=true;
       this.initializeScope();
       let proceed=true;
-      let globalCorrect=this.exerciseData.correct;
+      let globalCorrect=this.exerciseData?.correct;
       let correct;
       if(this.checking){
         correct=[];
