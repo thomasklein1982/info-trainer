@@ -53,12 +53,17 @@ export default{
         worldWidth: "40vw",
         code: "",
         setupFunc: function(gameworld){
+          
           return {
             bee: new Bee("B","Lisa",gameworld)
           };
         },
         resetFunc: function(gameworld, data){
-          
+          for(let i=0;i<10;i++){
+            let f=gameworld.getNamedField(i+"");
+            if(!f) continue;
+            f.text=i;
+          }
         },
       }
     }
@@ -73,6 +78,7 @@ export default{
       for(let a in inputs){
         let v=inputs[a];
         if(v.length>0){
+          v=v.toUpperCase();
           let s=a.split(",");
           let x=s[0]*1-1;
           let y=this.height-s[1]*1;
