@@ -2,10 +2,10 @@
 <div style="background: white; color: black">
   <template v-for="(s,i) in pythonProgram">
     <template v-if="s.type==='IfStatement'">
-      <div class="if-block-header">
+      <div class="if-block-header block">
         <div class="line diagonal-down"/>
         <div class="line diagonal-up"/>
-        <div class="if-block-condition">
+        <div class="if-block-condition" :class="highlightedStatement===s? 'highlight':''">
           {{ s.branches[0].condition.fullCode }}?
         </div>
         <div class="if-header-yes">
@@ -17,26 +17,26 @@
       </div>
       <div class="if-block-body">
         <div class="if-body-yes block">
-          <Struktogramm :python-program="s.branches[0].program"/>
+          <Struktogramm :python-program="s.branches[0].program" :highlighted-statement="highlightedStatement"/>
         </div>
         <div class="if-body-no block">
-          <Struktogramm :python-program="s.else?.program"/>
+          <Struktogramm :python-program="s.else?.program" :highlighted-statement="highlightedStatement"/>
         </div>
       </div>
     </template>
     <template v-else-if="s.type==='WhileStatement'">
-      <div class="while-block">
-        <div class="while-block-condition">
+      <div class="while-block block">
+        <div class="while-block-condition" :class="highlightedStatement===s? 'highlight':''">
           Solange {{ s.condition.fullCode }}
         </div>
         <div class="while-block-left"/>
         <div class="while-block-program">
-          <Struktogramm :python-program="s.program"/>
+          <Struktogramm :python-program="s.program" :highlighted-statement="highlightedStatement"/>
         </div>
       </div>
     </template>
     <template v-else>
-      <div class="block">
+      <div class="block statement" :class="highlightedStatement===s? 'highlight':''">
         {{ s.fullCode }}
       </div>
     </template>
@@ -45,7 +45,6 @@
 </template>
 
 <script>
-import { parsePython } from './beep-editor/parsePython';
 
 export default {
   components: {
@@ -53,7 +52,7 @@ export default {
   },
   props: {
     pythonProgram: Array,
-    scope: Object
+    highlightedStatement: Object
   },
   computed: {
     blocks(){
@@ -65,9 +64,15 @@ export default {
 </script>
 
 <style scoped>
+.highlight{
+  background-color: orange;
+}
 .block{
-  border: 1pt solid black;
+  outline: 1pt solid black;
   text-align: center;
+}
+.statement{
+  padding: 0.2rem;
 }
 .if-block-header{
   height: 4rem;
@@ -81,7 +86,6 @@ export default {
   position: relative;
   grid-template-rows: 1fr auto;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  border: 1pt solid black;
 }
 .if-block-condition{
   grid-row: 1;
@@ -91,11 +95,14 @@ export default {
 .if-header-yes{
   grid-row: 2;
   grid-column: 1;
+  justify-self: baseline;
+  padding: 0.2rem;
 }
 .if-header-no{
   grid-row: 2;
   grid-column: 4;
   justify-self: end;
+  padding: 0.2rem;
 }
 .if-block-header-lines{
   display: relative;
@@ -119,13 +126,14 @@ export default {
 }
 .while-block{
   display: grid;
-  border: 1pt solid black;
   grid-template-rows: auto 1fr;
   grid-template-columns: 1rem 1fr;
 }
 .while-block-condition{
   grid-row: 1;
   grid-column: 1/3;
+  text-align: left;
+  padding: 0.2rem;
 }
 .while-block-left{
   grid-row: 2;

@@ -14,17 +14,15 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-target-3",
   cheats: ["beep"],
-  title: "Die Biene muss zur Blume, Teil 3",
+  title: "Lisa fliegt zu mehreren Blumen",
   beep: {
     world: [
-      "B..1...",
-      "..WWW..",
-      "..WWWW.",
-      "..2....",
+      "B...",
+      ".WW2",
+      "1WW.",
+      "....",
     ],
-    maxMoveCount: 10,
     worldWidth: "15rem",
-    window: [5,3],
     setupFunc: function(gameworld){
       let f1=new Flower("1","",gameworld,"blue");
       let f2=new Flower("2","",gameworld,"red");

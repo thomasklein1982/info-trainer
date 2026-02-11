@@ -1,7 +1,6 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
-    <p>Wende den Algorithmus auf die Situation an.</p>
-    <p>Schreibe ein <strong>B</strong> auf das Feld, auf dem sich die Biene am Ende des Programms befindet.</p>
+    <p>Wende den Algorithmus auf die Situation an. Schreibe ein <strong>B</strong> auf das Feld, auf dem sich die Biene am Ende des Programms befindet.</p>
   </ExerciseBody>
 </template>
 
@@ -10,41 +9,34 @@ import { random } from '../../../other/random';
 import { Bee } from './Bee';
 import { createCode } from './createCode';
 import { Flower } from './Flower';
+import { checkPosition } from './functions/checkPosition';
 
 
 
 export const data={
   id: "beep-res-1",
   cheats: ["beep"],
-  title: "Die Biene muss zur Blume, Teil 1",
+  title: "Wohin fliegt Lisa?",
   programs: [
     {
       world: [
-        "WWWWW",
-        "B..1F",
-        "WWWWW",
+        ".....",
+        ".....",
+        "..B..",
+        ".....",
+        "....."
       ],
       code: [
+        ["left()","right()",""],
         "move()",
         ["move()",""],
-        'print("§s0§")'
-      ]
-    },
-    {
-      world: [
-        "B...",
-        "....",
-        "....",
-        "...."
-      ],
-      code: [
-        "move()",
         "right()",
-        ["move()",""],
-        'print("§s0§")',
-        "left()",
         "move()",
-        ["move()"]
+        ["move()",""],
+        "right()",
+        ["right()",""],
+        "move()",
+        ["move()",""]
       ]
     }
   ],
@@ -82,24 +74,7 @@ print(7)`
     {
       info: "Das richtige Feld wurde mit 'B' beschriftet.",
       check: function(result){
-        let bee=result.gameworld.objects.bee;
-        let soll=bee.x+","+bee.y;
-        for(let a in result.ist){
-          let f=result.ist[a];
-          if(soll===a){
-            if(f!=="B") return false;
-          }else{
-            if(f==="B") return false;
-          }
-        }
-        if(result.ist[soll]!=="B") return false;
-        return true;
-      }
-    },
-    {
-      info: "Die anderen Beschriftungen sind korrekt.",
-      check: function(result){
-        return result.correct;
+        return checkPosition(result,"B","bee");
       }
     }
   ]

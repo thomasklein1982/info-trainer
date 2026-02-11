@@ -20,7 +20,7 @@
             <div id="overlay" v-if="reverse"/>
           </div>
           <div class="editor" v-if="language==='struktogramm'">
-            <Struktogramm :python-program="program" :scope="parseScope"/>
+            <Struktogramm :python-program="program" :scope="parseScope" :highlighted-statement="highlightedStatement"/>
           </div>
         </div>
       </div>
@@ -145,6 +145,7 @@ export default{
       program: null,
       parseScope: null,
       moveCount: 0,
+      highlightedStatement: null,
       errors: [],
       runtimeError: null,
       scope: {},
@@ -225,6 +226,7 @@ export default{
         }
       }
       this.$emit("check-reverse",{correct,soll: valuesAfter, ist: valuesUser, gameworld: this.$refs.gameworld.gameworld});
+      this.highlightedStatement=null;
     },
     refreshReverseExercise(){
       this.$emit("refresh-reverse");
@@ -297,7 +299,7 @@ export default{
       this.running=false;
     },
     async run(testData){
-      if(this.running) return;
+      if(this.running ||!this.program) return;
       this.stop();
       this.running=true;
       this.initializeScope();
@@ -343,8 +345,10 @@ export default{
       //   st=block.program[block.nextStatement];
       // }
       if(st){
+        this.highlightedStatement=st;
         this.$refs.editor.highlightLine(this.$refs.editor.getLine(st.node.from).number);
       }else{
+        this.highlightedStatement=null;
         this.$refs.editor.highlightLine(-1);
       }
     },
@@ -415,6 +419,7 @@ export default{
       return true;
     },
     stop(){
+      this.highlightedStatement=null;
       this.running=false;
       this.runtimeError=null;
       this.$refs.gameworld.gameworld.reset();

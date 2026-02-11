@@ -175,6 +175,12 @@ let Internet={
   name: "Das Internet",
   id: "internet",
   paths: [
+    {
+      label: "Das Internet",
+      icon: "internet",
+      id: "internet",
+      exercises: ["iggrace","igeliz","igtim","igada","igalan"]
+    },
     // {
     //   label: "HTML & CSS",
     //   icon: "html",
@@ -202,21 +208,45 @@ let Grundlagen={
   ]
 }
 
-let IKG={
-  name: "DiBi",
-  id: "dibi",
+let DiBiAlgo={
+  name: "DiBi: Algorithmen",
+  id: "dibi-algo",
   paths: [
     {
-      label: "Das Internet",
-      icon: "internet",
-      id: "internet",
-      exercises: ["iggrace","igeliz","igtim","igada","igalan"]
+      label: "Bewegung",
+      icon: "algo-move",
+      id: "algo-move",
+      exercises: ["beep-res-1","beep-target-1","beep-target-2","beep-target-3","beep-target-4","beep-target-6", "beep-target-7"]
     },
     {
-      label: "Algorithmen",
-      icon: "",
-      id: "algo",
-      exercises: ["beep-res-1","beep-res-2","beep-target-1","beep-target-2","beep-target-3","beep-print-1", "beep-print-2", "beep-print-3", "beep-target-4"]
+      label: "Schreiben mit print",
+      icon: "algo-print",
+      id: "algo-print",
+      exercises: ["beep-res-2","beep-print-1", "beep-print-2", "beep-print-3"]
+    },
+    {
+      label: "Lesen mit read",
+      icon: "algo-read",
+      id: "algo-read",
+      exercises: []
+    },
+    {
+      label: "Verzweigungen",
+      icon: "algo-if",
+      id: "algo-if",
+      exercises: []
+    },
+    {
+      label: "Schleifen",
+      icon: "algo-loops",
+      id: "algo-loops",
+      exercises: []
+    },
+    {
+      label: "Problemlösen",
+      icon: "algo-problems",
+      id: "algo-problems",
+      exercises: []
     },
     // {
     //   label: "Textverarbeitung",
@@ -245,7 +275,7 @@ let Datenschutz={
 }
 
 let paths=[
-  IKG, Grundlagen, Internet, Bee, Java, Datenbanken, Datenschutz, TheoretischeInformatik
+  DiBiAlgo, Grundlagen, Internet, Bee, Java, Datenbanken, Datenschutz, TheoretischeInformatik
 ];
 
 for(let i=0;i<paths.length;i++){

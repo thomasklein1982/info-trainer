@@ -18,8 +18,8 @@ export const data={
   title: "Die Biene muss zur Blume, Teil 1",
   beep: {
     world: [
-      "WWWWW",
-      "B..1F",
+      "WWWFW",
+      "B...W",
       "WWWWW",
     ],
     worldWidth: "15rem",
