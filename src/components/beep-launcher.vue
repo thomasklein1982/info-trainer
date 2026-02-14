@@ -64,6 +64,13 @@ export default{
             if(!f) continue;
             f.text=i;
           }
+          let words=["Honig","Links","Rechts","Oben","Unten"];
+          let letters=["H","L","R","O","U"];
+          for(let i=0;i<words.length;i++){
+            let f=gameworld.getNamedField(letters[i]);
+            if(!f) continue;
+            f.text=words[i];
+          }
         },
       }
     }
