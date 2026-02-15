@@ -395,29 +395,27 @@ export default{
       let block=this.scope.blocks[this.scope.blocks.length-1];
       if(!block) return false;
       let st=block.program[block.nextStatement];
-      if(st && st.ignoreOnRun){
-        block.nextStatement++;
-        st=null;
-      }
+      // if(st && st.ignoreOnRun){
+      //   block.nextStatement++;
+      //   st=null;
+      // }
       while(!st){
         this.scope.blocks.pop();
         this.scope.layers.pop();
         block=this.scope.blocks[this.scope.blocks.length-1];
         if(!block) return false;
         st=block.program[block.nextStatement];
-        if(st && st.ignoreOnRun){
-          block.nextStatement++;
-          st=null;
-        }
       }
-      let run=getRunFunction(st.type);
-      let stay;
-      try{
-        stay=run(this.scope, st);
-      }catch(e){
-        this.runtimeError=e;
-        if(this.checking) throw e;
-        return false;
+      let stay=false;
+      if(!st.ignoreOnRun){
+        let run=getRunFunction(st.type);
+        try{
+          stay=run(this.scope, st);
+        }catch(e){
+          this.runtimeError=e;
+          if(this.checking) throw e;
+          return false;
+        }
       }
       if(stay!==true) block.nextStatement++;
       this.updateVariables();

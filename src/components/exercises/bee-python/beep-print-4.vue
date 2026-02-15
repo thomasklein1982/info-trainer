@@ -27,7 +27,7 @@ let art=createASCIIArt(` @.@
 export const data={
   id: "beep-print-4",
   cheats: ["beep"],
-  title: "Mit viel Liebe",
+  title: "Quak!",
   art,
   beep: {
     world: [
