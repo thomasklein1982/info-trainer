@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Wende den Algorithmus auf die Situation an.</p>
-    <p>Schreibe ein <strong>B</strong> auf das Feld, auf dem sich die Biene am Ende des Programms befindet.</p>
+    <p>Schreibe <strong>alle Texte und Zahlen</strong>, die sich am Programmende auf den Feldern befinden, in das passende Feld. Schreibe ein <strong>B</strong> auf das Feld, auf dem sich die Biene am Ende des Programms befindet.</p>
   </ExerciseBody>
 </template>
 
@@ -20,31 +20,32 @@ export const data={
   programs: [
     {
       world: [
-        "B...",
-        "....",
-        "....",
-        "...."
+        ".....",
+        ".....",
+        "..B..",
+        ".....",
+        "....."
       ],
       code: [
-        "i=1",
-        "while i<=2:",
-        "  move()",
-        "  i+=1",
-        "right()",
-        "x=5",
-        ["move()",""],
-        'if x == 5:',
-        '  print( "Hi")',
-        '  move()',
+        ["left()","right()",""],
         'print("§s0§")',
-        "left()",
         "move()",
-        ["move()"]
+        ["move()",""],
+        "right()",
+        ['print(§i0§)',''],
+        "move()",
+        ["move()",'print("§s1§")'],
+        "right()",
+        ["right()",""],
+        'print("§s2§")',
+        "move()",
+        "move()",
+        ["move()",""]
       ]
     }
   ],
   beep: {
-    language: "struktogramm",
+    language: "python",
     reverse: true,
     world: [
       "WWWWW",

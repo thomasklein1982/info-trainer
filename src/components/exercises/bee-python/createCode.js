@@ -40,7 +40,7 @@ export function createCode(Random,program){
       regex=new RegExp("§"+type.id+index+"§","g");
       let v=type.value();
       code=code.replace(regex,v);
-      if(code===oldCode) break;
+      if(code===oldCode && index>9) break;
       oldCode=code;
       index++;
     }

@@ -222,7 +222,7 @@ let DiBiAlgo={
       label: "Schreiben mit print",
       icon: "algo-print",
       id: "algo-print",
-      exercises: ["beep-print-1", "beep-print-2", "beep-print-4","beep-print-3"]
+      exercises: ["beep-print-1", "beep-res-2", "beep-print-2", "beep-print-4","beep-print-3"]
     },
     {
       label: "Lesen mit read",
