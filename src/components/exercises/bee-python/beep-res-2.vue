@@ -16,7 +16,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-res-2",
   cheats: ["beep"],
-  title: "Struktogramm, Test",
+  title: "Was schreibt die Biene?",
   programs: [
     {
       world: [

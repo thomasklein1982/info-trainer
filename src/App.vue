@@ -219,7 +219,7 @@ export default{
           javaAppDifficulty: difficulty
         },
         ab: null,
-        userDataSize: 0
+        userDataSize: 0,
       };
   },
   async mounted(){
@@ -264,9 +264,30 @@ export default{
         return;
       }
       console.log(code);
-      let a =confirm("Sollen die Daten wirklich überschrieben werden?\n\nDas kann nicht rückgängig gemacht werden!");
-      if(code.userData) storage.setItem(STORAGE_DATA,code.userData);
-      if(code.settings) storage.setItem(STORAGE_SETTINGS,code.settings);
+      let imported=[];
+      for(let a in code.userData){
+        let ov=this.exerciseDataCollection[a];
+        let nv=code.userData[a];
+        let sNV=JSON.stringify(nv.project);
+        let sOV=JSON.stringify(ov.userProject);
+        if(!nv.project || nv.project && ov.userProject && sNV===sOV){
+          if(ov.userProject) nv.project=JSON.parse(sOV);
+          let c=ov.correct;
+          if(Array.isArray(c)) c=boolArrayToInt(c);
+          nv.correct=c;
+        }else{
+          imported.push(a);
+        }
+      }
+      if(code.settings) await storage.setItem(STORAGE_SETTINGS,code.settings);
+      if(imported.length===0){
+        alert("Hier gibt es nichts zu importieren.");
+        location.reload();
+        return;
+      }
+      let a =confirm("Willst du die Lösungen zu folgenden "+imported.length+" Aufgaben importieren?\n\n"+imported.join("\n"));
+      if(!a) return;
+      if(code.userData) await storage.setItem(STORAGE_DATA,code.userData);
       location.reload();
     },
     isExerciseInAB(id){
