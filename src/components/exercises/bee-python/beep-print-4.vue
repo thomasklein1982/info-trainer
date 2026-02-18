@@ -1,8 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
-    <BeePreview :world="beep.world" width="14rem" style="float: right">
+    <BeePreview :world="art.world" width="14rem" style="float: right">
       <GameObject v-for="(p,i) in art.points" image="" :style="{'grid-row': p.row+1, 'grid-column': p.col+1}" :text="p.c" align="center"/>
-      <GameObject image="flower" text="" pos="F"/>
     </BeePreview>
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
     <p>Lisa soll einen Frosch aus einzelnen Zeichen in die Spielwelt schreiben. Rechts siehst du, wie der Frosch aussehen soll.</p>
@@ -18,9 +17,8 @@ import GameObject from '../../game-object.vue';
 import { Bee } from './Bee';
 import { Flower } from './Flower';
 
-let art=createASCIIArt(` @.@
-(---)
-`);
+let art=createASCIIArt(` @.@ 
+(---)`);
 
 
 
