@@ -364,6 +364,7 @@ export default{
       let res=this.db.sql("pragma table_info("+tablename+")");
       if(res.length===0) return false;
       res=res[0];
+      if(res.values.length<names.length) return false;
       for(let i=0;i<res.values.length;i++){
         let c=res.values[i][1].toLowerCase();
         if(c!==names[i]){
