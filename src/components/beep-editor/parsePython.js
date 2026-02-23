@@ -1,13 +1,9 @@
+import { BeepScope } from "./BeepScope";
 import { getParseFunction } from "./compile-functions";
 
 export function parsePython(src,firstLineNode,errors){
-  let scope={
-    layers: [
-      {}
-    ],
-    errors: errors,
-    moveCount: 0
-  };
+  let scope=new BeepScope(null,null);
+  scope.errors=errors;
   let program=[];
   let node=firstLineNode;
   while(node){

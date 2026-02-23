@@ -228,31 +228,26 @@ let DiBiAlgo={
       label: "Lesen mit read",
       icon: "algo-read",
       id: "algo-read",
-      exercises: []
-    },
-    {
-      label: "Verzweigungen",
-      icon: "algo-if",
-      id: "algo-if",
-      exercises: []
-    },
-    {
-      label: "Schleifen",
-      icon: "algo-loops",
-      id: "algo-loops",
-      exercises: []
-    },
-    {
-      label: "Problemlösen",
-      icon: "algo-problems",
-      id: "algo-problems",
-      exercises: []
+      exercises: ["beep-res-3","beep-read-1","beep-copy-1","beep-copy-2","beep-add"]
     },
     // {
-    //   label: "Textverarbeitung",
-    //   icon: "text",
-    //   exercises: ["tv-num-1"]
-    // }
+    //   label: "Verzweigungen",
+    //   icon: "algo-if",
+    //   id: "algo-if",
+    //   exercises: []
+    // },
+    // {
+    //   label: "Schleifen",
+    //   icon: "algo-loops",
+    //   id: "algo-loops",
+    //   exercises: []
+    // },
+    // {
+    //   label: "Problemlösen",
+    //   icon: "algo-problems",
+    //   id: "algo-problems",
+    //   exercises: []
+    // },
   ]
 }
 

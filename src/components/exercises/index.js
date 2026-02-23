@@ -1,5 +1,9 @@
 
-
+export * as BeepCopy2 from './bee-python/beep-copy-2.vue';
+export * as BeepAdd from './bee-python/beep-add.vue';
+export * as BeepRes3 from './bee-python/beep-res-3.vue';
+export * as BeepRead1 from './bee-python/beep-read-1.vue';
+export * as BeepCopy1 from './bee-python/beep-copy-1.vue';
 export * as BeepRes2 from './bee-python/beep-res-2.vue';
 export * as BeepRes1 from './bee-python/beep-res-1.vue';
 export * as BeepPrint4 from './bee-python/beep-print-4.vue';

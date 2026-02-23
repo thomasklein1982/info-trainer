@@ -2,7 +2,8 @@ import { random } from '../../../other/random';
 import TreeJSON from '../bee/graphics/tree.json';
 
 export class GameWorld{
-  constructor(worldArray, windowWidth, windowHeight, setupFunc, resetFunc, testDataProvider){
+  constructor(beep,worldArray, windowWidth, windowHeight, setupFunc, resetFunc, testDataProvider){
+    this.beep=beep;
     this.worldArray=worldArray;
     this.windowWidth=windowWidth;
     this.windowHeight=windowHeight;
@@ -45,8 +46,9 @@ export class GameWorld{
         this.testData=this.testDataProvider.create(index);
       }
     }else{
-      this.testData=this.testDataProvider.create(index);
+      this.testData=this.testDataProvider.create(index%this.testDataProvider.count);
     }
+    // this.testData.index=index;
     if(this.resetFunc) this.resetFunc(this, this.testData);
     return this.testData;
   }

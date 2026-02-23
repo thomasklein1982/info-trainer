@@ -94,6 +94,7 @@ import Message from 'primevue/message';
 import { random } from '../../other/random';
 import { isCompletelyTrue } from '../../other/bool-array';
 import Struktogramm from '../struktogramm.vue';
+import { BeepScope } from './BeepScope';
 
 export default{
   components: {
@@ -156,6 +157,7 @@ export default{
       scope: {},
       maxSpeed: false,
       nextStatement: 0,
+      testCaseIndex: 0,
       showTooManyCommands: false,
       running: false,
       checking: false,
@@ -236,8 +238,9 @@ export default{
     refreshReverseExercise(){
       this.$emit("refresh-reverse");
     },
-    changeTestcase(index){
-      this.$refs.gameworld.gameworld.reset(index);
+    changeTestcase(){
+      this.testCaseIndex++;
+      this.$refs.gameworld.gameworld.reset(this.testCaseIndex);
     },
     updateLinter(){
       this.$refs.editor.updateLinter();
@@ -279,18 +282,8 @@ export default{
       this.stop();
     },
     initializeScope(){
-      this.scope={
-        gameworld: this.$refs.gameworld.gameworld,
-        layers: [
-          {}
-        ],
-        blocks: [
-          {
-            program: this.program,
-            nextStatement: 0
-          }
-        ]
-      };
+      this.scope=new BeepScope(this.$refs.gameworld.gameworld, this.program);
+      
     },
     runImmediately(testData){
       if(this.running) return;
@@ -339,7 +332,7 @@ export default{
       for(let i=0;i<testcases.length;i++){
         if(correctArray[i]) continue;
         let tc=testcases[i];
-        correctArray[i]=tc.check(this.$refs.gameworld.gameworld,testData, isProgramOver);
+        correctArray[i]=tc.check(this.$refs.gameworld.gameworld,testData, isProgramOver, this.scope);
       }
     },
     updateHighlightedLine(){

@@ -52,7 +52,7 @@ export default{
   },
   data(){
     return {
-      gameworld: new GameWorld(this.beep.world,5,3,this.beep.setupFunc, this.beep.resetFunc, this.beep.testdata),
+      gameworld: new GameWorld(this.beep,this.beep.world,5,3,this.beep.setupFunc, this.beep.resetFunc, this.beep.testdata),
       values: {}
     };
   },

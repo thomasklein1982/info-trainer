@@ -1,5 +1,4 @@
 import { Methods } from "./methods";
-import { getVariable, addVariable } from "./scope";
 
 export function evaluate(scope, p){
   let run=getRunFunction(p.type);
@@ -273,7 +272,7 @@ export const CompileFunctions={
       let fullCode=src.substring(node.from,node.to);
       let name=src.substring(node.from,node.to);
       if(!mustNotBeDefined){
-        if(!getVariable(scope,name)) return createError(node,"unbekannte Variable");
+        if(!scope.getVariable(name)) return createError(node,"unbekannte Variable");
       }
       return {
         type: node.name,
@@ -283,7 +282,7 @@ export const CompileFunctions={
       }
     },
     run: (scope, statement)=>{
-      let v=getVariable(scope,statement.name);
+      let v=scope.getVariable(statement.name);
       if(!v) throw "Unbekannte Variable";
       return v.value;
     }
@@ -314,7 +313,7 @@ export const CompileFunctions={
     },
     run: (scope, statement)=>{
       let val=evaluate(scope,statement.value);
-      let v=getVariable(scope,statement.variable.name);
+      let v=scope.getVariable(statement.variable.name);
       if(!v){
         throw "Unbekannte Variable";
       }else{
@@ -346,8 +345,8 @@ export const CompileFunctions={
       n=n.nextSibling;
       cf=getParseFunction(n);
       if(cf.error) return cf;
-      if(!getVariable(scope,v.name)){
-        addVariable(scope,v.name);
+      if(!scope.getVariable(v.name)){
+        scope.addVariable(v.name);
       }
       let val=cf(n,src,scope);
       return {
@@ -360,9 +359,9 @@ export const CompileFunctions={
     },
     run: (scope, statement)=>{
       let val=evaluate(scope,statement.value);
-      let v=getVariable(scope,statement.variable.name);
+      let v=scope.getVariable(statement.variable.name);
       if(!v){
-        addVariable(scope,statement.variable.name,val);
+        scope.addVariable(statement.variable.name,val);
       }else{
         v.value=val;
       }
