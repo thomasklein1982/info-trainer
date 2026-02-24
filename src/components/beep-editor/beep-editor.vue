@@ -7,6 +7,7 @@
           <div class="editor" v-show="language==='python'">
             <CodeMirror 
               language="python"
+              class="print-friendly"
               ref="editor"
               v-model="code"
               :linter="linter"

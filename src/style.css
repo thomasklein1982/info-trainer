@@ -266,6 +266,10 @@ em{
     color: black !important;
     box-shadow: none !important;
   }
+  .print-friendly>.cm-editor *{
+    background-color: white;
+    color: black;
+  }
   .console-output{
     background-color: white; 
     color: black; 
