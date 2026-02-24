@@ -17,7 +17,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-copy-2",
   cheats: ["beep"],
-  title: "Die Kopier-Biene",
+  title: "Die Kopier-Biene, Teil 2",
   beep: {
     world: [
       "B123",

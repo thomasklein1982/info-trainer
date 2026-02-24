@@ -228,7 +228,7 @@ let DiBiAlgo={
       label: "Lesen mit read",
       icon: "algo-read",
       id: "algo-read",
-      exercises: ["beep-res-3","beep-read-1","beep-copy-1","beep-copy-2","beep-add"]
+      exercises: ["beep-res-3","beep-read-1","beep-copy-1","beep-read-2", "beep-copy-2","beep-double","beep-add", "beep-flaeche"]
     },
     // {
     //   label: "Verzweigungen",

@@ -297,7 +297,16 @@ export default{
       this.running=false;
     },
     async run(testData){
-      if(this.running ||!this.program) return;
+      if(this.running ||!this.program) {
+        if(this.exerciseData && this.checking){
+          let testcases=this.exerciseData.data.check.testcases;
+          this.exerciseData.correct=[];
+          for(let i=0;i<testcases.length;i++){
+            this.exerciseData.correct.push(false);
+          }
+        }
+        return;
+      }
       this.stop();
       this.running=true;
       this.initializeScope();
@@ -394,7 +403,7 @@ export default{
       // }
       while(!st){
         this.scope.blocks.pop();
-        this.scope.layers.pop();
+        if(this.scope.layers.length>1) this.scope.layers.pop();
         block=this.scope.blocks[this.scope.blocks.length-1];
         if(!block) return false;
         st=block.program[block.nextStatement];
