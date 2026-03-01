@@ -169,6 +169,11 @@ db.create=function(){
         kl=codd;
       }else{
         kl=klassenlehrer[klassenIndex];
+        if(kl===codd){
+          //codd soll nur genau 1 Klasse haben
+          kl=klassenlehrer[(klassenIndex+1)%klassenlehrer.length];
+          //console.log("codd is kl, new kl=",kl)
+        }
       }
       this.tables.Klasse.insert(n,r,kl);
       klassenIndex++;

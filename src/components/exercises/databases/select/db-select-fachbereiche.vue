@@ -1,6 +1,6 @@
 <template>
     <ExerciseBody :exercise="$data" :code="code" :database="database">
-      Gesucht ist eine Liste der drei Fachbereiche mit der jeweiligen Anzahl der Fächer, die zu diesem Fachbereich gehören. Die Überschriften sollen <code>Fachbereich</code> und <code>Anzahl Fächer</code> sein. Das Fach Sport, das zu keinem der Fachbereiche gehört, soll nicht in der Liste auftauchen.
+      Gesucht ist eine Liste der drei Fachbereiche mit der jeweiligen Anzahl der Fächer, die zu diesem Fachbereich gehören. Die Überschriften sollen <code>Fachbereich</code> und <code>Anzahl Fächer</code> sein. Fächer, die zu keinem Fachbereich gehören, sollen nicht in der Liste auftauchen.
     </ExerciseBody>
   </template>
   

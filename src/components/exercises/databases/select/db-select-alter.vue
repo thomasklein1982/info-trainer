@@ -1,6 +1,6 @@
 <template>
     <ExerciseBody :exercise="$data" :code="code" :database="database">
-      Gesucht ist eine Aufstellung der Fächer aus Fachbereich 3 gemeinsam mit dem jeweils niedrigsten und höchsten Alter der Lehrkräfte, die dieses Fach unterrichten. Die Spaltenüberschriften sollen lauten <code>Fach</code>, <code>niedrigstes Alter</code>, <code>höchstes Alter</code>.
+      Gesucht ist eine Aufstellung der Fächer aus Fachbereich 3 (<code>ID = 'FB 3'</code>) gemeinsam mit dem jeweils niedrigsten und höchsten Alter der Lehrkräfte, die dieses Fach unterrichten. Die Spaltenüberschriften sollen lauten <code>Fach</code>, <code>niedrigstes Alter</code>, <code>höchstes Alter</code>.
     </ExerciseBody>
   </template>
   
