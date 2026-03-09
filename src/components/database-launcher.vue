@@ -152,6 +152,7 @@ import DBEmpty from '../components/exercises/databases/databases/empty';
 import Select from 'primevue/select';
 import SelectButton from 'primevue/selectbutton';
 import Popover from 'primevue/popover';
+import { checkSQL } from '../other/checkSQL';
 
 
 export default{
@@ -286,6 +287,7 @@ export default{
       let multiple=soll && Array.isArray(soll[0]);
       if(!multiple) soll=[soll];
       try{
+        let ok=checkSQL(cmd);
         let res=this.db.sql(cmd)[0];
         if(res.values.length!==soll.length) return false;
         for(let j=0;j<soll.length;j++){
@@ -304,6 +306,7 @@ export default{
     },
     runSQLInput(){
       try{
+        let ok=checkSQL(this.input);
         this.db.sql(this.input);
       }catch(e){
         return e;
@@ -462,6 +465,7 @@ export default{
       //this.input=this.$refs.editor.getValue();
       if(sqlCode===undefined) return res;
       try{
+        let ok=checkSQL(sqlCode);
         res=this.db.sql(sqlCode);
         if(!res) return;
         if(res.values.length>300){
@@ -491,7 +495,6 @@ export default{
     },
     showResult(){
       let tc=this.exerciseData.data.check.testcases[0];
-      //let soll=this.db.sql(tc.sqlDo);
       if(tc.sqlDo){
         this.runSQL(tc.sqlDo);
         if(tc.sqlUndo){
