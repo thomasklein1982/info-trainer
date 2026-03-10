@@ -1,5 +1,9 @@
 import { sql } from "@codemirror/lang-sql";
 
+/**
+ * Soll checken, ob bare columns in einer Abfrage vorkommen. Macht aber wenig Sinn, wird nicht verwendet (zumindest vorerst nicht).
+ * @param {*} code 
+ */
 export function checkSQL(code){
   let parser=sql().language.parser;
   code=code.toLowerCase();

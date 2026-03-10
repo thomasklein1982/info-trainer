@@ -32,7 +32,6 @@ export const data={
     },
     resetFunc: function(gameworld, data){
       let f=gameworld.getNamedField("G");
-      f.text=data.text;
       f.style.backgroundColor="yellow";
       f=gameworld.getNamedField("1");
       f.text=data.a;

@@ -1,4 +1,8 @@
 
+export * as BeepVergleich from './bee-python/beep-vergleich.vue';
+export * as BeepTr2 from './bee-python/beep-tr-2.vue';
+export * as BeepTr1 from './bee-python/beep-tr-1.vue';
+export * as BeepIf1 from './bee-python/beep-if-1.vue';
 export * as BeepFlaeche from './bee-python/beep-flaeche.vue';
 export * as BeepDouble from './bee-python/beep-double.vue';
 export * as BeepCopy2 from './bee-python/beep-copy-2.vue';

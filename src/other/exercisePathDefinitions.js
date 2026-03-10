@@ -230,12 +230,12 @@ let DiBiAlgo={
       id: "algo-read",
       exercises: ["beep-res-3","beep-read-1","beep-copy-1","beep-read-2", "beep-copy-2","beep-double","beep-add", "beep-flaeche"]
     },
-    // {
-    //   label: "Verzweigungen",
-    //   icon: "algo-if",
-    //   id: "algo-if",
-    //   exercises: []
-    // },
+    {
+      label: "Verzweigungen",
+      icon: "algo-if",
+      id: "algo-if",
+      exercises: ["beep-if-1", "beep-tr-1","beep-vergleich", "beep-tr-2"]
+    },
     // {
     //   label: "Schleifen",
     //   icon: "algo-loops",
