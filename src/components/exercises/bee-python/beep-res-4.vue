@@ -1,20 +1,22 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
-    <p>Wende den Algorithmus auf die Situation an. Schreibe ein <strong>B</strong> auf das Feld, auf dem sich die Biene am Ende des Programms befindet.</p>
+    <ol class="teilaufgaben">
+      <li>Stelle den Algorithmus als Struktogramm dar.</li>
+      <li>Wende den Algorithmus auf die Situation an. Schreibe ein <strong>B</strong> auf das Feld, auf dem sich die Biene am Ende des Programms befindet.</li>
+    </ol>
+    
+    
   </ExerciseBody>
 </template>
 
 <script>
-import { random } from '../../../other/random';
 import { Bee } from './Bee';
 import { createCode } from './createCode';
-import { Flower } from './Flower';
 import { checkPosition } from './functions/checkPosition';
 
 
-
 export const data={
-  id: "beep-res-1",
+  id: "beep-res-4",
   cheats: ["beep"],
   title: "Wohin fliegt Lisa?",
   programs: [
@@ -22,23 +24,30 @@ export const data={
       world: [
         ".....",
         ".....",
-        "..B..",
+        "..B1.",
         ".....",
         "....."
       ],
       code: [
-        ["left()","right()",""],
-        "move()",
+        'a = read()',
+        {
+          type: "if",
+          condition: ["a == §i0§","a != §i0§"],
+          sub1: [
+            "left()",
+            ["move()",""],
+            ["right()",""]
+          ],
+          sub2: [
+            "right()",
+            "move()"
+          ]
+        },
+        "left()",
+        'move()',
         ["move()",""],
-        "right()",
-        "move()",
-        ["move()",""],
-        "right()",
-        ["right()",""],
-        "move()",
-        ["move()",""]
       ]
-    }
+    },
   ],
   beep: {
     language: "python",
@@ -50,13 +59,14 @@ export const data={
     ],
     worldWidth: "15rem",
     setupFunc: function(gameworld){
-      let bee=new Bee("B","Lisa",gameworld);
       return {
-        bee
+        bee: new Bee("B","Lisa",gameworld)
       };
     },
+    zahlen: [0,0],
     resetFunc: function(gameworld, data){
-      
+      let f=gameworld.getNamedField("1");
+      f.text=this.beep.zahlen[1];
     },
     testdata: {
       create: function(index){
@@ -91,10 +101,14 @@ export default{
     create(Random, resArray){
       let program=this.programs[Random.int(0,this.programs.length-1)];
       this.beep.world=program.world;
-      let code=createCode(Random,program.code).code;
-      this.beep.code=code;
+      let code=createCode(Random,program.code);
+      this.beep.code=code.code;
+      let nCode=code.values.i[0];
+      let nMap=Random.int(0,1)===1? nCode: Random.int(2,99);
+      this.beep.zahlen=[nCode,nMap];
       for(let i=0;i<this.tasks.length;i++){
         let t=this.tasks[i];
+        t.input="";
         t.correct=resArray? resArray[i]: false;
         t.checked=resArray? true: false;
       }

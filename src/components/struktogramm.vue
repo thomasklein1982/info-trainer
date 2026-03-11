@@ -5,8 +5,7 @@
       <div class="if-block-header block">
         <div class="line diagonal-down"/>
         <div class="line diagonal-up"/>
-        <div class="if-block-condition" :class="highlightedStatement===s? 'highlight':''">
-          {{ s.branches[0].condition.fullCode }}?
+        <div class="if-block-condition" :class="highlightedStatement===s? 'highlight':''" v-html="s.branches[0].condition.htmlCode+'?'">
         </div>
         <div class="if-header-yes">
           Ja
@@ -26,8 +25,7 @@
     </template>
     <template v-else-if="s.type==='WhileStatement'">
       <div class="while-block block">
-        <div class="while-block-condition" :class="highlightedStatement===s? 'highlight':''">
-          Solange {{ s.condition.fullCode }}
+        <div class="while-block-condition" :class="highlightedStatement===s? 'highlight':''" v-html="'Solange '+s.condition.htmlCode">
         </div>
         <div class="while-block-left"/>
         <div class="while-block-program">

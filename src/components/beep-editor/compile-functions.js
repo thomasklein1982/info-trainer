@@ -170,6 +170,7 @@ export const CompileFunctions={
           if(cf.error) return cf;
           let cond=cf(n,src,scope);
           if(cond.error) return cond;
+          createHtmlCode(cond);
           branch.condition=cond;
         }
         n=n.nextSibling;
@@ -462,4 +463,12 @@ export const CompileFunctions={
       return value;
     }
   }
+}
+
+function createHtmlCode(p){
+  let htmlCode=p.fullCode.replace(/!=/g,"&ne;");
+  htmlCode=htmlCode.replace(/<=/g,"&le;");
+  htmlCode=htmlCode.replace(/>=/g,"&ge;");
+  htmlCode=htmlCode.replace(/==/g,"=");
+  p.htmlCode=htmlCode;
 }

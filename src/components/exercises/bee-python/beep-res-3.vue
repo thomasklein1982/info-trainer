@@ -131,7 +131,7 @@ export default{
     create(Random, resArray){
       let program=this.programs[Random.int(0,this.programs.length-1)];
       this.beep.world=program.world;
-      let code=createCode(Random,program.code);
+      let code=createCode(Random,program.code).code;
       this.beep.code=code;
       this.beep.zahlen=Random.draw(this.beep.zahlen.length,10);
       for(let i=0;i<this.tasks.length;i++){

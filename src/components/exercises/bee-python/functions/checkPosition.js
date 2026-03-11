@@ -11,6 +11,7 @@ export function checkPosition(result,letter,objectname){
       if(f===letter) return false;
     }
   }
-  if(result.ist[soll].toLowerCase()!==letter) return false;
+  soll=result.ist[soll];
+  if(!soll || soll.toLowerCase()!==letter) return false;
   return true;
 }
