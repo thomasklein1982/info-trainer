@@ -2,7 +2,7 @@
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
     <p>Hier gibt es zwei Blumen und eine der beiden liefert mehr Nektar als die andere. Zum Glück haben Lisas Bienen-Kolleginnen auf das gelbe Feld geschrieben, welche der beiden Blumen die bessere ist.</p>
-    <p>Auf dem gelben Feld steht entweder <strong>oben</strong> oder <strong>unten</strong>. Je nachdem, was dort steht, soll Lisa zur oberen oder zu unteren Biene fliegen und dort stehen bleiben.</p>
+    <p>Auf dem gelben Feld steht entweder <strong>oben</strong> oder <strong>unten</strong>. Je nachdem, was dort steht, soll Lisa zur oberen oder zu unteren Blume fliegen und dort stehen bleiben.</p>
   </ExerciseBody>
 </template>
 

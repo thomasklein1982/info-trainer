@@ -7,7 +7,7 @@
           <div class="editor" v-show="language==='python'">
             <CodeMirror 
               language="python"
-              class="print-friendly"
+              class="no-print"
               ref="editor"
               v-model="code"
               :linter="linter"
@@ -15,6 +15,7 @@
               @update-tree="updateTree"
               @blur="save()"
             />
+            <Code class="only-print">{{ code }}</Code>
             <div id="meta-infos" :style="{color: moveCount>beep.maxMoveCount? 'red':'inherit'}" v-if="beep.maxMoveCount">
               {{ moveCount }} / {{ beep.maxMoveCount }} Move-Befehle
             </div>
