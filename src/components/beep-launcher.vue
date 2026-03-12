@@ -3,13 +3,21 @@
   <Button @click="openDialog" label="BeeP-Editor öffnen"/>
   <Dialog ref="dialog" header="BeeP-Editor" v-model:visible="show" :closable="true" maximizable :close-on-escape="false" class="p-dialog-maximized">
     <div id="controls">
-      <Select v-model="width" :options="[1,2,3,4,5,6,7,8,9,10]"/> &times; <Select v-model="height" :options="[1,2,3,4,5,6,7,8,9,10]"/> <Button label="Eintragungen übernehmen" @click="updateInputs()"/>
+      <Select v-model="width" :options="[1,2,3,4,5,6,7,8,9,10]"/> &times; <Select v-model="height" :options="[1,2,3,4,5,6,7,8,9,10]"/> <Button label="Eintragungen übernehmen" @click="updateInputs()"/> <Button label="Setup-Code" @click="setupCodeDialog.show=true"/>
     </div>
     <BeepEditor
       ref="beepEditor"
       :beep="beep"
       v-if="showEditor"
+      :setup-program="setupCodeDialog.program"
       writable
+    />
+  </Dialog>
+  <Dialog ref="setupCodeDialog" header="Setup-Code-Editor" v-model:visible="setupCodeDialog.show" maximizable>
+    <CodeMirror
+      v-model="setupCodeDialog.code"
+      language="python"
+      @update-tree="updateSetupProgram"
     />
   </Dialog>
 </template>
@@ -18,10 +26,12 @@
 import { nextTick } from 'vue';
 import BeepEditor from './beep-editor/beep-editor.vue';
 import {Bee} from './exercises/bee-python/Bee';
+import CodeMirror from './code-mirror.vue';
+import { parsePython } from './beep-editor/parsePython';
 
 export default{
   components: {
-    BeepEditor
+    BeepEditor, CodeMirror
   },
   emits: [
     "show-feedback"
@@ -38,14 +48,22 @@ export default{
   computed: {
   },
   props: {
-    
+    open: {
+      type: Boolean,
+      default: false
+    }
   },
   data(){
     return {
-      show: false,
+      show: this.open,
       width: 4,
       height: 4,
       showEditor: true,
+      setupCodeDialog: {
+        show: false,
+        code: "",
+        program: null
+      },
       beep: {
         world: [
           "."
@@ -79,6 +97,10 @@ export default{
     this.updateWorld();
   },
   methods: {
+    updateSetupProgram(tree){
+      if(this.setupCodeDialog.code.length===0) this.setupCodeDialog.program=null;
+      else this.setupCodeDialog.program=parsePython(this.setupCodeDialog.code,tree.topNode.firstChild,[]);
+    },
     updateInputs(){
       let inputs=this.$refs.beepEditor.$refs.gameworld.values;
       let beePos=null;

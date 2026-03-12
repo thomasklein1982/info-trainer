@@ -90,6 +90,12 @@ if(parsedAB){
     useStorage: false,
     icon: "favicon.svg"
   };
+}else if(hash.toLowerCase()==="#bp"){
+  mode={
+    type: "bp",
+    useStorage: false,
+    icon: "favicon.svg"
+  };
 }else if(hash.toLowerCase().startsWith("#start=")){
   let path=hash.toLowerCase().substring(7);
   let s=path.split("/");

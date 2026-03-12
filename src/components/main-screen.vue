@@ -23,6 +23,11 @@
         show-from-start
       />
     </template>
+    <template v-else-if="mode.type==='bp'">
+      <BeepLauncher
+        open
+      />
+    </template>
     <template v-else>
       <AppMenubar
         :settings="settings"
@@ -74,10 +79,11 @@ import { chooseExercises } from '../other/chooseExercises';
 import { Random } from '../other/random';
 import CheatSheet from './cheat-sheet.vue';
 import WhileSimulator from './while-simulator.vue';
+import BeepLauncher from './beep-launcher.vue';
 
 export default{
   components: {
-    AppMenubar, Home, ExerciseDrawer, ExercisePath, DialogSettings, Drawer, RmSimulator, TmSimulator, DatabaseLauncher, CheatSheet, WhileSimulator
+    AppMenubar, Home, ExerciseDrawer, ExercisePath, DialogSettings, Drawer, RmSimulator, TmSimulator, DatabaseLauncher, CheatSheet, WhileSimulator, BeepLauncher
   },
   props: {
     settings: Object,

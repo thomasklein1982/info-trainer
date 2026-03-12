@@ -31,12 +31,16 @@
           <Button icon="pi pi-play" @click="run()" :disabled="running"/>
           <Button icon="pi pi-stop" @click="stop()" :disabled="!running"/>
           <Button icon="pi pi-list-check" @click="check()" :disabled="running"/>
-          <ToggleButton on-label="Schnell" off-label="Langsam" v-model="maxSpeed"/>
           <Button icon="pi pi-refresh" @click="changeTestcase()" :disabled="running"/>
+          <SelectButton  v-model="speed" :options="['>','>>','>>>']">
+            <template #option="slotProps">
+              <span style="letter-spacing: -0.3rem;">{{slotProps.option}}</span>
+            </template>
+          </SelectButton>
         </div>
         <div>
           <GameWorld
-            :class="maxSpeed? 'max-speed':'slow-speed'"
+            :class="speed.length===3? 'max-speed':'slow-speed'"
             style="border: 2pt solid gray"
             ref="gameworld"
             :beep="beep"
@@ -97,10 +101,11 @@ import { random } from '../../other/random';
 import { isCompletelyTrue } from '../../other/bool-array';
 import Struktogramm from '../struktogramm.vue';
 import { BeepScope } from './BeepScope';
+import SelectButton from 'primevue/selectbutton';
 
 export default{
   components: {
-    CodeMirror, GameWorld, ToggleButton, Message, Struktogramm
+    CodeMirror, GameWorld, ToggleButton, Message, Struktogramm, SelectButton
   },
   emits: [
     "save", "exercise-submit", "check-reverse", "refresh-reverse"
@@ -108,6 +113,7 @@ export default{
   props: {
     exerciseData: Object,
     beep: Object,
+    setupProgram: Object,
     writable: {
       type: Boolean,
       default: false
@@ -133,9 +139,10 @@ export default{
       if(this.reverse) return "1000rem";
       if(this.beep.editorMaxHeight) return this.beep.editorMaxHeight; else return "20rem";
     },
-    speed(){
-      if(this.maxSpeed) return 10;
-      else return 500;
+    speedDelay(){
+      if(this.speed.length===3) return 10;
+      else if(this.speed.length===2) return 500;
+      else return 2000;
     }
   },
   mounted(){
@@ -158,6 +165,7 @@ export default{
       runtimeError: null,
       scope: {},
       maxSpeed: false,
+      speed: ">>",
       nextStatement: 0,
       testCaseIndex: 0,
       showTooManyCommands: false,
@@ -323,7 +331,7 @@ export default{
         }
       }else this.updateHighlightedLine();
       while(proceed && this.running){
-        if(!this.checking) await sleep(this.speed);
+        if(!this.checking) await sleep(this.speedDelay);
         proceed=this.step();
         if(this.checking) this.checkTestCases(testData,false,correct);
         else this.updateHighlightedLine();
@@ -412,6 +420,7 @@ export default{
       }
       let stay=false;
       if(!st.ignoreOnRun){
+        if(!this.running) return false;
         let run=getRunFunction(st.type);
         try{
           stay=run(this.scope, st);
@@ -425,11 +434,33 @@ export default{
       this.updateVariables();
       return true;
     },
+    runProgramInFullSpeed(program, parseScope){
+      let scope=new BeepScope(this.$refs.gameworld.gameworld, program);
+      while(true){
+        let block=scope.blocks[scope.blocks.length-1];
+        if(!block) return;
+        let st=block.program[block.nextStatement];
+        while(!st){
+          scope.blocks.pop();
+          if(scope.layers.length>1) scope.layers.pop();
+          block=scope.blocks[scope.blocks.length-1];
+          if(!block) return false;
+          st=block.program[block.nextStatement];
+        }
+        let run=getRunFunction(st.type);
+        run(scope, st);
+        block.nextStatement++;
+      }
+    },
     stop(){
       this.highlightedStatement=null;
       this.running=false;
       this.runtimeError=null;
       this.$refs.gameworld.gameworld.reset();
+      //run setupProgram in max-Speed
+      if(this.setupProgram){
+        this.runProgramInFullSpeed(this.setupProgram.program,this.setupProgram.scope);
+      }
       this.$refs.gameworld.$forceUpdate();
     },
     updateTree(tree){
