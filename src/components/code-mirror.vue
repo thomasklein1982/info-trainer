@@ -5,9 +5,9 @@
 <script>
 import {EditorView, basicSetup} from "codemirror";
 import {Compartment,EditorState,StateEffect,StateField,EditorSelection} from '@codemirror/state';
-import {autocompletion} from '@codemirror/autocomplete';
+import {acceptCompletion, autocompletion, completionStatus} from '@codemirror/autocomplete';
 import {keymap, Decoration} from '@codemirror/view';
-import {indentWithTab, undo, redo} from '@codemirror/commands';
+import {indentWithTab, undo, redo, indentLess, indentMore} from '@codemirror/commands';
 import {LRLanguage,LanguageSupport,foldNodeProp, foldInside, indentNodeProp} from "@codemirror/language";
 import {parser as registerParser} from "../parsers/register-parser/register-parser";
 import {parser as whileParser } from "../parsers/while-parser/while-parser";
@@ -154,7 +154,17 @@ export default{
     let updateTreeDebounceTimer=null;
     let extensions=[
       basicSetup,
-      keymap.of(this.insertTab? insertTab:indentWithTab),
+      keymap.of([
+      {
+        key: 'Tab',
+        preventDefault: true,
+        shift: indentLess,
+        run: e => {
+          if (!completionStatus(e.state)) return indentMore(e);
+          return acceptCompletion(e);
+        },
+      },
+    ]),
       editorTheme.of(oneDark),
       lineHighlightField,
       EditorView.domEventHandlers({

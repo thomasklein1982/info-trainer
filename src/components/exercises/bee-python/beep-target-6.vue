@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Die Biene Lisa muss nacheinander zu beiden Blumen fliegen.</p>
+    <p>Die Biene Lisa muss nacheinander zu allen Blumen fliegen.</p>
   </ExerciseBody>
 </template>
 
