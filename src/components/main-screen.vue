@@ -21,6 +21,7 @@
         allow-choose-database
         allow-choose-mode
         show-from-start
+        :database="emptyDB"
       />
     </template>
     <template v-else-if="mode.type==='bp'">
@@ -80,6 +81,7 @@ import { Random } from '../other/random';
 import CheatSheet from './cheat-sheet.vue';
 import WhileSimulator from './while-simulator.vue';
 import BeepLauncher from './beep-launcher.vue';
+import EmptyDB from "../components/exercises/databases/databases/empty";
 
 export default{
   components: {
@@ -95,7 +97,8 @@ export default{
       currentComponent: "Home",
       currentPath: ExercisePathData[1].paths[0],
       showHome: true,
-      showABDrawer: false
+      showABDrawer: false,
+      emptyDB: EmptyDB
     };
   },
   mounted(){

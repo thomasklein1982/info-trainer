@@ -42,6 +42,7 @@ import ToggleButton from 'primevue/togglebutton';
 import SelectButton from 'primevue/selectbutton';
 import { parseTerm } from './other/parse-term';
 
+
 const updateSW=registerSW({
   onNeedRefresh(){
     let a=confirm("Eine neue Version ist verfügbar. Willst du aktualisieren (empfohlen!)?");
