@@ -183,7 +183,7 @@ export default{
   },
   computed: {
     buttonLabel(){
-      if(!this.exerciseData) return "DB-Playgroud";
+      if(!this.exerciseData) return "DB-Playground";
       if(this.realMode==="sql") return 'SQL-Aufgabe bearbeiten';
       return 'Aufgabe bearbeiten';
     },
