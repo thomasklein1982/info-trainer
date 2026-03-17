@@ -13,6 +13,17 @@ export class GameWorld{
     this.testData=null;
     this.create();
   }
+  forEachField(func){
+    let index=0;
+    for(let i=0;i<this.fields.length;i++){
+      let line=this.fields[i];
+      for(let j=0;j<line.length;j++){
+        let f=line[j];
+        func(f,index);
+        index++;
+      }
+    }
+  }
   getNamedField(name){
     return this.namedFields[name];
   }

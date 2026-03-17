@@ -181,7 +181,7 @@ export const CompileFunctions={
         if(block.error) return block;
         branch.program=block.program;
         if(expectCondition) st.branches.push(branch);
-        else st.else=branch.program;
+        else st.elseBranch=branch.program;
         n=n.nextSibling;
       }
       return st;
@@ -201,9 +201,9 @@ export const CompileFunctions={
           return;
         }
       }
-      if(statement.else){
+      if(statement.elseBranch){
         scope.blocks.push({
-          program: statement.else,
+          program: statement.elseBranch,
           nextStatement: 0
         });
       }

@@ -234,7 +234,7 @@ let DiBiAlgo={
       label: "Verzweigungen",
       icon: "algo-if",
       id: "algo-if",
-      exercises: ["beep-res-4","beep-target-8","beep-if-1", "beep-tr-1","beep-tanz-1", "beep-vergleich", "beep-tr-2"]
+      exercises: ["beep-res-5","beep-target-8","beep-res-4","beep-if-1", "beep-tr-1","beep-tanz-1", "beep-vergleich", "beep-tr-2", "beep-max", "beep-sort"]
     },
     // {
     //   label: "Schleifen",

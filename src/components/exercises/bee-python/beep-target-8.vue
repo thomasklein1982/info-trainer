@@ -18,7 +18,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-target-8",
   cheats: ["beep"],
-  title: "Wohin soll Lisa fliegen?",
+  title: "Oben oder unten?",
   beep: {
     world: [
       ".WWO",

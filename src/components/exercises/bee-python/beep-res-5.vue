@@ -1,12 +1,6 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
-    Gegeben ist das untenstehende Python-Programm.
-    <ol class="teilaufgaben">
-      <li>Stelle den Algorithmus als Struktogramm dar.</li>
-      <li>Wende den Algorithmus auf die Situation an. Schreibe ein <strong>B</strong> auf das Feld, auf dem sich die Biene am Ende des Programms befindet.</li>
-    </ol>
-    
-    
+    Wende den Algorithmus auf die Situation an. Schreibe ein <strong>B</strong> auf das Feld, auf dem sich die Biene am Ende des Programms befindet.
   </ExerciseBody>
 </template>
 
@@ -17,7 +11,7 @@ import { checkPosition } from './functions/checkPosition';
 
 
 export const data={
-  id: "beep-res-4",
+  id: "beep-res-5",
   cheats: ["beep"],
   title: "Wohin fliegt Lisa?",
   programs: [
@@ -30,13 +24,15 @@ export const data={
         "....."
       ],
       code: [
+        ['right()','left()'],
+        ['right()','left()',''],
         'a = read()',
         {
           type: "if",
-          condition: ["a == §i0§","a != §i0§"],
+          condition: ["a < §i0§","a > §i0§"],
           sub1: [
-            "left()",
             ["move()",""],
+            "left()",
             ["right()",""]
           ],
           sub2: [
@@ -44,14 +40,14 @@ export const data={
             "move()"
           ]
         },
-        "left()",
-        'move()',
-        ["move()",""],
+        "right()",
+        ["right()","left()",""],
+        "move()"
       ]
     },
   ],
   beep: {
-    language: "python",
+    language: "struktogramm",
     reverse: true,
     world: [
       "WWWWW",
@@ -107,9 +103,7 @@ export default{
       this.beep.world=program.world;
       let code=createCode(Random,program.code);
       this.beep.code=code.code;
-      let nCode=code.values.i[0];
-      let nMap=Random.int(0,1)===1? nCode: Random.int(2,99);
-      this.beep.zahlen=[nCode,nMap];
+      this.beep.zahlen=[];
       for(let i=0;i<40;i++){
         this.beep.zahlen.push(Random.int(2,99));
       }

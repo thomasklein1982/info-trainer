@@ -66,6 +66,7 @@ db.addTable(
 );
 
 db.create=function(options){
+  this.info="<em>Info: Die Daten in dieser Datenbank werden zufällig generiert. Namensgleichheiten mit Personen oder Spielen aus der echten Welt sind rein zufällig.</em>";
   let usernames=[
     "ShadowSlayer",
     "NoobMaster69",

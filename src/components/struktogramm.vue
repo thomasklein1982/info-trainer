@@ -19,7 +19,7 @@
           <Struktogramm :python-program="s.branches[0].program" :highlighted-statement="highlightedStatement"/>
         </div>
         <div class="if-body-no block">
-          <Struktogramm :python-program="s.else?.program" :highlighted-statement="highlightedStatement"/>
+          <Struktogramm :python-program="s.elseBranch" :highlighted-statement="highlightedStatement"/>
         </div>
       </div>
     </template>
@@ -71,6 +71,8 @@ export default {
 }
 .statement{
   padding: 0.2rem;
+  padding-left: 1rem;
+  text-align: left;
 }
 .if-block-header{
   height: 4rem;
