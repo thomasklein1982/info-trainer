@@ -2,7 +2,8 @@ import { Methods } from "./methods";
 
 export function evaluate(scope, p){
   let run=getRunFunction(p.type);
-  return run(scope,p);
+  let v=run(scope,p);
+  return v;
 }
 
 export function getParseFunction(node){
@@ -55,6 +56,32 @@ export const CompileFunctions={
       return v;
     }
   },
+  UnaryExpression: {
+    parse: (node,src,scope)=>{
+      let fullCode=src.substring(node.from,node.to);
+      let n=node.firstChild;
+      let op=src.substring(n.from,n.to);
+      
+      if(n.type.isError || ["-"].indexOf(op)<0) return createError(n,"Mit diesem Zeichen kann ich an dieser Stelle\nnichts anfangen: '"+fullCode.trim()+"'");
+      n=n.nextSibling;
+      let cf=getParseFunction(n);
+      let a=cf(n,src,scope);
+      if(a.error) return a;
+      return {
+        type: node.name,
+        op, a, node,
+        fullCode
+      };
+    },
+    run: (scope, statement)=>{
+      let a=statement.a;
+      let op=statement.op;
+      a=evaluate(scope,a);
+      if(op==="-"){
+        return -a;
+      }
+    }
+  },
   BinaryExpression: {
     parse: (node,src,scope)=>{
       let fullCode=src.substring(node.from,node.to);
@@ -66,6 +93,7 @@ export const CompileFunctions={
       n=n.nextSibling;
       let op=src.substring(n.from,n.to);
       if(n.type.isError || ["==","!=","<",">","<=",">=","+","-","*","/","%"].indexOf(op)<0) return createError(n,"Rechenzeichen erwartet:\n== != < > <= >= + - * /");
+      let isBoolean=["==","!=","<",">","<=",">="].indexOf(op)>=0;
       n=n.nextSibling;
       cf=getParseFunction(n);
       let b=cf(n,src,scope);
@@ -73,15 +101,24 @@ export const CompileFunctions={
       return {
         type: node.name,
         op, a, b, node,
-        fullCode
+        fullCode,
+        isBoolean
       };
     },
     run: (scope, statement)=>{
       let a=statement.a;
       let b=statement.b;
       let op=statement.op;
-      a=evaluate(scope,a);
-      b=evaluate(scope,b);
+      let va=evaluate(scope,a);
+      if(va.value!==undefined){
+        if(va.value===false) return false;
+        a=va.right;
+      }else{
+        a=va;
+      }
+      let vb=evaluate(scope,b);
+      if(vb.value!==undefined) b=vb.value; else b=vb;
+      let c;
       if(op==="+"){
         return a+b;
       }else if(op==="-"){
@@ -93,17 +130,21 @@ export const CompileFunctions={
       }else if(op==="%"){
         return a%b;
       }else if(op==="=="){
-        return a==b;
+        c=a==b;
       }else if(op==="!="){
-        return a!=b;
+        c=a!=b;
       }else if(op==="<"){
-        return a<b;
+        c=a<b;
       }else if(op===">"){
-        return a>b;
+        c=a>b;
       }else if(op==="<="){
-        return a<=b;
+        c=a<=b;
       }else if(op===">="){
-        return a>=b;
+        c=a>=b;
+      }
+      return {
+        value: c,
+        right: b
       }
     }
   },
@@ -170,6 +211,11 @@ export const CompileFunctions={
           if(cf.error) return cf;
           let cond=cf(n,src,scope);
           if(cond.error) return cond;
+          if(!cond.isBoolean){
+            return {
+              error: {node: n, message: "Dies ist keine Bedingung."}
+            };
+          }
           createHtmlCode(cond);
           branch.condition=cond;
         }
@@ -191,6 +237,7 @@ export const CompileFunctions={
       for(let i=0;i<branches.length;i++){
         let b=branches[i];
         let cond=evaluate(scope,b.condition);
+        if(cond.value!==undefined) cond=cond.value;
         if(cond!==true && cond!==false) throw createError(statement.node,"Bedingung muss True oder False sein,\nsie ist aber "+cond);
         if(cond){
           scope.blocks.push({
@@ -231,6 +278,11 @@ export const CompileFunctions={
       if(cf.error) return cf;
       let cond=cf(n,src,scope);
       if(cond.error) return cond;
+      if(!cond.isBoolean){
+        return {
+          error: {node: n, message: "Dies ist keine Bedingung."}
+        };
+      }
       st.condition=cond;
       
       n=n.nextSibling;
@@ -244,6 +296,7 @@ export const CompileFunctions={
     },
     run: (scope, statement)=>{
       let cond=evaluate(scope,statement.condition);
+      if(cond.value!==undefined) cond=cond.value;
       if(cond!==true && cond!==false) throw createError(statement.node,"Bedingung muss True oder False sein,\nsie ist aber "+cond);
       if(cond){
         scope.blocks.push({
@@ -314,11 +367,13 @@ export const CompileFunctions={
     },
     run: (scope, statement)=>{
       let val=evaluate(scope,statement.value);
+      if(val.value!==undefined) val=val.value;
       let v=scope.getVariable(statement.variable.name);
       if(!v){
         throw "Unbekannte Variable";
       }else{
         let old=evaluate(scope,statement.variable);
+        if(old.value!==undefined) old=old.value;
         if(statement.op==="+="){
           v.value=old+val;
         }else if(statement.op==="-="){
@@ -360,6 +415,7 @@ export const CompileFunctions={
     },
     run: (scope, statement)=>{
       let val=evaluate(scope,statement.value);
+      if(val.value!==undefined) val=val.value;
       let v=scope.getVariable(statement.variable.name);
       if(!v){
         scope.addVariable(statement.variable.name,val);
@@ -399,6 +455,7 @@ export const CompileFunctions={
       let args=[];
       for(let i=0;i<statement.args.length;i++){
         let a=evaluate(scope,statement.args[i]);
+        if(a.value!==undefined) a=a.value;
         args.push(a);
       }
       return args;
@@ -459,6 +516,7 @@ export const CompileFunctions={
     run: (scope, statement)=>{
       let m=statement.method;
       let args=evaluate(scope,statement.args);
+      if(args.value!==undefined) args=args.value;
       let value=m.run(scope.gameworld,args);
       return value;
     }
