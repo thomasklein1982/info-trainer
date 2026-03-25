@@ -2,6 +2,7 @@
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
     <p>Auf den drei gelben Feldern stehen drei unterschiedliche Zahlen. Lisa soll diese Zahlen von klein nach groß sortieren und anschließend zur Blume fliegen.</p>
+    <Hint>Mit <Code inline>if a < b < c: ...</Code> kannst du abfragen, ob a kleiner als b und gleichzeitig b kleiner als c ist.</Hint>
   </ExerciseBody>
 </template>
 
