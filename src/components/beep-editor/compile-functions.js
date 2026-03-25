@@ -283,6 +283,7 @@ export const CompileFunctions={
           error: {node: n, message: "Dies ist keine Bedingung."}
         };
       }
+      createHtmlCode(cond);
       st.condition=cond;
       
       n=n.nextSibling;

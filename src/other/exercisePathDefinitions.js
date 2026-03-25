@@ -236,12 +236,12 @@ let DiBiAlgo={
       id: "algo-if",
       exercises: ["beep-res-5","beep-target-8","beep-res-4","beep-if-1", "beep-tr-1","beep-tanz-1", "beep-vergleich", "beep-tr-2", "beep-max", "beep-sort"]
     },
-    // {
-    //   label: "Schleifen",
-    //   icon: "algo-loops",
-    //   id: "algo-loops",
-    //   exercises: []
-    // },
+    {
+      label: "Schleifen",
+      icon: "algo-loops",
+      id: "algo-loops",
+      exercises: ["beep-res-6", "beep-target-9", "beep-target-10", "beep-target-11","beep-max-2"]
+    },
     // {
     //   label: "Problemlösen",
     //   icon: "algo-problems",

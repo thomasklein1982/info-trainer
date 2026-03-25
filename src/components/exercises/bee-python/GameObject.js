@@ -20,6 +20,9 @@ export class GameObject{
     this.x=x;
     this.y=y;
   }
+  setPositionToField(f){
+    this.setPosition(f.x,f.y);
+  }
   print(text){
     let f=this.getFieldAhead();
     if ( !f ) {

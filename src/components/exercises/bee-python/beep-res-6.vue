@@ -1,12 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
-    Gegeben ist das untenstehende Python-Programm.
-    <ol class="teilaufgaben">
-      <li>Stelle den Algorithmus als Struktogramm dar.</li>
-      <li>Wende den Algorithmus auf die Situation an. Schreibe ein <strong>B</strong> auf das Feld, auf dem sich die Biene am Ende des Programms befindet.</li>
-    </ol>
-    
-    
+    <p>Wende den Algorithmus auf die Situation an.</p>
+    <p>Schreibe <strong>alle Texte und Zahlen</strong>, die sich am Programmende auf den Feldern befinden, in das passende Feld. Schreibe ein <strong>B</strong> auf das Feld, auf dem sich die Biene am Ende des Programms befindet.</p>
   </ExerciseBody>
 </template>
 
@@ -17,7 +12,7 @@ import { checkPosition } from './functions/checkPosition';
 
 
 export const data={
-  id: "beep-res-4",
+  id: "beep-res-6",
   cheats: ["beep"],
   title: "Wohin fliegt Lisa?",
   programs: [
@@ -25,28 +20,34 @@ export const data={
       world: [
         ".....",
         ".....",
-        "..B1.",
         ".....",
-        "....."
+        ".....",
+        "B...."
       ],
       code: [
-        'a = read()',
         {
-          type: "if",
-          condition: ["a == §i0§","a != §i0§"],
+          type: "select",
+          values: ['left()',''],
+          name: "leftOrNot"
+        },
+        'i = 1',
+        {
+          type: "while",
+          condition: ["i <= §a§"],
           sub1: [
-            "left()",
-            ["move()",""],
-            ["right()",""]
-          ],
-          sub2: [
-            "right()",
-            "move()"
+            'print( i )',
+            "move()",
+            'i = i + 1'
           ]
         },
-        "left()",
-        'move()',
+        {
+          type: "select",
+          values: ['right()','left()'],
+          name: "leftOrNot"
+        },
+        "move()",
         ["move()",""],
+        ["move()",""]
       ]
     },
   ],
@@ -64,13 +65,8 @@ export const data={
         bee: new Bee("B","Lisa",gameworld)
       };
     },
-    zahlen: [0,0],
     resetFunc: function(gameworld, data){
-      gameworld.forEachField((f,i)=>{
-        f.text=this.beep.zahlen[i];
-      });
-      let f=gameworld.getNamedField("1");
-      f.text=this.beep.zahlen[1];
+      
     },
     testdata: {
       create: function(index){
@@ -85,6 +81,12 @@ export const data={
       info: "Das richtige Feld wurde mit 'B' beschriftet.",
       check: function(result){
         return checkPosition(result,"B","bee");
+      }
+    },
+    {
+      info: "Die anderen Beschriftungen sind korrekt.",
+      check: function(result){
+        return result.correct;
       }
     }
   ]
@@ -101,14 +103,8 @@ export default{
     create(Random, resArray){
       let program=this.programs[Random.int(0,this.programs.length-1)];
       this.beep.world=program.world;
-      let code=createCode(Random,program.code);
+      let code=createCode(Random,program.code,{a: Random.int(2,4)});
       this.beep.code=code.code;
-      let nCode=code.values.i[0];
-      let nMap=Random.int(0,1)===1? nCode: Random.int(2,99);
-      this.beep.zahlen=[nCode,nMap];
-      for(let i=0;i<40;i++){
-        this.beep.zahlen.push(Random.int(2,99));
-      }
       for(let i=0;i<this.tasks.length;i++){
         let t=this.tasks[i];
         t.input="";

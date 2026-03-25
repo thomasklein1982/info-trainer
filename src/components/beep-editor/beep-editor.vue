@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Hint v-if="beep.maxMoveCount">Du darfst höchstens {{ beep.maxMoveCount }} Move-Befehle verwenden.</Hint>
+    <Hint v-if="beep.maxMoveCount">Du darfst höchstens {{ beep.maxMoveCount }} Move-Befehl{{ beep.maxMoveCount===1? '':'e' }} verwenden.</Hint>
     <div id="wrapper" :style="{maxHeight: editorMaxHeight}">
       <div :class="reverse? '':'invisible-at-print'" id="left-side">
         <div id="editor-wrapper">
@@ -78,7 +78,7 @@
       </Message>
     </div>
     <Dialog header="Zu viele Move-Befehle" v-model:visible="showTooManyCommands" :closable="true">
-      Dein Programm verwendet {{ moveCount }} Move-Befehle, du darfst aber nur höchstens {{ beep.maxMoveCount }} Move-Befehle verwenden.
+      Dein Programm verwendet {{ moveCount }} Move-Befehl{{ moveCount===1? '':'e' }}, du darfst aber nur höchstens {{ beep.maxMoveCount }} Move-Befehl{{ beep.maxMoveCount===1? '':'e' }} verwenden.
       <p>Vielleicht musst du noch mal neu über die Aufgabe nachdenken?</p>
     </Dialog>
   </div>
@@ -235,7 +235,7 @@ export default{
         }else{
           if(a in valuesUser){
             let user=(valuesUser[a]+"").trim();
-            if(user!=="B" && user.length>0){
+            if(user.toLowerCase()!=="b" && user.length>0){
               correct = false;
               continue;
             }

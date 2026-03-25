@@ -15,7 +15,7 @@ import { Flower } from './Flower';
 
 
 export const data={
-  id: "beep-max",
+  id: "beep-max-2",
   cheats: ["beep"],
   title: "Welche Zahl ist die größte?",
   beep: {
@@ -25,6 +25,7 @@ export const data={
       "B123.",
       ".WWW."
     ],
+    maxMoveCount: 2,
     worldWidth: "15rem",
     setupFunc: function(gameworld){
       return {

@@ -1,4 +1,9 @@
 
+export * as BeepMax2 from './bee-python/beep-max-2.vue';
+export * as BeepRes6 from './bee-python/beep-res-6.vue';
+export * as BeepTarget11 from './bee-python/beep-target-11.vue';
+export * as BeepTarget10 from './bee-python/beep-target-10.vue';
+export * as BeepTarget9 from './bee-python/beep-target-9.vue';
 export * as BeepMax from './bee-python/beep-max.vue';
 export * as BeepSort from './bee-python/beep-sort.vue';
 export * as BeepRes5 from './bee-python/beep-res-5.vue';
