@@ -43,6 +43,7 @@ export function createCode(Random,program,values,indent){
 }
 
 function completeValues(givenValues,Random){
+  if(!givenValues) givenValues={};
   if(givenValues.selects) return givenValues;
   let values={i: [], c: [], s: [], selects: {}};
   values.variables=givenValues;
