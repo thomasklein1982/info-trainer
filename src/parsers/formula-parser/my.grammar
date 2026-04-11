@@ -1,0 +1,33 @@
+@top Formel { "" | "=" Term }
+
+@skip { space }
+
+@tokens {
+  space { (" "|"	")+ }
+  Word { $[A-Za-z_ÄäÜüÖöß] $[A-Za-z0-9_ÄäÜüÖöß]* }
+  Functionname { $[A-Za-z_ÄäÜüÖöß] $[A-Za-z._ÄäÜüÖöß] $[A-Za-z0-9_ÄäÜüÖöß]* }
+  Number { std.digit+ }
+  Bezug { $[A-Za-z] $[0-9]+}
+  NewLine { "\n" }
+  @precedence{Word,Number}
+}
+
+@precedence {
+  prec_exp @left,
+  prec_neg @left,
+  prec_callSub @left,
+  prec_mul_div @left,
+  prec_plus @left
+}
+
+Term { BinaryExpression | Klammerausdruck |  Wert | Bezug | Bereich }
+
+Klammerausdruck { "(" Term ")" } 
+
+BinaryExpression { Term !prec_plus '+' Term | Term !prec_mul_div "*" Term | Term !prec_callSub "-" Term | Term !prec_mul_div "/" Term | Term !prec_exp "^" Term }
+
+Zahl { Number "," Number | Number }
+
+Wert { Zahl | '"' Word '"' | Functionname "(" Term (";" Term)* ")" }
+
+Bereich { Bezug ":" Bezug }

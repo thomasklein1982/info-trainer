@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "build-register-parser": "lezer-generator src/parsers/register-parser/my.grammar -o src/parsers/register-parser/register-parser.js",
-    "build-while-parser": "lezer-generator src/parsers/while-parser/my.grammar -o src/parsers/while-parser/while-parser.js"
+    "build-while-parser": "lezer-generator src/parsers/while-parser/my.grammar -o src/parsers/while-parser/while-parser.js",
+    "build-formula-parser": "lezer-generator src/parsers/formula-parser/my.grammar -o src/parsers/formula-parser/formula-parser.js"
   },
   "dependencies": {
     "@codemirror/lang-python": "^6.2.1",

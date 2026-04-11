@@ -54,6 +54,9 @@
         @refresh-reverse="refreshExercise"
       />
     </template>
+    <template v-else-if="spreadsheet">
+      <SpreadsheetEditor v-model="spreadsheet.data"/>
+    </template>
     <div v-else style="display: grid; place-content: end;">
       <template v-if="java">
         <JavaAppLauncher
@@ -120,10 +123,11 @@ import Message from "primevue/message";
 import RmLauncher from "./rm-launcher.vue";
 import BeepEditor from "./beep-editor/beep-editor.vue";
 import { nextTick } from "vue";
+import SpreadsheetEditor from "./spreadsheet/spreadsheet-editor.vue";
 
 export default {
   components: {
-    JavaApp, DialogFeedback,ExerciseProgress, TuringMachineLauncher, Message, RegexpLauncher, DatabaseLauncher, RmLauncher, BeepEditor
+    JavaApp, DialogFeedback,ExerciseProgress, TuringMachineLauncher, Message, RegexpLauncher, DatabaseLauncher, RmLauncher, BeepEditor, SpreadsheetEditor
   },
   props: {
     inline: {
@@ -142,6 +146,7 @@ export default {
     regexp: Object,
     database: Object,
     beep: Object,
+    spreadsheet: Object,
     dbMode: {
       type: String,
       default: "sql"
@@ -162,7 +167,7 @@ export default {
   },
   computed: {
     isRandomStandardExercise(){
-      if(this.java || this.turingMachine || this.finiteStateMachine || this.registerMachine || this.regexp || this.database || this.beep) return false;
+      if(this.java || this.turingMachine || this.finiteStateMachine || this.registerMachine || this.regexp || this.database || this.beep || this.spreadsheet) return false;
       return true;
     },
     machine(){

@@ -115,6 +115,19 @@ let Bee={
   ]
 }
 
+let Spreadsheet={
+  name: "Tabellenkalkulation",
+  id: "tk",
+  paths: [
+    {
+      label: "Formeln",
+      id: "tk-formulas",
+      icon: "tk-formulas",
+      exercises: ["sh-test"]
+    }
+  ]
+}
+
 let Datenbanken={
   name: "Datenbanken",
   id: "db",
@@ -270,7 +283,7 @@ let Datenschutz={
 }
 
 let paths=[
-  DiBiAlgo, Grundlagen, Internet, Bee, Java, Datenbanken, Datenschutz, TheoretischeInformatik
+  DiBiAlgo, Spreadsheet, Grundlagen, Internet, Bee, Java, Datenbanken, Datenschutz, TheoretischeInformatik
 ];
 
 for(let i=0;i<paths.length;i++){

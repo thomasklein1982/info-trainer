@@ -1,4 +1,5 @@
 
+export * as ShTest from './spreadsheet/sh-test.vue';
 export * as BeepMax2 from './bee-python/beep-max-2.vue';
 export * as BeepRes6 from './bee-python/beep-res-6.vue';
 export * as BeepTarget11 from './bee-python/beep-target-11.vue';
