@@ -18,41 +18,43 @@ import { checkPosition } from './functions/checkPosition';
 
 
 export const data={
-  id: "beep-res-6",
+  id: "beep-res-7",
   cheats: ["beep"],
   title: "Wohin fliegt Lisa?",
   programs: [
     {
       world: [
-        ".....",
-        ".....",
-        ".....",
-        ".....",
-        "B...."
+        ".......",
+        "1......",
+        "B3.....",
+        "2......",
+        "......."
       ],
       code: [
         {
           type: "select",
-          values: ['left()',''],
-          name: "leftOrNot"
+          values: ['left()','right()',''],
+          name: "dir"
         },
+        "a = read()",
+        {
+          type: "select",
+          values: ['right()','left()',''],
+          name: "dir"
+        },
+        'move()',
         'i = 1',
         {
           type: "while",
-          condition: ["i <= §a§"],
+          condition: ["i <= a"],
           sub1: [
-            'print( i )',
+            ['print( i * i )', 'print( i + §a§ )', 'print( i - 1 )',' print( i * §a§ ) '],
             "move()",
             'i = i + 1'
           ]
         },
-        {
-          type: "select",
-          values: ['right()','left()'],
-          name: "leftOrNot"
-        },
-        "move()",
-        ["move()",""],
+        ['left()', 'right()'],
+        'move()',
         ["move()",""]
       ]
     },
@@ -62,9 +64,10 @@ export const data={
     reverse: true,
     world: [
       "WWWWW",
-      "B..1F",
+      "B123",
       "WWWWW",
     ],
+    zahlen: [0,0,0],
     worldWidth: "15rem",
     setupFunc: function(gameworld){
       return {
@@ -72,11 +75,14 @@ export const data={
       };
     },
     resetFunc: function(gameworld, data){
-      
+      for(let i=0;i<3;i++){
+        gameworld.getNamedField(i+1+"").text=this.beep.zahlen[i];
+      }
     },
     testdata: {
       create: function(index){
-        return {};
+        return {
+        };
       },
       count: 1
     },
@@ -109,8 +115,10 @@ export default{
     create(Random, resArray){
       let program=this.programs[Random.int(0,this.programs.length-1)];
       this.beep.world=program.world;
-      let code=createCode(Random,program.code,{a: Random.int(2,4)});
+      let code=createCode(Random,program.code,{a: Random.int(2,5)});
       this.beep.code=code.code;
+      let zahlen=Random.mixArray([2,3,4,5]);
+      this.beep.zahlen=zahlen;
       for(let i=0;i<this.tasks.length;i++){
         let t=this.tasks[i];
         t.input="";

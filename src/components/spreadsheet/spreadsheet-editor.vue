@@ -2,11 +2,12 @@
   <div id="menu">
     <div>{{ modelValue }}</div>
     <div>{{ selection }}</div>
+    <div><input @change="updateSelectedCellToCurrentCellAdress()" id="current-cell-address" v-model="currentCellAdress"/></div>
   </div>
   <div id="table">
     <table>
       <tr>
-        <th></th><th class="col-caption" v-for="i in colCount">{{ String.fromCodePoint(64+i) }}</th>
+        <th class="col-caption"></th><th class="col-caption" v-for="i in colCount">{{ String.fromCodePoint(64+i) }}</th>
       </tr>
       <tr v-for="(r,i) in modelValue">
         <th class="row-caption">{{i+1}}</th>
@@ -16,7 +17,7 @@
             :row="i" 
             :cell-data="modelValue"
             :selected="isInSelection(i,j)"
-            :edited="selection.from!==null && selection.from.row===i && selection.from.col===j"
+            :active="selection.from!==null && selection.from.row===i && selection.from.col===j"
             @down="mouseDownCell"
             @enter="mouseEntersCell"
             @hit-enter="hitEnterCell"
@@ -42,11 +43,6 @@ export default{
   emits: [
     "update:modelValue"
   ],
-  watch: {
-    modelValue(nv,ov){
-      console.log("change",nv);
-    }
-  },
   computed: {
     value: {
       get() {
@@ -78,14 +74,15 @@ export default{
     return {
       selectMode: true,
       selection: {
-        from: null,
-        to: null,
-        lastCell: null
-      }
+        from: {row: 0, col: 0},
+        to: {row: 0, col: 0}
+      },
+      currentCellAdress: "A1"
     };
   },
   mounted(){
     // this.createCellData();
+    this.updateData();
   },
   methods: {
     isInSelection(row,col){
@@ -93,14 +90,6 @@ export default{
       if(!from) return false;
       let to=this.realSelection.to;
       return from.row<=row && row<=to.row && from.col<=col && col<=to.col;
-    },
-    updateSelection(pos){
-      for(let i=0;i<this.selectedCells.length;i++){
-        let p=this.selectedCells[i];
-
-      }
-      this.selectedCells=[];
-      this.selectedCells.push(pos);
     },
     isNeighbor(pos1,pos2){
       return Math.abs(pos1.row-pos2.row)===1 && pos1.col===pos2.col || Math.abs(pos1.col-pos2.col)===1 && pos1.row===pos2.row;
@@ -111,13 +100,12 @@ export default{
     clearSelection(){
       this.selection.from=null;
       this.selection.to=null;
-      this.selection.lastCell=null;
     },
     mouseDownCell(pos){
       if(this.selectMode){
         this.selection.from=pos;
         this.selection.to=pos;
-        this.selection.lastCell=pos;
+        this.updateCurrentCellAdressFromSelection();
         return;
       }
       console.log(pos);
@@ -127,7 +115,21 @@ export default{
       if(pos.row>=this.rowCount) pos=null;
       this.selection.from=pos;
       this.selection.to=pos;
-      this.selection.lastCell=pos;
+      this.updateCurrentCellAdressFromSelection();
+    },
+    updateCurrentCellAdressFromSelection(){
+      let name=getCellName(this.selection.from.row,this.selection.from.col);
+      this.currentCellAdress=name;
+    },
+    updateSelectedCellToCurrentCellAdress(){
+      let pos=getRowAndCol(this.currentCellAdress);
+      if(Number.isNaN(pos.row) || Number.isNaN(pos.col) || pos.row<0 || pos.col<0){
+        let name=getCellName(this.selection.from.row,this.selection.from.col);
+        this.currentCellAdress=name;
+        return;
+      }
+      this.selection.from=pos;
+      this.selection.to=pos;
     },
     updateData(sourcePos){
       console.log("update data",sourcePos);
@@ -135,16 +137,18 @@ export default{
       let queue=[];
       for(let i=0;i<this.rowCount;i++){
         for(let j=0;j<this.colCount;j++){
-          queue.push([i,j]);
+          let cell={
+            row: i, col: j, name: getCellName(i,j)
+          };
+          queue.push(cell);
         }
       }
       while(queue.length>0){
-        let p=queue.splice(0,1)[0];
-        let v=calcCellValue(valid,this.modelValue,p);
-        if(v===null){
-          queue.push(p);
+        let cell=queue.splice(0,1)[0];
+        if(!calcCellValue(valid,this.modelValue,cell)){
+          queue.push(cell);
         }else{
-          valid[getCellName(p[0],p[1])]=true;
+          valid[cell.name]=true;
         }
       }
     }
@@ -164,9 +168,9 @@ export function getRowAndCol(cellname){
   return { row: r, col: c};
 }
 
-function calcCellValue(valid,cellData,posArray){
-  let c=posArray[1]
-  let r=posArray[0];
+function calcCellValue(valid,cellData,cell){
+  let c=cell.col;
+  let r=cell.row;
   let data=cellData[r][c];
   if(!data) return true;
   if(data.f===null || data.f===undefined) return true;
@@ -191,7 +195,7 @@ function calcCellValue(valid,cellData,posArray){
   let pf=getParseFunction(node);
   let v=pf(node,f,cellData,valid);
   data.v=v;
-  return true;
+  return v!==null;
 }
 </script>
 
@@ -206,6 +210,10 @@ function calcCellValue(valid,cellData,posArray){
     color: black;
     height: 2em;
   }
+  #menu{
+    background-color: lightgray;
+    color: black;
+  }
   th{
     border: 0.5pt solid gray;
     color: black;
@@ -215,11 +223,18 @@ function calcCellValue(valid,cellData,posArray){
     user-select: none;
     min-width: 2em;
   }
+  th.col-caption{
+    border-top: none;
+  }
   .col-caption{
     text-align: center;
   }
   .row-caption{
     text-align: right;
     width: 2em;
+  }
+  #current-cell-address{
+    width: 3em;
+    height: 2em;
   }
 </style>
