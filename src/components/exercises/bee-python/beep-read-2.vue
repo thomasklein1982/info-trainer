@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Lisa soll die Texte auf den gelben Feldern lesen und in zwei verschiedenen Variablen speichern.</p>
+    <p>Lisa soll die Texte auf den hervorgehobenen Feldern lesen und in zwei verschiedenen Variablen speichern.</p>
   </ExerciseBody>
 </template>
 
@@ -34,7 +34,7 @@ export const data={
       for(let i=0;i<2;i++){
         let f=gameworld.getNamedField(i+1+"");
         f.text=data.texts[i];
-        f.style.backgroundColor="yellow";
+        f.cssClass="em-field-1";
       }
     },
     testdata: {

@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Lisa soll den Text auf dem gelben Feld lesen und in einer Variablen speichern.</p>
+    <p>Lisa soll den Text auf dem hervorgehobenen Feld lesen und in einer Variablen speichern.</p>
   </ExerciseBody>
 </template>
 
@@ -33,7 +33,7 @@ export const data={
     resetFunc: function(gameworld, data){
       let f=gameworld.getNamedField("G");
       f.text=data.text;
-      f.style.backgroundColor="yellow";
+      f.cssClass="em-field-1";
     },
     testdata: {
       create: function(index){

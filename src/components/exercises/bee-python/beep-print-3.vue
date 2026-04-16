@@ -73,7 +73,8 @@ export const data={
             if(ist!==soll) return false;
           }
           return true;
-        }
+        },
+        points: 0.5
       },
       {
         info: "Die zweite Reihe ist richtig.",
@@ -88,7 +89,8 @@ export const data={
             if(ist!==soll) return false;
           }
           return true;
-        }
+        },
+        points: 0.5
       },
       {
         info: "Die dritte Reihe ist richtig.",
@@ -103,7 +105,8 @@ export const data={
             if(ist!==soll) return false;
           }
           return true;
-        }
+        },
+        points: 1
       },
       {
         info: "Die vierte Reihe ist richtig.",
@@ -118,7 +121,8 @@ export const data={
             if(ist!==soll) return false;
           }
           return true;
-        }
+        },
+        points: 1
       },
       {
         info: "Die unterste Reihe ist richtig.",
@@ -133,7 +137,8 @@ export const data={
             if(ist!==soll) return false;
           }
           return true;
-        }
+        },
+        points: 1
       },
       {
         info: "Die Biene befindet sich am Programmende auf der Blume.",
@@ -142,7 +147,8 @@ export const data={
           let bee=gameworld.objects.bee;
           let f=gameworld.objects.f;
           return bee.isOnSameField(f);
-        }
+        },
+        points: 1
       }
     ]
   },

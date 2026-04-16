@@ -14,6 +14,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-target-6",
   cheats: ["beep"],
+  points: 3,
   title: "Lisa fliegt zu mehreren Blumen, noch verschärftere Variante!",
   beep: {
     world: [
@@ -68,7 +69,8 @@ export const data={
           let bee=gameworld.objects.bee;
           let f=gameworld.objects.f3;
           return bee.isOnSameField(f);
-        }
+        },
+        points: 2
       },
     ]
   },

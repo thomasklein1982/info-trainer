@@ -290,7 +290,9 @@ export default {
       let resArray=[];
       for(let i=0;i<this.$parent.tasks.length;i++){
         let t=this.$parent.tasks[i];
-        resArray.push(t.check(result));
+        t.correct=t.check(result);
+        resArray.push(t.correct);
+        t.checked=true;
       }
       this.exerciseData.correct=resArray;
       this.exerciseData.userProject=this.seed;
@@ -317,7 +319,7 @@ export default {
         this.seed=random(1000,99999999);
         Random.setSeed(this.seed);
       }
-      this.$parent.create(Random);
+      this.$parent.create(Random,undefined);
       this.showBeepEditor=false;
       nextTick(()=>{
         this.showBeepEditor=true;

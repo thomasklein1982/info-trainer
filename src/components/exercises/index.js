@@ -1,4 +1,5 @@
 
+export * as BeepRes8 from './bee-python/beep-res-8.vue';
 export * as ShTest from './spreadsheet/sh-test.vue';
 export * as BeepRes7 from './bee-python/beep-res-7.vue';
 export * as BeepMax2 from './bee-python/beep-max-2.vue';
@@ -17,8 +18,10 @@ export * as BeepTr2 from './bee-python/beep-tr-2.vue';
 export * as BeepTr1 from './bee-python/beep-tr-1.vue';
 export * as BeepIf1 from './bee-python/beep-if-1.vue';
 export * as BeepFlaeche from './bee-python/beep-flaeche.vue';
+export * as BeepDouble2 from './bee-python/beep-double-2.vue';
 export * as BeepDouble from './bee-python/beep-double.vue';
 export * as BeepCopy2 from './bee-python/beep-copy-2.vue';
+export * as BeepCopy3 from './bee-python/beep-copy-3.vue';
 export * as BeepAdd from './bee-python/beep-add.vue';
 export * as BeepRes3 from './bee-python/beep-res-3.vue';
 export * as BeepRead2 from './bee-python/beep-read-2.vue';

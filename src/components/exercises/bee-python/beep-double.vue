@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Auf dem gelben Feld steht eine Zahl. Lisa soll das Doppelte dieser Zahl auf das rote Feld schreiben.</p>
+    <p>Auf dem linken hervorgehobenen Feld steht eine Zahl. Lisa soll das Doppelte dieser Zahl auf das andere hervorgehobene Feld schreiben.</p>
   </ExerciseBody>
 </template>
 
@@ -33,9 +33,9 @@ export const data={
     resetFunc: function(gameworld, data){
       let f=gameworld.getNamedField("G");
       f.text=data.a;
-      f.style.backgroundColor="yellow";
+      f.cssClass="em-field-1";
       f=gameworld.getNamedField("R");
-      f.style.backgroundColor="red";
+      f.cssClass="em-field-2";
     },
     testdata: {
       create: function(index){
@@ -56,7 +56,8 @@ export const data={
           if(!isProgramOver) return false;
           let f=gameworld.getNamedField("R");
           return (f.text+""===data.a*2+"");
-        }
+        },
+        points: 2
       },
     ]
   },

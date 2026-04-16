@@ -213,36 +213,48 @@ export default{
       let valuesAfter=this.getFieldValues();
       let valuesUser=this.$refs.gameworld.values;
       let correct=true;
+      console.log("start checking");
       for(let a in valuesAfter){
         let v=valuesAfter[a];
         let before=valuesBefore[a];
-        if(before.text.length>0){
-          if(v.text!==before.text){
-            correct=false;
-            continue;
-          }
+        let soll=v.text+"";
+        let u=valuesUser[a];
+        if (u==="B" || u==="b") u=undefined;
+        let ist=u===undefined? before.text+"":u+"";
+        console.log("soll:",soll,"ist:",ist,"user:",u);
+        if(soll!==ist){
+          correct=false;
+          console.log("not correct")
+          continue;
         }
-        if(v.text.length>0){
-          if(!(a in valuesUser)){
-            correct = false;
-            continue;
-          }
-          let user=(valuesUser[a]+"").trim();
-          if(user!==v.text){
-            correct = false;
-            continue;
-          }
-        }else{
-          if(a in valuesUser){
-            let user=(valuesUser[a]+"").trim();
-            if(user.toLowerCase()!=="b" && user.length>0){
-              correct = false;
-              continue;
-            }
-          }
-        }
+        // if(before.text.length>0){
+        //   if(v.text!==before.text){
+        //     correct=false;
+        //     continue;
+        //   }
+        // }
+        // if(v.text.length>0){
+        //   if(!(a in valuesUser)){
+        //     correct = false;
+        //     continue;
+        //   }
+        //   let user=(valuesUser[a]+"").trim();
+        //   if(user!==v.text){
+        //     correct = false;
+        //     continue;
+        //   }
+        // }else{
+        //   if(a in valuesUser){
+        //     let user=(valuesUser[a]+"").trim();
+        //     if(user.toLowerCase()!=="b" && user.length>0){
+        //       correct = false;
+        //       continue;
+        //     }
+        //   }
+        // }
       }
-      this.$emit("check-reverse",{correct,soll: valuesAfter, ist: valuesUser, gameworld: this.$refs.gameworld.gameworld});
+      console.log("stop checking");
+      this.$emit("check-reverse",{scope: this.scope,correct,soll: valuesAfter, ist: valuesUser, gameworld: this.$refs.gameworld.gameworld});
       this.highlightedStatement=null;
     },
     refreshReverseExercise(){

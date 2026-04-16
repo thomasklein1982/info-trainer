@@ -253,7 +253,7 @@ let DiBiAlgo={
       label: "Schleifen",
       icon: "algo-loops",
       id: "algo-loops",
-      exercises: ["beep-res-6", "beep-target-9", "beep-res-7",  "beep-target-10", "beep-target-11","beep-max-2"]
+      exercises: ["beep-res-6", "beep-target-9", "beep-copy-3", "beep-res-7",  "beep-target-10", "beep-target-11","beep-double-2", "beep-res-8","beep-max-2"]
     },
     // {
     //   label: "Problemlösen",

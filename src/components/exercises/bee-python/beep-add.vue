@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Lisa soll das Ergebnis der Additionsaufgabe auf das gelbe Feld schreiben.</p>
+    <p>Lisa soll das Ergebnis der Additionsaufgabe auf das hervorgehobene Feld schreiben.</p>
   </ExerciseBody>
 </template>
 
@@ -32,7 +32,7 @@ export const data={
     },
     resetFunc: function(gameworld, data){
       let f=gameworld.getNamedField("G");
-      f.style.backgroundColor="yellow";
+      f.cssClass="em-field-1";
       f=gameworld.getNamedField("1");
       f.text=data.a;
       f=gameworld.getNamedField("2");
@@ -62,7 +62,8 @@ export const data={
           if(!isProgramOver) return false;
           let f=gameworld.getNamedField("G");
           return (f.text+""===data.a+data.b+"");
-        }
+        },
+        points: 3
       },
     ]
   },

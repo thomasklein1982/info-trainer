@@ -1,7 +1,15 @@
 <template>
-  <ExerciseBody :exercise="$data" :beep="beep">
-    <p>Wende den Algorithmus auf die Situation an. Gib an, welcher Wert am Programmende auf dem gelben Feld steht.</p>
-    <p class="no-print">Schreibe diesen Wert direkt auf das gelbe Feld.</p>
+  <ExerciseBody ref="body" :exercise="$data" :beep="beep">
+    Der untenstehende Algorithmus wird auf die Situation daneben angewendet.
+    <ol class="teilaufgaben">
+      <li>Schreibe die Zahl, die sich am Programmende in dem <span class="em-field-1">hervorgehobenen Feld</span> befindet, in dieses Feld.</li>
+      <li>Schreibe ein <strong>B</strong> auf das Feld, auf dem sich die Biene am Ende des Programms befindet.</li>
+      <li>Gib die Werte der Variablen am Programmende an.
+        <div class="no-print">
+          a = <InputCheck ref="inputA" :task="tasks[1]"/> b = <InputCheck ref="inputB" :task="tasks[2]"/>
+        </div>
+      </li>
+    </ol>
     
   </ExerciseBody>
 </template>
@@ -70,12 +78,13 @@ export const data={
     reverse: true,
     world: [
       "WWWWW",
-      "B..1F",
-      "WWWWW",
+      "BG.1F",
     ],
     worldWidth: "15rem",
     setupFunc: function(gameworld){
       let bee=new Bee("B","Lisa",gameworld);
+      let f=gameworld.getNamedField("G");
+      f.cssClass="em-field-1";
       return {
         bee
       };
@@ -90,8 +99,7 @@ export const data={
         if(!f)return;
         f.text=z;
       }
-      let f=gameworld.getNamedField("G");
-      f.style.backgroundColor="yellow";
+      
     },
     testdata: {
       create: function(index){
@@ -116,6 +124,20 @@ print(7)`
         return soll===ist;
       },
       input: ""
+    },
+    {
+      info: "Variable a hat den richtigen Wert.",
+      check: function(result){
+        this.solution=result.scope.getVariable("a").value+"";
+        return this.input===this.solution;
+      }
+    },
+    {
+      info: "Variable b hat den richtigen Wert.",
+      check: function(result){
+        this.solution=result.scope.getVariable("b").value+"";
+        return this.input===this.solution;
+      }
     }
   ]
 };
@@ -134,6 +156,9 @@ export default{
       let code=createCode(Random,program.code).code;
       this.beep.code=code;
       this.beep.zahlen=Random.draw(this.beep.zahlen.length,10);
+      let beepEditor=this.$refs.body.$refs.beepEditor;
+      //beepEditor.runImmediately();
+      console.log(beepEditor);
       for(let i=0;i<this.tasks.length;i++){
         let t=this.tasks[i];
         t.input="";

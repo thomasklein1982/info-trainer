@@ -115,41 +115,41 @@ for(let a in exercises){
   //   console.log(a);
   // }
   let data=exercises[a].data;
-  let ed={data: data};
+  let ed={data: data, total: -1};
+  if(data.points!==undefined){
+    ed.total=data.points;
+  }
   if(data.check){
     let testcases=data.check.testcases;
-    ed={
-      correct: createBoolArray(testcases.length),
-      data: data
-    };
-    let p=0;
-    for(let i=0;i<testcases.length;i++){
-      let tc=testcases[i];
-      p+=tc.points? tc.points: 1;
+    ed.correct=createBoolArray(testcases.length);
+    if(ed.total<0){
+      let p=0;
+      for(let i=0;i<testcases.length;i++){
+        let tc=testcases[i];
+        p+=tc.points? tc.points: 1;
+      }
+      ed.total=p;
     }
-    ed.total=p;
   }else if(data.tasks){
-    ed={
-      correct: createBoolArray(data.tasks.length),
-      data: data
-    };
-    let p=0;
-    for(let i=0;i<data.tasks.length;i++){
-      let t=data.tasks[i];
-      p+=t.points? t.points: 1;
+    ed.correct=createBoolArray(data.tasks.length);
+    if(ed.total<0){
+      let p=0;
+      for(let i=0;i<data.tasks.length;i++){
+        let t=data.tasks[i];
+        p+=t.points? t.points: 1;
+      }
+      ed.total=p;
     }
-    ed.total=p;
   }else if(data.features){
-    ed={
-      correct: createBoolArray(data.features.length),
-      data: data
+    ed.correct=createBoolArray(data.features.length);
+    if(ed.total<0){
+      let p=0;
+      for(let i=0;i<data.features.length;i++){
+        let t=data.features[i];
+        p+=t.points? t.points: 1;
+      }
+      ed.total=p;
     }
-    let p=0;
-    for(let i=0;i<data.features.length;i++){
-      let t=data.features[i];
-      p+=t.points? t.points: 1;
-    }
-    ed.total=p;
   }
   exerciseDataCollection[data.id]=ed;
 }

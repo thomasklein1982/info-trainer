@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Auf den beiden gelben Feldern stehen zwei Zahlen. Lisa soll die beiden Zahlen miteinander vergleichen und das richtige Vergleichszeichen (also <strong>&lt;</strong> oder <strong>&gt;</strong> oder <strong>=</strong>) auf das rote Feld zwischen den beiden Zahlen schreiben. Anschließend soll sie zur Blume fliegen.</p>
+    <p>Auf den beiden hervorgehobenen Feldern stehen zwei Zahlen. Lisa soll die beiden Zahlen miteinander vergleichen und das richtige Vergleichszeichen (also <strong>&lt;</strong> oder <strong>&gt;</strong> oder <strong>=</strong>) auf das leere hervorgehobene Feld zwischen den beiden Zahlen schreiben. Anschließend soll sie zur Blume fliegen.</p>
   </ExerciseBody>
 </template>
 
@@ -17,6 +17,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-vergleich",
   cheats: ["beep"],
+  points: 5,
   title: "Kleiner, größer oder gleich?",
   beep: {
     world: [
@@ -35,10 +36,10 @@ export const data={
       for(let i=0;i<2;i++){
         let f=gameworld.getNamedField(i+1+"");
         f.text=data.numbers[i];
-        f.style.backgroundColor="yellow";
+        f.cssClass="em-field-1";
       }
       let f=gameworld.getNamedField("R");
-      f.style.backgroundColor="red";
+      f.cssClass="em-field-2";
     },
     testdata: {
       create: function(index){

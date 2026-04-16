@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Lisa soll den Text auf dem gelben Feld lesen und auf das rote Feld kopieren.</p>
+    <p>Lisa soll den Text auf dem hervorgehobenen Feld lesen und auf das andere hervorgehobene Feld kopieren.</p>
   </ExerciseBody>
 </template>
 
@@ -34,9 +34,10 @@ export const data={
     resetFunc: function(gameworld, data){
       let f=gameworld.getNamedField("G");
       f.text=data.text;
-      f.style.backgroundColor="yellow";
+      f.cssClass="em-field-1";
       f=gameworld.getNamedField("R");
-      f.style.backgroundColor="red";
+      f.cssClass="em-field-2";
+      
     },
     testdata: {
       create: function(index){
@@ -68,7 +69,7 @@ export const data={
           if(!isProgramOver) return false;
           let f=gameworld.getNamedField("R");
           return (f.text+""===data.text);
-        }
+        },
       },
     ]
   },

@@ -1,7 +1,14 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
-    <p>Wende den Algorithmus auf die Situation an.</p>
-    <p>Schreibe <strong>alle Texte und Zahlen</strong>, die sich am Programmende auf den Feldern befinden, in das passende Feld. Schreibe ein <strong>B</strong> auf das Feld, auf dem sich die Biene am Ende des Programms befindet.</p>
+    <p>Der Algorithmus wird auf die Situation angewendet.</p>
+    <ol class="teilaufgaben">
+      <li>
+        Schreibe <strong>alle Texte und Zahlen</strong>, die sich am Programmende auf den Feldern befinden, in das passende Feld (sofern sie sich verändert haben).
+      </li>
+      <li>
+        Schreibe ein <strong>B</strong> auf das Feld, auf dem sich die Biene am Ende des Programms befindet.
+      </li>
+    </ol>
   </ExerciseBody>
 </template>
 

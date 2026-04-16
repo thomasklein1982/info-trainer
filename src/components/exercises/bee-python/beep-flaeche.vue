@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Auf den beiden gelben Feldern stehen die Seitenlängen a und b eines Rechtecks. Lisa soll die beiden Seitenlängen lesen und den Flächeninhalt des Rechtecks auf das rote Feld schreiben.</p>
+    <p>Auf den beiden oberen hervorgehobenen Feldern stehen die Seitenlängen a und b eines Rechtecks. Lisa soll die beiden Seitenlängen lesen und den Flächeninhalt des Rechtecks auf das untere hervorgehobene Feld schreiben.</p>
   </ExerciseBody>
 </template>
 
@@ -33,10 +33,10 @@ export const data={
     resetFunc: function(gameworld, data){
       let f=gameworld.getNamedField("1");
       f.text=data.a;
-      f.style.backgroundColor="yellow";
+      f.cssClass="em-field-1";
       f=gameworld.getNamedField("2");
       f.text=data.b;
-      f.style.backgroundColor="yellow";
+      f.cssClass="em-field-1";
       f=gameworld.getNamedField("a");
       f.text="a";
       f=gameworld.getNamedField("b");
@@ -50,7 +50,7 @@ export const data={
       f=gameworld.getNamedField("e");
       f.text="=";
       f=gameworld.getNamedField("R");
-      f.style.backgroundColor="red";
+      f.cssClass="em-field-2";
     },
     testdata: {
       create: function(index){
@@ -72,7 +72,8 @@ export const data={
           if(!isProgramOver) return false;
           let f=gameworld.getNamedField("R");
           return (f.text+""===data.a*data.b+"");
-        }
+        },
+        points: 3
       },
     ]
   },

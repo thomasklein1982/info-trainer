@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Auf den gelben Feldern stehen zwei Zahlen und dazwischen steht entweder <strong>+</strong> (plus) oder <strong>&minus;</strong> (minus) oder <strong>*</strong> (mal) oder <strong>:</strong> (geteilt). Lisa soll das Ergebnis der Rechenaufgabe bestimmen und auf das rote Feld schreiben.</p>
+    <p>Auf den hervorgehobenen Feldern stehen zwei Zahlen und dazwischen steht entweder <strong>+</strong> (plus) oder <strong>&minus;</strong> (minus) oder <strong>*</strong> (mal) oder <strong>:</strong> (geteilt). Lisa soll das Ergebnis der Rechenaufgabe bestimmen und auf das leere hervorgehobene Feld schreiben.</p>
   </ExerciseBody>
 </template>
 
@@ -17,6 +17,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-tr-2",
   cheats: ["beep"],
+  points: 6,
   title: "Taschenrechner",
   beep: {
     world: [
@@ -33,16 +34,16 @@ export const data={
     resetFunc: function(gameworld, data){
       let f=gameworld.getNamedField("R");
       f.text=data.text;
-      f.style.backgroundColor="red";
+      f.cssClass="em-field-2";
       f=gameworld.getNamedField("1");
       f.text=data.a;
-      f.style.backgroundColor="yellow";
+      f.cssClass="em-field-1";
       f=gameworld.getNamedField("2");
       f.text=data.rz;
-      f.style.backgroundColor="yellow";
+      f.cssClass="em-field-1";
       f=gameworld.getNamedField("3");
       f.text=data.b;
-      f.style.backgroundColor="yellow";
+      f.cssClass="em-field-1";
       f=gameworld.getNamedField("4");
       f.text="=";
     },

@@ -1,6 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
-    <p>Wende den Algorithmus auf die Situation an. Schreibe ein <strong>B</strong> auf das Feld, auf dem sich die Biene am Ende des Programms befindet.</p>
+    <p>Der Algorithmus wird auf die Situation angewendet.</p> 
+    <p>Schreibe ein <strong>B</strong> auf das Feld, auf dem sich die Biene am Ende des Programms befindet.</p>
   </ExerciseBody>
 </template>
 

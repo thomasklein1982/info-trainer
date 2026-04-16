@@ -14,6 +14,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-target-5",
   cheats: ["beep"],
+  points: 2,
   title: "Die Biene muss zur Blume, Teil 4",
   beep: {
     world: [

@@ -8,7 +8,9 @@
               <JImage style="outline: 1pt dotted darkgreen; aspect-ratio: 1;" :style="{'grid-row': f.row, 'grid-column': f.x}" :src="f.dataurl"/>
             </template>
             <template v-else>
-              <JLabel style="outline: 1pt dotted darkgreen; aspect-ratio: 1; font-size: 5cqw; text-align: center" :style="labelStyle(f)">{{ f.text }}</JLabel>
+              <div :style="labelDivStyle(f)">
+                <JLabel style="outline: 1pt dotted darkgreen; aspect-ratio: 1; font-size: 25cqw; text-align: center" :class="cssClass(f)" :style="labelStyle(f)">{{ f.text }}</JLabel>
+              </div>
             </template>
           </template>
         </template>
@@ -77,10 +79,19 @@ export default{
     }
   },
   methods: {
-    labelStyle(field){
+    labelDivStyle(field){
       let style={
         "grid-row": field.row,
-        "grid-column": field.x
+        "grid-column": field.x,
+        "container-type": "inline-size"
+      };
+      return style;
+    },
+    cssClass(field){
+      return field.cssClass;
+    },
+    labelStyle(field){
+      let style={
       };
       for(let s in field.style){
         style[s]=field.style[s];

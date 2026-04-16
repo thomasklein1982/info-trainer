@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Auf den drei gelben Feldern stehen drei unterschiedliche Zahlen. Lisa soll die größte dieser drei Zahlen ermitteln und auf das rote Feld schreiben.</p>
+    <p>Auf den drei hervorgehobenen Feldern stehen drei unterschiedliche Zahlen. Lisa soll die größte dieser drei Zahlen ermitteln und auf das leere hervorgehobene Feld schreiben.</p>
   </ExerciseBody>
 </template>
 
@@ -36,10 +36,10 @@ export const data={
       for(let i=0;i<3;i++){
         let f=gameworld.getNamedField(i+1+"");
         f.text=data.numbers[i];
-        f.style.backgroundColor="yellow";
+        f.cssClass="em-field-1";
       }
       let f=gameworld.getNamedField("R");
-      f.style.backgroundColor="red";
+      f.cssClass="em-field-2";
     },
     testdata: {
       create: function(index){
@@ -76,7 +76,8 @@ export const data={
           let ist=f.text+"";
           let soll=data.sorted[2]+"";
           return ist===soll;
-        }
+        },
+        points: 2
       },
       {
         info: "Funktioniert, wenn die größte Zahl in der Mitte steht.",
@@ -87,7 +88,8 @@ export const data={
           let ist=f.text+"";
           let soll=data.sorted[2]+"";
           return ist===soll;
-        }
+        },
+        points: 2
       },
       {
         info: "Funktioniert, wenn die größte Zahl ganz rechts steht.",
@@ -98,7 +100,8 @@ export const data={
           let ist=f.text+"";
           let soll=data.sorted[2]+"";
           return ist===soll;
-        }
+        },
+        points: 2
       },
     ]
   },

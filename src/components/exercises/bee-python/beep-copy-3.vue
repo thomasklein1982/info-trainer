@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Lisa soll die Texte auf den hervorgehobenen Feldern oben auf die hervorgehobenen Felder darunter kopieren.</p>
+    <p>Lisa soll die Texte auf den hervorgehobenen Feldern oben auf die leeren, hervorgehobenen Felder darunter kopieren.</p>
   </ExerciseBody>
 </template>
 
@@ -15,15 +15,16 @@ import { Flower } from './Flower';
 
 
 export const data={
-  id: "beep-copy-2",
+  id: "beep-copy-3",
   cheats: ["beep"],
-  title: "Die Kopier-Biene, Teil 2",
+  title: "Die Kopier-Biene, Teil 3",
   beep: {
     world: [
-      "B123",
-      "....",
+      ".123",
+      "B...",
       ".456",
     ],
+    maxMoveCount: 1,
     worldWidth: "15rem",
     setupFunc: function(gameworld){
       return {

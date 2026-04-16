@@ -2,7 +2,7 @@
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
     <p>Lisa soll einen Bienentanz einstudieren.</p>
-    <p>Auf den gelben Feldern steht jeweils entweder <strong>links</strong> oder <strong>rechts</strong>. Lisa soll sich beide Texte merken und dann zur Blume fliegen. Dort soll sie sich gemäß dieser Texte drehen (und sich danach nicht mehr bewegen).</p>
+    <p>Auf den hervorgehobenen Feldern steht jeweils entweder <strong>links</strong> oder <strong>rechts</strong>. Lisa soll sich beide Texte merken und dann zur Blume fliegen. Dort soll sie sich gemäß dieser Texte drehen (und sich danach nicht mehr bewegen).</p>
     <p>Beispiel: Wenn auf den Feldern <strong>links</strong> und <strong>links</strong> steht, soll sie sich auf der Blume zweimal nach links drehen.</p>
   </ExerciseBody>
 </template>
@@ -37,7 +37,7 @@ export const data={
       for(let i=0;i<2;i++){
         let f=gameworld.getNamedField(i+1+"");
         f.text=data.cmds[i];
-        f.style.backgroundColor="yellow";
+        f.cssClass="em-field-1";
       }
     },
     testdata: {
@@ -77,7 +77,8 @@ export const data={
           let ist=bee.lastRotations.join("");
           let soll=data.dance;
           return ist===soll;
-        }
+        },
+        points: 4
       }
     ]
   },

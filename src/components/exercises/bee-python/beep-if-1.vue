@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Auf den beiden gelben Feldern stehen zwei Zahlen. Lisa soll die größere der beiden Zahlen auf das rote Feld schreiben.</p>
+    <p>Auf den beiden hervorgehobenen Feldern stehen zwei Zahlen. Lisa soll die größere der beiden Zahlen auf das leere hervorgehobene Feld schreiben.</p>
   </ExerciseBody>
 </template>
 
@@ -34,10 +34,10 @@ export const data={
       for(let i=0;i<2;i++){
         let f=gameworld.getNamedField(i+1+"");
         f.text=data.numbers[i];
-        f.style.backgroundColor="yellow";
+        f.cssClass="em-field-1";
       }
       let f=gameworld.getNamedField("R");
-      f.style.backgroundColor="red";
+      f.cssClass="em-field-2";
     },
     testdata: {
       create: function(index){
@@ -69,7 +69,8 @@ export const data={
           let ist=f.text+"";
           let soll=data.max+"";
           return ist===soll;
-        }
+        },
+        points: 3
       }
     ]
   },

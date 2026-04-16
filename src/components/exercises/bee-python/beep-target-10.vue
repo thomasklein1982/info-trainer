@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Die Blume befindet sich auf einem zufälligen Feld. Auf dem gelben Feld steht, wie weit die Blume am Anfang von Lisa entfernt ist.</p>
+    <p>Die Blume befindet sich auf einem zufälligen Feld. Auf dem hervorgehobenen Feld steht, wie weit die Blume am Anfang von Lisa entfernt ist.</p>
     <p>Lisa soll zur Blume fliegen und dort stehen bleiben.</p>
   </ExerciseBody>
 </template>
@@ -17,6 +17,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-target-10",
   cheats: ["beep"],
+  points: 3,
   title: "Finde die Blume.",
   beep: {
     world: [
@@ -24,6 +25,7 @@ export const data={
       "GB1234",
       "WWWWWW"
     ],
+    maxMoveCount: 1,
     worldWidth: "17rem",
     setupFunc: function(gameworld){
       return {
@@ -35,7 +37,7 @@ export const data={
       let f=gameworld.getNamedField(data.feld+"");
       gameworld.objects.flower.setPositionToField(f);
       f=gameworld.getNamedField("G");
-      f.style.backgroundColor="yellow";
+      f.cssClass="em-field-1";
       f.text=data.feld;
     },
     testdata: {

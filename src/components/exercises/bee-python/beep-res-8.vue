@@ -1,5 +1,5 @@
 <template>
-  <ExerciseBody ref="body" :exercise="$data" :beep="beep">
+  <ExerciseBody :exercise="$data" :beep="beep">
     Das untenstehende Python-Programm wird auf die Situation daneben angwendet.
     <ol class="teilaufgaben">
       <li>
@@ -13,9 +13,6 @@
         <p class="no-print" style="font-style: italic">Hinweis: Zeichne das <strong>zuerst</strong> das Struktogramm und <Button severity="secondary" @click="beep.language=beep.language==='python'? 'struktogramm': 'python'" :label="beep.language==='python'? 'zeige die Lösung': 'verstecke die Lösung'"/>.</p>
       </li>
     </ol>
-    <Dialog v-model:visible="showSolution" header="Struktogramm">
-      <Struktogramm v-if="program" :python-program="program"/>
-    </Dialog>
   </ExerciseBody>
 </template>
 
@@ -23,49 +20,59 @@
 import { Bee } from './Bee';
 import { createCode } from './createCode';
 import { checkPosition } from './functions/checkPosition';
-import Struktogramm from '../../struktogramm.vue';
-import { parsePython } from '../../beep-editor/parsePython';
-import { nextTick } from 'vue';
+
 
 export const data={
-  id: "beep-res-6",
+  id: "beep-res-8",
   cheats: ["beep"],
-  showSolution: false,
-  title: "Was schreibt Lisa da?",
-  program: null,
+  title: "Ein IF im WHILE",
   programs: [
     {
       world: [
-        ".....",
-        ".....",
-        ".....",
-        ".....",
-        "B...."
+        "..1..",
+        "..2..",
+        "..3..",
+        "..4..",
+        "..5..",
+        "..6..",
+        "..BM."
       ],
       code: [
-        {
-          type: "select",
-          values: ['left()',''],
-          name: "leftOrNot"
-        },
+        'm = read()',
+        'left()',
         'i = 1',
         {
           type: "while",
-          condition: ["i <= §a§"],
+          condition: ["i <= 6"],
           sub1: [
-            'print( i )',
-            "move()",
+            'x = read()',
+            'move()',
+            {
+              type: "select",
+              values: ['left()','right()'],
+              name: "dir"
+            },
+            {
+              type: "if",
+              condition: ["x <= m","x >= m", "x < m", "x > m"],
+              sub1: [
+                'print( x - 1 )'
+              ],
+              sub2: [
+                ['print( x + 1 )','print( 2 * x )']
+              ]
+            },
+            {
+              type: "select",
+              values: ['right()','left()'],
+              name: "dir"
+            },
             'i = i + 1'
           ]
         },
-        {
-          type: "select",
-          values: ['right()','left()'],
-          name: "leftOrNot"
-        },
-        "move()",
-        ["move()",""],
-        ["move()",""]
+        ['right()','left()'],
+        'move()',
+        'move()'
       ]
     },
   ],
@@ -73,22 +80,27 @@ export const data={
     language: "python",
     reverse: true,
     world: [
-      "WWWWW",
-      "B..1F",
-      "WWWWW",
+      "123456M",
     ],
+    zahlen: [0,0,0,0,0,0],
+    middle: 0,
     worldWidth: "15rem",
     setupFunc: function(gameworld){
+      let bee=new Bee("B","Lisa",gameworld);
       return {
-        bee: new Bee("B","Lisa",gameworld)
+        bee
       };
     },
     resetFunc: function(gameworld, data){
-      
+      for(let i=0;i<6;i++){
+        gameworld.getNamedField(i+1+"").text=this.beep.zahlen[i];
+      }
+      gameworld.getNamedField("M").text=this.beep.middle;
     },
     testdata: {
       create: function(index){
-        return {};
+        return {
+        };
       },
       count: 1
     },
@@ -112,7 +124,7 @@ export const data={
 
 export default{
   components: {
-    Struktogramm
+    
   },
   data() {
       return data;
@@ -121,12 +133,16 @@ export default{
     create(Random, resArray){
       let program=this.programs[Random.int(0,this.programs.length-1)];
       this.beep.world=program.world;
-      let code=createCode(Random,program.code,{a: Random.int(2,4)});
+      let code=createCode(Random,program.code,{a: Random.int(2,5)});
       this.beep.code=code.code;
-      nextTick(()=>{
-        let edit=this.$refs.body.$refs.beepEditor;
-        this.program=edit.program;
-      });
+      let zahlen=[];
+      let x=0;
+      for(let i=1;i<=6;i++){
+        x+=Random.int(1,3);
+        zahlen.push(x);
+      }
+      this.beep.middle=zahlen[Random.int(2,4)];
+      this.beep.zahlen=Random.mixArray(zahlen);
       for(let i=0;i<this.tasks.length;i++){
         let t=this.tasks[i];
         t.input="";

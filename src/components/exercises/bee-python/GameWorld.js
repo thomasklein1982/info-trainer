@@ -90,6 +90,7 @@ export class GameWorld{
           row: i+1,
           text: "",
           style: {},
+          cssClass: "",
           blocked: false
         };
         if(d==="W"){
