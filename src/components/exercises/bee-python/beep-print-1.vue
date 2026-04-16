@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Die Biene Lisa soll das Wort <strong>Hallo</strong> auf das gelbe Feld schreiben.</p>
+    <p>Die Biene Lisa soll das Wort <strong>Hallo</strong> auf das hervorgehobene Feld schreiben.</p>
   </ExerciseBody>
 </template>
 
@@ -30,7 +30,8 @@ export const data={
       };
     },
     resetFunc: function(gameworld, data){
-      gameworld.getNamedField("1").style.backgroundColor="yellow";
+      let f=gameworld.getNamedField("1");
+      f.cssClass="em-field-1";
     },
     testdata: {
       create: function(index){
