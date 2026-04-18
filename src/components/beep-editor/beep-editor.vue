@@ -21,7 +21,7 @@
             </div>
             <div id="overlay" v-if="reverse"/>
           </div>
-          <div class="editor" v-if="language==='struktogramm'">
+          <div class="editor" v-if="language==='struktogramm'" style="padding: 0.2rem;">
             <Struktogramm :python-program="program" :scope="parseScope" :highlighted-statement="highlightedStatement"/>
           </div>
         </div>

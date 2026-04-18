@@ -1,7 +1,7 @@
 <template>
   <ExerciseBody :exercise="$data" :beep="beep">
     <p>Implementiere ein Python-Programm, das das folgende Problem löst:</p>
-    <p>Lisa soll alle acht Zahlen verdoppeln und anschließend zur Blume fliegen.</p>
+    <p>Lisa soll alle sieben Zahlen verdoppeln und anschließend zur Blume fliegen.</p>
   </ExerciseBody>
 </template>
 

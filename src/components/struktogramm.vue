@@ -1,5 +1,5 @@
 <template>
-<div style="background: white; color: black">
+<div style="background: white; color: black;">
   <template v-for="(s,i) in pythonProgram">
     <template v-if="s.type==='IfStatement'">
       <div class="if-block-header block">
