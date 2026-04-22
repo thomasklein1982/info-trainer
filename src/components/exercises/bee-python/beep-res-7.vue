@@ -50,7 +50,7 @@ export const data={
           type: "while",
           condition: ["i <= a"],
           sub1: [
-            ['print( i * i )', 'print( i + §a§ )', 'print( i - 1 )',' print( i * §a§ ) '],
+            ['print( i * i )', 'print( i + §a§ )', 'print( i - 1 )','print( i * §a§ ) '],
             "move()",
             'i = i + 1'
           ]
@@ -64,6 +64,7 @@ export const data={
   beep: {
     language: "python",
     reverse: true,
+    points: 4,
     world: [
       "WWWWW",
       "B123",

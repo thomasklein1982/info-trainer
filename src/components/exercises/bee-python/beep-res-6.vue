@@ -30,6 +30,7 @@ import { nextTick } from 'vue';
 export const data={
   id: "beep-res-6",
   cheats: ["beep"],
+  points: 4,
   showSolution: false,
   title: "Was schreibt Lisa da?",
   program: null,

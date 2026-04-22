@@ -25,6 +25,7 @@ import { checkPosition } from './functions/checkPosition';
 export const data={
   id: "beep-res-8",
   cheats: ["beep"],
+  points: 6,
   title: "Ein IF im WHILE",
   programs: [
     {
