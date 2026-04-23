@@ -49,8 +49,7 @@ export const data={
           if(!isProgramOver) return false;
           let ist=gameworld.getNamedField("1").text;
           return (ist==="DiBi");
-        },
-        points: 0.5
+        }
       },
       {
         info: "Auf dem 'B'-Feld steht am Ende 'ist'.",
@@ -58,8 +57,7 @@ export const data={
           if(!isProgramOver) return false;
           let ist=gameworld.getNamedField("2").text;
           return (ist==="ist");
-        },
-        points: 0.5
+        }
       },
       {
         info: "Auf dem 'C'-Feld steht am Ende 'cool'.",
@@ -67,8 +65,7 @@ export const data={
           if(!isProgramOver) return false;
           let ist=gameworld.getNamedField("3").text;
           return (ist==="cool");
-        },
-        points: 0.5
+        }
       },
       {
         info: "Die Biene befindet sich am Programmende auf der Blume.",
@@ -77,8 +74,7 @@ export const data={
           let bee=gameworld.objects.bee;
           let f=gameworld.objects.f;
           return bee.isOnSameField(f);
-        },
-        points: 0.5
+        }
       }
     ]
   },

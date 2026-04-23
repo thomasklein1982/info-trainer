@@ -17,7 +17,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-tr-1",
   cheats: ["beep"],
-  points: 4,
+  pointsPrint: 4,
   title: "Plus oder Minus?",
   beep: {
     world: [

@@ -116,8 +116,8 @@ for(let a in exercises){
   // }
   let data=exercises[a].data;
   let ed={data: data, total: -1};
-  if(data.points!==undefined){
-    ed.total=data.points;
+  if(data.pointsPrint!==undefined){
+    ed.pointsPrint=data.pointsPrint;
   }
   if(data.check){
     let testcases=data.check.testcases;

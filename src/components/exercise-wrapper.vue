@@ -2,7 +2,7 @@
   <Card>
     
     <template #title>
-      <div class="flex"><span style="flex: 1">Aufgabe {{number}}: {{ title }}</span> <span v-if="$root.mode.type==='ab' || $root.addExercisesToAB">({{ exerciseData.total }} P)</span></div>
+      <div class="flex"><span style="flex: 1">Aufgabe {{number}}: {{ title }}</span> <span v-if="$root.mode.type==='ab' || $root.addExercisesToAB">({{ total }} P)</span></div>
       
     </template>
     <template #content>
@@ -44,6 +44,11 @@ export default {
     }
   },
   computed: {
+    total(){
+      if(!this.exerciseData) return "";
+      let pp=this.exerciseData.data.pointsPrint;
+      return pp!==undefined? pp: this.exerciseData.total;
+    },
     title(){
       return this.exerciseData?.data.title;
     },
