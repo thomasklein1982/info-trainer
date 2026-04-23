@@ -17,6 +17,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-flaeche",
   cheats: ["beep"],
+  pointsPrint: 3,
   title: "Der Flächeninhalt eines Rechtecks",
   beep: {
     world: [
@@ -72,8 +73,7 @@ export const data={
           if(!isProgramOver) return false;
           let f=gameworld.getNamedField("R");
           return (f.text+""===data.a*data.b+"");
-        },
-        points: 3
+        }
       },
     ]
   },

@@ -19,6 +19,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-tanz-1",
   cheats: ["beep"],
+  pointsPrint: 4,
   title: "Bienentanz",
   beep: {
     world: [
@@ -77,8 +78,7 @@ export const data={
           let ist=bee.lastRotations.join("");
           let soll=data.dance;
           return ist===soll;
-        },
-        points: 4
+        }
       }
     ]
   },

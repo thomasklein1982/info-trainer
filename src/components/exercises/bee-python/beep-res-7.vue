@@ -6,6 +6,9 @@
         Schreibe <strong>alle Texte und Zahlen</strong>, die sich am Programmende auf den Feldern befinden, in das passende Feld (sofern sie sich verändert haben).
       </li>
       <li>
+        Schreibe ein <strong>B</strong> auf das Feld, auf dem sich die Biene am Ende des Programms befindet.
+      </li>
+      <li>
         Stelle den Algorithmus als Struktogramm dar.
         <p class="no-print" style="font-style: italic">Hinweis: Zeichne das <strong>zuerst</strong> das Struktogramm und <Button severity="secondary" @click="beep.language=beep.language==='python'? 'struktogramm': 'python'" :label="beep.language==='python'? 'zeige die Lösung': 'verstecke die Lösung'"/>.</p>
       </li>
@@ -22,6 +25,7 @@ import { checkPosition } from './functions/checkPosition';
 export const data={
   id: "beep-res-7",
   cheats: ["beep"],
+  pointsPrint: 4,
   title: "Wie viele Felder fliegt Lisa?",
   programs: [
     {
@@ -64,7 +68,7 @@ export const data={
   beep: {
     language: "python",
     reverse: true,
-    points: 4,
+    pointsPrint: 4,
     world: [
       "WWWWW",
       "B123",

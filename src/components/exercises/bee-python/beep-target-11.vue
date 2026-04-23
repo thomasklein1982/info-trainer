@@ -19,7 +19,6 @@ export const data={
   cheats: ["beep"],
   pointsPrint: 5,
   title: "Finde die Blume.",
-  points: 18,
   beep: {
     world: [
       ".....",

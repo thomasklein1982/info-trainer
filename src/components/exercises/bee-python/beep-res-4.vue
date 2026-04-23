@@ -19,6 +19,7 @@ import { checkPosition } from './functions/checkPosition';
 export const data={
   id: "beep-res-4",
   cheats: ["beep"],
+  pointsPrint: 3,
   title: "Wohin fliegt Lisa?",
   programs: [
     {

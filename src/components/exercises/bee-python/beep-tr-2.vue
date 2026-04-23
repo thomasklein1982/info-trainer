@@ -17,7 +17,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-tr-2",
   cheats: ["beep"],
-  points: 6,
+  pointsPrint: 6,
   title: "Taschenrechner",
   beep: {
     world: [

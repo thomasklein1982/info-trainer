@@ -15,6 +15,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-print-2",
   cheats: ["beep"],
+  pointsPrint: 2,
   title: "DiBi ist cool!",
   beep: {
     world: [

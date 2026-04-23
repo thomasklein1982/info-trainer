@@ -18,6 +18,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-sort",
   cheats: ["beep"],
+  pointsPrint: 6,
   title: "Sortiere die Zahlen",
   beep: {
     world: [
@@ -73,8 +74,7 @@ export const data={
           let ist=f.text+"";
           let soll=data.sorted[0]+"";
           return ist===soll;
-        },
-        points: 2
+        }
       },
       {
         info: "Am Programmende steht in der Mitte die mittlere Zahl.",
@@ -84,8 +84,7 @@ export const data={
           let ist=f.text+"";
           let soll=data.sorted[1]+"";
           return ist===soll;
-        },
-        points: 2
+        }
       },
       {
         info: "Am Programmende steht rechts die größte Zahl.",
@@ -95,8 +94,7 @@ export const data={
           let ist=f.text+"";
           let soll=data.sorted[2]+"";
           return ist===soll;
-        },
-        points: 1
+        }
       },
       {
         info: "Die Biene befindet sich am Programmende auf der Blume.",
@@ -105,8 +103,7 @@ export const data={
           let bee=gameworld.objects.bee;
           let f=gameworld.objects.flower;
           return bee.isOnSameField(f);
-        },
-        points: 1
+        }
       }
     ]
   },

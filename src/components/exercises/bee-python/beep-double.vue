@@ -17,6 +17,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-double",
   cheats: ["beep"],
+  pointsPrint: 2,
   title: "Lisa kann verdoppeln!",
   beep: {
     world: [
@@ -56,8 +57,7 @@ export const data={
           if(!isProgramOver) return false;
           let f=gameworld.getNamedField("R");
           return (f.text+""===data.a*2+"");
-        },
-        points: 2
+        }
       },
     ]
   },

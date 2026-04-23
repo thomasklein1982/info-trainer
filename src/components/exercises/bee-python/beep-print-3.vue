@@ -30,6 +30,7 @@ let art=createASCIIArt(` ^	^
 export const data={
   id: "beep-print-3",
   cheats: ["beep"],
+  pointsPrint: 4,
   title: "Mit viel Liebe",
   art,
   beep: {
@@ -73,8 +74,7 @@ export const data={
             if(ist!==soll) return false;
           }
           return true;
-        },
-        points: 0.5
+        }
       },
       {
         info: "Die zweite Reihe ist richtig.",
@@ -89,8 +89,7 @@ export const data={
             if(ist!==soll) return false;
           }
           return true;
-        },
-        points: 0.5
+        }
       },
       {
         info: "Die dritte Reihe ist richtig.",
@@ -105,8 +104,7 @@ export const data={
             if(ist!==soll) return false;
           }
           return true;
-        },
-        points: 1
+        }
       },
       {
         info: "Die vierte Reihe ist richtig.",
@@ -121,8 +119,7 @@ export const data={
             if(ist!==soll) return false;
           }
           return true;
-        },
-        points: 1
+        }
       },
       {
         info: "Die unterste Reihe ist richtig.",
@@ -137,8 +134,7 @@ export const data={
             if(ist!==soll) return false;
           }
           return true;
-        },
-        points: 1
+        }
       },
       {
         info: "Die Biene befindet sich am Programmende auf der Blume.",
@@ -147,8 +143,7 @@ export const data={
           let bee=gameworld.objects.bee;
           let f=gameworld.objects.f;
           return bee.isOnSameField(f);
-        },
-        points: 1
+        }
       }
     ]
   },

@@ -14,7 +14,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-target-3",
   cheats: ["beep"],
-  points: 2,
+  pointsPrint: 2,
   title: "Lisa fliegt zu mehreren Blumen",
   beep: {
     world: [

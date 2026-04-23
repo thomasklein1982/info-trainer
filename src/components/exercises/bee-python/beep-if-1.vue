@@ -17,6 +17,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-if-1",
   cheats: ["beep"],
+  pointsPrint: 3,
   title: "Welche Zahl ist größer?",
   beep: {
     world: [
@@ -69,8 +70,7 @@ export const data={
           let ist=f.text+"";
           let soll=data.max+"";
           return ist===soll;
-        },
-        points: 3
+        }
       }
     ]
   },

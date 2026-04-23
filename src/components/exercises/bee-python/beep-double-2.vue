@@ -17,6 +17,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-double-2",
   cheats: ["beep"],
+  pointsPrint: 3,
   title: "Verdoppeln am Fließband",
   beep: {
     world: [
@@ -59,8 +60,7 @@ export const data={
           let bee=gameworld.objects.bee;
           let f=gameworld.objects.flower;
           return bee.isOnSameField(f);
-        },
-        points: 0.5
+        }
       },
       {
         info: "Die erste Zahl wurde verdoppelt.",
@@ -68,8 +68,7 @@ export const data={
           if(!isProgramOver) return false;
           let f=gameworld.getNamedField("1");
           return (f.text+""===data.zahlen[0]*2+"");
-        },
-        points: 0.5
+        }
       },
       {
         info: "Die zweite Zahl wurde verdoppelt.",
@@ -77,8 +76,7 @@ export const data={
           if(!isProgramOver) return false;
           let f=gameworld.getNamedField("2");
           return (f.text+""===data.zahlen[1]*2+"");
-        },
-        points: 0.5
+        }
       },
       {
         info: "Die dritte Zahl wurde verdoppelt.",
@@ -86,8 +84,7 @@ export const data={
           if(!isProgramOver) return false;
           let f=gameworld.getNamedField("3");
           return (f.text+""===data.zahlen[2]*2+"");
-        },
-        points: 0.5
+        }
       },
       {
         info: "Die vierte Zahl wurde verdoppelt.",
@@ -95,8 +92,7 @@ export const data={
           if(!isProgramOver) return false;
           let f=gameworld.getNamedField("4");
           return (f.text+""===data.zahlen[3]*2+"");
-        },
-        points: 0.5
+        }
       },
       {
         info: "Die fünfte Zahl wurde verdoppelt.",
@@ -104,8 +100,7 @@ export const data={
           if(!isProgramOver) return false;
           let f=gameworld.getNamedField("5");
           return (f.text+""===data.zahlen[4]*2+"");
-        },
-        points: 0.5
+        }
       },
       {
         info: "Die sechste Zahl wurde verdoppelt.",
@@ -113,8 +108,7 @@ export const data={
           if(!isProgramOver) return false;
           let f=gameworld.getNamedField("6");
           return (f.text+""===data.zahlen[5]*2+"");
-        },
-        points: 0.5
+        }
       },
       {
         info: "Die siebte Zahl wurde verdoppelt.",
@@ -122,8 +116,7 @@ export const data={
           if(!isProgramOver) return false;
           let f=gameworld.getNamedField("7");
           return (f.text+""===data.zahlen[6]*2+"");
-        },
-        points: 0.5
+        }
       },
     ]
   },

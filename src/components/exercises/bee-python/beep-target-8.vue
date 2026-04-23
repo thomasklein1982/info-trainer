@@ -18,7 +18,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-target-8",
   cheats: ["beep"],
-  points: 3,
+  pointsPrint: 3,
   title: "Oben oder unten?",
   beep: {
     world: [
@@ -62,8 +62,7 @@ export const data={
           let bee=gameworld.objects.bee;
           let f=gameworld.objects.oben;
           return bee.isOnSameField(f);
-        },
-        points: 2
+        }
       },
       {
         info: "Wenn auf dem gelben Feld <strong>unten</strong> steht, fliegt Lisa zur unteren Blume.",

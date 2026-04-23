@@ -17,6 +17,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-max",
   cheats: ["beep"],
+  pointsPrint: 4,
   title: "Welche Zahl ist die größte?",
   beep: {
     world: [
@@ -75,8 +76,7 @@ export const data={
           let ist=f.text+"";
           let soll=data.sorted[2]+"";
           return ist===soll;
-        },
-        points: 2
+        }
       },
       {
         info: "Funktioniert, wenn die größte Zahl in der Mitte steht.",
@@ -87,8 +87,7 @@ export const data={
           let ist=f.text+"";
           let soll=data.sorted[2]+"";
           return ist===soll;
-        },
-        points: 2
+        }
       },
       {
         info: "Funktioniert, wenn die größte Zahl ganz rechts steht.",
@@ -99,8 +98,7 @@ export const data={
           let ist=f.text+"";
           let soll=data.sorted[2]+"";
           return ist===soll;
-        },
-        points: 2
+        }
       },
     ]
   },

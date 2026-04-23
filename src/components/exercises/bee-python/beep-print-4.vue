@@ -25,7 +25,7 @@ let art=createASCIIArt(` @.@
 export const data={
   id: "beep-print-4",
   cheats: ["beep"],
-  points: 5,
+  pointsPrint: 3,
   title: "Quak!",
   art,
   beep: {
@@ -65,8 +65,7 @@ export const data={
             if(ist!==soll) return false;
           }
           return true;
-        },
-        points: 1
+        }
       },
       {
         info: "Die untere Reihe ist richtig.",
@@ -81,8 +80,7 @@ export const data={
             if(ist!==soll) return false;
           }
           return true;
-        },
-        points: 2
+        }
       },
     ]
   },

@@ -17,6 +17,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-add",
   cheats: ["beep"],
+  pointsPrint: 3,
   title: "Lisa kann addieren!",
   beep: {
     world: [
@@ -62,8 +63,7 @@ export const data={
           if(!isProgramOver) return false;
           let f=gameworld.getNamedField("G");
           return (f.text+""===data.a+data.b+"");
-        },
-        points: 3
+        }
       },
     ]
   },

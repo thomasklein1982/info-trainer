@@ -17,7 +17,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-vergleich",
   cheats: ["beep"],
-  points: 5,
+  pointsPrint: 5,
   title: "Kleiner, größer oder gleich?",
   beep: {
     world: [

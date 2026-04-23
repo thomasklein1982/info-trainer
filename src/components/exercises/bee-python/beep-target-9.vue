@@ -17,6 +17,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-target-9",
   cheats: ["beep"],
+  pointsPrint: 2,
   title: "Lisa will zur Blume",
   beep: {
     world: [
@@ -24,7 +25,6 @@ export const data={
       "B...F",
       "WWWWW"
     ],
-    points: 2,
     maxMoveCount: 1,
     worldWidth: "13rem",
     setupFunc: function(gameworld){
@@ -53,8 +53,7 @@ export const data={
           let bee=gameworld.objects.bee;
           let f=gameworld.objects.flower;
           return bee.isOnSameField(f);
-        },
-        points: 2
+        }
       }
     ]
   },
