@@ -2,7 +2,7 @@
 //select name="Gertrud", wenn keine Gertrud vorhanden: Absturz
 
 export function parseTerm(input){
-  let term=parseUPNAndDisplay(input);
+  let term=parseTreeAndDisplay(input);
   return term;
 }
 
@@ -15,78 +15,133 @@ export function parseTerm(input){
 //     case "\\":
 //       return "∖";
 
-export function evaluateTerm(upn,database){
+export function evaluateTerm(tree,database){
   try{
-    for(let i=0;i<upn.length;i++){
-      let f=upn[i];
-      if(f.length===1){
-        if(f[0]==="×"){
-          let res=applyCartesianProduct(upn[i-2],upn[i-1]);
-          upn.splice(i-2,3,res);
-          i-=2;
-        }else if(f[0]==="⨝"){
-          let res=applyJoin(upn[i-2],upn[i-1],database);
-          upn.splice(i-2,3,res);
-          i-=2;
-        }else if(f[0]==="∩"){
-          let res=applyIntersect(upn[i-2],upn[i-1],database);
-          upn.splice(i-2,3,res);
-          i-=2;
-        }else if(f[0]==="∪"){
-          let res=applyUnion(upn[i-2],upn[i-1],database);
-          upn.splice(i-2,3,res);
-          i-=2;
-        }else if(f[0]==="∖"){
-          let res=applyMinus(upn[i-2],upn[i-1],database);
-          upn.splice(i-2,3,res);
-          i-=2;
-        }else{
-          try{
-            let res=database.sql("select distinct * from "+f[0])[0];
-            if(!res) res=null;
-            upn[i]=res;
-          }catch(e){
-            return {
-              error: "Datenbank kann nicht abgefragt werden: "+f[0]
-            }
-          }
-        }
-      }else if(f.length===2){
-        if(f[0]==="π"){
-          let params=f[1];
-          let res=upn[i-1];
-          res=applyProjection(res,params,database);
-          upn.splice(i-1,2,res);
-          i-=1;
-        }else if(f[0]==="⨝"){
-          let res=applyJoin(upn[i-2],upn[i-1],database,f[1]);
-          upn.splice(i-2,3,res);
-          i-=2;
-        }else if(f[0]==="σ"){
-          let conditions=f[1];
-          let res=upn[i-1];
-          res=applySelection(res,conditions,database);
-          upn.splice(i-1,2,res);
-          i-=1;
-        }else if(f[0]==="ρ"){
-          let changes=f[1].split(",");
-          let res=upn[i-1];
-          res=applyRename(res,changes);
-          upn.splice(i-1,2,res);
-          i-=1;
+    if(tree.type==="brackets"){
+      return evaluateTerm(tree.tokens,database);
+    }
+    if(tree.type==="operator"){
+      let l=evaluateTerm(tree.left, database);
+      let r=evaluateTerm(tree.right, database);
+      if(l.error) return l;
+      if(r.error) return r;
+      if(tree.name==="×"){
+        return applyCartesianProduct(l,r);
+      }
+      if(tree.name==="⨝"){
+        return applyJoin(l,r,database,tree.params);
+      }
+      if(tree.name==="∩"){
+        return applyIntersect(l,r,database);
+      }
+      if(tree.name==="∪"){
+        return applyUnion(l,r,database);
+      }
+      if(tree.name==="∖"){
+        return applyMinus(l,r,database);
+      }
+    }else if(tree.type==="function"){
+      let a=evaluateTerm(tree.arg, database);
+      if(a.error) return a;
+      if(tree.name==="π"){
+        return applyProjection(a,tree.params,database);
+      }
+      if(tree.name==="σ"){
+        return applySelection(a,tree.params,database);
+      }
+      if(tree.name==="ρ"){
+        return applyRename(a,tree.params,database);
+      }
+    }else{
+      try{
+        let res=database.sql("select distinct * from "+tree)[0];
+        if(!res) res=null;
+        return res;
+      }catch(e){
+        return {
+          error: e
         }
       }
     }
-    if(upn.length!==1) throw "Syntax-Fehler: Eingabe kann nicht geparst werden :(";
   }catch(e){
     return {
       error: e
-    }
+    };
   }
-  return {
-    relation: upn[0]
-  };
 }
+
+// export function evaluateTerm(upn,database){
+//   try{
+//     for(let i=0;i<upn.length;i++){
+//       let f=upn[i];
+//       if(f.length===1){
+//         if(f[0]==="×"){
+//           let res=applyCartesianProduct(upn[i-2],upn[i-1]);
+//           upn.splice(i-2,3,res);
+//           i-=2;
+//         }else if(f[0]==="⨝"){
+//           let res=applyJoin(upn[i-2],upn[i-1],database);
+//           upn.splice(i-2,3,res);
+//           i-=2;
+//         }else if(f[0]==="∩"){
+//           let res=applyIntersect(upn[i-2],upn[i-1],database);
+//           upn.splice(i-2,3,res);
+//           i-=2;
+//         }else if(f[0]==="∪"){
+//           let res=applyUnion(upn[i-2],upn[i-1],database);
+//           upn.splice(i-2,3,res);
+//           i-=2;
+//         }else if(f[0]==="∖"){
+//           let res=applyMinus(upn[i-2],upn[i-1],database);
+//           upn.splice(i-2,3,res);
+//           i-=2;
+//         }else{
+//           try{
+//             let res=database.sql("select distinct * from "+f[0])[0];
+//             if(!res) res=null;
+//             upn[i]=res;
+//           }catch(e){
+//             return {
+//               error: "Datenbank kann nicht abgefragt werden: "+f[0]
+//             }
+//           }
+//         }
+//       }else if(f.length===2){
+//         if(f[0]==="π"){
+//           let params=f[1];
+//           let res=upn[i-1];
+//           res=applyProjection(res,params,database);
+//           upn.splice(i-1,2,res);
+//           i-=1;
+//         }else if(f[0]==="⨝"){
+//           let res=applyJoin(upn[i-2],upn[i-1],database,f[1]);
+//           upn.splice(i-2,3,res);
+//           i-=2;
+//         }else if(f[0]==="σ"){
+//           let conditions=f[1];
+//           let res=upn[i-1];
+//           res=applySelection(res,conditions,database);
+//           upn.splice(i-1,2,res);
+//           i-=1;
+//         }else if(f[0]==="ρ"){
+//           let changes=f[1].split(",");
+//           let res=upn[i-1];
+//           res=applyRename(res,changes);
+//           upn.splice(i-1,2,res);
+//           i-=1;
+//         }
+//       }
+//     }
+//     if(upn.length!==1) throw "Syntax-Fehler: Eingabe kann nicht geparst werden :(";
+//   }catch(e){
+//     return {
+//       error: e
+//     }
+//   }
+//   return {
+//     relation: upn[0]
+//   };
+// }
 
 export function parseDisplay(input){
   input=translateSpecialCharacters(input);
@@ -100,12 +155,24 @@ export function parseDisplay(input){
     };
   }
   let display=createDisplayTerm(tokens);
+  let depth=0;
+  for(let i=0;i<tokens.length;i++){
+    let c=tokens[i];
+    if(c==="(") depth++;
+    if(c===")"){
+      if(depth===0){
+        return {display, error: "')' zu viel"};
+      }
+      depth--;
+    }
+  }
+  if(depth>0) return {display, error: "')' erwartet"};
   return {
     display
   };
 }
 
-function parseUPNAndDisplay(input){
+function parseTreeAndDisplay(input){
   let tokens;
   try{
     tokens=tokenizeTerm(input);
@@ -115,9 +182,13 @@ function parseUPNAndDisplay(input){
     };
   }
   let display=createDisplayTerm(tokens);
-  let upn=[tokens];
   try{
-    parseTermRecursive(upn,0);
+    tokens=handleBrackets(tokens);
+    console.log("brackets",JSON.stringify(tokens));
+    tokens=handleParameters(tokens);
+    console.log("params",JSON.stringify(tokens));
+    tokens=handleOperations(tokens);
+    console.log("ops",tokens);
   }catch(e){
     return {
       error: e,
@@ -126,7 +197,7 @@ function parseUPNAndDisplay(input){
   }
   
   return {
-    upn, display
+    tree: tokens, display
   };
 }
 
@@ -175,6 +246,7 @@ function applyRename(table,changes){
   if(!table) return null;
   let alt=[];
   let neu=[];
+  changes=changes.split(",");
   for(let i=0;i<changes.length;i++){
     let c=changes[i].split("→");
     alt.push(c[0].trim());
@@ -524,6 +596,7 @@ function tokenizeTerm(input){
   for(let i=0;i<tokens.length;i++){
     let t=tokens[i];
     if(t.length===1 && funcs.indexOf(t)>=0){
+      //function: i: name, i+1: [ i+2: Params, i+3: ], i+4: (
       if(tokens[i+1]!=="["){
         throw "Syntax-Fehler: '[' hinter '"+t+"' erwartet.";
       }
@@ -583,54 +656,195 @@ function checkParams(func,params){
   return undefined;
 }
 
-function parseTermRecursive(upn,index){
-  let operators=["∪","∩","×⨝","∖","πρσ"];
-  let funcs="πρσ";
+function handleBrackets(tokens){
+  let changed;
+  do{
+    let newTokens=[];
+    let bracketsDepth=0;
+    let subTokens;
+    changed=false;
+    for(let k=0;k<tokens.length;k++){
+      let c=tokens[k];
+      if(c==="("){
+        if(bracketsDepth===0){
+          subTokens=[];
+        }else{
+          subTokens.push(c);
+        }
+        bracketsDepth++;
+      }else if(c===")"){
+        if(bracketsDepth===0) throw "')' erwartet";
+        bracketsDepth--;
+        if(bracketsDepth===0){
+          subTokens=handleBrackets(subTokens);
+          newTokens.push({
+            type: "brackets",
+            tokens: subTokens
+          });
+          changed=true;
+        }else{
+          subTokens.push(c);
+        }
+      }else{
+        if(bracketsDepth===0) newTokens.push(c);
+        else subTokens.push(c);
+      }
+    }
+    tokens=newTokens;
+    if(bracketsDepth>0){
+      throw "')' erwartet"
+    }
+  }while(changed);
+  return tokens;
+}
+
+function handleParameters(tokens){
+  let array;
+  if(tokens.type==="brackets"){
+    array=tokens.tokens;
+  }else{
+    array=tokens;
+  }
+  let newTokens=[];
+  for(let i=0;i<array.length;i++){
+    let c=array[i];
+    let next=array[i+1];
+    if(next==="["){
+      let t={};
+      if(c==="π" || c==="ρ" || c==="σ"){
+        t.type="function";
+        t.name=c;
+        t.params=array[i+2];
+        t.arg=handleParameters(array[i+4]);
+        i+=4;
+      }else if(c==="⨝"){
+        t.type="operator";
+        t.name=c;
+        t.params=array[i+2];
+        i+=3;
+      }else{
+        throw "Error Parameters";
+      }
+      newTokens.push(t);
+    }else{
+      newTokens.push(c);
+    }
+  }
+  if(tokens.type){
+    tokens.tokens=newTokens;
+  }else{
+    tokens=newTokens;
+  }
+  return tokens;
+}
+
+function handleOperations(tokens){
+  if(tokens.length===1) {
+    let c=tokens[0];
+    if(c.type==="brackets"){
+      if(!c.handled){
+        c.tokens=handleOperations(c.tokens);
+        c.handled=true;
+      }
+    }
+    if(c.type==="function"){
+      if(!c.handled){
+        c.arg=handleOperations(c.arg.tokens);
+        c.handled=true;
+      }
+    }
+    return c;
+  };
+  let operators=["∪","∩","×⨝","∖"];
   for(let i=0;i<operators.length;i++){
     let op=operators[i];
     let op1=op.charAt(0);
     let op2=op.charAt(op.length-1);
-    let tokens=upn[index];
-    while(tokens.length>=2 && tokens[0]==="(" && tokens[tokens.length-1]===")"){
-      tokens.splice(0,1);
-      tokens.splice(tokens.length-1,1);
-    }
-    upn[index]=tokens;
-    let bracketsDepth=0;
     for(let k=tokens.length-1;k>=0;k--){
       let c=tokens[k];
-      if(c===")"){
-        bracketsDepth++;
-      }else if(c==="("){
-        if(bracketsDepth===0){
-          throw "')' erwartet";
+      if(c.type==="brackets"){
+        if(!c.handled){
+          c.tokens=handleOperations(c.tokens);
+          c.handled=true;
         }
-        bracketsDepth--;
-      }else if(bracketsDepth>0){
         continue;
+      }
+      if(c.type==="function"){
+        if(!c.handled){
+          c.arg=handleOperations(c.arg.tokens);
+          c.handled=true;
+        }
+        continue;
+      }
+      if(c===op1 || c===op2 || c.type==="operator" && c.name===op2){
+        let left=handleOperations(tokens.slice(0,k));
+        let right=handleOperations(tokens.slice(k+1));
+        let t={
+          type: "operator",
+          params: c.params,
+          name: c.type? c.name: c,
+          left, right
+        };
+        return t;
+      }
+    }
+  }
+  return tokens;
+}
+
+/**
+ * MUSS ICH NEU SCHREIBEN!
+ * @param {*} tokens Array mit bisher geparster UPN, bei erstem Aufruf tokenized input-String; kann Arrays enthalten, die für Unter-Terme stehen
+ * @returns Array der Form 
+ * [
+ *  {
+ *    type: Term|
+ *  }
+ * ]
+ */
+function parseTermRecursive(tokens){
+  let operators=["∪","∩","×⨝","∖","πρσ"];
+  let funcs="πρσ";
+  if(tokens.length===1){
+    return tokens;
+  }
+  for(let i=0;i<operators.length;i++){
+    let op=operators[i];
+    let op1=op.charAt(0);
+    let op2=op.charAt(op.length-1);
+    let newTokens=[];
+    for(let k=tokens.length-1;k>=0;k--){
+      let c=tokens[k];
+      if(Array.isArray(c)){
+        newTokens.push(parseTermRecursive(c));
       }else{
         if(i<operators.length-1 && (c===op1||c===op2)){
+          //binäre Operation
           let t1,t2,t3;
           let standard=true;
           if(c==="⨝"){
             if(tokens[k+1]==="["){
               t1=tokens.slice(0,k);
               t2=tokens.slice(k+4);
-              t3=[c,tokens[k+2]];
+              t3={
+                op: c,
+                params: tokens[k+2]
+              };
               standard=false;
             }
           }
           if(standard){
             t1=tokens.slice(0,k);
             t2=tokens.slice(k+1);
-            t3=[c];
+            t3={
+              op: c
+            };
           }
-          upn.splice(index,1,t1,t2,t3);
-          //upn.splice(index,1,tokens.slice(0,k),tokens.slice(k+1),[c]);
-          let off1=parseTermRecursive(upn,index);
-          let off2=parseTermRecursive(upn,index+1+off1);
-          return off1+off2;
+          newTokens.push(parseTermRecursive(t1));
+          newTokens.push(parseTermRecursive(t2));
+          newTokens.push(t3);
         }else if(i===operators.length-1 && funcs.indexOf(c)>=0){
+          //Funktionsaufruf
           //if(tokens.length===2) continue;
           let params=tokens[k+2];
           if(!params){
@@ -638,12 +852,15 @@ function parseTermRecursive(upn,index){
           }
           let error=checkParams(c,params);
           if(error) throw error;
-          upn.splice(index,1,tokens.slice(k+4),[tokens[k],params]);
-          let off=parseTermRecursive(upn,index);
-          return off+1;
+          newTokens.push({
+            func: c,
+            params,
+            arg: tokens[k+3]
+          });
         }
       }
     }
+    tokens=newTokens.reverse();
   }
-  return 0;
+  return tokens;
 }

@@ -100,7 +100,7 @@ import RelationTable from "../../../relation-table.vue";
       t.realTerm=term;
       t.parsedTerm=parseTerm(term);
       let parsedUseTerm=parseTerm(useTerm);
-      t.result=evaluateTerm(parsedUseTerm.upn,db);
+      t.result=evaluateTerm(parsedUseTerm.tree,db);
       if(t.input) t.input.reset();
     }
   }

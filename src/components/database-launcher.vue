@@ -425,7 +425,7 @@ export default{
       let res=null;
       console.log("run relational",termInput);
       let term;
-      if(termInput.upn){
+      if(termInput.tree){
         term=JSON.parse(JSON.stringify(termInput));
       }else{
         term=parseTerm(termInput);
@@ -435,12 +435,11 @@ export default{
         this.error=term.error;
         return;
       }
-      res=evaluateTerm(term.upn,this.db);
-      if(res.error){
+      res=evaluateTerm(term.tree,this.db);
+      if(res && res.error){
         this.error=res.error;
         return;
       }
-      res=res.relation;
       if(res && res.values.length>300){
         this.truncated=res.values.length-200;
         while(res.values.length>300) res.values.pop();
@@ -544,19 +543,19 @@ export default{
           }else{
             let soll, ist;
             if(tc.term){
-              let upn=JSON.parse(JSON.stringify(tc.term.upn));
+              let upn=JSON.parse(JSON.stringify(tc.term.tree));
               soll=evaluateTerm(upn,this.db);
-              soll=[soll.relation];
+              soll=[soll];
               try{
                 let term=parseTerm(this.input);
                 if(term.error){
                   throw term.error;
                 }
-                ist=evaluateTerm(term.upn,this.db);
+                ist=evaluateTerm(term.tree,this.db);
                 if(ist.error){
                   throw ist.error;
                 }
-                ist=[ist.relation];
+                ist=[ist];
               }catch(e){
                 this.error=e;
               }

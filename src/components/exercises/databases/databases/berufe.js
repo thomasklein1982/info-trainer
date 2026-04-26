@@ -46,11 +46,20 @@ db.create=function(options){
   }
   let staedte=r.drawFrom(cities,count.staedte);
   let jobs=r.drawFrom(berufe,10);
+  if(jobs.indexOf("Fotograf*in")<0) jobs[0]="Fotograf*in";
   for(let i=0;i<staedte.length;i++){
     let s=staedte[i];
     this.tables.Ort.insert(s.plz,s.name,s.einwohner*1000);
   }
+  let stadtFotograf=staedte[r.int(0,staedte.length-1)];
+  let stadtOhneFotograf=stadtFotograf;
+  while(stadtOhneFotograf===stadtFotograf){
+    stadtOhneFotograf=staedte[r.int(0,staedte.length-1)];
+  }
   let pids={};
+  let indices=[];
+  for(let i=0;i<count.personen;i++) indices.push(i);
+  let indicesStadt=r.drawFrom(indices,2);
   for(let i=0;i<count.personen;i++){
     let nn=nachnamen[r.int(0,nachnamen.length-1)];
     let vn=vornamen[r.int(0,vornamen.length-1)];
@@ -68,6 +77,19 @@ db.create=function(options){
     let stadt=staedte[r.int(0,staedte.length-1)];
     while(pids[id]) id++;
     pids[id]=true;
+    if(indicesStadt.indexOf(i)>=0){
+      stadt=stadtFotograf;
+      if(i===indicesStadt[0]){
+        beruf="Fotograf*in";
+      }else{
+        if(beruf==="Fotograf*in"){
+          beruf="Bestattungsfachkraft";
+        }
+      }
+    }
+    if(stadt===stadtOhneFotograf && beruf==="Fotograf*in"){
+      beruf="Bestattungsfachkraft";
+    }
     this.tables.Person.insert(id,nn,vn,beruf,geb,groesse,gewicht,stadt.plz);
   }
 };

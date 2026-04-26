@@ -3,7 +3,7 @@
     <RelationTable v-if="relation" :relation="relation"/>
     <Message v-if="correct" severity="success">Korrekte Antwort.</Message>
     <Message v-else severity="error">Das ist falsch. Die korrekte Lösung ist
-      <RelationTable v-if="task.result" :relation="task.result.relation"/>
+      <RelationTable v-if="task.result" :relation="task.result"/>
     </Message>
   </template>
   <table v-else style="overflow-x: auto; text-align: center">
@@ -133,9 +133,9 @@ export default{
         ignoreRowOrder=options.ignoreRowOrder;
       }
       if(ignoreRowOrder){
-        return areResultsEqualIgnoreOrder(this.relation,this.task.result.relation,true,!ignoreColumnOrder);
+        return areResultsEqualIgnoreOrder(this.relation,this.task.result,true,!ignoreColumnOrder);
       }else{
-        return areResultsEqual(this.relation,this.task.result.relation,true,true);
+        return areResultsEqual(this.relation,this.task.result,true,true);
       }
       console.log(this.task)
     }
