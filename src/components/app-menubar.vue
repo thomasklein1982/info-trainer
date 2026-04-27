@@ -7,6 +7,7 @@
     <img alt="logo" :src="$root.mode.icon" style="height: 2rem" ><Button icon="pi pi-bars" text @click="$emit('show-exercises')"/>
   </template>
   <template #end>
+    <Button size="small" text rounded v-if="$root.mode.type==='ab'" icon="pi pi-print" @click="print()"/>
     <Button size="small" text rounded @click="$emit('settings')">
       <Button class="nopointer" size="small" :label="settings.javaAppDifficulty" icon="pi pi-gauge"  text/>
       <Button class="nopointer" size="small" icon="pi pi-tag" :label="$root.version" text rounded/>
@@ -55,6 +56,11 @@ export default{
           }
         }
       ];
+    }
+  },
+  methods: {
+    print(){
+      window.print();
     }
   }
 };
