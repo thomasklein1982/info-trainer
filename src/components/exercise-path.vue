@@ -1,7 +1,7 @@
 <template>
-  <h2 style="text-align: center"><span v-if="path.category">{{path.category}}: </span>{{ path.label }} <Button class="no-print" label="" as="a" target="_blank" style="text-decoration: none" :href="directLink" text icon="pi pi-send"/></h2>
+  <h2 style="text-align: center"><span v-if="path.category">{{path.category}}: </span>{{ path.label }} <Button class="no-print" label="" as="a" target="_blank" style="text-decoration: none" :href="directLink" text icon="pi pi-send"/><span v-if="$root.mode.type==='ab' || $root.addExercisesToAB">({{ totalPoints }} P)</span></h2>
   <template v-for="(e,i) in items">
-    <ExerciseWrapper v-if="e.isExercise" :number="e.nr" :id="e.id" :disabled="disabled">
+    <ExerciseWrapper ref="wrappers" v-if="e.isExercise" :number="e.nr" :id="e.id" :disabled="disabled">
       <component :is="e.id"/>
     </ExerciseWrapper>
     <InfoWrapper v-else :id="e.id" :disabled="disabled">
@@ -49,6 +49,25 @@ export default{
       }
       return items;
     }
+  },
+  data(){
+    return {
+      totalPoints: 0
+    };
+  },
+  mounted(){
+    this.totalPoints=this.getTotalPoints();
+  },
+  methods: {
+    getTotalPoints(){
+      if(!this.$refs.wrappers) return 0;
+      let total=0;
+      for(let i=0;i<this.$refs.wrappers.length;i++){
+        let w=this.$refs.wrappers[i];
+        total+=w.total;
+      }
+      return total;
+    },
   }
 }
 </script>

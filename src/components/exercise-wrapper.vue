@@ -45,7 +45,7 @@ export default {
   },
   computed: {
     total(){
-      if(!this.exerciseData) return "";
+      if(!this.exerciseData) return 0;
       let pp=this.exerciseData.data.pointsPrint;
       return pp!==undefined? pp: this.exerciseData.total;
     },

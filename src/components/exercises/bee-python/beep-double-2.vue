@@ -17,7 +17,7 @@ import { Flower } from './Flower';
 export const data={
   id: "beep-double-2",
   cheats: ["beep"],
-  pointsPrint: 3,
+  pointsPrint: 4,
   title: "Verdoppeln am Fließband",
   beep: {
     world: [
