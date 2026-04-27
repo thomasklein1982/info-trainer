@@ -148,7 +148,7 @@ let Datenbanken={
       label: "Relationale Algebra",
       id: "dm-ra",
       icon: "database-ra",
-      exercises: ["db-ra-et1","db-ra-al","db-ra-ad","db-ra-fm","db-ra-et2","db-ra-bm","db-ra-bm2","db-ra-gs", "db-ra-so"]
+      exercises: ["db-ra-et1","db-ra-al","db-ra-ad","db-ra-fm","db-ra-fa", "db-ra-et2","db-ra-bm","db-ra-bm2","db-ra-gs", "db-ra-so"]
     },
   ]
 }

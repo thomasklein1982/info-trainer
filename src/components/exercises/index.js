@@ -1,4 +1,5 @@
 
+export * as DbRaFa from './databases/relational-algebra/db-ra-fa.vue';
 export * as DbRaSo from './databases/relational-algebra/db-ra-so.vue';
 export * as BeepRes8 from './bee-python/beep-res-8.vue';
 export * as ShTest from './spreadsheet/sh-test.vue';
