@@ -657,6 +657,10 @@ function checkParams(func,params){
 }
 
 function handleBrackets(tokens){
+  while(tokens[0]==="(" && tokens[tokens.length-1]===")"){
+    tokens.splice(0,1);
+    tokens.pop();
+  }
   let changed;
   do{
     let newTokens=[];
