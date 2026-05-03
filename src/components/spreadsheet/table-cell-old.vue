@@ -1,6 +1,6 @@
 <template>
   <td @click="handleClick" @pointerdown.left="handleMouseDown" @pointerenter="handleMouseEnter" :class="active? 'active' : (selected? 'selected':'')">
-    <input class="starterInput" @keyup.enter="hitEnter" :class="edited? 'edited':''" v-model="starterInputValue" @input="startInput" @change="endEditing(true)" @blur="endEditing(false)" :style="{opacity: edited? 1: 0}"/><span>{{ displayedValue }}</span>
+    <input v-show="!selectionMode" class="starterInput" :class="edited? 'edited':''" v-model="starterInputValue" @input="startInput" @keyup.enter="hitEnter" @change="endEditing(true)" @blur="endEditing(false)" :style="{opacity: edited? 1: 0}"/><span>{{ displayedValue }}</span>
     </td>
 </template>
 
@@ -28,9 +28,9 @@ export default{
     cellData: Array,
     selected: Boolean,
     active: Boolean,
-    overrideText: {
-      type: String,
-      default: null
+    selectionMode: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -38,7 +38,6 @@ export default{
       return this.cellData[this.row][this.col];
     },
     displayedValue(){
-      if(this.active && this.overrideText) return this.overrideText;
       if(this.cell.v){
         return this.cell.v;
       }
@@ -55,21 +54,28 @@ export default{
     startInput(event){
       this.edited=true;
     },
+    handleClick(){
+      console.log("click cell",this.selectionMode)
+      if(this.selectionMode){
+        this.$emit('click-cell',{row: this.row,col: this.col});
+      }
+    },
     handleMouseDown(event){
       console.log("mouse down cell", this.selectionMode);
+      if(this.selectionMode) return;
       if(event.buttons!==1) return;
       this.$emit('down',{row: this.row,col: this.col});
     },
     handleMouseEnter(event){
+      if(this.selectionMode) return;
       if(event.buttons!==1) return;
       this.$emit('enter',{row: this.row,col: this.col});
     },
     hitEnter(ev){
-      if(this.edited){
-        this.endEditing(true);
-      }else{
-        this.$emit('hit-enter',{row: this.row,col: this.col});
-      }
+      ev.preventDefault();
+      if(this.edited) return;
+      this.edited=false;
+      this.$emit('hit-enter',{row: this.row,col: this.col});
     },
     endEditing(withEnter){
       if(!this.edited){

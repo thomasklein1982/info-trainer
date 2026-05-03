@@ -1,6 +1,9 @@
 <template>
   <div id="menu">
-    <div id="current-cell-bar"><input @change="updateSelectedCellToCurrentCellAdress()" id="current-cell-address" v-model="currentCellAdress"/> = <input ref="currentCellFormula" id="current-cell-formula" v-model="currentCellFormula" @keyup.enter="handleEnterCurrentCellFormula" @focus="handleFocusCurrentCellFormula" @blur="handleBlurCurrentCellFormula"/></div>
+    <div>{{ modelValue }}</div>
+    <div>{{ selection }}</div>
+    <div>{{ preparedCell }}</div>
+    <div id="current-cell-bar"><input @change="updateSelectedCellToCurrentCellAdress()" id="current-cell-address" v-model="currentCellAdress"/> = <input ref="currentCellFormula" id="current-cell-formula" v-model="currentCellFormula" @focus="handleFocusCurrentCellFormula" @blur="handleBlurCurrentCellFormula"/></div>
   </div>
   <div id="table">
     <table>
@@ -13,10 +16,11 @@
           <TableCell 
             :col="j" 
             :row="i"
+            :selection-mode="preparedCell!==null"
             :cell-data="modelValue"
-            :override-text="editMode===1? currentCellFormula: null"
             :selected="isInSelection(i,j)"
             :active="selection.from!==null && selection.from.row===i && selection.from.col===j"
+            @click-cell="clickCell"
             @down="mouseDownCell"
             @enter="mouseEntersCell"
             @hit-enter="hitEnterCell"
@@ -46,9 +50,6 @@ export default{
     currentCellAdress(nv,ov){
       console.log("change current cell adress");
       this.currentCellFormula=this.currentCell.f;
-    },
-    currentCellFormula(nv,ov){
-
     }
   },
   computed: {
@@ -89,39 +90,35 @@ export default{
         from: {row: 0, col: 0},
         to: {row: 0, col: 0}
       },
-      currentCellAdress: null,
+      currentCellAdress: "A1",
       currentCellFormula: "",
-      editMode: 0 /**0: nichts wird editiert, 1: currentCellValue wird editiert, 2: ausgewählte Zelle wird editiert */
+      preparedCell: null,
     };
   },
   mounted(){
     // this.createCellData();
-    this.updateAllCells();
     this.updateData();
-    this.currentCellAdress="A1";
   },
   methods: {
     handleFocusCurrentCellFormula(){
       console.log("focus");
-      this.editMode=1;
-    },
-    handleEnterCurrentCellFormula(){
-      console.log("enter");
-      this.$refs.currentCellFormula.blur();
-      // this.editMode=0;
-      // this.changeFormulaOfCurrentCell();
+      this.preparedCell=this.currentCell;
     },
     handleBlurCurrentCellFormula(){
       console.log("blur");
-      this.editMode=0;
-      this.changeFormulaOfCurrentCell();
+      setTimeout(()=>{
+        if(document.activeElement!==this.$refs.currentCellFormula){
+          this.preparedCell.f=this.currentCellFormula;
+          this.preparedCell=null;
+          this.updateData(this.selection.from);
+        }
+      },100);
     },
     getCell(row,col){
       return this.modelValue[row][col];
     },
     changeFormulaOfCurrentCell(){
       this.currentCell.f=this.currentCellFormula;
-      this.updateCell(this.currentCell);
       this.updateData();
       //this.$refs.currentCellFormula.blur();
     },
@@ -156,6 +153,13 @@ export default{
       this.updateCurrentCellAdressFromSelection();
       return;
     },
+    hitEnterCell(pos){
+      console.log("hit enter",pos);
+      if(pos.row<this.rowCount-1) pos.row++;
+      this.selection.from=pos;
+      this.selection.to=pos;
+      this.updateCurrentCellAdressFromSelection();
+    },
     updateCurrentCellAdressFromSelection(){
       let name=getCellName(this.selection.from.row,this.selection.from.col);
       this.currentCellAdress=name;
@@ -171,65 +175,10 @@ export default{
       this.selection.from=pos;
       this.selection.to=pos;
     },
-    hitEnterCell(pos){
-      console.log("hit enter",pos);
-      if(pos.row<this.rowCount-1) pos.row++;
-      this.selection.from=pos;
-      this.selection.to=pos;
-      this.updateCurrentCellAdressFromSelection();
-    },
     handleEndEditing(sourcePos){
       console.log("end editing",sourcePos)
       if(sourcePos.enter) this.hitEnterCell(sourcePos);
-      this.updateCell(sourcePos.row,sourcePos.col);
       this.updateData(sourcePos);
-    },
-    updateAllCells(){
-      for(let i=0;i<this.rowCount;i++){
-        for(let j=0;j<this.colCount;j++){
-          this.updateCell(i,j);
-        }
-      }
-    },
-    /**parst die Formel der Zelle (null, wenn es kein =-Zeichen gibt) 
-     * @param {Number|Object} row darf auch direkt die Zelldaten sein
-     * @param {Number|undefined} column 
-    */
-    updateCell(row,column){
-      let data;
-      if(row.f){
-        data=row;
-      }else{
-        data=this.modelValue[row][column];
-      }
-      data.parsedFormula=null;
-      if(data.f===null || data.f===undefined){
-        data.v="";
-        return;
-      };
-      if(typeof data.f === "number"){
-        data.v=data.f;
-        return;
-      }
-      let f=data.f;
-      if(!f.trim){
-        data.v=f;
-        return;
-      }
-      f=f.trim();
-      data.f=f;
-      if(!f.startsWith("=")){
-        data.v=f;
-        return;
-      }
-      f=f.toUpperCase();
-      data.f=f;
-      try{
-        let tree=parser.parse(f);
-        data.parsedFormula=tree.topNode.firstChild;
-      }catch(e){
-
-      }
     },
     updateData(sourcePos){
       console.log("update data",sourcePos);
@@ -264,7 +213,7 @@ export function getCellName(row,col){
 }
 
 export function getRowAndCol(cellname){
-  let c=cellname.toUpperCase().codePointAt(0)-65;
+  let c=cellname.codePointAt(0)-65;
   let r=cellname.substring(1)*1-1;
   return { row: r, col: c};
 }
@@ -274,19 +223,29 @@ function calcCellValue(valid,cellData,cell){
   let r=cell.row;
   let data=cellData[r][c];
   if(!data) return true;
-  if(data.parsedFormula){
-    let pf=getParseFunction(data.parsedFormula);
-    try{
-      let v=pf(data.parsedFormula,data.f,cellData,valid);
-      data.v=v;
-      return v!==null;
-    }catch(e){
-      data.v=e;
-      data.error=e;
-      return true;
-    }
+  if(data.f===null || data.f===undefined) return true;
+  if(typeof data.f === "number"){
+    data.v=data.f;
+    return true;
   }
-  return true;
+  let f=data.f;
+  if(!f.trim){
+    data.v=f;
+    return true;
+  }
+  f=f.trim();
+  if(!f.startsWith("=")){
+    data.v=f;
+    return true;
+  }
+  let tree=parser.parse(f);
+  console.log(tree.toString());
+  let node=tree.topNode.firstChild;
+  console.log(node);
+  let pf=getParseFunction(node);
+  let v=pf(node,f,cellData,valid);
+  data.v=v;
+  return v!==null;
 }
 </script>
 

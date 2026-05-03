@@ -26,9 +26,13 @@ export const CompileFunctions={
   Bezug: {
     parse: (node,src,cellData,valid)=>{
       let bezug=src.substring(node.from,node.to);
-      if(!valid[bezug]) return null;
       let pos=getRowAndCol(bezug);
-      return cellData[pos.row][pos.col].v;
+      if(pos.row>=cellData.length || pos.col>=cellData[0].length){
+        throw "Ungültiger Zellbezug "+bezug;
+      }
+      let data=cellData[pos.row][pos.col];
+      if(!valid[bezug]) return null;
+      return data.v;
     }
   },
   Term: {
