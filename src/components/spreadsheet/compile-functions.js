@@ -42,6 +42,19 @@ export const CompileFunctions={
       return cf(n,src,cellData,valid);
     }
   },
+  Wert: {
+    parse: (node,src,cellData,valid)=>{
+      let n=node.firstChild;
+      let cf=getParseFunction(n);
+      return cf(n,src,cellData,valid);
+    }
+  },
+  Zahl: {
+    parse: (node,src,cellData,valid)=>{
+      let x=src.substring(node.from,node.to)*1;
+      return x;
+    }
+  },
   UnaryExpression: {
     parse: (node,src,scope)=>{
       let fullCode=src.substring(node.from,node.to);
@@ -69,68 +82,31 @@ export const CompileFunctions={
     }
   },
   BinaryExpression: {
-    parse: (node,src,scope)=>{
+    parse: (node,src,cellData,valid)=>{
       let fullCode=src.substring(node.from,node.to);
       let n=node.firstChild;
       let cf=getParseFunction(n);
       if(cf.error) return cf;
-      let a=cf(n,src,scope);
-      if(a.error) return a;
+      let a=cf(n,src,cellData,valid);
+      if(a===null) return null;
+      if(a?.error) return a;
       n=n.nextSibling;
       let op=src.substring(n.from,n.to);
-      if(n.type.isError || ["==","!=","<",">","<=",">=","+","-","*","/","%"].indexOf(op)<0) return createError(n,"Rechenzeichen erwartet:\n== != < > <= >= + - * /");
-      let isBoolean=["==","!=","<",">","<=",">="].indexOf(op)>=0;
       n=n.nextSibling;
       cf=getParseFunction(n);
-      let b=cf(n,src,scope);
-      if(b.error) return b;
-      return {
-        type: node.name,
-        op, a, b, node,
-        fullCode,
-        isBoolean
-      };
-    },
-    run: (scope, statement)=>{
-      let a=statement.a;
-      let b=statement.b;
-      let op=statement.op;
-      let va=evaluate(scope,a);
-      if(va.value!==undefined){
-        if(va.value===false) return false;
-        a=va.right;
-      }else{
-        a=va;
-      }
-      let vb=evaluate(scope,b);
-      if(vb.value!==undefined) b=vb.value; else b=vb;
-      let c;
-      if(op==="+"){
-        return a+b;
-      }else if(op==="-"){
-        return a-b;
-      }else if(op==="*"){
-        return a*b;
-      }else if(op==="/"){
-        return a/b;
-      }else if(op==="%"){
-        return a%b;
-      }else if(op==="=="){
-        c=a==b;
-      }else if(op==="!="){
-        c=a!=b;
-      }else if(op==="<"){
-        c=a<b;
-      }else if(op===">"){
-        c=a>b;
-      }else if(op==="<="){
-        c=a<=b;
-      }else if(op===">="){
-        c=a>=b;
-      }
-      return {
-        value: c,
-        right: b
+      let b=cf(n,src,cellData,valid);
+      if(b===null) return null;
+      if(b?.error) return b;
+      if(op==="+"||op==="-"||op==="*"||op==="/"||op==="^"){
+        if(a==="") a=0;
+        if(b==="") b=0;
+        if(typeof a!=="number") throw "#WERT!";
+        if(typeof b!=="number") throw "#WERT!";
+        if(op==="+") return a+b;
+        if(op==="-") return a-b;
+        if(op==="*") return a*b;
+        if(op==="/") return a/b;
+        if(op==="^") return Math.pow(a,b);
       }
     }
   },

@@ -2,14 +2,14 @@
 import {LRParser} from "@lezer/lr"
 export const parser = LRParser.deserialize({
   version: 14,
-  states: "%dQVQPOOO[QPOOQmQPOOO[QPO'#C`O!OQPO'#CbOOQO'#Ca'#CaO!mQQO'#CaO!rQPO'#CaO!wQPO'#C^OOQO'#C^'#C^O[QPO,58yO[QPO,58yO[QPO,58yO[QPO,58yO#fQPO,58zO#mQPO,58|O#rQPO,58{O[QPO,58{O#wQPO,59RO$bQPO1G.eO$lQPO1G.eO$vQPO1G.eOOQO1G.e1G.eOOQO1G.f1G.fOOQO1G.h1G.hOOQO1G.g1G.gO%bQPO1G.gOOQO1G.m1G.mO[QPO'#ChO%lQPO7+$ROOQO7+$R7+$RO%tQPO,59SOOQO-E6f-E6fOOQO<<Gm<<Gm",
-  stateData: "&R~O_OS~O`PO~OVSOXVOYWOfROiUO~OaYObZOc[OdZOe]O~Oh_O]UXaUXbUXcUXdUXeUXgUXjUX~OW`O~OfaO~OkbO]QXaQXbQXcQXdQXeQXgQXjQX~OggO~PmOVhO~OiiO~OYkO~Oc[Oe]O]RiaRigRijRi~ObZOdZO~P#|ObRidRi~P#|Oe]O]RiaRibRicRidRigRijRi~OgnOjlO~PmOgqOjlO~Og[aj[a~PmOWV~",
-  goto: "!b]PP^vvv!QPPPPv![QQPQ^RQcYQdZQe[Qf]QjaRolaXPRYZ[]alaTPRYZ[]alQmjRpm",
-  nodeNames: "⚠ Formel Term BinaryExpression Klammerausdruck Wert Zahl Number Word Functionname Bezug Bereich",
-  maxTerm: 27,
+  states: "&SQVQPOOO[QPOOQmQPOOO[QPO'#CeO!OQPO'#CgOOQO'#Cf'#CfO!mQQO'#CfO!rQPO'#CfO!wQPO'#C^OOQO'#C^'#C^OOQO'#C`'#C`OOQO'#Ca'#CaOOQO'#Cb'#CbOOQO'#Cc'#CcOOQO'#Cd'#CdO[QPO,58yO[QPO,58yO[QPO,58yO[QPO,58yO#fQPO,59PO#mQPO,59RO#rQPO,59QO[QPO,59QO#wQPO,59WO$bQPO1G.eO$lQPO1G.eO$vQPO1G.eOOQO1G.e1G.eOOQO1G.k1G.kOOQO1G.m1G.mOOQO1G.l1G.lO%bQPO1G.lOOQO1G.r1G.rO[QPO'#CmO%lQPO7+$WOOQO7+$W7+$WO%tQPO,59XOOQO-E6k-E6kOOQO<<Gr<<Gr",
+  stateData: "&R~OdOS~OePO~O[SO^VO_WOkROnUO~OfYOgZOh[Oi]Oj^O~OmdObZXfZXgZXhZXiZXjZXlZXoZX~O]eO~OkfO~OpgObQXfQXgQXhQXiQXjQXlQXoQX~OllO~PmO[mO~OnnO~O_pO~Oh[Oj^ObRifRilRioRi~OgZOi]O~P#|OgRiiRi~P#|Oj^ObRifRigRihRiiRilRioRi~OlsOoqO~PmOlvOoqO~Olaaoaa~PmO][~",
+  goto: "#VbPPc{!V!]!d!]!l{{!uPPPP{#PQQPQcRQh_Qi`QjaQkbQofRtqaXPR_`abfqX_QcotZ`Qchot]aQchiot_bQchijotaTPR_`abfqQroRur",
+  nodeNames: "⚠ Formel Term BinaryExpression Plus Mal Minus Geteilt Hoch Klammerausdruck Wert Zahl Number Word Functionname Bezug Bereich",
+  maxTerm: 32,
   skippedNodes: [0],
   repeatNodeCount: 1,
-  tokenData: ")k~RiXY!ppq!prs!{xy#Qyz#Vz{#[{|#a|}#f}!O#k!P!Q#p!Q![#u![!]#}!]!^$S!_!`$X!c!}$^#Q#R(k#R#S(p#T#o$^%[%](p%n%o(p%t%u(p%w%x(p%|%}(p&`&a(p&f&g(p~!uQ_~XY!ppq!p~#QOi~~#VOf~~#[Og~~#aOb~~#fOa~~#kOh~~#pOc~~#uOd~~#zPV~!Q![#u~$SOk~~$XOj~~$^O`~R$c[WQ!O!P%X!Q![&P!c!}'q#R#S'q#T#o'q%[%]'q%n%o'q%t%u'q%w%x'q%|%}'q&`&a'q&f&g'qP%^ZXP!Q![%X!c!}%X#R#S%X#T#o%X%[%]%X%n%o%X%t%u%X%w%x%X%|%}%X&`&a%X&f&g%XR&WZYPWQ!Q![&P!c!}&y#R#S&y#T#o&y%[%]&y%n%o&y%t%u&y%w%x&y%|%}&y&`&a&y&f&g&yQ'OZWQ!Q![&y!c!}&y#R#S&y#T#o&y%[%]&y%n%o&y%t%u&y%w%x&y%|%}&y&`&a&y&f&g&yR'xZXPWQ!Q!['q!c!}'q#R#S'q#T#o'q%[%]'q%n%o'q%t%u'q%w%x'q%|%}'q&`&a'q&f&g'q~(pOe~R(u[WQ!O!P%X!Q![&y!c!}'q#R#S'q#T#o'q%[%]'q%n%o'q%t%u'q%w%x'q%|%}'q&`&a'q&f&g'q",
+  tokenData: ")k~RiXY!ppq!prs!{xy#Qyz#Vz{#[{|#a|}#f}!O#k!P!Q#p!Q![#u![!]#}!]!^$S!_!`$X!c!}$^#Q#R(k#R#S(p#T#o$^%[%](p%n%o(p%t%u(p%w%x(p%|%}(p&`&a(p&f&g(p~!uQd~XY!ppq!p~#QOn~~#VOk~~#[Ol~~#aOg~~#fOf~~#kOm~~#pOh~~#uOi~~#zP[~!Q![#u~$SOp~~$XOo~~$^Oe~R$c[]Q!O!P%X!Q![&P!c!}'q#R#S'q#T#o'q%[%]'q%n%o'q%t%u'q%w%x'q%|%}'q&`&a'q&f&g'qP%^Z^P!Q![%X!c!}%X#R#S%X#T#o%X%[%]%X%n%o%X%t%u%X%w%x%X%|%}%X&`&a%X&f&g%XR&WZ_P]Q!Q![&P!c!}&y#R#S&y#T#o&y%[%]&y%n%o&y%t%u&y%w%x&y%|%}&y&`&a&y&f&g&yQ'OZ]Q!Q![&y!c!}&y#R#S&y#T#o&y%[%]&y%n%o&y%t%u&y%w%x&y%|%}&y&`&a&y&f&g&yR'xZ^P]Q!Q!['q!c!}'q#R#S'q#T#o'q%[%]'q%n%o'q%t%u'q%w%x'q%|%}'q&`&a'q&f&g'q~(pOj~R(u[]Q!O!P%X!Q![&y!c!}'q#R#S'q#T#o'q%[%]'q%n%o'q%t%u'q%w%x'q%|%}'q&`&a'q&f&g'q",
   tokenizers: [0, 1],
   topRules: {"Formel":[0,1]},
   tokenPrec: 230

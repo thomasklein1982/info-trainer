@@ -24,7 +24,17 @@ Term { BinaryExpression | Klammerausdruck |  Wert | Bezug | Bereich }
 
 Klammerausdruck { "(" Term ")" } 
 
-BinaryExpression { Term !prec_plus '+' Term | Term !prec_mul_div "*" Term | Term !prec_callSub "-" Term | Term !prec_mul_div "/" Term | Term !prec_exp "^" Term }
+BinaryExpression { Term !prec_plus Plus Term | Term !prec_mul_div Mal Term | Term !prec_callSub Minus Term | Term !prec_mul_div Geteilt Term | Term !prec_exp Hoch Term }
+
+Plus { '+' }
+
+Minus { '-' }
+
+Mal { '*' }
+
+Geteilt { '/' }
+
+Hoch { '^' }
 
 Zahl { Number "," Number | Number }
 

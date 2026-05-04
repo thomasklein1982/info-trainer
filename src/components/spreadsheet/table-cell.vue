@@ -1,6 +1,8 @@
 <template>
-  <td @click="handleClick" @pointerdown.left="handleMouseDown" @pointerenter="handleMouseEnter" :class="active? 'active' : (selected? 'selected':'')">
-    <input class="starterInput" @keyup.enter="hitEnter" :class="edited? 'edited':''" v-model="starterInputValue" @input="startInput" @change="endEditing(true)" @blur="endEditing(false)" :style="{opacity: edited? 1: 0}"/><span>{{ displayedValue }}</span>
+  <td @click="handleClick" @keyup.left="handleDirection(-1,0)" @keyup.right="handleDirection(1,0)" @keyup.up="handleDirection(0,-1)" @keyup.down="handleDirection(0,1)" @pointerdown.left="handleMouseDown" @pointerenter="handleMouseEnter" >
+    <div class="wrapper" :class="active? 'active' : (selected? 'selected':'')">
+      <input ref="input" class="starterInput" @keyup.enter="hitEnter" :class="edited? 'edited':''" v-model="starterInputValue" @input="startInput" @change="endEditing(true)" @blur="endEditing(false)" :style="{opacity: edited? 1: 0}"/><span class="display-value">{{ displayedValue }}</span>
+    </div>
     </td>
 </template>
 
@@ -11,17 +13,13 @@ export default{
   components: {
     
   },
-  // watch: {
-  //   edited(nv,ov){
-  //     if(!nv){
-        
-  //       return;
-  //     }
-  //     setTimeout(()=>{
-  //       this.$refs.input.focus();
-  //     },100);
-  //   }
-  // },
+  watch: {
+    active(nv,ov){
+      if(nv && !ov){
+        this.$refs.input.focus();
+      }
+    }
+  },
   props: {
     row: Number,
     col: Number,
@@ -39,7 +37,7 @@ export default{
     },
     displayedValue(){
       if(this.active && this.overrideText) return this.overrideText;
-      if(this.cell.v){
+      if(this.cell.v!==undefined && this.cell.v!==null){
         return this.cell.v;
       }
       return "";
@@ -52,6 +50,9 @@ export default{
     };
   },
   methods: {
+    handleDirection(dx,dy){
+      this.$emit('navigate',{dx,dy});
+    },
     startInput(event){
       this.edited=true;
     },
@@ -87,18 +88,19 @@ export default{
 </script>
 
 <style scoped>
-.selected{
-  border: 0.5pt solid red;
+.wrapper.selected{
+  border-color: tan;
   background-color: tan;
 }
-.active{
-  border: 2pt solid red;
+.wrapper.active{
+  border-color: red;
 }
 td{
   -moz-user-select: none;
   user-select: none;
   position: relative;
   padding: 0;
+  box-sizing: border-box;
 }
 input{
   outline: none;
@@ -111,6 +113,14 @@ input{
   font-size: inherit;
   padding: 0;
   field-sizing: content;
+}
+.wrapper{
+  width: 100%;
+  height: 100%;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  border: 2pt solid white;
 }
 .starterInput{
   position: absolute;

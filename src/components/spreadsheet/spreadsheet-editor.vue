@@ -11,6 +11,7 @@
         <th class="row-caption">{{i+1}}</th>
         <template v-for="(c,j) in r">
           <TableCell 
+            ref="cell"
             :col="j" 
             :row="i"
             :cell-data="modelValue"
@@ -21,6 +22,7 @@
             @enter="mouseEntersCell"
             @hit-enter="hitEnterCell"
             @end-editing="handleEndEditing"
+            @navigate="handleNavigate"
           />
         </template>
       </tr>
@@ -46,6 +48,7 @@ export default{
     currentCellAdress(nv,ov){
       console.log("change current cell adress");
       this.currentCellFormula=this.currentCell.f;
+      //this.$refs.cell[0].$el.focus();
     },
     currentCellFormula(nv,ov){
 
@@ -101,6 +104,17 @@ export default{
     this.currentCellAdress="A1";
   },
   methods: {
+    handleNavigate(dir){
+      let pos=this.selection.from;
+      pos.row+=dir.dy;
+      pos.col+=dir.dx;
+      if(pos.col<0) pos.col=0;
+      if(pos.row<0) pos.row=0;
+      if(pos.col>=this.colCount) pos.col--;
+      if(pos.row>=this.rowCount) pos.row--;
+      this.selection.to=pos;
+      this.updateCurrentCellAdressFromSelection();
+    },
     handleFocusCurrentCellFormula(){
       console.log("focus");
       this.editMode=1;
@@ -122,7 +136,13 @@ export default{
     changeFormulaOfCurrentCell(){
       this.currentCell.f=this.currentCellFormula;
       this.updateCell(this.currentCell);
-      this.updateData();
+      try{
+        this.updateData();
+      }catch(e){
+        if(e.zirkelbezug){
+          alert(e.message);
+        }
+      }
       //this.$refs.currentCellFormula.blur();
     },
     isInSelection(row,col){
@@ -180,9 +200,15 @@ export default{
     },
     handleEndEditing(sourcePos){
       console.log("end editing",sourcePos)
-      if(sourcePos.enter) this.hitEnterCell(sourcePos);
       this.updateCell(sourcePos.row,sourcePos.col);
-      this.updateData(sourcePos);
+      try{
+        this.updateData(sourcePos);
+      }catch(e){
+        if(e.zirkelbezug){
+          alert(e.message);
+        }
+      }
+      if(sourcePos.enter) this.hitEnterCell(sourcePos);
     },
     updateAllCells(){
       for(let i=0;i<this.rowCount;i++){
@@ -219,6 +245,7 @@ export default{
       f=f.trim();
       data.f=f;
       if(!f.startsWith("=")){
+        if(f*1+""===f) f*=1;
         data.v=f;
         return;
       }
@@ -243,12 +270,31 @@ export default{
           queue.push(cell);
         }
       }
+      let count=queue.length;
       while(queue.length>0){
         let cell=queue.splice(0,1)[0];
         if(!calcCellValue(valid,this.modelValue,cell)){
           queue.push(cell);
+          count--;
         }else{
           valid[cell.name]=true;
+        }
+        if(count<0){
+          let t="Die Zellen ";
+          for(let i=0;i<queue.length;i++){
+            let c=queue[i];
+            this.modelValue[c.row][c.col].v="#ZIRKEL!";
+            if(i>0){
+              if(i<queue.length-1) t+=", ";
+              else t+=" und ";
+            }
+            t+=c.name;
+          }
+          t+=" haben einen Zirkelbezug.\nD.h. die Formeln beziehen sich so aufeinander, dass die Ergebnisse wechselseitig voneinander abhängen.";
+          throw {
+            zirkelbezug: true,
+            message: t
+          }
         }
       }
     }
