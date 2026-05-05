@@ -1,6 +1,10 @@
 <template>
   <div id="menu">
-    <div id="current-cell-bar"><input @change="updateSelectedCellToCurrentCellAdress()" id="current-cell-address" v-model="currentCellAdress"/> = <input ref="currentCellFormula" id="current-cell-formula" v-model="currentCellFormula" @keyup.enter="handleEnterCurrentCellFormula" @focus="handleFocusCurrentCellFormula" @blur="handleBlurCurrentCellFormula"/></div>
+    <ButtonGroup>
+      <Button style="color: black" text icon="pi pi-copy" @click="copySelection()"/>
+      <Button style="color: black" text icon="pi pi-clipboard" :disabled="selectionCopy.from===null" @click="paste()"/>
+    </ButtonGroup>
+    <div id="current-cell-bar"><input @change="updateSelectedCellToCurrentCellAdress()" id="current-cell-address" v-model="currentCellAdress"/> <span style="margin-left: 0.3rem; margin-right: 0.3rem">=</span> <input ref="currentCellFormula" id="current-cell-formula" v-model="currentCellFormula" @keyup.enter="handleEnterCurrentCellFormula" @focus="handleFocusCurrentCellFormula" @blur="handleBlurCurrentCellFormula"/></div>
   </div>
   <div id="table" @pointermove="handleMouseMove">
     <table>
@@ -17,12 +21,14 @@
             :cell-data="modelValue"
             :override-text="editMode===1? currentCellFormula+'': null"
             :selected="isInSelection(i,j)"
+            :selected-to-copy="isInSelectionCopy(i,j)"
             :active="selection.from!==null && selection.from.row===i && selection.from.col===j"
             @down="mouseDownCell"
             @enter="mouseEntersCell"
             @hit-enter="hitEnterCell"
             @end-editing="handleEndEditing"
             @navigate="handleNavigate"
+            @input-start="cancelCopySelection"
           />
         </template>
       </tr>
@@ -32,11 +38,12 @@
 
 <script>
 import Menubar from 'primevue/menubar';
+import ButtonGroup from 'primevue/buttongroup';
 import TableCell from './table-cell.vue';
 
 export default{
   components: {
-    Menubar, TableCell
+    Menubar, TableCell, ButtonGroup
   },
   props: {
     modelValue: Array,
@@ -46,7 +53,6 @@ export default{
   ],
   watch: {
     currentCellAdress(nv,ov){
-      console.log("change current cell adress");
       this.currentCellFormula=this.currentCell.f;
       //this.$refs.cell[0].$el.focus();
     },
@@ -92,6 +98,10 @@ export default{
         from: {row: 0, col: 0},
         to: {row: 0, col: 0}
       },
+      selectionCopy: {
+        from: null,
+        to: null
+      },
       currentCellAdress: null,
       currentCellFormula: "",
       editMode: 0 /**0: nichts wird editiert, 1: currentCellValue wird editiert, 2: ausgewählte Zelle wird editiert */,
@@ -100,11 +110,57 @@ export default{
   },
   mounted(){
     // this.createCellData();
+    for(let i=0;i<this.rowCount;i++){
+      for(let j=0;j<this.colCount;j++){
+        this.modelValue[i][j].row=i;
+        this.modelValue[i][j].col=j;
+      }
+    }
     this.updateAllCells();
     this.updateData();
     this.currentCellAdress="A1";
   },
   methods: {
+    cancelCopySelection(){
+      this.selectionCopy.from=null;
+      this.selectionCopy.to=null;
+    },
+    copySelection(){
+      this.selectionCopy.from={
+        row: this.realSelection.from.row,
+        col: this.realSelection.from.col
+      };
+      this.selectionCopy.to={
+        row: this.realSelection.to.row,
+        col: this.realSelection.to.col
+      };
+    },
+    paste(){
+      let offset={
+        row: this.realSelection.from.row-this.selectionCopy.from.row,
+        col: this.realSelection.from.col-this.selectionCopy.from.col
+      };
+      for(let i=this.selectionCopy.from.row;i<=this.selectionCopy.to.row;i++){
+        for(let j=this.selectionCopy.from.col;j<=this.selectionCopy.to.col;j++){
+          let dest=this.modelValue[i+offset.row][j+offset.col];
+          if(dest){
+            let src=this.modelValue[i][j];
+            dest.f=src.f;
+            dest.bezuege=src.bezuege;
+            adaptBezuege(dest,offset.row,offset.col);
+            this.updateCell(dest);
+          }
+        }
+      }
+      this.selection.from.row=this.selectionCopy.from.row+offset.row;
+      this.selection.from.col=this.selectionCopy.from.col+offset.col;
+      this.selection.to={
+        row: this.selectionCopy.to.row+offset.row,
+        col: this.selectionCopy.to.col+offset.col
+      };
+      this.cancelCopySelection();
+      this.updateData();
+    },
     handleMouseMove(event){
       if(event.buttons!==1) return;
       //get the mouse-over-cell
@@ -165,17 +221,15 @@ export default{
       this.updateCurrentCellAdressFromSelection();
     },
     handleFocusCurrentCellFormula(){
-      console.log("focus");
       this.editMode=1;
+      this.cancelCopySelection();
     },
     handleEnterCurrentCellFormula(){
-      console.log("enter");
       this.$refs.currentCellFormula.blur();
       // this.editMode=0;
       // this.changeFormulaOfCurrentCell();
     },
     handleBlurCurrentCellFormula(){
-      console.log("blur");
       this.editMode=0;
       this.changeFormulaOfCurrentCell();
     },
@@ -200,11 +254,16 @@ export default{
       let to=this.realSelection.to;
       return from.row<=row && row<=to.row && from.col<=col && col<=to.col;
     },
+    isInSelectionCopy(row,col){
+      let from=this.selectionCopy.from;
+      if(!from) return false;
+      let to=this.selectionCopy.to;
+      return from.row<=row && row<=to.row && from.col<=col && col<=to.col;
+    },
     isNeighbor(pos1,pos2){
       return Math.abs(pos1.row-pos2.row)===1 && pos1.col===pos2.col || Math.abs(pos1.col-pos2.col)===1 && pos1.row===pos2.row;
     },
     clickCell(pos){
-      console.log("click cell",pos);
       this.currentCellFormula+=getCellName(pos.row,pos.col);
       setTimeout(()=>{
         this.$refs.currentCellFormula.focus();
@@ -241,14 +300,12 @@ export default{
       this.selection.to=pos;
     },
     hitEnterCell(pos){
-      console.log("hit enter",pos);
       if(pos.row<this.rowCount-1) pos.row++;
       this.selection.from=pos;
       this.selection.to=pos;
       this.updateCurrentCellAdressFromSelection();
     },
     handleEndEditing(sourcePos){
-      console.log("end editing",sourcePos)
       this.updateCell(sourcePos.row,sourcePos.col);
       try{
         this.updateData(sourcePos);
@@ -272,7 +329,7 @@ export default{
     */
     updateCell(row,column){
       let data;
-      if(row.f){
+      if(row.f!==undefined){
         data=row;
       }else{
         data=this.modelValue[row][column];
@@ -293,6 +350,10 @@ export default{
       }
       f=f.trim();
       data.f=f;
+      if(f==="="){
+        data.v=f;
+        return;
+      }
       if(!f.startsWith("=")){
         if(f*1+""===f) f*=1;
         data.v=f;
@@ -308,7 +369,6 @@ export default{
       }
     },
     updateData(sourcePos){
-      console.log("update data",sourcePos);
       let valid={};
       let queue=[];
       for(let i=0;i<this.rowCount;i++){
@@ -369,11 +429,15 @@ function calcCellValue(valid,cellData,cell){
   let r=cell.row;
   let data=cellData[r][c];
   if(!data) return true;
+  delete data.error;
+  data.bezuege=[];
   if(data.parsedFormula){
     let pf=getParseFunction(data.parsedFormula);
+    let bezuege=[];
     try{
-      let v=pf(data.parsedFormula,data.f,cellData,valid);
+      let v=pf(data.parsedFormula,data.f,cellData,valid,bezuege);
       data.v=v;
+      data.bezuege=bezuege;
       return v!==null;
     }catch(e){
       data.v=e;
@@ -383,12 +447,41 @@ function calcCellValue(valid,cellData,cell){
   }
   return true;
 }
+
+/**
+ * Passt in der Zelle alle relativen Bezuege an
+ * @param cell 
+ * @param dRow 
+ * @param dCol 
+ */
+function adaptBezuege(cell,dRow,dCol){
+  if(!cell.bezuege || cell.bezuege.length===0 || dRow===0 && dCol===0) return;
+  let f=cell.f;
+  let parts=[];
+  let offset=0;
+  for(let i=0;i<cell.bezuege.length;i++){
+    let b=cell.bezuege[i];
+    let pos=b.pos-offset;
+    parts.push(f.substring(0,pos));
+    let n=getRowAndCol(b.name);
+    n.row+=dRow;
+    n.col+=dCol;
+    let neu=getCellName(n.row,n.col);
+    parts.push(neu);
+    f=f.substring(pos+b.name.length);
+    offset+=pos+b.name.length;
+  }
+  parts.push(f);
+  cell.f=parts.join("");
+}
 </script>
 
 
 <style scoped>
   #table{
-    touch-action: none;  
+    touch-action: none;
+    overflow: auto;
+    background-color: lightgray;
   }
   table{
     border-collapse: collapse;

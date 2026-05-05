@@ -3,15 +3,11 @@ import { getRowAndCol } from "./spreadsheet-editor.vue";
 
 export function getParseFunction(node){
   if(node.type.isError){
-    return {
-      error: {node: node, message: "Syntax-Fehler"}
-    };
+    //throw "#FEHLER!";
   }
   let cf=CompileFunctions[node.name];
   if(!cf){
-    return {
-      error: {node: node, message: "Unbekannter Ausdruck\n"+node.name}
-    };
+    throw "#NAME?";
   }
   return cf.parse;
 }
@@ -24,8 +20,9 @@ function createError(node,message){
 
 export const CompileFunctions={
   Bezug: {
-    parse: (node,src,cellData,valid)=>{
+    parse: (node,src,cellData,valid,bezuege)=>{
       let bezug=src.substring(node.from,node.to);
+      bezuege.push({name: bezug, pos: node.from});
       let pos=getRowAndCol(bezug);
       if(pos.row>=cellData.length || pos.col>=cellData[0].length){
         throw "Ungültiger Zellbezug "+bezug;
@@ -36,21 +33,21 @@ export const CompileFunctions={
     }
   },
   Term: {
-    parse: (node,src,cellData,valid)=>{
+    parse: (node,src,cellData,valid,bezuege)=>{
       let n=node.firstChild;
       let cf=getParseFunction(n);
-      return cf(n,src,cellData,valid);
+      return cf(n,src,cellData,valid,bezuege);
     }
   },
   Wert: {
-    parse: (node,src,cellData,valid)=>{
+    parse: (node,src,cellData,valid,bezuege)=>{
       let n=node.firstChild;
       let cf=getParseFunction(n);
-      return cf(n,src,cellData,valid);
+      return cf(n,src,cellData,valid,bezuege);
     }
   },
   Zahl: {
-    parse: (node,src,cellData,valid)=>{
+    parse: (node,src,cellData,valid,bezuege)=>{
       let x=src.substring(node.from,node.to);
       if(/^-?\d+,\d+$/.test(x)){
         x=x.replace(",",".")*1;
@@ -61,10 +58,10 @@ export const CompileFunctions={
     }
   },
   Klammerausdruck: {
-    parse: (node,src,cellData,valid)=>{
+    parse: (node,src,cellData,valid,bezuege)=>{
       let n=node.firstChild;
       let cf=getParseFunction(n);
-      return cf(n,src,cellData,valid);
+      return cf(n,src,cellData,valid,bezuege);
     }
   },
   UnaryExpression: {
@@ -94,19 +91,19 @@ export const CompileFunctions={
     }
   },
   BinaryExpression: {
-    parse: (node,src,cellData,valid)=>{
+    parse: (node,src,cellData,valid,bezuege)=>{
       let fullCode=src.substring(node.from,node.to);
       let n=node.firstChild;
       let cf=getParseFunction(n);
       if(cf.error) return cf;
-      let a=cf(n,src,cellData,valid);
+      let a=cf(n,src,cellData,valid,bezuege);
       if(a===null) return null;
       if(a?.error) return a;
       n=n.nextSibling;
       let op=src.substring(n.from,n.to);
       n=n.nextSibling;
       cf=getParseFunction(n);
-      let b=cf(n,src,cellData,valid);
+      let b=cf(n,src,cellData,valid,bezuege);
       if(b===null) return null;
       if(b?.error) return b;
       if(op==="+"||op==="-"||op==="*"||op==="/"||op==="^"){

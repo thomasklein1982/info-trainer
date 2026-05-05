@@ -1,6 +1,6 @@
 <template>
   <td @click="handleClick" @keyup.left="handleDirection(-1,0)" @keyup.right="handleDirection(1,0)" @keyup.up="handleDirection(0,-1)" @keyup.down="handleDirection(0,1)" @pointerdown.left="handleMouseDown" >
-    <div class="wrapper" :class="active? 'active' : (selected? 'selected':'')">
+    <div class="wrapper" :class="(active? 'active' : (selected? 'selected':'')) + ' '+(selectedToCopy? 'selected-to-copy': '')">
       <input ref="input" class="starterInput" @keyup.enter="hitEnter" :class="edited? 'edited':''" v-model="starterInputValue" @input="startInput" @change="endEditing(true)" @blur="endEditing(false)" :style="{opacity: edited? 1: 0}"/><span class="display-value">{{ displayedValue }}</span>
     </div>
     </td>
@@ -25,6 +25,7 @@ export default{
     col: Number,
     cellData: Array,
     selected: Boolean,
+    selectedToCopy: Boolean,
     active: Boolean,
     overrideText: {
       type: String,
@@ -39,6 +40,9 @@ export default{
       if(this.active && this.overrideText) return this.overrideText;
       if(this.cell.v!==undefined && this.cell.v!==null){
         let v=this.cell.v;
+        if(typeof v==="number"){
+          v=v.toPrecision(9)*1;
+        }
         let vs=v+"";
         if(/^-?\d+\.\d+$/.test(vs)){
           v=vs.replace(".",",");
@@ -60,6 +64,7 @@ export default{
     },
     startInput(event){
       this.edited=true;
+      this.$emit("input-start");
     },
     handleMouseDown(event){
       console.log("mouse down cell", this.selectionMode);
@@ -107,6 +112,10 @@ export default{
   border-color: tan;
   background-color: tan;
 }
+.wrapper.selected-to-copy{
+  border-style: dashed;
+  border-color: blue;
+}
 .wrapper.active{
   border-color: red;
 }
@@ -117,6 +126,7 @@ td{
   padding: 0;
   box-sizing: border-box;
   touch-action: none;
+  min-width: 6em;
 }
 input{
   outline: none;
