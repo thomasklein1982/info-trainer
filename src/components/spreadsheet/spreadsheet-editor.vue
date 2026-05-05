@@ -94,7 +94,8 @@ export default{
       },
       currentCellAdress: null,
       currentCellFormula: "",
-      editMode: 0 /**0: nichts wird editiert, 1: currentCellValue wird editiert, 2: ausgewählte Zelle wird editiert */
+      editMode: 0 /**0: nichts wird editiert, 1: currentCellValue wird editiert, 2: ausgewählte Zelle wird editiert */,
+      currentPointerCell: null
     };
   },
   mounted(){
@@ -106,17 +107,51 @@ export default{
   methods: {
     handleMouseMove(event){
       if(event.buttons!==1) return;
+      //get the mouse-over-cell
       let x=event.clientX;
       let y=event.clientY;
+      if(this.currentPointerCell){
+        let br=this.currentPointerCell.$el.getBoundingClientRect();
+        if(x>=br.x && x<br.x+br.width){
+          //gleiche spalte
+          let col=this.currentPointerCell.col;
+          if(y>=br.y && y<br.y+br.height){
+            //gleiche zeile
+            return;
+          }
+          for(let i=0;i<this.rowCount;i++){
+            let c=this.$refs.cell[i*this.colCount+col];
+            let br=c.$el.getBoundingClientRect();
+            if(y>=br.y && y<br.y+br.height){
+              this.currentPointerCell=c;
+              this.mouseEntersCell(c);
+              return;
+            }
+          }
+        }else if(y>=br.y && y<br.y+br.height){
+          //gleiche Zeile
+          let row=this.currentPointerCell.row;
+          for(let i=0;i<this.colCount;i++){
+            let c=this.$refs.cell[row*this.colCount+i];
+            let br=c.$el.getBoundingClientRect();
+            if(x>=br.x && x<br.x+br.width){
+              this.currentPointerCell=c;
+              this.mouseEntersCell(c);
+              return;
+            }
+          }
+        }
+      }
+      //full search
       for(let i=0;i<this.$refs.cell.length;i++){
         let c=this.$refs.cell[i];
         let br=c.$el.getBoundingClientRect();
         if(x>=br.x && x<br.x+br.width && y>=br.y && y<br.y+br.height){
+          this.currentPointerCell=c;
           this.mouseEntersCell(c);
-          break;
+          return;
         }
       }
-      //this.$emit('enter',{row: this.row,col: this.col});
     },
     handleNavigate(dir){
       let pos=this.selection.from;
