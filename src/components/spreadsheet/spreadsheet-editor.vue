@@ -219,9 +219,9 @@ export default{
       this.selection.to=null;
     },
     mouseDownCell(pos){
-      console.log("mouse down",pos);
-      this.selection.from=pos;
-      this.selection.to=pos;
+      this.currentPointerCell=pos;
+      this.selection.from={row: pos.row, col: pos.col};
+      this.selection.to=this.selection.from;
       this.updateCurrentCellAdressFromSelection();
       return;
     },

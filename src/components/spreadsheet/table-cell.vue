@@ -38,7 +38,12 @@ export default{
     displayedValue(){
       if(this.active && this.overrideText) return this.overrideText;
       if(this.cell.v!==undefined && this.cell.v!==null){
-        return this.cell.v;
+        let v=this.cell.v;
+        let vs=v+"";
+        if(/^-?\d+\.\d+$/.test(vs)){
+          v=vs.replace(".",",");
+        }
+        return v;
       }
       return "";
     }
@@ -62,7 +67,7 @@ export default{
         event.target.releasePointerCapture(event.pointerId);
       }catch(e){}
       if(event.buttons!==1) return;
-      this.$emit('down',{row: this.row,col: this.col});
+      this.$emit('down',this);
     },
     handleMouseEnter(event){
       event.preventDefault();

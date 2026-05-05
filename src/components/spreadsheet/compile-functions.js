@@ -51,8 +51,20 @@ export const CompileFunctions={
   },
   Zahl: {
     parse: (node,src,cellData,valid)=>{
-      let x=src.substring(node.from,node.to)*1;
+      let x=src.substring(node.from,node.to);
+      if(/^-?\d+,\d+$/.test(x)){
+        x=x.replace(",",".")*1;
+      }else{
+        x*=1;
+      }
       return x;
+    }
+  },
+  Klammerausdruck: {
+    parse: (node,src,cellData,valid)=>{
+      let n=node.firstChild;
+      let cf=getParseFunction(n);
+      return cf(n,src,cellData,valid);
     }
   },
   UnaryExpression: {
@@ -100,8 +112,20 @@ export const CompileFunctions={
       if(op==="+"||op==="-"||op==="*"||op==="/"||op==="^"){
         if(a==="") a=0;
         if(b==="") b=0;
-        if(typeof a!=="number") throw "#WERT!";
-        if(typeof b!=="number") throw "#WERT!";
+        if(typeof a!=="number"){
+          if(/^-?\d+,\d+$/.test(a)){
+            a=a.replace(",",".")*1;
+          }else{
+            throw "#WERT!";
+          }
+        }
+        if(typeof b!=="number"){
+          if(/^-?\d+,\d+$/.test(b)){
+            b=b.replace(",",".")*1;
+          }else{
+            throw "#WERT!";
+          }
+        }
         if(op==="+") return a+b;
         if(op==="-") return a-b;
         if(op==="*") return a*b;
