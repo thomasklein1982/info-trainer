@@ -67,6 +67,7 @@ export default{
       this.$emit('down',{row: this.row,col: this.col});
     },
     handleMouseEnter(event){
+      console.log("pointer enter");
       if(this.selectionMode) return;
       if(event.buttons!==1) return;
       this.$emit('enter',{row: this.row,col: this.col});

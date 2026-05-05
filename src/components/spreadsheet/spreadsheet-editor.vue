@@ -2,7 +2,7 @@
   <div id="menu">
     <div id="current-cell-bar"><input @change="updateSelectedCellToCurrentCellAdress()" id="current-cell-address" v-model="currentCellAdress"/> = <input ref="currentCellFormula" id="current-cell-formula" v-model="currentCellFormula" @keyup.enter="handleEnterCurrentCellFormula" @focus="handleFocusCurrentCellFormula" @blur="handleBlurCurrentCellFormula"/></div>
   </div>
-  <div id="table">
+  <div id="table" @pointermove="handleMouseMove">
     <table>
       <tr>
         <th class="col-caption"></th><th class="col-caption" v-for="i in colCount">{{ String.fromCodePoint(64+i) }}</th>
@@ -15,7 +15,7 @@
             :col="j" 
             :row="i"
             :cell-data="modelValue"
-            :override-text="editMode===1? currentCellFormula: null"
+            :override-text="editMode===1? currentCellFormula+'': null"
             :selected="isInSelection(i,j)"
             :active="selection.from!==null && selection.from.row===i && selection.from.col===j"
             @down="mouseDownCell"
@@ -104,6 +104,20 @@ export default{
     this.currentCellAdress="A1";
   },
   methods: {
+    handleMouseMove(event){
+      if(event.buttons!==1) return;
+      let x=event.clientX;
+      let y=event.clientY;
+      for(let i=0;i<this.$refs.cell.length;i++){
+        let c=this.$refs.cell[i];
+        let br=c.$el.getBoundingClientRect();
+        if(x>=br.x && x<br.x+br.width && y>=br.y && y<br.y+br.height){
+          this.mouseEntersCell(c);
+          break;
+        }
+      }
+      //this.$emit('enter',{row: this.row,col: this.col});
+    },
     handleNavigate(dir){
       let pos=this.selection.from;
       pos.row+=dir.dy;
@@ -338,6 +352,9 @@ function calcCellValue(valid,cellData,cell){
 
 
 <style scoped>
+  #table{
+    touch-action: none;  
+  }
   table{
     border-collapse: collapse;
   }
