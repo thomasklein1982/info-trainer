@@ -19,7 +19,6 @@ export function createASCIIArt(text){
     }
     world.push(row);
   }
-  console.log("world",world)
   return {
     points,
     text,

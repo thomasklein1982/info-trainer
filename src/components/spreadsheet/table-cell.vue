@@ -3,7 +3,7 @@
     <div class="wrapper" :class="(active? 'active' : (selected? 'selected':'')) + ' '+(selectedToCopy? 'selected-to-copy': '')">
       <input ref="input" class="starterInput" @keyup.enter="hitEnter" :class="edited? 'edited':''" v-model="starterInputValue" @input="startInput" @change="endEditing(true)" @blur="endEditing(false)" :style="{opacity: edited? 1: 0}"/><span class="display-value">{{ displayedValue }}</span>
     </div>
-    </td>
+  </td>
 </template>
 
 <script>

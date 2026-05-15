@@ -184,11 +184,8 @@ function parseTreeAndDisplay(input){
   let display=createDisplayTerm(tokens);
   try{
     tokens=handleBrackets(tokens);
-    console.log("brackets",JSON.stringify(tokens));
     tokens=handleParameters(tokens);
-    console.log("params",JSON.stringify(tokens));
     tokens=handleOperations(tokens);
-    console.log("ops",tokens);
   }catch(e){
     return {
       error: e,
