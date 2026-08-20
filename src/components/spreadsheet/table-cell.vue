@@ -1,6 +1,6 @@
 <template>
-  <td @click="handleClick" @keyup.left="handleDirection(-1,0)" @keyup.right="handleDirection(1,0)" @keyup.up="handleDirection(0,-1)" @keyup.down="handleDirection(0,1)" @pointerdown.left="handleMouseDown" >
-    <div class="wrapper" :class="(active? 'active' : (selected? 'selected':'')) + ' '+(selectedToCopy? 'selected-to-copy': '')">
+  <td @click="handleClick" @keydown.left="handleDirection(-1,0)" @keydown.right="handleDirection(1,0)" @keydown.up="handleDirection(0,-1)" @keydown.down="handleDirection(0,1)" @pointerdown.left="handleMouseDown" >
+    <div class="wrapper" :class="(active? 'active' : (selected? 'selected':'')) + ' '+(selectedToCopy? 'selected-to-copy': '') +' '+(isInputCell? 'input-cell': '')">
       <input ref="input" class="starterInput" @keyup.enter="hitEnter" :class="edited? 'edited':''" v-model="starterInputValue" @input="startInput" @change="endEditing(true)" @blur="endEditing(false)" :style="{opacity: edited? 1: 0}"/><span class="display-value">{{ displayedValue }}</span>
     </div>
   </td>
@@ -33,6 +33,9 @@ export default{
     }
   },
   computed: {
+    isInputCell(){
+      return this.cell.input;
+    },
     cell(){
       return this.cellData[this.row][this.col];
     },
@@ -125,7 +128,6 @@ td{
   position: relative;
   padding: 0;
   box-sizing: border-box;
-  touch-action: none;
   min-width: 6em;
 }
 input{
@@ -159,5 +161,8 @@ input{
 }
 .starterInput.edited{
   cursor: text;
+}
+.input-cell{
+  background-color: yellow;
 }
 </style>

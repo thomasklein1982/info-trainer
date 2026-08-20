@@ -123,7 +123,7 @@ let Spreadsheet={
       label: "Formeln",
       id: "tk-formulas",
       icon: "tk-formulas",
-      exercises: ["sh-test"]
+      exercises: ["sh-wenn-1"]
     }
   ]
 }

@@ -55,7 +55,12 @@
       />
     </template>
     <template v-else-if="spreadsheet">
-      <SpreadsheetEditor v-model="spreadsheet.data"/>
+      <SpreadsheetEditor v-model="spreadsheet.data" @change="checkSpreadsheet()" ref="spreadsheetEditor" @refresh="refreshSpreadsheet()"/>
+      <div class="no-print">
+        <Message :icon="'pi pi-'+(exerciseData.correct[i]===true?'check':'times')" :severity="(exerciseData.correct[i]===true?'success':'error')" v-for="(t,i) in exerciseData.data.check.testcases">
+          <span v-html="t.info"/>
+        </Message>
+      </div>
     </template>
     <div v-else style="display: grid; place-content: end;">
       <template v-if="java">
@@ -235,6 +240,8 @@ export default {
     }else if(this.beep && this.beep.reverse){
 
       await this.showExercise();
+    }else if(this.spreadsheet && this.exerciseData.userProject){
+      this.$refs.spreadsheetEditor.setValues(this.exerciseData.userProject);
     }
   },
   methods: {
@@ -298,6 +305,26 @@ export default {
       this.exerciseData.userProject=this.seed;
       calcPoints(this.exerciseData);
       this.$root.save(this.exerciseData);
+    },
+    async checkSpreadsheet(){
+      let data=this.$refs.spreadsheetEditor.getValues();
+      let testcases=this.exerciseData.data.check.testcases;
+      this.exerciseData.correct=[];
+      for(let i=0;i<testcases.length;i++){
+        let tc=testcases[i];
+        let res=await tc.check(this.$refs.spreadsheetEditor, this.$parent);
+        this.exerciseData.correct.push(res);
+      }
+      this.$refs.spreadsheetEditor.setValues(data);
+      this.exerciseData.userProject=data;
+      calcPoints(this.exerciseData);
+      this.$root.save(this.exerciseData);
+    },
+    refreshSpreadsheet(){
+      console.log("refresh");
+      this.exercise.refresh();
+      this.$refs.spreadsheetEditor.updateAllCells();
+      this.$refs.spreadsheetEditor.updateData(true);
     },
     async checkExercise(){
       let resArray=await this.$parent.check();

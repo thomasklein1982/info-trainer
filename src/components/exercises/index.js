@@ -3,6 +3,7 @@ export * as DbRaFa from './databases/relational-algebra/db-ra-fa.vue';
 export * as DbRaSo from './databases/relational-algebra/db-ra-so.vue';
 export * as BeepRes8 from './bee-python/beep-res-8.vue';
 export * as ShTest from './spreadsheet/sh-test.vue';
+export * as ShWenn1 from './spreadsheet/sh-wenn-1.vue';
 export * as BeepRes7 from './bee-python/beep-res-7.vue';
 export * as BeepMax2 from './bee-python/beep-max-2.vue';
 export * as BeepRes6 from './bee-python/beep-res-6.vue';

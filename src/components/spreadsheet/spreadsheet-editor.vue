@@ -3,10 +3,11 @@
     <ButtonGroup>
       <Button style="color: black" text icon="pi pi-copy" @click="copySelection()"/>
       <Button style="color: black" text icon="pi pi-clipboard" :disabled="selectionCopy.from===null" @click="paste()"/>
+      <Button style="color: black" text icon="pi pi-refresh" @click="$emit('refresh')"/>
     </ButtonGroup>
     <div id="current-cell-bar"><input @change="updateSelectedCellToCurrentCellAdress()" id="current-cell-address" v-model="currentCellAdress"/> <span style="margin-left: 0.3rem; margin-right: 0.3rem">=</span> <input ref="currentCellFormula" id="current-cell-formula" v-model="currentCellFormula" @keyup.enter="handleEnterCurrentCellFormula" @focus="handleFocusCurrentCellFormula" @blur="handleBlurCurrentCellFormula"/></div>
   </div>
-  <div id="table" @pointermove="handleMouseMove">
+  <div id="table" @pointermove="handleMouseMove" @keydown.ctrl.c="copySelection()" @keydown.ctrl.v="paste">
     <table>
       <tr>
         <th class="col-caption"></th><th class="col-caption" v-for="i in colCount">{{ String.fromCodePoint(64+i) }}</th>
@@ -49,7 +50,7 @@ export default{
     modelValue: Array,
   },
   emits: [
-    "update:modelValue"
+    "update:modelValue", "change", "refresh"
   ],
   watch: {
     currentCellAdress(nv,ov){
@@ -117,10 +118,32 @@ export default{
       }
     }
     this.updateAllCells();
-    this.updateData();
+    this.updateData(true);
     this.currentCellAdress="A1";
   },
   methods: {
+    getValues(){
+      let vals=[];
+      for(let i=0;i<this.value.length;i++){
+        let row=this.value[i];
+        let rowCopy=[];
+        vals.push(rowCopy);
+        for(let j=0;j<row.length;j++){
+          rowCopy.push(row[j].f);
+        }
+      }
+      return vals;
+    },
+    setValues(data){
+      for(let i=0;i<data.length; i++){
+        let row=data[i];
+        for(let j=0;j<row.length;j++){
+          this.modelValue[i][j].f=row[j];
+        }
+      }
+      this.updateAllCells();
+      this.updateData(true);
+    },
     cancelCopySelection(){
       this.selectionCopy.from=null;
       this.selectionCopy.to=null;
@@ -135,7 +158,8 @@ export default{
         col: this.realSelection.to.col
       };
     },
-    paste(){
+    paste(e){
+      if(e) e.preventDefault();
       let offset={
         row: this.realSelection.from.row-this.selectionCopy.from.row,
         col: this.realSelection.from.col-this.selectionCopy.from.col
@@ -308,7 +332,7 @@ export default{
     handleEndEditing(sourcePos){
       this.updateCell(sourcePos.row,sourcePos.col);
       try{
-        this.updateData(sourcePos);
+        this.updateData();
       }catch(e){
         if(e.zirkelbezug){
           alert(e.message);
@@ -335,15 +359,16 @@ export default{
         data=this.modelValue[row][column];
       }
       data.parsedFormula=null;
-      if(data.f===null || data.f===undefined){
+      let f;
+      f=data.f;
+      if(f===null || f===undefined){
         data.v="";
         return;
       };
       if(typeof data.f === "number"){
-        data.v=data.f;
+        data.v=f;
         return;
       }
-      let f=data.f;
       if(!f.trim){
         data.v=f;
         return;
@@ -356,19 +381,24 @@ export default{
       }
       if(!f.startsWith("=")){
         if(f*1+""===f) f*=1;
+        else if(/^\d+,\d*$/.test(f)){
+          f=f.replace(",",".")*1;
+        }
         data.v=f;
         return;
       }
-      f=f.toUpperCase();
+      //f=f.toUpperCase();
+      f=everythingButStringsToUpperCase(f);
       data.f=f;
+      f=f.substring(1);
       try{
-        let tree=parser.parse(f);
-        data.parsedFormula=tree.topNode.firstChild;
+        let tree=SpreadsheetFormulaParser.parse(f);
+        data.parsedFormula=tree;
       }catch(e){
-
+        console.log(e);
       }
     },
-    updateData(sourcePos){
+    updateData(dontEmitChangeEvent){
       let valid={};
       let queue=[];
       for(let i=0;i<this.rowCount;i++){
@@ -400,86 +430,31 @@ export default{
             t+=c.name;
           }
           t+=" haben einen Zirkelbezug.\nD.h. die Formeln beziehen sich so aufeinander, dass die Ergebnisse wechselseitig voneinander abhängen.";
+          this.$emit("change");
           throw {
             zirkelbezug: true,
             message: t
           }
         }
       }
+      if(!dontEmitChangeEvent) this.$emit("change");
     }
   }
 }
 
-import { parser } from '../../parsers/formula-parser/formula-parser';
-import { CompileFunctions, getParseFunction } from './compile-functions';
+import SpreadsheetFormulaParser from './SpreadsheetFormulaParser.js';
+import SpreadsheetFunctions from './SpreadsheetFunctions.js';
 import { nextTick } from 'vue';
+import { adaptBezuege, calcCellValue, everythingButStringsToUpperCase, getCellName, getRowAndCol } from './helper.js';
 
-export function getCellName(row,col){
-  return String.fromCodePoint(65+col)+(row+1);
-}
 
-export function getRowAndCol(cellname){
-  let c=cellname.toUpperCase().codePointAt(0)-65;
-  let r=cellname.substring(1)*1-1;
-  return { row: r, col: c};
-}
 
-function calcCellValue(valid,cellData,cell){
-  let c=cell.col;
-  let r=cell.row;
-  let data=cellData[r][c];
-  if(!data) return true;
-  delete data.error;
-  data.bezuege=[];
-  if(data.parsedFormula){
-    let pf=getParseFunction(data.parsedFormula);
-    let bezuege=[];
-    try{
-      let v=pf(data.parsedFormula,data.f,cellData,valid,bezuege);
-      data.v=v;
-      data.bezuege=bezuege;
-      return v!==null;
-    }catch(e){
-      data.v=e;
-      data.error=e;
-      return true;
-    }
-  }
-  return true;
-}
 
-/**
- * Passt in der Zelle alle relativen Bezuege an
- * @param cell 
- * @param dRow 
- * @param dCol 
- */
-function adaptBezuege(cell,dRow,dCol){
-  if(!cell.bezuege || cell.bezuege.length===0 || dRow===0 && dCol===0) return;
-  let f=cell.f;
-  let parts=[];
-  let offset=0;
-  for(let i=0;i<cell.bezuege.length;i++){
-    let b=cell.bezuege[i];
-    let pos=b.pos-offset;
-    parts.push(f.substring(0,pos));
-    let n=getRowAndCol(b.name);
-    n.row+=dRow;
-    n.col+=dCol;
-    let neu=getCellName(n.row,n.col);
-    parts.push(neu);
-    f=f.substring(pos+b.name.length);
-    offset+=pos+b.name.length;
-  }
-  parts.push(f);
-  cell.f=parts.join("");
-}
 </script>
 
 
 <style scoped>
   #table{
-    touch-action: none;
     overflow: auto;
     background-color: lightgray;
   }
