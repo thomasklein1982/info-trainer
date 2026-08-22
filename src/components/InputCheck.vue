@@ -1,5 +1,5 @@
 <template>
-  <span :style="{display: fullwidth?'block':'', fontFamily: code? 'monospace, monospace':''}"><template v-if="isChecked"><template v-if="!isCorrect"><span style="color: red;" v-html="displayValueWrong"/></template><span v-else>{{ value }}</span></template><InputText v-else :style="{'width': width}" v-model="task.input"/>&nbsp;<Check :status="status"/><span v-if="isChecked && !isCorrect" style="font-size: small"> [{{ solution }}]</span></span> 
+  <span :style="{display: fullwidth?'block':'', fontFamily: code? 'monospace, monospace':''}"><template v-if="isChecked"><template v-if="!isCorrect"><span style="color: red;" v-html="displayValueWrong"/></template><span v-else>{{ value }}</span></template><InputText v-else :style="{'width': width}" v-model="task.input"/>&nbsp;<Check :status="status"/><span v-if="isChecked && !isCorrect" style="font-size: small"> {{ solution }}</span></span> 
 </template>
 
 <script>

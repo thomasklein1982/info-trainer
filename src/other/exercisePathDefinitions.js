@@ -37,7 +37,7 @@ let Java={
       label: "Arrays",
       id: "arrays",
       icon: "arrays",
-      exercises: ["array-basics","array-erzeugen","array-swap","array-ausgabe","array-ausgabe-liste","array-summe","array-shift", "array-addieren", "array-zaehlen"]
+      exercises: ["array-basics","array-one","array-erzeugen","array-swap","array-ausgabe","array-ausgabe-liste","array-summe","array-shift", "array-addieren", "array-zaehlen"]
     },
     {
       label: "UI",
@@ -123,7 +123,7 @@ let Spreadsheet={
       label: "Formeln",
       id: "tk-formulas",
       icon: "tk-formulas",
-      exercises: ["sh-wenn-1"]
+      exercises: ["sh-af-1","sh-wenn-1"]
     }
   ]
 }

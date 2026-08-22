@@ -91,14 +91,20 @@ export async function checkOneliner(exercise, allowMultipleLines){
   let resArray=[];
   for(let i=0;i<exercise.tasks.length;i++){
     let t=exercise.tasks[i];
-    let res;
+    let res=undefined;
+    let input=t.input.trim();
     if(!allowMultipleLines){
-      let count=t.input.split(";").length;
-      if(count>1) res=false;
+      if(input.charAt(input.length-1)===";") input=input.substring(0,input.length-1);
+      if(input.indexOf(";")>=0) res=false;
+      input+=";";
     }
-    if(!res){
-      let scope=await exercise.$root.runJavaSnippet(t.preCode+t.input);
-      res=scope && t.check(scope,t.vars);
+    if(res===undefined){
+      try{
+        let scope=await exercise.$root.runJavaSnippet(t.preCode+input);
+        res=scope && t.check(scope,t.vars);
+      }catch(e){
+        res=false;
+      }
     }
     if(res===true){
       t.correct=true;

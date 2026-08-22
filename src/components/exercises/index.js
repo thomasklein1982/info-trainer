@@ -1,8 +1,10 @@
 
+
 export * as DbRaFa from './databases/relational-algebra/db-ra-fa.vue';
 export * as DbRaSo from './databases/relational-algebra/db-ra-so.vue';
 export * as BeepRes8 from './bee-python/beep-res-8.vue';
 export * as ShTest from './spreadsheet/sh-test.vue';
+export * as ShAf1 from './spreadsheet/sh-af-1.vue';
 export * as ShWenn1 from './spreadsheet/sh-wenn-1.vue';
 export * as BeepRes7 from './bee-python/beep-res-7.vue';
 export * as BeepMax2 from './bee-python/beep-max-2.vue';
@@ -160,6 +162,7 @@ export * as Fakultaet  from './rekursion/fakultaet.vue';
 export * as Palindrom from './rekursion/palindrom.vue';
 export * as Ggt from './rekursion/ggt.vue';
 export * as BinarySearch from './rekursion/binary-search.vue';
+export * as ArrayOne from './arrays/array-one.vue';
 export * as ArraySwap from './arrays/array-swap.vue';
 export * as HalloWelt from './hallo-welt.vue';
 export * as Preis from './preis.vue';

@@ -1,6 +1,6 @@
 <template>
   <ExerciseBody :exercise="$data" inline>
-    Gib jeweils eine einzelne Zeile Java-Code an.
+    Gib jeweils eine einzelne Java-Anweisung an.
     <template #exercise>
       <ol class="teilaufgaben">
         <li v-for="(t,i) in tasks"><span v-html="t.aufgabe"/>

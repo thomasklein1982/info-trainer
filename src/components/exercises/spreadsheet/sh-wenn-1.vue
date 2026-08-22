@@ -33,7 +33,8 @@ export const data={
         input: true, f: punkte[i-2]
       }
     }
-    setInSpreadsheet(this,sheet);
+    
+    return sheet;
   },
   check: {
     testcases: [
@@ -93,18 +94,7 @@ export default{
     
   },
   data() {
-    let sheet={
-      A1: "Aufgabe", B1: "Punkte",
-      A11: "Gesamtpunktzahl:",
-      A12: "Bewertung:"
-    };
-    let punkte=[5,0,8,6,7,2,10,3]
-    for(let i=2;i<=9;i++){
-      sheet["A"+i]="Aufgabe "+(i-1);
-      sheet["B"+i]={
-        input: true, f: punkte[i-2]
-      }
-    }
+    let sheet=data.refresh();
     data.spreadsheet.data=convertToSpreadsheet(sheet)
     return data;
   }

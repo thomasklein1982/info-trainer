@@ -2,11 +2,10 @@
   <ExerciseBody :exercise="$data" :java="project">
     Es sollen mehrere Methoden implementiert werden:
       <ol class="teilaufgaben">
-        <li>Die Methode <Code inline no-numbers>??? erzeugeArray1()</Code> soll ein Array erzeugen, das Platz für 100 ganze Zahlen hat, und dieses Array zurückgeben.</li>
-        <li>Die Methode <Code inline no-numbers>??? erzeugeArray2()</Code> soll ein Array mit den Einträgen <code>"red"</code>, <code>"blue"</code>, <code>"yellow"</code> und <code>"green"</code> erzeugen (in dieser Reihenfolge) und zurückgeben.</li>
+        <li>Die Methode <Code inline no-numbers>int[] erzeugeArray1()</Code> soll ein Array erzeugen, das Platz für 100 ganze Zahlen hat, und dieses Array zurückgeben.</li>
+        <li>Die Methode <Code inline no-numbers>String[] erzeugeArray2()</Code> soll ein Array mit den Einträgen <code>"red"</code>, <code>"blue"</code>, <code>"yellow"</code> und <code>"green"</code> erzeugen (in dieser Reihenfolge) und zurückgeben.</li>
       </ol>
       Implementiere diese Methoden.
-      <Hint>'???' bedeutet, dass du die korrekten Datentypen eingeben musst, damit das Programm funktioniert.</Hint>
   </ExerciseBody>
 </template>
 
@@ -64,12 +63,12 @@ export const data={
     clazzes: [
       {
         name: "Aufgabe",
-        src: `??? erzeugeArray1(){
+        src: `int[] erzeugeArray1(){
   //hierhin kommt der Code:
 
 }
   
-??? erzeugeArray2(){
+String[] erzeugeArray2(){
   //hierhin kommt der Code:
   
 }

@@ -129,6 +129,7 @@ import RmLauncher from "./rm-launcher.vue";
 import BeepEditor from "./beep-editor/beep-editor.vue";
 import { nextTick } from "vue";
 import SpreadsheetEditor from "./spreadsheet/spreadsheet-editor.vue";
+import { setInSpreadsheet } from "./spreadsheet/setInSpreadsheet.js";
 
 export default {
   components: {
@@ -240,8 +241,9 @@ export default {
     }else if(this.beep && this.beep.reverse){
 
       await this.showExercise();
-    }else if(this.spreadsheet && this.exerciseData.userProject){
-      this.$refs.spreadsheetEditor.setValues(this.exerciseData.userProject);
+    }else if(this.spreadsheet){
+      if(this.exerciseData.userProject) this.$refs.spreadsheetEditor.setValues(this.exerciseData.userProject);
+      this.checkSpreadsheet();
     }
   },
   methods: {
@@ -322,7 +324,9 @@ export default {
     },
     refreshSpreadsheet(){
       console.log("refresh");
-      this.exercise.refresh();
+      let sheet=this.exercise.refresh();
+      setInSpreadsheet(this.exercise,sheet);
+      //setInSpreadsheet(this,sheet);
       this.$refs.spreadsheetEditor.updateAllCells();
       this.$refs.spreadsheetEditor.updateData(true);
     },

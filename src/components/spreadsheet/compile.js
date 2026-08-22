@@ -80,7 +80,6 @@ export default {
       parse: (node,src,cellData,valid,bezuege)=>{
         let n=AST.getChild(node,0);
         let name=src.substring(n.start,n.end).toLowerCase();
-        console.log("funktionsname",name);
         //argumente:
         let args=[];
         n=AST.getChild(node,4);
@@ -97,7 +96,6 @@ export default {
           if(a===null) return a;
           args.push(a);
         }
-        console.log(args);
         let f=SpreadsheetFunctions[name];
         if(!f){
           throw "#NAME!";
