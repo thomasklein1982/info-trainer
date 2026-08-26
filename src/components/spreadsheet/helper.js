@@ -2,13 +2,14 @@ import AST from "./AST";
 import compile from "./compile";
 
 export function getRowAndCol(cellname){
+  cellname=cellname.replace(/\$/g,"");
   let c=cellname.toUpperCase().codePointAt(0)-65;
   let r=cellname.substring(1)*1-1;
   return { row: r, col: c};
 }
 
-export function getCellName(row,col){
-  return String.fromCodePoint(65+col)+(row+1);
+export function getCellName(row,col,isRowAbsolute,isColAbsolute){
+  return (isColAbsolute? "$":"")+String.fromCodePoint(65+col)+(isRowAbsolute? "$":"")+(row+1);
 }
 
 export function everythingButStringsToUpperCase(text){
@@ -66,16 +67,32 @@ export function adaptBezuege(cell,dRow,dCol){
     let b=cell.bezuege[i];
     let pos=b.pos-offset;
     parts.push(f.substring(0,pos));
-    let n=getRowAndCol(b.name);
-    n.row+=dRow;
-    n.col+=dCol;
-    let neu=getCellName(n.row,n.col);
-    parts.push(neu);
+    let s=b.name.split(":");
+    for(let j=0;j<s.length;j++){
+      if(j===1) parts.push(":");
+      let bname=s[j];
+      let n=getRowAndCol(bname);
+      let rowAbs=isRowAbsolute(bname);
+      let colAbs=isColAbsolute(bname);
+      if(!rowAbs) n.row+=dRow;
+      if(!colAbs) n.col+=dCol;
+      let neu=getCellName(n.row,n.col,rowAbs,colAbs);
+      parts.push(neu);
+    }
     f=f.substring(pos+b.name.length);
     offset+=pos+b.name.length;
   }
   parts.push(f);
   cell.f=parts.join("");
+}
+
+export function isRowAbsolute(bezug){
+  let pos=bezug.indexOf("$");
+  return (pos>0);
+}
+
+export function isColAbsolute(bezug){
+  return (bezug.charAt(0)==="$");
 }
 
 export function getParseFunction(node){

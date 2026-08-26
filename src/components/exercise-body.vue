@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div>{{ resetUID }}
     <slot name="preview"></slot>
     <slot></slot>
     <slot name="outerintro"></slot>
@@ -130,6 +130,7 @@ import BeepEditor from "./beep-editor/beep-editor.vue";
 import { nextTick } from "vue";
 import SpreadsheetEditor from "./spreadsheet/spreadsheet-editor.vue";
 import { setInSpreadsheet } from "./spreadsheet/setInSpreadsheet.js";
+import convertToSpreadsheet from "./spreadsheet/convert-to-spreadsheet.js";
 
 export default {
   components: {
@@ -172,6 +173,18 @@ export default {
     }
   },
   computed: {
+    resetUID(){
+      /**weg, um auf das löschen zu reagieren: 
+       * der wrapper setzt root.resetUID auf seine eigene UID 
+       * der body bemerkt dies hier und setzt das Spreadsheet zurück
+       * anschließend setzt der wrapper root.resetUID wieder auf null*/
+      if(this.$parent?.$parent?.$parent?.$.uid===this.$root.resetUID){
+        if(this.spreadsheet){
+          this.refreshSpreadsheet(true);
+        }
+      }
+      return this.$root.resetUID;
+    },
     isRandomStandardExercise(){
       if(this.java || this.turingMachine || this.finiteStateMachine || this.registerMachine || this.regexp || this.database || this.beep || this.spreadsheet) return false;
       return true;
@@ -328,11 +341,19 @@ export default {
       calcPoints(this.exerciseData);
       this.$root.save(this.exerciseData);
     },
-    refreshSpreadsheet(){
+    refreshSpreadsheet(reset){
       console.log("refresh");
       let sheet=this.exercise.refresh();
+      if(reset){
+        let data=this.exercise.spreadsheet.data;
+        for(let i=0;i<data.length;i++){
+          let row=data[i];
+          for(let j=0;j<row.length;j++){
+            row[j].f="";
+          }
+        }
+      }
       setInSpreadsheet(this.exercise,sheet);
-      //setInSpreadsheet(this,sheet);
       this.$refs.spreadsheetEditor.updateAllCells();
       this.$refs.spreadsheetEditor.updateData(true);
     },

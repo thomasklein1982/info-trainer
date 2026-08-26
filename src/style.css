@@ -248,18 +248,7 @@ em{
   .wertetabelle>tr>td, .wertetabelle>tr>th{
     border: 1pt solid white;
   }
-  .wertetabelle>tr>td:first-child, .wertetabelle>tr>th:first-child{
-    border-left: none;
-  }
-  .wertetabelle>tr>td:last-child, .wertetabelle>tr>th:last-child{
-    border-right: none;
-  }
-  .wertetabelle>tr:first-child>*{
-    border-top: none;
-  }
-  .wertetabelle>tr:last-child>*{
-    border-bottom: none;
-  }
+  
   .teilaufgaben>li::marker{
     color: orange;
   }
@@ -336,6 +325,19 @@ em{
     box-shadow: none !important;
   }
 }
+
+.wertetabelle>tr>td:first-child, .wertetabelle>tr>th:first-child{
+    border-left: none;
+  }
+  .wertetabelle>tr>td:last-child, .wertetabelle>tr>th:last-child{
+    border-right: none;
+  }
+  .wertetabelle>tr:first-child>*{
+    border-top: none;
+  }
+  .wertetabelle>tr:last-child>*{
+    border-bottom: none;
+  }
 
 .database-relation{
   text-align: center;

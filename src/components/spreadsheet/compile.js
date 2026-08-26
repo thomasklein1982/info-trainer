@@ -7,11 +7,14 @@ export default {
   Bezug: {
       parse: (node,src,cellData,valid,bezuege)=>{
         let bezug=src.substring(node.start,node.end);
-        if(node.children[2]!==""){ //brittle maybe???
+        let realBezug=bezug.replace(/\$/g,"");
+        bezuege.push({name: bezug, pos: node.start+1}); //+1 wegen =
+        if(node.children[4]!==""){ //brittle maybe???
           //bereich
-          let parts=bezug.split(":");
+          let parts=realBezug.split(":");
           let start=parts[0];
           let end=parts[1];
+          
           let posStart=getRowAndCol(start);
           let posEnd=getRowAndCol(end);
           if(posStart.row>posEnd.row || posStart.col>posEnd.col){
@@ -36,13 +39,13 @@ export default {
           }
           return array;
         }
-        bezuege.push({name: bezug, pos: node.start+1}); //+1 wegen =
-        let pos=getRowAndCol(bezug);
+        
+        let pos=getRowAndCol(realBezug);
         if(pos.row>=cellData.length || pos.col>=cellData[0].length){
           throw "Ungültiger Zellbezug "+bezug;
         }
         let data=cellData[pos.row][pos.col];
-        if(!valid[bezug]) return null;
+        if(!valid[realBezug]) return null;
         let v=data.v;
         if(typeof v==="string"){
           let n=v.replace(",",".")*1;

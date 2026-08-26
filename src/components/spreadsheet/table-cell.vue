@@ -1,7 +1,7 @@
 <template>
-  <td @click="handleClick" @keydown.left="handleDirection(-1,0)" @keydown.right="handleDirection(1,0)" @keydown.up="handleDirection(0,-1)" @keydown.down="handleDirection(0,1)" @pointerdown.left="handleMouseDown" >
+  <td @click="handleClick" @keydown.delete="handleDelete()" @keydown.left="handleDirection(-1,0)" @keydown.right="handleDirection(1,0)" @keydown.up="handleDirection(0,-1)" @keydown.down="handleDirection(0,1)" @pointerdown.left="handleMouseDown" >
     <div class="wrapper" :class="(active? 'active' : (selected? 'selected':'')) + ' '+(selectedToCopy? 'selected-to-copy': '') +' '+(isInputCell? 'input-cell': '')">
-      <input ref="input" class="starterInput" @keyup.enter="hitEnter" :class="edited? 'edited':''" v-model="starterInputValue" @input="startInput" @change="endEditing(true)" @blur="endEditing(false)" :style="{opacity: edited? 1: 0}"/><span class="display-value">{{ displayedValue }}</span>
+      <input ref="input" class="starterInput" @keydown.delete="handleDeleteInput" @keyup.enter="hitEnter" :class="edited? 'edited':''" v-model="starterInputValue" @input="startInput" @change="endEditing(true)" @blur="endEditing(false)" :style="{opacity: edited? 1: 0}"/><span class="display-value">{{ displayedValue }}</span>
     </div>
   </td>
 </template>
@@ -62,6 +62,15 @@ export default{
     };
   },
   methods: {
+    handleDeleteInput(ev){
+      if(this.edited){
+        ev.stopPropagation();
+      }
+    },
+    handleDelete(){
+      this.cell.f="";
+      this.$emit('end-editing',{enter: false, row: this.row,col: this.col});
+    },
     handleDirection(dx,dy){
       this.$emit('navigate',{dx,dy});
     },
@@ -128,7 +137,7 @@ td{
   position: relative;
   padding: 0;
   box-sizing: border-box;
-  min-width: 6em;
+  min-width: 3em;
 }
 input{
   outline: none;

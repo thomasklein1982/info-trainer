@@ -14,7 +14,7 @@ import MainScreen from './components/main-screen.vue';
 import { storage } from './other/storage';
 import * as exercises from './components/exercises/index';
 import { boolArrayToInt, createBoolArray, intToBoolArray, isCompletelyTrue } from './other/bool-array';
-import { toRaw } from 'vue';
+import { nextTick, toRaw } from 'vue';
 import packageJson from '../package.json';
 import { download, upload } from './other/helper';
 import { random, RandomClazz } from './other/random';
@@ -226,6 +226,7 @@ export default{
         },
         ab: null,
         userDataSize: 0,
+        resetUID: null,
       };
   },
   async mounted(){
@@ -233,6 +234,16 @@ export default{
     window.testObject=this.testObject;
   },
   methods: {
+    /**
+     * Siehe ExerciseBody
+     * @param uid 
+     */
+    resetExercise(uid){
+      this.resetUID=uid;
+      nextTick(()=>{
+        this.resetUID=null;
+      });
+    },
     async runJavaProject(project){
       let interpreter=this.$refs.javaInterpreter;
       let res=await interpreter.runJavaProject(project);

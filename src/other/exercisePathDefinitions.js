@@ -123,7 +123,7 @@ let Spreadsheet={
       label: "Formeln",
       id: "tk-formulas",
       icon: "tk-formulas",
-      exercises: []
+      exercises: ["sh-couscous","sh-jahre"]
     },
     {
       label: "Funktionen",
@@ -141,7 +141,7 @@ let Spreadsheet={
       label: "WENN-Funktion",
       id: "tk-if",
       icon: "tk-if",
-      exercises: []
+      exercises: ["sh-rabatt"]
     },
     {
       label: "Komplexe Aufgaben",
