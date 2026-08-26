@@ -314,7 +314,13 @@ export default {
       this.exerciseData.correct=[];
       for(let i=0;i<testcases.length;i++){
         let tc=testcases[i];
-        let res=await tc.check(this.$refs.spreadsheetEditor, this.$parent);
+        let count=1;
+        if(tc.count) count=tc.count;
+        let res;
+        for(let i=0;i<count;i++){
+          res=await tc.check(this.$refs.spreadsheetEditor, this.$parent);
+          if(!res) break;
+        }
         this.exerciseData.correct.push(res);
       }
       this.$refs.spreadsheetEditor.setValues(data);

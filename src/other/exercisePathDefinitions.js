@@ -123,7 +123,31 @@ let Spreadsheet={
       label: "Formeln",
       id: "tk-formulas",
       icon: "tk-formulas",
-      exercises: ["sh-af-1","sh-wenn-1"]
+      exercises: []
+    },
+    {
+      label: "Funktionen",
+      id: "tk-functions",
+      icon: "tk-functions",
+      exercises: []
+    },
+    {
+      label: "Bereich-Funktionen",
+      id: "tk-aggregate",
+      icon: "tk-aggregate",
+      exercises: ["sh-af-1"]
+    },
+    {
+      label: "WENN-Funktion",
+      id: "tk-if",
+      icon: "tk-if",
+      exercises: []
+    },
+    {
+      label: "Komplexe Aufgaben",
+      id: "tk-complex",
+      icon: "tk-complex",
+      exercises: ["sh-wenn-1","sh-arbeit"]
     }
   ]
 }

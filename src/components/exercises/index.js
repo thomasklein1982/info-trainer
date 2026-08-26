@@ -1,5 +1,5 @@
 
-
+export * as ShArbeit from './spreadsheet/sh-arbeit.vue';
 export * as DbRaFa from './databases/relational-algebra/db-ra-fa.vue';
 export * as DbRaSo from './databases/relational-algebra/db-ra-so.vue';
 export * as BeepRes8 from './bee-python/beep-res-8.vue';

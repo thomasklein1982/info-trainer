@@ -56,33 +56,73 @@ export const data={
       {
         info: "In B12 steht 'Bestanden', wenn man mindestens 40 Punkte erreicht hat.",
         check: async function(editor,ex){
-          let sum=0;
-          for(let i=0;i<8;i++){
-            let c=random(1,8);
-            if(i===7 && sum+c<40) c=40-sum;
-            sum+=c;
-            ex.spreadsheet.data[i+1][1].f=c;
+          let gesamtPunkte=40;
+          for(let j=0;j<5;j++){
+            let sum=0;
+            let punkte=[];
+            for(let i=0;i<8;i++){
+              let c=random(1,8);
+              punkte.push(c);
+              sum+=c;
+            }
+            if(sum<gesamtPunkte){
+              let diff=gesamtPunkte-sum;
+              let w=random(0,punkte.length-1);
+              punkte[w]+=diff;
+              sum+=diff;
+            }
+            while(sum>gesamtPunkte){
+              let w=random(0,punkte.length-1);
+              if(punkte[w]===0) continue;
+              punkte[w]--;
+              sum--;
+            }
+            for(let i=0;i<punkte.length;i++){
+              ex.spreadsheet.data[i+1][1].f=punkte[i];
+            }
+            editor.updateAllCells();
+            editor.updateData(true);
+            let ist=ex.spreadsheet.data[11][1].v;
+            if(ist.toLowerCase()!=="bestanden") return false;
+            gesamtPunkte+=random(1,3);
           }
-          editor.updateAllCells();
-          editor.updateData(true);
-          let ist=ex.spreadsheet.data[11][1].v;
-          return (ist.toLowerCase()==="bestanden");
+          return true;
         }
       },
       {
         info: "In B12 steht 'Durchgefallen', wenn man weniger als 40 Punkte erreicht hat.",
         check: async function(editor,ex){
-          let sum=0;
-          for(let i=0;i<8;i++){
-            let c=random(1,8);
-            if(sum+c>=40) c=0;
-            sum+=c;
-            ex.spreadsheet.data[i+1][1].f=c;
+          let gesamtPunkte=39;
+          for(let j=0;j<5;j++){
+            let sum=0;
+            let punkte=[];
+            for(let i=0;i<8;i++){
+              let c=random(1,7);
+              punkte.push(c);
+              sum+=c;
+            }
+            if(sum<gesamtPunkte){
+              let diff=gesamtPunkte-sum;
+              let w=random(0,punkte.length-1);
+              punkte[w]+=diff;
+              sum+=diff;
+            }
+            while(sum>gesamtPunkte){
+              let w=random(0,punkte.length-1);
+              if(punkte[w]===0) continue;
+              punkte[w]--;
+              sum--;
+            }
+            for(let i=0;i<punkte.length;i++){
+              ex.spreadsheet.data[i+1][1].f=punkte[i];
+            }
+            editor.updateAllCells();
+            editor.updateData(true);
+            let ist=ex.spreadsheet.data[11][1].v;
+            if(ist.toLowerCase()!=="durchgefallen") return false;
+            gesamtPunkte-=random(1,3);
           }
-          editor.updateAllCells();
-          editor.updateData(true);
-          let ist=ex.spreadsheet.data[11][1].v;
-          return (ist.toLowerCase()==="durchgefallen");
+          return true;
         }
       }
     ]
