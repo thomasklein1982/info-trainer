@@ -249,11 +249,11 @@ $void main(){
           }
           private double getVerbrauchProKm(){
             if(geschwindigkeit==0) return 0;
-            if(geschwindigkeit<=40) return geschwindigkeit*0.08;
-            if(geschwindigkeit<=60) return geschwindigkeit*0.1;
-            if(geschwindigkeit<=80) return geschwindigkeit*0.12;
-            if(geschwindigkeit<=100) return geschwindigkeit*0.15;
-            if(geschwindigkeit<=120) return geschwindigkeit*0.25;
+            if(geschwindigkeit<=40) return geschwindigkeit*0.0016;
+            if(geschwindigkeit<=60) return geschwindigkeit*0.002;
+            if(geschwindigkeit<=80) return geschwindigkeit*0.0024;
+            if(geschwindigkeit<=100) return geschwindigkeit*0.003;
+            if(geschwindigkeit<=120) return geschwindigkeit*0.005;
             return geschwindigkeit*0.4;
           }
           void fahren(double stunden){

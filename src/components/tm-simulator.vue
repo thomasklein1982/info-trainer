@@ -98,6 +98,7 @@
               <Message v-if="startStateError" style="grid-column: 1/3;" severity="error">{{ startStateError }}</Message>
               <template v-if="accepting">
                 <span>Akzeptierende Zustände:</span><InputText v-model="acceptingStates"/>
+                <small style="grid-column: 1/3;">Die Zustände müssen mit Leerzeichen getrennt werden.</small>
                 <Message v-if="acceptingStatesError" style="grid-column: 1/3;" severity="error">{{ acceptingStatesError }}</Message>
               </template>
               <span>Eingabe:</span><InputText :invalid="inputError!==null" v-model="input"/>
@@ -135,7 +136,19 @@
                 <p>Wenn die TM im Zustand <span style="font-family: monospace">NachLinks</span> ein beliebiges Zeichen liest: Maschine schreibt das Zeichen wieder hin, geht nach links und bleibt im Zustand <span style="font-family: monospace">NachLinks</span>.</p>
               </li>
             </ul>
-            
+            <div v-else>
+              Der folgende EA prüft, ob eine Binärzahl eine gerade Anzahl von Nullen hat:
+              <Code>//S= Startzustand, gerade Anzahl Nullen
+//N=einzelne 0, fertig
+//U=ungerade Anzahl Nullen
+S 0 N
+S 0 U
+S 1 S
+U 0 S
+U 1 U</Code>
+              Die akzeptierenden Zustände sind <code>S N</code>
+              
+            </div>
           </template>
         </Card>
       </SplitterPanel>
