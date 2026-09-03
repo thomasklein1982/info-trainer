@@ -44,22 +44,16 @@ import { nextTick } from 'vue';
 
 
 export const data={
-  id: "oo-beziehungen",
-  title: "Beziehungen im UML-Klassendiagramm (Variante Leistungskurs)",
+  id: "oo-beziehungen-gk",
+  title: "Beziehungen im UML-Klassendiagramm (Variante Grundkurs)",
   statements: [
     "Klasse A bekommt ein zusätzliches Attribut vom <code>Typ B</code>.",
     "Klasse A bekommt ein zusätzliches Attribut vom Typ <code>B[]</code>.",
     "Klasse B bekommt ein zusätzliches Attribut vom Typ <code>A</code>.",
     "Klasse B bekommt ein zusätzliches Attribut vom Typ <code>A[]</code>.",
-    "Klasse A erbt alle Eigenschaften von Klasse B.",
-    "Klasse B erbt alle Eigenschaften von Klasse A."
   ],
   realTasks: [],
   tasks: [
-    {
-      type: "vererbung",
-      mult: ["1",null]
-    },
     {
       type: "aggregation",
       mult: [null,"*"]

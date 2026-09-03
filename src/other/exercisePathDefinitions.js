@@ -55,7 +55,7 @@ let Java={
       label: "Objektorientierung",
       id: "oo",
       icon: "oo",
-      exercises: ["oo-eautos","oo-pokemon","oo-person", "oo-inherit", "oo-beziehungen", "oo-pat"]
+      exercises: ["oo-eautos","oo-pokemon","oo-person", "oo-inherit", "oo-beziehungen-gk", "oo-beziehungen", "oo-pat"]
     },
     {
       label: "Rekursion",

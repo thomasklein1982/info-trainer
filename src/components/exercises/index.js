@@ -218,6 +218,7 @@ export * as TmLoeschen from './tm/tm-loeschen.vue';
 export * as TmInkrement from './tm/tm-inkrement.vue';
 export * as TmAddieren from './tm/tm-addieren.vue';
 export * as OoBasics from './oo/oo-basics.vue';
+export * as OoBeziehungenGk from './oo/oo-beziehungen-gk.vue';
 export * as OoBeziehungen from './oo/oo-beziehungen.vue';
 export * as OoSpace from './oo/oo-space.vue';
 export * as OoPokemon from './oo/oo-pokemon.vue';

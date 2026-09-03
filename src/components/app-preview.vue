@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper" :style="{width: width, height: height, display: 'flex', 'flex-direction': 'column'}">
-    <div v-if="resetable" style="text-align: right"><Button text icon="pi pi-refresh" label="Reset" @click="$emit('reset')"/></div>
+    <div v-if="resetable" style="text-align: right"><Button text icon="pi pi-refresh" label="Reset" @click="clickReset()"/></div>
     <div :style="{flex: 1}"><slot></slot></div>
   </div>
 </template>
@@ -22,6 +22,16 @@ export default{
     resetable: {
       type: Boolean,
       default: false
+    }
+  },
+  mounted(){
+    if(this.resetable){
+      this.clickReset();
+    }
+  },
+  methods: {
+    clickReset(){
+      this.$emit('reset')
     }
   }
 }
