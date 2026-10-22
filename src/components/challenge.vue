@@ -18,6 +18,7 @@
     :title="path.label"
     :exercise="exercises[progress]"
     :exercise-count="exerciseCount"
+    :path="path"
     @proceed="proceed()"
   />
 </template>

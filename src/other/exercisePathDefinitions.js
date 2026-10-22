@@ -55,7 +55,7 @@ let Java={
       label: "Objektorientierung",
       id: "oo",
       icon: "oo",
-      exercises: ["oo-eautos","oo-one","oo-pokemon","oo-person", "oo-inherit", "oo-beziehungen-gk", "oo-beziehungen", "oo-pat"]
+      exercises: ["oo-eautos","oo-pokemon","oo-person", "oo-inherit", "oo-beziehungen-gk", "oo-beziehungen", "oo-pat"]
     },
     {
       label: "Rekursion",
@@ -125,12 +125,12 @@ let Spreadsheet={
       icon: "tk-formulas",
       exercises: ["sh-couscous","sh-jahre"]
     },
-    {
-      label: "Funktionen",
-      id: "tk-functions",
-      icon: "tk-functions",
-      exercises: []
-    },
+    // {
+    //   label: "Funktionen",
+    //   id: "tk-functions",
+    //   icon: "tk-functions",
+    //   exercises: []
+    // },
     {
       label: "Bereich-Funktionen",
       id: "tk-aggregate",

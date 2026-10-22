@@ -4,9 +4,12 @@
       <h1 style="margin: 0">Challenge: {{ title }}</h1>
       <small>Aufgabe {{ exercise.nr }} von {{ exerciseCount }}</small>
     </div>
-    <ExerciseWrapper style="flex: 1; overflow: auto" ref="wrapper" :number="exercise.nr" :id="exercise.id">
-      <component :is="exercise.id"/>
-    </ExerciseWrapper>
+    <div style="flex: 1; overflow: auto">
+      <ExerciseWrapper  ref="wrapper" :number="exercise.nr" :id="exercise.id">
+        <component :is="exercise.id"/>
+      </ExerciseWrapper>
+      <CheatSheet :path="path"/>
+    </div>
     <div class="bar" style="text-align: right">
       <Button @click="proceed()">{{ proceedLabel }}</Button>
     </div>
@@ -14,12 +17,13 @@
 </template>
 
 <script>
+import CheatSheet from './cheat-sheet.vue';
 import ExerciseWrapper from './exercise-wrapper.vue';
 
 
 export default {
   components: {
-    ExerciseWrapper
+    ExerciseWrapper, CheatSheet
   },
   emits: [
 
@@ -27,7 +31,8 @@ export default {
   props: {
     title: String,
     exercise: Object,
-    exerciseCount: Number
+    exerciseCount: Number,
+    path: Object
   },
   computed: {
     proceedLabel(){
