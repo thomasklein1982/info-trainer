@@ -35,14 +35,14 @@ export default{
       let randPos=Random.int(1,9);
       let tasks=[
         {
-          aufgabe: "Es wird ein neues Array mit Platz für §i0§ §Aganze Zahlen;Kommazahlen;Zeichenketten;Wahrheitswerte§ erzeugt und in der Variablen §l0§ gespeichert.",
+          aufgabe: "Es wird ein neues Array mit Platz für §I0§ §Aganze Zahlen;Kommazahlen;Zeichenketten;Wahrheitswerte§ erzeugt und in der Variablen §l0§ gespeichert.",
           check: (scope,vars)=>{
             let v=getVariableFromScope(vars.l[0],scope);
             if(!v.value) return false;
             if(!v.value.length===vars.i[0]) return false;
             return true;
           },
-          solution: "§l0§ = new §Aint;double;String;boolean§[ §i0§ ];",
+          solution: "§l0§ = new §Aint;double;String;boolean§[ §I0§ ];",
           preCode: "§Aint;double;String;boolean§[] §l0§;"
         },
         {
@@ -58,13 +58,13 @@ export default{
           preCode: ""
         },
         {
-          aufgabe: "Der Wert von §l0§ wird in das Array §l1§ an der Position des Wertes von §l2§ gespeichert.",
+          aufgabe: "Der Wert von §l0§ wird in das Array §l1§ an der Position §l2§ gespeichert.",
           check: (scope,vars)=>{
             let v=getVariableFromScope(vars.l[1],scope);
             if(!v.value) return false;
             return (v.value[randPos]===rand);
           },
-          solution: '§Aint;double;String;boolean§ §w0§;',
+          solution: '§l1§[§l2§] = §l0§;',
           preCode: "int[] §l1§=new int[10]; int §l0§="+rand+"; int §l2§="+randPos+";"
         },
         {

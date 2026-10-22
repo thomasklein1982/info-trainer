@@ -46,20 +46,26 @@
       </template>
     </Card>
     <Card>
-      <template #title>Aufgabenblatt erstellen</template>
+      <template #title>Arbeitsblätter erstellen und verwalten</template>
       <template #content>
         Du kannst beliebige Aufgaben zu einem <strong>Aufgabenblatt (AB)</strong> zusammenfassen. Dieses AB kannst du dann per Link teilen.
         <div style="text-align: right">
           <template v-if="ab===null">
             <Button label="AB importieren" @click="importAB.show=true"/>
             <Button label="AB erstellen" @click="createAB()"/>
+            <Button label="ABs verwalten" @click="openAB.show=true"/>
           </template>
-          <Button v-else label="AB entfernen" @click="removeAB()"/>
+          <template v-else>
+            <Button label="AB schließen" @click="closeAB()"/>
+          </template>
         </div>
         <div v-if="ab">
           <p style="text-align: center"><template v-if="linkToAB"><a :href="linkToAB" target="_blank">Link zum AB</a> <Button class="clipboard" size="small" text :data-clipboard-text="linkToAB" icon="pi pi-copy" label="Kopieren"/></template><template v-else>Füge Aufgaben hinzu, damit der Link erzeugt wird.</template></p> 
-          Titel: <InputText v-model="ab.label"/>
-          JavaApp-Schwierigkeit: <Select v-model="ab.diff" option-label="label" option-value="value" :options="difficultyOptions"/>
+          <div style="text-align: center">
+            Titel: <InputText v-model="ab.label"/>
+            JavaApp-Schwierigkeit: <Select v-model="ab.diff" option-label="label" option-value="value" :options="difficultyOptions"/>
+            <label style="white-space: nowrap"><Checkbox v-model="ab.ch" binary/> Challenge</label>
+          </div>
           <ExercisePath :path="ab" disabled/>
         </div>
       </template>
@@ -93,6 +99,29 @@
         <Button icon="pi pi-check" label="Importieren" @click="importABFromLink(importAB.link)"/>
       </template>
     </Dialog>
+    <Dialog ref="openABDialog" header="ABs verwalten" v-model:visible="openAB.show" :closable="true" maximizable>
+      <template v-if="$root.abs.length>0">
+        Wählen Sie das Arbeitsblatt aus, das Sie öffnen wollen:
+        <Listbox
+          v-model="openAB.selected"
+          :options="$root.abs"
+        >
+          <template #option="slotProps">
+            <div>
+              <div>{{ slotProps.option.label }}</div>
+              <small>{{ (new Date(slotProps.option.date)).toLocaleString() }}<template v-if="slotProps.option.ch">, Challenge</template></small>
+            </div>
+          </template>
+        </Listbox>
+      </template>
+      <template v-else>
+        Sie haben noch keine Arbeitsblätter gespeichert.
+      </template>
+      <template #footer>
+        <Button :disabled="!openAB.selected" icon="pi pi-trash" label="Löschen" @click="removeSelectedAB()"/>
+        <Button :disabled="!openAB.selected" icon="pi pi-check" label="Öffnen" @click="openSelectedAB()"/>
+      </template>
+    </Dialog>
   </div>
 </template>
 
@@ -112,10 +141,12 @@ import Dialog from 'primevue/dialog';
 import { parseABLink } from '../other/parseABLink';
 import WhileLauncher from './while-launcher.vue';
 import BeepLauncher from './beep-launcher.vue';
+import Listbox from 'primevue/listbox';
+import Checkbox from 'primevue/checkbox';
 
 export default{
   components: {
-    TuringMachineLauncher, ClassDiagram, WebEditorLauncher, ExercisePath, SpeedDial, Select, DatabaseLauncher, RmLauncher, Dialog, WhileLauncher, BeepLauncher
+    TuringMachineLauncher, ClassDiagram, WebEditorLauncher, ExercisePath, SpeedDial, Select, DatabaseLauncher, RmLauncher, Dialog, WhileLauncher, BeepLauncher, Listbox, Checkbox
   },
   props: {
     ab: Object
@@ -123,7 +154,7 @@ export default{
   computed: {
     linkToAB(){
       if(!this.ab || this.ab.exercises.length===0) return null;
-      let hash=this.ab.label+"[";
+      let hash=this.ab.label+"("+(this.ab.ch?1:0)+")"+"[";
       for(let i=0;i<this.ab.exercises.length;i++){
         if(i>0) hash+=",";
         let ex=this.ab.exercises[i];
@@ -166,49 +197,16 @@ export default{
       return achievements;
     }
   },
-  methods: {
-    openPath(achievement){
-      this.$emit("open-exercise-path", achievement.path);
-    },
-    importABFromLink(link){
-      let ok=this.$root.importABFromLink(link);
-      if(!ok){
-        alert("Ungültiger Link");
-      }
-      this.importAB.show=false;
-    },
-    removeSavedData(){
-      let a=confirm("Bist du wirklich sicher, dass du alle Lösungen und deinen gesamten Fortschritt löschen willst?\n\nDies kann nicht rückgängig gemacht werden!");
-      if(!a) return;
-      this.$root.removeSavedUserData();
-    },
-    downloadSavedData(){
-      this.$root.downloadSavedData();
-    },
-    uploadSavedData(){
-      this.$root.uploadSavedData();
-    },
-    changeModeToNormal(){
-      location.hash="";
-      location.reload();
-    },
-    changeModeToPractise(){
-      location.hash="practise";
-      location.reload();
-    },
-    createAB(){
-      this.$root.createAB();
-    },
-    removeAB(){
-      this.$root.removeAB();
-    }
-  },
   data(){
     return {
       database: empty,
       importAB: {
         show: false,
         link: ""
+      },
+      openAB: {
+        show: false,
+        selected: null
       },
       difficultyOptions: [
         {
@@ -252,7 +250,63 @@ export default{
         },
       ]
     }
-  }
+  },
+  methods: {
+    openPath(achievement){
+      this.$emit("open-exercise-path", achievement.path);
+    },
+    importABFromLink(link){
+      let ok=this.$root.importABFromLink(link);
+      if(!ok){
+        alert("Ungültiger Link");
+      }
+      this.importAB.show=false;
+    },
+    removeSavedData(){
+      let a=confirm("Bist du wirklich sicher, dass du alle Lösungen und deinen gesamten Fortschritt löschen willst?\n\nDies kann nicht rückgängig gemacht werden!");
+      if(!a) return;
+      this.$root.removeSavedUserData();
+    },
+    downloadSavedData(){
+      this.$root.downloadSavedData();
+    },
+    uploadSavedData(){
+      this.$root.uploadSavedData();
+    },
+    changeModeToNormal(){
+      location.hash="";
+      location.reload();
+    },
+    changeModeToPractise(){
+      location.hash="practise";
+      location.reload();
+    },
+    saveAB(){
+      this.$root.saveCurrentAB();
+    },
+    createAB(){
+      this.$root.createAB();
+    },
+    openSelectedAB(){
+      this.$root.ab=this.openAB.selected;
+      this.openAB.show=false;
+    },
+    removeSelectedAB(){
+      this.$root.removeAB(this.openAB.selected);
+    },
+    closeAB(){
+      if(!this.$root.isCurrentABSaved()){
+        let a=confirm("Möchten Sie das neue AB speichern?");
+        if(a){
+          this.$root.saveCurrentAB();
+        }
+      }else{
+        this.$root.saveABs();
+      }
+      this.$root.closeAB();
+    }
+  },
+  
 }
 </script>
 

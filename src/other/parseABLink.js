@@ -7,16 +7,27 @@ export function parseABLink(link){
     hash=hash.substring(pos);
   }
   if(!hash.toLowerCase().startsWith("#ab=")) return null;
-    hash=hash.substring(4);
-    try{
-      hash=decodeURI(hash);
-    }catch(e){
-      
-    }
+  hash=hash.substring(4);
+  try{
+    hash=decodeURI(hash);
+  }catch(e){
+    
+  }
   let pos1=hash.indexOf("[");
   let pos2=hash.indexOf("]");
   if(pos1>=0 && pos2>pos1){
-    let title=hash.substring(0,pos1);
+    let before=hash.substring(0,pos1);
+    let posInfos1=before.lastIndexOf("(");
+    let posInfos2=before.lastIndexOf(")");
+    let title;
+    let challenge=false;
+    if(posInfos1>=0 && posInfos1<posInfos2){
+      let infos=before.substring(posInfos1+1,posInfos2);
+      challenge=infos==="1";
+      title=before.substring(0,posInfos1);
+    }else{
+      title=hash.substring(0,pos1);
+    }
     let ids=hash.substring(pos1+1,pos2);
     ids=ids.split(",");
     let paths={};
@@ -36,7 +47,7 @@ export function parseABLink(link){
       diff=null;
     }
     return {
-      title, ids, paths, difficulty: diff
+      title, ids, paths, difficulty: diff, challenge
     };
   }
 }

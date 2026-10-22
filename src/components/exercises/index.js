@@ -1,4 +1,5 @@
 
+export * as OoOne from './oo/oo-one.vue';
 export * as OoEautos from './oo/oo-eautos.vue';
 export * as ShRabatt from './spreadsheet/sh-rabatt.vue';
 export * as ShJahre from './spreadsheet/sh-jahre.vue';

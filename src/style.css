@@ -12,6 +12,11 @@ html,body{
   display: flex;
 }
 
+.flex-column{
+  display: flex;
+  flex-direction: column;
+}
+
 .em-field-1,.em-field-2{
   border: 4pt double black;
 }
@@ -130,6 +135,10 @@ code{
 .cm-editor{
   font-size: 150%;
   flex: 1;
+}
+
+.ͼo .cm-gutters{
+  border-right: 1pt solid gray;
 }
 
 .top-batch.p-overlaybatch{

@@ -29,6 +29,12 @@
         open
       />
     </template>
+    <template v-else-if="mode.type==='challenge'">
+      <Challenge 
+        :path="currentPath"
+      />
+      
+    </template>
     <template v-else>
       <AppMenubar
         :settings="settings"
@@ -82,10 +88,11 @@ import CheatSheet from './cheat-sheet.vue';
 import WhileSimulator from './while-simulator.vue';
 import BeepLauncher from './beep-launcher.vue';
 import EmptyDB from "../components/exercises/databases/databases/empty";
+import Challenge from './challenge.vue';
 
 export default{
   components: {
-    AppMenubar, Home, ExerciseDrawer, ExercisePath, DialogSettings, Drawer, RmSimulator, TmSimulator, DatabaseLauncher, CheatSheet, WhileSimulator, BeepLauncher
+    AppMenubar, Home, ExerciseDrawer, ExercisePath, DialogSettings, Drawer, RmSimulator, TmSimulator, DatabaseLauncher, CheatSheet, WhileSimulator, BeepLauncher, Challenge
   },
   props: {
     settings: Object,

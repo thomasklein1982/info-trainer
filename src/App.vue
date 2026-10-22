@@ -24,6 +24,7 @@ import JavaInterpreter from './components/java-interpreter.vue';
 import { GameObject } from './components/exercises/bee-python/GameObject';
 const STORAGE_DATA="INFO-TRAINER-USER-DATA";
 const STORAGE_SETTINGS="INFO-TRAINER-SETTINGS";
+const STORAGE_ABS="INFO-TRAINER-ABS";
 let mode={
   type: "normal",
   useStorage: true,
@@ -50,7 +51,7 @@ if(parsedAB){
   let r=new RandomClazz(random(1,9999999));
   let ids=chooseExercises(parsedAB.ids,parsedAB.paths, r);
   mode={
-    type: "ab",
+    type: parsedAB.challenge? "challenge": "ab",
     title: parsedAB.title,
     ids: ids,
     paths: parsedAB.paths,
@@ -115,7 +116,7 @@ for(let a in exercises){
   //   console.log(a);
   // }
   let data=exercises[a].data;
-  let ed={data: data, total: -1};
+  let ed={data: data, total: -1, points: 0};
   if(data.pointsPrint!==undefined){
     ed.pointsPrint=data.pointsPrint;
   }
@@ -187,7 +188,6 @@ export function calcPoints(exerciseData){
 
 let userData=null;
 
-let testObject=new GameObject("B","Bee");
 
 
 export default{
@@ -198,7 +198,6 @@ export default{
   watch: {
     "settings.javaAppDifficulty"(nv,ov){
       difficulty=nv;
-      console.log("difficulty",difficulty);
     }
   },
   computed: {
@@ -227,11 +226,11 @@ export default{
         ab: null,
         userDataSize: 0,
         resetUID: null,
+        abs: []
       };
   },
   async mounted(){
     await this.load();
-    window.testObject=this.testObject;
   },
   methods: {
     /**
@@ -353,10 +352,12 @@ export default{
         diff: "n",
         paths: {},
         exercises: [],
-        category: "Arbeitsblatt"
+        category: "Arbeitsblatt",
+        date: Date.now(),
+        ch: false //Challenge?
       };
     },
-    removeAB(){
+    closeAB(){
       this.ab=null;
     },
     getExerciseData(id){
@@ -432,6 +433,10 @@ export default{
       }else{
         userData=data;
       }
+      let abData=await storage.getItem(STORAGE_ABS);
+      if(abData){
+        this.abs=abData;
+      }
     },
     save(exerciseData){
       if(this.mode.useStorage){
@@ -467,6 +472,26 @@ export default{
         ed.points=points;
         ed.correct=correct;
       }
+    },
+    saveCurrentAB(){
+      if(!this.isCurrentABSaved()){
+        this.abs.push(this.ab);
+      }
+      this.saveABs();
+    },
+    isCurrentABSaved(){
+      return this.abs.indexOf(this.ab)>=0;
+    },
+    removeAB(ab){
+      let index=this.abs.indexOf(ab);
+      if(index<0) return;
+      this.abs.splice(index,1);
+      this.saveABs();
+    },
+    saveABs(){
+      storage.setItem(STORAGE_ABS,toRaw(this.abs)).catch((err)=>{
+        console.error(err);
+      });
     },
     saveSettings(){
       storage.setItem(STORAGE_SETTINGS,toRaw(this.settings)).catch((err)=>{

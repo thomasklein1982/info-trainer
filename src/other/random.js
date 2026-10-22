@@ -37,6 +37,7 @@ export class RandomClazz{
     return b;
   }
   drawFrom(array,k){
+    if(!k) k=1;
     let indices=this.draw(k,array.length);
     let b=[];
     for(let i=0;i<indices.length;i++){

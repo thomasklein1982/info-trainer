@@ -41,6 +41,8 @@ import Tooltip from 'primevue/tooltip';
 import ToggleButton from 'primevue/togglebutton';
 import SelectButton from 'primevue/selectbutton';
 import { parseTerm } from './other/parse-term';
+import { generateAdjektiv, generateNomen, generateVerb } from './other/generateWord.js';
+import { Random } from './other/random.js';
 
 
 const updateSW=registerSW({
@@ -106,6 +108,15 @@ new ClipboardJS(".clipboard");
 
 app.mount('#app');
 
+// for(let i=0;i<10;i++){
+//   console.log(generateNomen(Random,4));
+// }
+// for(let i=0;i<10;i++){
+//   console.log(generateAdjektiv(Random,4));
+// }
+// for(let i=0;i<10;i++){
+//   console.log(generateVerb(Random,4));
+// }
 //
 
 // console.log(parseTerm("C n (A n B)"));
