@@ -22,6 +22,45 @@ import { generateNomen, generateVerb } from '../../../other/generateWord.js';
 import { checkOneliner, createOnelinerTasks, getVariableFromScope } from '../../java-interpreter.vue';
 import UmlClazz from '../../UmlClazz.vue';
 
+const clazzes=[
+  {
+    name: "Auto",
+    attributes: [
+      {name: "kilometerstand", type: "double"},
+      {name: "tankstand", type: "double"},
+      {name: "besitzer", type: "String"}
+    ],
+    constructorArgs: ["marke"],
+    methods: [
+      {name: "getKilometerstand", type: "double"},
+      {name: "tanken", args: [{name: "liter", type: "double"}]},
+      {name: "fahren", args: [{name: "kilometer", type: "double"}]},
+      {name: "uebernehmeBesitzerVon", args: [{name: "a", type: "Auto"}]}
+    ],
+    tasks: [
+      {
+        aufgabe: "Es soll ein neues Auto erzeugt und in der Variablen §l0§ gespeichert werden. Der Besitzer des Autos heißt §replace1§.",
+        solution: '§l0§ = new Auto( "§replace1§" );',
+        preCode: "Auto §l0§"
+      },
+      {
+        aufgabe: "Das Auto, das in der Variablen §l0§ gespeichert ist, soll um §I0§ Liter aufgetankt werden.",
+        solution: '§l0§.tanken( §I0§ );',
+        preCode: "Auto §l0§=new Auto('');"
+      },
+      {
+        aufgabe: "Der Kilometerstand des Autos, das in der Variablen §l0§ gespeichert ist, soll in einer neu deklarierten Variable §l1§ gespeichert werden.",
+        solution: 'double §l1§=§l0§.getKilometerstand();',
+        preCode: "Auto §l0§=new Auto('');"
+      },
+      {
+        aufgabe: "Das Auto, das in der Variablen §l0§ gespeichert ist, wird an den Besitzer des Autos verkauft, das in der Variablen §l1§ gespeichert ist.",
+        solution: '§l0§.uebernehmeBesitzerVon(§l1§);',
+        preCode: "Auto §l0§=new Auto('Ben');Auto §l1§=new Auto('Ada');"
+      }
+    ]
+  }
+];
 
 export const data={
   id: "oo-one",
