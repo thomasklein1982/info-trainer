@@ -248,9 +248,9 @@ export default{
       let res=await interpreter.runJavaProject(project);
       return res;
     },
-    async runJavaSnippet(code){
+    async runJavaSnippet(code, additionalClazzes){
       let interpreter=this.$refs.javaInterpreter;
-      let res=await interpreter.runJavaSnippet(code);
+      let res=await interpreter.runJavaSnippet(code, additionalClazzes);
       return res;
     },
     removeSavedUserData(){

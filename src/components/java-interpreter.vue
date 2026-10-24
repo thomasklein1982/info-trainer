@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { toRaw } from 'vue';
 import { javaAppUrl } from './java-app.vue';
 
 
@@ -16,11 +17,9 @@ export default{
     }
   },
   methods: {
-    async runJavaSnippet(code){
-      let project={
-        clazzes: [
-          {
-            name: "Main",
+    async runJavaSnippet(code, additionalClazzes){
+      let clazzes=[{
+        name: "Main",
             src: `void main(){
             try{
               ${code}
@@ -34,8 +33,15 @@ export default{
             }
       
     }`
-          }
-        ]
+      }];
+      if(additionalClazzes){
+        for(let i=0;i<additionalClazzes.length;i++){
+          clazzes.push(additionalClazzes[i]);
+        }
+      }
+
+      let project={
+        clazzes
       };
       return await this.runJavaProject(project);
     },
@@ -100,7 +106,7 @@ export async function checkOneliner(exercise, allowMultipleLines){
     }
     if(res===undefined){
       try{
-        let scope=await exercise.$root.runJavaSnippet(t.preCode+input);
+        let scope=await exercise.$root.runJavaSnippet(t.preCode+input, toRaw(t.additionalClazzes));
         res=scope && t.check(scope,t.vars);
       }catch(e){
         res=false;
@@ -213,5 +219,6 @@ function createTask(task,srcTask, srcData ){
     text+=handleVariable(t, parts[j], srcData);
   }
   t.preCode=text;
+  t.additionalClazzes=src.additionalClazzes;
 }
 </script>
