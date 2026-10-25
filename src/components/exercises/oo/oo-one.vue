@@ -1,12 +1,15 @@
 <template>
   <ExerciseBody :exercise="$data" inline>
-    Gib jeweils eine einzelne Java-Anweisung an.
+    Gegeben ist das folgende UML-Klassendiagramm.
+    <p>Gib jeweils eine einzelne Java-Anweisung an.</p>
     <template #exercise>
       <span class="float-right" v-if="tasks[0]">
         <UmlClazz
           :clazz="tasks[0].uml"
+          style="width: 400px"
         />
       </span>
+
       <ol class="teilaufgaben">
         <li v-for="(t,i) in tasks"><span v-html="t.aufgabe"/>
           <p class="no-print"><InputCheck :auto-check="false" code width="100%" ref="input" :task="t"/>
@@ -33,6 +36,30 @@ function replaceVariables(text,variables){
 const clazzes=[
   {
     name: "Auto",
+    src: `class Auto{
+      private String besitzer;
+      private double kilometerstand, tankstand;
+      Auto(String besitzer){
+        this.besitzer=besitzer;
+        kilometerstand=0;
+        tankstand=0;
+      }
+      void fahren(double kilometer){
+      }
+      double getKilometerstand(){
+        return kilometerstand;
+      }
+      void setKilometerstand(double k){
+        kilometerstand=k;
+      }
+      void tanken(double liter){
+        tankstand+=liter;
+
+      }
+      void uebernehmeBesitzerVon(Auto a){
+        besitzer=a.besitzer;
+      }
+    }`,
     attributes: [
       {name: "besitzer", type: "String"},
       {name: "kilometerstand", type: "double"},
@@ -47,7 +74,9 @@ const clazzes=[
       {name: "uebernehmeBesitzerVon", args: [{name: "a", type: "Auto"}]}
     ],
     variables: [
-      {name: "name", values: ["Alan", "Donald", "John", "Konrad"]}
+      {name: "name", values: ["Alan", "Donald", "John", "Konrad"]},
+      {name: "kmStand", values: [5,7,3,10,57,4]},
+      {name: "besitzer2", values: ["fo43t4", "58ijg", "welöjjdff", "54utjfg", "dfdff", "fddal"]},
     ],
     tasks: [
       {
@@ -65,17 +94,42 @@ const clazzes=[
       {
         aufgabe: "Das Auto, das in der Variablen §l0§ gespeichert ist, soll um §I0§ Liter aufgetankt werden.",
         solution: '§l0§.tanken( §I0§ );',
-        preCode: "Auto §l0§=new Auto('');"
+        preCode: 'Auto §l0§=new Auto("");',
+        check: function(variables){
+          return (scope,vars)=>{
+            let v=getVariableFromScope(vars.l[0],scope);
+            if(Math.abs(v.value.tankstand-vars.I[0])>0.0000001) return false;
+            return true;
+          };
+        }
       },
       {
-        aufgabe: "Der Kilometerstand des Autos, das in der Variablen §l0§ gespeichert ist, soll in einer neu deklarierten Variable §l1§ gespeichert werden.",
+        aufgabe: "Der Kilometerstand des Autos, das in der Variablen §l0§ gespeichert ist, soll in einer neuen lokalen Variable §l1§ gespeichert werden.",
         solution: 'double §l1§=§l0§.getKilometerstand();',
-        preCode: "Auto §l0§=new Auto('');"
+        check: function(variables){
+          return (scope,vars)=>{
+            let auto=getVariableFromScope(vars.l[0],scope);
+            let v=getVariableFromScope(vars.l[1],scope);
+            if(Math.abs(v.value-variables.kmStand)>0.0000001) return false;
+            return true;
+          };
+        },
+        preCode: 'Auto §l0§=new Auto("");§l0§.setKilometerstand(§kmStand§);'
       },
       {
         aufgabe: "Das Auto, das in der Variablen §l0§ gespeichert ist, wird an den Besitzer des Autos verkauft, das in der Variablen §l1§ gespeichert ist.",
         solution: '§l0§.uebernehmeBesitzerVon(§l1§);',
-        preCode: "Auto §l0§=new Auto('Ben');Auto §l1§=new Auto('Ada');"
+        check: function(variables){
+          return (scope,vars)=>{
+            console.log("uebernehme")
+            let auto1=getVariableFromScope(vars.l[0],scope);
+            let auto2=getVariableFromScope(vars.l[1],scope);
+            let backup=getVariableFromScope("backup",scope);
+            if(auto1.value.besitzer!==auto2.value.besitzer) return false;
+            return true;
+          };
+        },
+        preCode: 'Auto §l0§=new Auto("Ben");Auto §l1§=new Auto("§besitzer2§");Auto backup=§l1§;'
       }
     ]
   }
@@ -85,7 +139,7 @@ export const data={
   id: "oo-one",
   title: "Java-Oneliners: Objekte erzeugen und verwenden",
   tasks: [
-    {},// {}, {}, {}
+    {}, {}, {}, {}
   ]
 }
 
@@ -136,16 +190,8 @@ export default{
         methods
       };
       let additionalClazzes=[{
-        name: "Auto",
-        src: `class Auto{
-          String besitzer;
-          double kilometerstand, tankstand;
-          Auto(String besitzer){
-            this.besitzer=besitzer;
-            kilometerstand=66.6;
-            tankstand=100;
-          }
-        }`
+        name: clazz.name,
+        src: clazz.src
       }];
       let tasks=[];
       for(let i=0;i<this.tasks.length;i++){
